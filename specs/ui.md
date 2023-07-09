@@ -32,6 +32,10 @@
     - Reset the diagram: Delete everything in the diagram
 - Bottom area: A react-diagrams canvas with variable/operation nodes on it
 
+## Figma Spec
+
+See files under `specs/Figma`.
+
 ## References
 
 - [Free Figma course dashboard template - Andrey Lohmatov](https://www.figma.com/file/7SAHIZwPs1VSgBVOAUpwWp/Dashboard?type=design&node-id=0-1&mode=design&t=LAwyws0HO3EP4rLo-0)

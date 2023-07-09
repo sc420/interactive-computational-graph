@@ -8,6 +8,7 @@
 ## Nice-To-Have Features
 
 - Can build the graph by drag-and-dropping
+- Can show the variable names in LaTeX
 - Can fill in the variable values so that we can actually calculate forward-pass and differentiation values
 - Can select any node as the differentiation target rather than just the last node $ y' $ (also means that the graph allows multiple outputs)
 - Fully connected neural network builder
@@ -15,6 +16,7 @@
 
 ## Advanced Features
 
+- Highlight the path from the target node to the selected node to show how chain rule works
 - Show both forward-mode and reverse-mode differentiation
 - Can customize the operations: Define more operations and specify how to differentiate (e.g., with custom JavaScript code)
 

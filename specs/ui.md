@@ -16,6 +16,11 @@
     - Load from presets: Show a list of built-in computational graphs
     - Load/Save: Either load the graph from a file or save the graph to a file
 - Right panel: To show the content for the currently selected icon
+    - Add nodes: List of nodes grouped by types (e.g., "Values", "Simple", "Advanced")
+    - View nodes: List of nodes on the graph, click to focus the node, has remove icon
+    - Neural network builder: Specify number of layers, number of nodes in each layer, activation function, etc.
+    - Load from presets: List of built-in computational graphs, click to load
+    - Load/Save: Load from a data file, save to a data file, may support other formats like GraphViz/Mermaid
 
 ### Right Area
 

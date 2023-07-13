@@ -10,6 +10,7 @@
 - Can build the graph by drag-and-dropping
 - Can show the variable names in LaTeX
 - Can fill in the variable values so that we can actually calculate forward-pass and differentiation values
+- Can randomize the values
 - Can select any node as the differentiation target rather than just the last node $ y' $ (also means that the graph allows multiple outputs)
 - Show how the derivative is calculated by showing the chain rule (e.g., $ \frac{\partial{e}}{\partial{a}} = \frac{\partial{(c)}}{\partial{a}} * \frac{\partial{e}}{\partial{(c)}} = 1.2 * d = 2.4 $)
 - Show the expression of a node (e.g., $ e = c * d $)

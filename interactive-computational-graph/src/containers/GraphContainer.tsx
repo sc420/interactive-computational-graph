@@ -1,23 +1,17 @@
-import { Box } from '@mui/material'
+import { Grid } from '@mui/material'
 import Graph from '../components/Graph'
-// import GraphControl from '../components/GraphControl'
+import GraphControl from '../components/GraphControl'
 
 const GraphContainer: React.FunctionComponent = () => {
   return (
-    <Box display="flex" flexGrow={1}>
-      {/* <GraphControl></GraphControl> */}
-      <Graph></Graph>
-      {/* <Grid container alignItems="stretch">
-        <Grid width="100%">
-          <GraphControl></GraphControl>
-        </Grid>
+    <Grid container direction="column" height="100%">
+      <Grid item>
+        <GraphControl></GraphControl>
       </Grid>
-      <Grid container alignItems="stretch" sx={{ border: 1 }}>
-        <Grid>
-          <Graph></Graph>
-        </Grid>
-      </Grid> */}
-    </Box>
+      <Grid item flexGrow={1}>
+        <Graph></Graph>
+      </Grid>
+    </Grid>
   )
 }
 

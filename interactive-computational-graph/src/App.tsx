@@ -6,7 +6,7 @@ import MuiDrawer from '@mui/material/Drawer'
 import { styled } from '@mui/material/styles'
 import React from 'react'
 import FeatureNavigator from './components/FeatureNavigator'
-import Graph from './components/Graph'
+import GraphContainer from './containers/GraphContainer'
 
 const drawerWidth: number = 240
 
@@ -131,7 +131,7 @@ const App: React.FunctionComponent = () => {
       >
         <Toolbar />
         <Container disableGutters maxWidth={false} sx={{ height: '100%', position: 'relative' }}>
-          <Graph />
+          <GraphContainer />
         </Container>
       </Box>
     </Box>

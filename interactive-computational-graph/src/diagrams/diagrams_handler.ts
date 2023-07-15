@@ -24,6 +24,7 @@ class DiagramsHandler {
     })
     node2.setPosition(200, 100)
     const port2 = node2.addInPort('In')
+    node2.addOutPort('Out')
 
     // Link them and add a label to the link
     const link = port1.link<DefaultLinkModel>(port2)

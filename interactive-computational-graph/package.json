@@ -44,6 +44,7 @@
     ]
   },
   "devDependencies": {
+    "@types/react-test-renderer": "^18.0.0",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "eslint": "^8.44.0",
     "eslint-config-standard-with-typescript": "^36.0.1",
@@ -51,6 +52,7 @@
     "eslint-plugin-n": "^15.7.0",
     "eslint-plugin-promise": "^6.1.1",
     "eslint-plugin-react": "^7.32.2",
+    "react-test-renderer": "^18.2.0",
     "stylelint": "^15.10.1",
     "stylelint-config-standard": "^34.0.0",
     "typescript": "^5.1.6"

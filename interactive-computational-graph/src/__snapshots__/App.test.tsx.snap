@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders the app 1`] = `
+<div>
+  <header
+    className="MuiPaper-root MuiPaper-elevation MuiPaper-elevation4 MuiAppBar-root MuiAppBar-colorPrimary MuiAppBar-positionStatic css-hip9hq-MuiPaper-root-MuiAppBar-root"
+  >
+    <div
+      className="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular css-hyum1k-MuiToolbar-root"
+    >
+      <h6
+        className="MuiTypography-root MuiTypography-h6 css-1juivf6-MuiTypography-root"
+      >
+        Interactive Computational Graph
+      </h6>
+      <a
+        className="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+        href="https://github.com/sc420/interactive-computational-graph"
+        onBlur={[Function]}
+        onFocus={[Function]}
+        target="_blank"
+      >
+        GitHub
+      </a>
+    </div>
+  </header>
+</div>
+`;

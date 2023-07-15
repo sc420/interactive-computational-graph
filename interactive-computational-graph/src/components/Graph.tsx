@@ -1,5 +1,5 @@
 import { Box } from '@mui/material'
-import createEngine, { CanvasWidget, type DefaultLinkModel, DefaultNodeModel, DiagramModel } from '@projectstorm/react-diagrams'
+import createEngine, { CanvasWidget, DefaultNodeModel, DiagramModel, type DefaultLinkModel } from '@projectstorm/react-diagrams'
 
 const Graph: React.FunctionComponent = () => {
   // Create an instance of the engine
@@ -31,9 +31,12 @@ const Graph: React.FunctionComponent = () => {
 
   engine.setModel(model)
 
+  console.log('Engine initialized')
+
   return (
     <Box
       sx={{
+        backgroundColor: 'lightgray',
         height: '100%',
         '> *': { height: '100%', width: '100%' }
       }}

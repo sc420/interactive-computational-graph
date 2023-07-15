@@ -1,6 +1,6 @@
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
 import MenuIcon from '@mui/icons-material/Menu'
-import { Box, CssBaseline, Divider, IconButton, List, Toolbar, Typography } from '@mui/material'
+import { Box, Container, CssBaseline, Divider, IconButton, List, Toolbar, Typography } from '@mui/material'
 import MuiAppBar, { type AppBarProps as MuiAppBarProps } from '@mui/material/AppBar'
 import MuiDrawer from '@mui/material/Drawer'
 import { styled } from '@mui/material/styles'
@@ -126,11 +126,13 @@ const App: React.FunctionComponent = () => {
               : theme.palette.grey[900],
           flexGrow: 1,
           height: '100vh',
-          overflow: 'auto'
+          overflow: 'hidden'
         }}
       >
         <Toolbar />
-        <Graph />
+        <Container disableGutters maxWidth={false} sx={{ height: '100%', position: 'relative' }}>
+          <Graph />
+        </Container>
       </Box>
     </Box>
   )

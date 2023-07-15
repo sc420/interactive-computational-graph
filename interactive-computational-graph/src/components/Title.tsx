@@ -1,5 +1,4 @@
-import React from 'react'
-import { AppBar, Toolbar, Typography, Link } from '@mui/material'
+import { AppBar, Link, Toolbar, Typography } from '@mui/material'
 
 const Title: React.FunctionComponent = () => {
   return (

@@ -1,38 +1,28 @@
-import { Box } from '@mui/material'
-import createEngine, { CanvasWidget, DefaultNodeModel, DiagramModel, type DefaultLinkModel } from '@projectstorm/react-diagrams'
+import { Box, Button } from '@mui/material'
+import { CanvasWidget } from '@projectstorm/react-diagrams'
+import React from 'react'
+import DiagramsHandler from '../diagrams/diagrams_handler'
 
 const Graph: React.FunctionComponent = () => {
-  // Create an instance of the engine
-  const engine = createEngine()
+  const diagramsHandlerRef: React.MutableRefObject<DiagramsHandler | null> = React.useRef(null)
+  const [isDiagramsReady, setDiagramsReady] = React.useState(false)
 
-  // Create a diagram model
-  const model = new DiagramModel()
+  React.useEffect(() => {
+    diagramsHandlerRef.current = new DiagramsHandler()
+    setDiagramsReady(true)
+  }, [])
 
-  // node 1
-  const node1 = new DefaultNodeModel({
-    name: 'Node 1',
-    color: 'rgb(0,192,255)'
-  })
-  node1.setPosition(100, 100)
-  const port1 = node1.addOutPort('Out')
+  const handleAddNode = (): void => {
+    const diagramsHandle = diagramsHandlerRef.current
+    if (diagramsHandle === null) {
+      return
+    }
 
-  // node 2
-  const node2 = new DefaultNodeModel({
-    name: 'Node 2',
-    color: 'rgb(0,192,255)'
-  })
-  node2.setPosition(200, 100)
-  const port2 = node2.addInPort('In')
+    diagramsHandle.addNode()
+    diagramsHandle.repaint()
+  }
 
-  // Link them and add a label to the link
-  const link = port1.link<DefaultLinkModel>(port2)
-
-  model.addAll(node1, node2, link)
-
-  engine.setModel(model)
-
-  console.log('Engine initialized')
-
+  // TODO(sc420): Remove the "Add Node" Button
   return (
     <Box
       sx={{
@@ -41,7 +31,10 @@ const Graph: React.FunctionComponent = () => {
         '> *': { height: '100%', width: '100%' }
       }}
     >
-      <CanvasWidget engine={engine} />
+      <Button variant="contained" onClick={handleAddNode} sx={{ width: 100, height: 50 }}>Add Node</Button>
+      {isDiagramsReady &&
+        diagramsHandlerRef.current != null &&
+        <CanvasWidget engine={diagramsHandlerRef.current.getEngine()} />}
     </Box >
   )
 }

@@ -1,12 +1,12 @@
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
 import MenuIcon from '@mui/icons-material/Menu'
-import { Box, Container, CssBaseline, Divider, IconButton, List, Toolbar, Typography } from '@mui/material'
+import { Box, CssBaseline, Divider, IconButton, List, Toolbar, Typography } from '@mui/material'
 import MuiAppBar, { type AppBarProps as MuiAppBarProps } from '@mui/material/AppBar'
 import MuiDrawer from '@mui/material/Drawer'
 import { styled } from '@mui/material/styles'
 import React from 'react'
 import FeatureNavigator from './components/FeatureNavigator'
-import GraphContainer from './containers/GraphContainer'
+import Graph from './components/Graph'
 
 const drawerWidth: number = 240
 
@@ -65,7 +65,7 @@ const App: React.FunctionComponent = () => {
   }
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box display="flex">
       <CssBaseline />
       <AppBar position="absolute" open={open}>
         <Toolbar
@@ -130,9 +130,7 @@ const App: React.FunctionComponent = () => {
         }}
       >
         <Toolbar />
-        <Container disableGutters maxWidth={false}>
-          <GraphContainer />
-        </Container>
+        <Graph />
       </Box>
     </Box>
   )

@@ -6,39 +6,43 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
 import { ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
 import React from 'react'
 
-const FeatureNavigator: React.FunctionComponent = () => {
+interface FeatureNavigatorProps {
+  selectedItem: string | null
+  onItemClick: (item: string | null) => void
+}
+
+interface FeatureItem {
+  id: string
+  text: string
+  icon: JSX.Element
+}
+
+const FeatureNavigator: React.FunctionComponent<FeatureNavigatorProps> = ({ selectedItem, onItemClick }) => {
+  const featureItems: FeatureItem[] = [
+    { id: 'dashboard', text: 'Dashboard', icon: <DashboardIcon /> },
+    { id: 'orders', text: 'Orders', icon: <ShoppingCartIcon /> },
+    { id: 'customers', text: 'Customers', icon: <PeopleIcon /> },
+    { id: 'reports', text: 'Reports', icon: <BarChartIcon /> },
+    { id: 'integrations', text: 'Integrations', icon: <LayersIcon /> }
+  ]
+
+  const handleItemClick = (id: string): void => {
+    const newSelectedItem = (id !== selectedItem) ? id : null
+    onItemClick(newSelectedItem)
+  }
+
   return (
     <React.Fragment>
-      <ListItemButton>
-        <ListItemIcon>
-          <DashboardIcon />
-        </ListItemIcon>
-        <ListItemText primary="Dashboard" />
-      </ListItemButton>
-      <ListItemButton>
-        <ListItemIcon>
-          <ShoppingCartIcon />
-        </ListItemIcon>
-        <ListItemText primary="Orders" />
-      </ListItemButton>
-      <ListItemButton>
-        <ListItemIcon>
-          <PeopleIcon />
-        </ListItemIcon>
-        <ListItemText primary="Customers" />
-      </ListItemButton>
-      <ListItemButton>
-        <ListItemIcon>
-          <BarChartIcon />
-        </ListItemIcon>
-        <ListItemText primary="Reports" />
-      </ListItemButton>
-      <ListItemButton>
-        <ListItemIcon>
-          <LayersIcon />
-        </ListItemIcon>
-        <ListItemText primary="Integrations" />
-      </ListItemButton>
+      {featureItems.map((item) => (
+        <ListItemButton
+          key={item.id}
+          selected={selectedItem === item.id}
+          onClick={() => { handleItemClick(item.id) }}
+        >
+          <ListItemIcon>{item.icon}</ListItemIcon>
+          <ListItemText primary={item.id} />
+        </ListItemButton>
+      ))}
     </React.Fragment>
   )
 }

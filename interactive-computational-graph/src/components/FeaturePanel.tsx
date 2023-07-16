@@ -1,11 +1,20 @@
 import { Box } from '@mui/material'
+import PropTypes from 'prop-types'
 
-const FeaturePanel: React.FunctionComponent = () => {
+interface FeaturePanelProps {
+  feature: string
+}
+
+const FeaturePanel: React.FunctionComponent<FeaturePanelProps> = ({ feature }) => {
   return (
     <Box sx={{ width: 250 }}>
-        FeaturePanel
+      FeaturePanel {feature}
     </Box>
   )
+}
+
+FeaturePanel.propTypes = {
+  feature: PropTypes.string.isRequired
 }
 
 export default FeaturePanel

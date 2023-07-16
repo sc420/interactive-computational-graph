@@ -1,12 +1,13 @@
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
 import MenuIcon from '@mui/icons-material/Menu'
-import { Box, Container, CssBaseline, Divider, IconButton, List, Toolbar, Typography } from '@mui/material'
+import { Box, Container, CssBaseline, Divider, Grid, IconButton, List, Toolbar, Typography } from '@mui/material'
 import MuiAppBar, { type AppBarProps as MuiAppBarProps } from '@mui/material/AppBar'
 import MuiDrawer from '@mui/material/Drawer'
 import { styled } from '@mui/material/styles'
 import React from 'react'
 import FeatureNavigator from './components/FeatureNavigator'
 import GraphContainer from './containers/GraphContainer'
+import FeaturePanel from './components/FeaturePanel'
 
 const drawerWidth: number = 240
 
@@ -62,8 +63,14 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 
 const App: React.FunctionComponent = () => {
   const [open, setOpen] = React.useState(true)
+  const [selectedFeature, setSelectedFeature] = React.useState<string | null>('dashboard')
+
   const toggleDrawer = (): void => {
     setOpen(!open)
+  }
+
+  const toggleFeature = (feature: string | null): void => {
+    setSelectedFeature(feature)
   }
 
   return (
@@ -116,7 +123,7 @@ const App: React.FunctionComponent = () => {
         </Toolbar>
         <Divider />
         <List component="nav">
-          <FeatureNavigator />
+          <FeatureNavigator selectedItem={selectedFeature} onItemClick={toggleFeature} />
         </List>
       </Drawer>
       <Box
@@ -133,7 +140,16 @@ const App: React.FunctionComponent = () => {
       >
         <Toolbar />
         <Container disableGutters maxWidth={false} sx={{ height: '100%', position: 'relative' }}>
-          <GraphContainer />
+          <Grid container direction="row" height="100%">
+            {selectedFeature !== null &&
+              <Grid item borderRight="1px solid" borderColor="divider">
+                <FeaturePanel feature={selectedFeature} />
+              </Grid>
+            }
+            <Grid item flexGrow={1}>
+              <GraphContainer />
+            </Grid>
+          </Grid>
         </Container>
       </Box>
     </Box>

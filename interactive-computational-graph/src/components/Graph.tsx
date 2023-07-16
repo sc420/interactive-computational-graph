@@ -33,7 +33,7 @@ const Graph: React.FunctionComponent = () => {
     >
       <Button variant="contained" onClick={handleAddNode} sx={{ width: 100, height: 50 }}>Add Node</Button>
       {isDiagramsReady &&
-        diagramsHandlerRef.current != null &&
+        diagramsHandlerRef.current !== null &&
         <CanvasWidget engine={diagramsHandlerRef.current.getEngine()} />}
     </Box >
   )

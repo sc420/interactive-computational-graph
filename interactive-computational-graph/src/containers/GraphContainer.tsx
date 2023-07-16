@@ -6,10 +6,10 @@ const GraphContainer: React.FunctionComponent = () => {
   return (
     <Grid container direction="column" height="100%">
       <Grid item>
-        <GraphControl></GraphControl>
+        <GraphControl />
       </Grid>
       <Grid item flexGrow={1}>
-        <Graph></Graph>
+        <Graph />
       </Grid>
     </Grid>
   )

@@ -3,8 +3,8 @@ import DashboardIcon from '@mui/icons-material/Dashboard'
 import LayersIcon from '@mui/icons-material/Layers'
 import PeopleIcon from '@mui/icons-material/People'
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
-import { ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
-import React from 'react'
+import { List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
+import type React from 'react'
 
 interface FeatureNavigatorProps {
   selectedItem: string | null
@@ -32,7 +32,7 @@ const FeatureNavigator: React.FunctionComponent<FeatureNavigatorProps> = ({ sele
   }
 
   return (
-    <React.Fragment>
+    <List component="nav">
       {featureItems.map((item) => (
         <ListItemButton
           key={item.id}
@@ -43,7 +43,7 @@ const FeatureNavigator: React.FunctionComponent<FeatureNavigatorProps> = ({ sele
           <ListItemText primary={item.id} />
         </ListItemButton>
       ))}
-    </React.Fragment>
+    </List>
   )
 }
 

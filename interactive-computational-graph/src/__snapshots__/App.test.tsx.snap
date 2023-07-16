@@ -2,13 +2,13 @@
 
 exports[`renders the app 1`] = `
 <div
-  className="MuiBox-root css-k008qs"
+  className="MuiBox-root css-qy22cp"
 >
   <header
-    className="MuiPaper-root MuiPaper-elevation MuiPaper-elevation4 MuiAppBar-root MuiAppBar-colorPrimary MuiAppBar-positionAbsolute css-n7rtur-MuiPaper-root-MuiAppBar-root"
+    className="MuiPaper-root MuiPaper-elevation MuiPaper-elevation4 MuiAppBar-root MuiAppBar-colorPrimary MuiAppBar-positionAbsolute css-1hc774f-MuiPaper-root-MuiAppBar-root"
   >
     <div
-      className="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular css-m9mp0w-MuiToolbar-root"
+      className="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular css-bb1jkp-MuiToolbar-root"
     >
       <button
         aria-label="open drawer"
@@ -335,121 +335,116 @@ exports[`renders the app 1`] = `
     </div>
   </div>
   <main
-    className="MuiBox-root css-1tz6kl2"
+    className="MuiBox-root css-i9gxme"
   >
     <div
       className="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular css-hyum1k-MuiToolbar-root"
     />
     <div
-      className="MuiContainer-root MuiContainer-disableGutters css-1u3b1zp-MuiContainer-root"
+      className="MuiGrid-root MuiGrid-container css-iinpw2-MuiGrid-root"
     >
       <div
-        className="MuiGrid-root MuiGrid-container css-1sgmr83-MuiGrid-root"
+        className="MuiGrid-root MuiGrid-item css-4m78hi-MuiGrid-root"
       >
         <div
-          className="MuiGrid-root MuiGrid-item css-4m78hi-MuiGrid-root"
+          className="MuiBox-root css-1hskriy"
         >
-          <div
-            className="MuiBox-root css-1hskriy"
-          >
-            FeaturePanel 
-            dashboard
-          </div>
+          FeaturePanel 
+          dashboard
         </div>
+      </div>
+      <div
+        className="MuiGrid-root MuiGrid-item css-qzr350-MuiGrid-root"
+      >
         <div
-          className="MuiGrid-root MuiGrid-item css-4pkl32-MuiGrid-root"
+          className="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-column css-x795x0-MuiGrid-root"
         >
           <div
-            className="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-column css-1mm5gp4-MuiGrid-root"
+            className="MuiGrid-root MuiGrid-item css-13i4rnv-MuiGrid-root"
           >
-            <div
-              className="MuiGrid-root MuiGrid-item css-13i4rnv-MuiGrid-root"
+            <header
+              className="MuiPaper-root MuiPaper-elevation MuiPaper-elevation4 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-v526sl-MuiPaper-root-MuiAppBar-root"
             >
-              <header
-                className="MuiPaper-root MuiPaper-elevation MuiPaper-elevation4 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-v526sl-MuiPaper-root-MuiAppBar-root"
+              <div
+                className="MuiToolbar-root MuiToolbar-gutters MuiToolbar-dense css-10ltm04-MuiToolbar-root"
               >
                 <div
-                  className="MuiToolbar-root MuiToolbar-gutters MuiToolbar-dense css-10ltm04-MuiToolbar-root"
+                  className="MuiFormGroup-root css-dmmspl-MuiFormGroup-root"
                 >
-                  <div
-                    className="MuiFormGroup-root css-dmmspl-MuiFormGroup-root"
+                  <label
+                    className="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
                   >
-                    <label
-                      className="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
+                    <span
+                      className="MuiSwitch-root MuiSwitch-sizeMedium css-julti5-MuiSwitch-root"
                     >
                       <span
-                        className="MuiSwitch-root MuiSwitch-sizeMedium css-julti5-MuiSwitch-root"
+                        className="MuiButtonBase-root MuiSwitch-switchBase MuiSwitch-colorPrimary PrivateSwitchBase-root MuiSwitch-switchBase MuiSwitch-colorPrimary Mui-checked css-5ryogn-MuiButtonBase-root-MuiSwitch-switchBase"
+                        onBlur={[Function]}
+                        onContextMenu={[Function]}
+                        onDragLeave={[Function]}
+                        onFocus={[Function]}
+                        onKeyDown={[Function]}
+                        onKeyUp={[Function]}
+                        onMouseDown={[Function]}
+                        onMouseLeave={[Function]}
+                        onMouseUp={[Function]}
+                        onTouchEnd={[Function]}
+                        onTouchMove={[Function]}
+                        onTouchStart={[Function]}
+                        tabIndex={null}
                       >
+                        <input
+                          className="PrivateSwitchBase-input MuiSwitch-input css-1m9pwf3"
+                          defaultChecked={true}
+                          onChange={[Function]}
+                          required={false}
+                          type="checkbox"
+                        />
                         <span
-                          className="MuiButtonBase-root MuiSwitch-switchBase MuiSwitch-colorPrimary PrivateSwitchBase-root MuiSwitch-switchBase MuiSwitch-colorPrimary Mui-checked css-5ryogn-MuiButtonBase-root-MuiSwitch-switchBase"
-                          onBlur={[Function]}
-                          onContextMenu={[Function]}
-                          onDragLeave={[Function]}
-                          onFocus={[Function]}
-                          onKeyDown={[Function]}
-                          onKeyUp={[Function]}
-                          onMouseDown={[Function]}
-                          onMouseLeave={[Function]}
-                          onMouseUp={[Function]}
-                          onTouchEnd={[Function]}
-                          onTouchMove={[Function]}
-                          onTouchStart={[Function]}
-                          tabIndex={null}
-                        >
-                          <input
-                            className="PrivateSwitchBase-input MuiSwitch-input css-1m9pwf3"
-                            defaultChecked={true}
-                            onChange={[Function]}
-                            required={false}
-                            type="checkbox"
-                          />
-                          <span
-                            className="MuiSwitch-thumb css-jsexje-MuiSwitch-thumb"
-                          />
-                        </span>
-                        <span
-                          className="MuiSwitch-track css-1yjjitx-MuiSwitch-track"
+                          className="MuiSwitch-thumb css-jsexje-MuiSwitch-thumb"
                         />
                       </span>
                       <span
-                        className="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-ahj2mt-MuiTypography-root"
-                      >
-                        Reverse-Mode
-                      </span>
-                    </label>
-                  </div>
+                        className="MuiSwitch-track css-1yjjitx-MuiSwitch-track"
+                      />
+                    </span>
+                    <span
+                      className="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-ahj2mt-MuiTypography-root"
+                    >
+                      Reverse-Mode
+                    </span>
+                  </label>
                 </div>
-              </header>
-            </div>
-            <div
-              className="MuiGrid-root MuiGrid-item css-4pkl32-MuiGrid-root"
-            >
-              <div
-                className="MuiBox-root css-ukee57"
-              >
-                <button
-                  className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-gw8g6a-MuiButtonBase-root-MuiButton-root"
-                  disabled={false}
-                  onBlur={[Function]}
-                  onClick={[Function]}
-                  onContextMenu={[Function]}
-                  onDragLeave={[Function]}
-                  onFocus={[Function]}
-                  onKeyDown={[Function]}
-                  onKeyUp={[Function]}
-                  onMouseDown={[Function]}
-                  onMouseLeave={[Function]}
-                  onMouseUp={[Function]}
-                  onTouchEnd={[Function]}
-                  onTouchMove={[Function]}
-                  onTouchStart={[Function]}
-                  tabIndex={0}
-                  type="button"
-                >
-                  Add Node
-                </button>
               </div>
-            </div>
+            </header>
+          </div>
+          <div
+            className="MuiGrid-root MuiGrid-item css-uzsve4-MuiGrid-root"
+          >
+            <button
+              className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-gw8g6a-MuiButtonBase-root-MuiButton-root"
+              disabled={false}
+              onBlur={[Function]}
+              onClick={[Function]}
+              onContextMenu={[Function]}
+              onDragLeave={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyUp={[Function]}
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              onTouchEnd={[Function]}
+              onTouchMove={[Function]}
+              onTouchStart={[Function]}
+              tabIndex={0}
+              type="button"
+            >
+              Add Node
+            </button>
+            <div
+              className="MuiBox-root css-1npatzm"
+            />
           </div>
         </div>
       </div>

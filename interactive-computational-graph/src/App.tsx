@@ -18,7 +18,7 @@ const App: React.FunctionComponent = () => {
   }
 
   return (
-    <Box display="flex">
+    <Box display='flex' height='100vh' width='100vw'>
       <CssBaseline />
       {/* Title */}
       <Title isSidebarOpen={isSidebarOpen} onToggleSidebar={toggleSidebar} />
@@ -27,7 +27,9 @@ const App: React.FunctionComponent = () => {
         <FeatureNavigator selectedItem={selectedFeature} onItemClick={toggleFeature} />
       </Sidebar>
       {/* Main */}
-      <MainContainer selectedFeature={selectedFeature} />
+      <Box component='main' flexGrow={1}>
+        <MainContainer selectedFeature={selectedFeature} />
+      </Box>
     </Box>
   )
 }

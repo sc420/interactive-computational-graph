@@ -4,13 +4,13 @@ import GraphControl from '../components/GraphControl'
 
 const GraphContainer: React.FunctionComponent = () => {
   return (
-    <Grid container direction="column" height="100%">
+    <Grid container direction='column' flexGrow={1} p={1}>
       {/* Graph control */}
       <Grid item>
         <GraphControl />
       </Grid>
       {/* Graph */}
-      <Grid item flexGrow={1}>
+      <Grid item display='flex' flexGrow={1} sx={{ boxShadow: (theme) => theme.shadows[3] }}>
         <Graph />
       </Grid>
     </Grid>

@@ -24,18 +24,21 @@ const Graph: React.FunctionComponent = () => {
 
   // TODO(sc420): Remove the "Add Node" Button
   return (
-    <Box
-      sx={{
-        backgroundColor: 'lightgray',
-        height: '100%',
-        '> *': { height: '100%', width: '100%' }
-      }}
-    >
+    <React.Fragment>
       <Button variant="contained" onClick={handleAddNode} sx={{ width: 100, height: 50 }}>Add Node</Button>
-      {isDiagramsReady &&
-        diagramsHandlerRef.current !== null &&
-        <CanvasWidget engine={diagramsHandlerRef.current.getEngine()} />}
-    </Box >
+      <Box
+        display="flex"
+        flexGrow={1}
+        sx={{
+          backgroundColor: 'lightgray',
+          '> *': { flexGrow: 1 }
+        }}
+      >
+        {isDiagramsReady &&
+          diagramsHandlerRef.current !== null &&
+          <CanvasWidget engine={diagramsHandlerRef.current.getEngine()} />}
+      </Box >
+    </React.Fragment>
   )
 }
 

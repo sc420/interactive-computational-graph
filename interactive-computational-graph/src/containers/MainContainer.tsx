@@ -1,6 +1,8 @@
-import { Box, Container, Grid, Toolbar } from '@mui/material'
+import { Grid, Toolbar } from '@mui/material'
 import PropTypes from 'prop-types'
+import React from 'react'
 import FeaturePanel from '../components/FeaturePanel'
+import { TITLE_HEIGHT } from '../constants'
 import GraphContainer from './GraphContainer'
 
 interface MainContainerProps {
@@ -9,23 +11,21 @@ interface MainContainerProps {
 
 const MainContainer: React.FunctionComponent<MainContainerProps> = ({ selectedFeature }) => {
   return (
-    <Box component="main" flexGrow={1} height="100vh" overflow="hidden">
+    <React.Fragment>
       <Toolbar />
-      <Container disableGutters maxWidth={false} sx={{ height: '100%', position: 'relative' }}>
-        <Grid container direction="row" height="100%">
-          {/* Feature panel */}
-          {selectedFeature !== null &&
-            <Grid item borderRight="1px solid" borderColor="divider">
-              <FeaturePanel feature={selectedFeature} />
-            </Grid>
-          }
-          {/* Graph container */}
-          <Grid item flexGrow={1}>
-            <GraphContainer />
+      <Grid container direction="row" sx={{ height: `calc(100% - ${TITLE_HEIGHT}px)` }}>
+        {/* Feature panel */}
+        {selectedFeature !== null &&
+          <Grid item borderRight="1px solid" borderColor="divider">
+            <FeaturePanel feature={selectedFeature} />
           </Grid>
+        }
+        {/* Graph container */}
+        <Grid item display="flex" flexGrow={1}>
+          <GraphContainer />
         </Grid>
-      </Container>
-    </Box>
+      </Grid>
+    </React.Fragment>
   )
 }
 

@@ -3,7 +3,7 @@ import { IconButton, Toolbar, Typography } from '@mui/material'
 import MuiAppBar, { type AppBarProps as MuiAppBarProps } from '@mui/material/AppBar'
 import { styled } from '@mui/material/styles'
 import type React from 'react'
-import { SIDEBAR_EXPANDED_WIDTH } from '../constants'
+import { TITLE_HEIGHT, SIDEBAR_EXPANDED_WIDTH } from '../constants'
 
 interface TitleProps {
   isSidebarOpen: boolean
@@ -23,6 +23,7 @@ const AppBar = styled(MuiAppBar, {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen
   }),
+  height: `${TITLE_HEIGHT}px`, // make it the same height regardless of the screen width
   ...((open === true) && {
     marginLeft: SIDEBAR_EXPANDED_WIDTH,
     width: `calc(100% - ${SIDEBAR_EXPANDED_WIDTH}px)`,
@@ -38,7 +39,8 @@ const Title: React.FunctionComponent<TitleProps> = ({ isSidebarOpen, onToggleSid
     <AppBar position="absolute" open={isSidebarOpen}>
       <Toolbar
         sx={{
-          pr: '24px' // keep right padding when drawer closed
+          pr: '24px', // keep right padding when drawer closed
+          minHeight: `${TITLE_HEIGHT}px !important` // keep the typography at the center vertically
         }}
       >
         <IconButton

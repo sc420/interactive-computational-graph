@@ -335,7 +335,7 @@ exports[`renders the app 1`] = `
     </div>
   </div>
   <main
-    className="MuiBox-root css-187of58"
+    className="MuiBox-root css-1tz6kl2"
   >
     <div
       className="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular css-hyum1k-MuiToolbar-root"

@@ -6,11 +6,11 @@ import Title from './components/Title'
 import MainContainer from './containers/MainContainer'
 
 const App: React.FunctionComponent = () => {
-  const [open, setOpen] = React.useState(true)
+  const [isSidebarOpen, setSidebarOpen] = React.useState(true)
   const [selectedFeature, setSelectedFeature] = React.useState<string | null>('dashboard')
 
-  const toggleDrawer = (): void => {
-    setOpen(!open)
+  const toggleSidebar = (): void => {
+    setSidebarOpen(!isSidebarOpen)
   }
 
   const toggleFeature = (feature: string | null): void => {
@@ -21,9 +21,9 @@ const App: React.FunctionComponent = () => {
     <Box display="flex">
       <CssBaseline />
       {/* Title */}
-      <Title isSidebarOpen={open} onToggleSidebar={toggleDrawer} />
+      <Title isSidebarOpen={isSidebarOpen} onToggleSidebar={toggleSidebar} />
       {/* Sidebar */}
-      <Sidebar isSidebarOpen={open} onToggleSidebar={toggleDrawer}>
+      <Sidebar isSidebarOpen={isSidebarOpen} onToggleSidebar={toggleSidebar}>
         <FeatureNavigator selectedItem={selectedFeature} onItemClick={toggleFeature} />
       </Sidebar>
       {/* Main */}

@@ -11,6 +11,7 @@ If you use VSCode, please open the subdirectory `./interactive-computational-gra
 ### Recommended VSCode Extensions
 
 - Code Spell Checker: Checks common spelling errors
-- ESLint: Lint Typescript files
-- Stylelint: Lint CSS files
-- Markdown Preview Mermaid Support: Preview Mermaid graphs in Markdown files
+- ESLint: Lints Typescript files
+- Stylelint: Lints CSS files
+- PrettierL: Formats Typescript files
+- Markdown Preview Mermaid Support: Previews Mermaid graphs in Markdown files

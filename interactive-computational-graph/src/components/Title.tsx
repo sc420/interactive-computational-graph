@@ -1,46 +1,51 @@
-import MenuIcon from '@mui/icons-material/Menu'
-import { IconButton, Toolbar, Typography } from '@mui/material'
-import MuiAppBar, { type AppBarProps as MuiAppBarProps } from '@mui/material/AppBar'
-import { styled } from '@mui/material/styles'
-import type React from 'react'
-import { TITLE_HEIGHT, SIDEBAR_EXPANDED_WIDTH } from '../constants'
+import MenuIcon from "@mui/icons-material/Menu";
+import { IconButton, Toolbar, Typography } from "@mui/material";
+import MuiAppBar, {
+  type AppBarProps as MuiAppBarProps,
+} from "@mui/material/AppBar";
+import { styled } from "@mui/material/styles";
+import type React from "react";
+import { SIDEBAR_EXPANDED_WIDTH, TITLE_HEIGHT } from "../constants";
 
 interface TitleProps {
-  isSidebarOpen: boolean
-  onToggleSidebar: () => void
+  isSidebarOpen: boolean;
+  onToggleSidebar: () => void;
 }
 
 interface AppBarProps extends MuiAppBarProps {
-  open?: boolean
+  open?: boolean;
 }
 
 // Reference: https://github.com/mui/material-ui/tree/v5.14.0/docs/data/material/getting-started/templates/dashboard
 const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== 'open'
+  shouldForwardProp: (prop) => prop !== "open",
 })<AppBarProps>(({ theme, open }) => ({
   zIndex: theme.zIndex.drawer + 1,
-  transition: theme.transitions.create(['width', 'margin'], {
+  transition: theme.transitions.create(["width", "margin"], {
     easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen
+    duration: theme.transitions.duration.leavingScreen,
   }),
   height: `${TITLE_HEIGHT}px`, // make it the same height regardless of the screen width
-  ...((open === true) && {
+  ...(open === true && {
     marginLeft: SIDEBAR_EXPANDED_WIDTH,
     width: `calc(100% - ${SIDEBAR_EXPANDED_WIDTH}px)`,
-    transition: theme.transitions.create(['width', 'margin'], {
+    transition: theme.transitions.create(["width", "margin"], {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen
-    })
-  })
-}))
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  }),
+}));
 
-const Title: React.FunctionComponent<TitleProps> = ({ isSidebarOpen, onToggleSidebar }) => {
+const Title: React.FunctionComponent<TitleProps> = ({
+  isSidebarOpen,
+  onToggleSidebar,
+}) => {
   return (
     <AppBar position="absolute" open={isSidebarOpen}>
       <Toolbar
         sx={{
-          pr: '24px', // keep right padding when drawer closed
-          minHeight: `${TITLE_HEIGHT}px !important` // keep the typography at the center vertically
+          pr: "24px", // keep right padding when drawer closed
+          minHeight: `${TITLE_HEIGHT}px !important`, // keep the typography at the center vertically
         }}
       >
         <IconButton
@@ -49,8 +54,8 @@ const Title: React.FunctionComponent<TitleProps> = ({ isSidebarOpen, onToggleSid
           aria-label="open drawer"
           onClick={onToggleSidebar}
           sx={{
-            marginRight: '36px',
-            ...(isSidebarOpen && { display: 'none' })
+            marginRight: "36px",
+            ...(isSidebarOpen && { display: "none" }),
           }}
         >
           <MenuIcon />
@@ -64,12 +69,10 @@ const Title: React.FunctionComponent<TitleProps> = ({ isSidebarOpen, onToggleSid
         >
           Interactive Computational Graph
         </Typography>
-        <IconButton color="inherit">
-          GitHub
-        </IconButton>
+        <IconButton color="inherit">GitHub</IconButton>
       </Toolbar>
     </AppBar>
-  )
-}
+  );
+};
 
-export default Title
+export default Title;

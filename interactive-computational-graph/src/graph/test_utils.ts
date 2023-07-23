@@ -34,8 +34,8 @@ const SUM_DFDY_CODE = `\
  *     "v2": { "id": "v2", "value": 3 },
  *   }
  * }
- * @param y Node data of y. Example data for product:
- * { "id": "v2", "value": 3 }
+ * @param y Node data of y. y will not be the current node. Example data for
+ * product: { "id": "v2", "value": 3 }
  * @returns Evaluated derivative df/dy. For example, 1.0 given the above example
  * data because df/dy = v1.value * v3.value.
  */
@@ -83,8 +83,8 @@ const PRODUCT_DFDY_CODE = `\
  *     "v2": { "id": "v2", "value": 3 },
  *   }
  * }
- * @param y Node data of y. Example data for product:
- * { "id": "v2", "value": 3 }
+ * @param y Node data of y. y will not be the current node. Example data for
+ * product: { "id": "v2", "value": 3 }
  * @returns Evaluated derivative df/dy. For example, 1.0 given the above example
  * data because df/dy = v1.value * v3.value.
  */
@@ -139,12 +139,15 @@ const IDENTITY_DFDY_CODE = `\
  *     "v2": { "id": "v2", "value": 3 },
  *   }
  * }
- * @param y Node data of y. Example data for product:
- * { "id": "v2", "value": 3 }
+ * @param y Node data of y. y will not be the current node. Example data for
+ * product: { "id": "v2", "value": 3 }
  * @returns Evaluated derivative df/dy. For example, 1.0 given the above example
  * data because df/dy = v1.value * v3.value.
  */
 function dfdy(portToNodes, y) {
+  if (!(y.id in portToNodes.x)) {
+    return 0;
+  }
   return 1;
 }
 `;

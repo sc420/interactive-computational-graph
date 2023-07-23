@@ -13,7 +13,7 @@ class Graph {
   getOneNode(nodeId: string): GraphNode {
     const node = this.nodeIdToNodes.get(nodeId);
     if (node === undefined) {
-      throw new Error(`Node ID ${nodeId} doesn't exist`);
+      throw new Error(`Node ${nodeId} doesn't exist`);
     }
     return node;
   }
@@ -25,7 +25,7 @@ class Graph {
   addNode(node: GraphNode): void {
     const nodeId = node.getId();
     if (this.hasNode(nodeId)) {
-      throw new Error(`Node ID ${nodeId} already exists`);
+      throw new Error(`Node ${nodeId} already exists`);
     }
     this.nodeIdToNodes.set(node.getId(), node);
   }
@@ -33,15 +33,15 @@ class Graph {
   removeNode(nodeId: string): void {
     const success = this.nodeIdToNodes.delete(nodeId);
     if (!success) {
-      throw new Error(`Node ID ${nodeId} doesn't exist`);
+      throw new Error(`Node ${nodeId} doesn't exist`);
     }
   }
 
-  connect(nodeId1: string, nodeId2: string): void {
+  connect(node1Id: string, node2Id: string, node2PortId: string): void {
     // TODO(sc420)
   }
 
-  disconnect(nodeId1: string, nodeId2: string): void {
+  disconnect(node1Id: string, node2Id: string, node2PortId: string): void {
     // TODO(sc420)
   }
 

@@ -44,9 +44,11 @@ class Operation {
         `Error occurred when running eval with the user code: ${error.message}`,
       );
       console.error(
-        `Please make sure the full code is executable: ${fullCode}`,
+        `Please make sure the following code is executable:\n${fullCode}`,
       );
-      console.error(`Stack trace: ${error.stack?.toString() ?? "Unavailable"}`);
+      console.error(
+        `Stack trace:\n${error.stack?.toString() ?? "Unavailable"}`,
+      );
       throw error;
     }
   }

@@ -155,9 +155,9 @@ describe("sequential testing to check output behavior", () => {
 
     expect(nodeRelationship.getOutputNodes()).toEqual([]);
   });
-});
 
-function getDummyOperationNode(id: string): OperationNode {
-  const op = new Operation("", "");
-  return new OperationNode(id, [new Port("in1", false)], op);
-}
+  function getDummyOperationNode(id: string): OperationNode {
+    const op = new Operation("", "");
+    return new OperationNode(id, [new Port("in1", false)], op);
+  }
+});

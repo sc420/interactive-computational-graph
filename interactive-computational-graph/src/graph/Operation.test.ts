@@ -1,7 +1,7 @@
 import Operation from "./Operation";
 import { type NodeData, type PortToNodesData } from "./PortToNodesData";
 
-const SUM_F_CODE = `
+const SUM_F_CODE = `\
 /**
  * Calculates f(...).
  * @param {PortToNodesData} portToNodes Object with port ID as the keys and node
@@ -25,7 +25,7 @@ function f(portToNodes) {
 }
 `;
 
-const SUM_DFDY_CODE = `
+const SUM_DFDY_CODE = `\
 /**
  * Calculates df/dy.
  * @param portToNodes Object with port ID as the keys and node
@@ -50,7 +50,7 @@ function dfdy(portToNodes, y) {
 }
 `;
 
-const PRODUCT_F_CODE = `
+const PRODUCT_F_CODE = `\
 /**
  * Calculates f(...).
  * @param {PortToNodesData} portToNodes Object with port ID as the keys and node
@@ -74,7 +74,7 @@ function f(portToNodes) {
 }
 `;
 
-const PRODUCT_DFDY_CODE = `
+const PRODUCT_DFDY_CODE = `\
 /**
  * Calculates df/dy.
  * @param portToNodes Object with port ID as the keys and node
@@ -106,7 +106,7 @@ function dfdy(portToNodes, y) {
 }
 `;
 
-const BROKEN_SUM_F_CODE = `
+const BROKEN_SUM_F_CODE = `\
 function f(portToNodes) {
   let sum = 0;
   portToNodes.x_i.forEach((nodeData) => {
@@ -116,7 +116,7 @@ function f(portToNodes) {
 }
 `;
 
-const WRONG_RETURN_TYPE_SUM_DFDY_CODE = `
+const WRONG_RETURN_TYPE_SUM_DFDY_CODE = `\
 function dfdy(portToNodes, y) {
   return "abc";
 }
@@ -260,9 +260,11 @@ describe("evaluating problematic code", () => {
     expect(mockConsole.mock.calls[0][0]).toEqual(
       "Error occurred when running eval with the user code: portToNodes.x_i.forEach is not a function",
     );
-    expect(mockConsole.mock.calls[1][0]).toMatch(
-      /^Please make sure the following code is executable:\n/,
-    );
+    expect(mockConsole.mock.calls[1][0]).toEqual(`\
+Please make sure the following code is executable:
+${BROKEN_SUM_F_CODE}
+f(${JSON.stringify(portToNodesData)})
+`);
     expect(mockConsole.mock.calls[2][0]).toMatch(/^Stack trace:\n/);
   });
 

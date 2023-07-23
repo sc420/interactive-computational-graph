@@ -1,6 +1,10 @@
 import { type NodeData, type PortToNodesData } from "./PortToNodesData";
 
 class Operation {
+  static readonly F_FN_NAME = "f";
+
+  static readonly DFDY_FN_NAME = "dfdy";
+
   private readonly fCode: string;
 
   private readonly dfdyCode: string;
@@ -13,19 +17,26 @@ class Operation {
   evalF(portToNodesData: PortToNodesData): number {
     const arg1 = JSON.stringify(portToNodesData);
     const args: string[] = [arg1];
-    return Operation.evalCode(this.fCode, args);
+    return Operation.evalCode(this.fCode, Operation.F_FN_NAME, args);
   }
 
   evalDfdy(portToNodesData: PortToNodesData, yNodeData: NodeData): number {
     const arg1 = JSON.stringify(portToNodesData);
     const arg2 = JSON.stringify(yNodeData);
     const args: string[] = [arg1, arg2];
-    return Operation.evalCode(this.dfdyCode, args);
+    return Operation.evalCode(this.dfdyCode, Operation.DFDY_FN_NAME, args);
   }
 
-  private static evalCode(code: string, args: string[]): number {
+  private static evalCode(
+    code: string,
+    fnName: string,
+    args: string[],
+  ): number {
     const argsSeparatedByComma = args.join(", ");
-    const fullCode = `(${code})(${argsSeparatedByComma})`;
+    const fullCode = `\
+${code}
+${fnName}(${argsSeparatedByComma})
+`;
     try {
       // eslint-disable-next-line no-eval
       const result = eval(fullCode);

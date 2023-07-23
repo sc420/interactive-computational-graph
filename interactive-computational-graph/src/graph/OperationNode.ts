@@ -89,7 +89,7 @@ class OperationNode implements GraphNode {
   }
 
   private buildNodeData(node: GraphNode): NodeData {
-    return { value: node.getValue() };
+    return { id: node.getId(), value: node.getValue() };
   }
 }
 

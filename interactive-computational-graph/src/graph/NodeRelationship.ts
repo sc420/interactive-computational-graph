@@ -1,22 +1,27 @@
 import type GraphNode from "./GraphNode";
 import Port from "./Port";
 
+interface PortData {
+  port: Port;
+  nodeIdToNodes: Map<string, GraphNode>;
+}
+
 class NodeRelationship {
-  private readonly inputPortToNodes: Map<string, Map<string, GraphNode>> =
-    new Map<string, Map<string, GraphNode>>();
+  private readonly inputPortIdToPortData: Map<string, PortData> = new Map<
+    string,
+    PortData
+  >();
+
+  private readonly outputPortIdToPortData: Map<string, PortData> = new Map<
+    string,
+    PortData
+  >();
 
   public readonly outputPort: Port = new Port("output", true);
 
-  private readonly outputNodes: Map<string, GraphNode> = new Map<
-    string,
-    GraphNode
-  >();
-
   constructor(inputPorts: Port[]) {
-    inputPorts.forEach((inputPort) => {
-      const nodes = new Map<string, GraphNode>();
-      this.inputPortToNodes.set(inputPort.getId(), nodes);
-    });
+    this.initInputPortIdToPortData(inputPorts);
+    this.initOutputPortIdToPortData();
   }
 
   isInputPortEmpty(portId: string): boolean {
@@ -25,12 +30,16 @@ class NodeRelationship {
   }
 
   isOutputPortEmpty(): boolean {
-    return this.outputNodes.size === 0;
+    const outputNodes = this.getOutputNodes();
+    return outputNodes.length === 0;
   }
 
   getInputNodesByPort(portId: string): GraphNode[] {
-    const inputNodes = this.getInputNodesAsMapByPort(portId);
-    return Array.from(inputNodes.values());
+    const inputPortData = this.getPortDataByPort(
+      this.inputPortIdToPortData,
+      portId,
+    );
+    return Array.from(inputPortData.nodeIdToNodes.values());
   }
 
   getOneInputNodeByPort(portId: string): GraphNode {
@@ -42,7 +51,11 @@ class NodeRelationship {
   }
 
   getOutputNodes(): GraphNode[] {
-    return Array.from(this.outputNodes.values());
+    const outputPortData = this.getPortDataByPort(
+      this.outputPortIdToPortData,
+      this.outputPort.getId(),
+    );
+    return Array.from(outputPortData.nodeIdToNodes.values());
   }
 
   hasInputNodeByPort(portId: string, nodeId: string): boolean {
@@ -51,45 +64,89 @@ class NodeRelationship {
   }
 
   addInputNodeByPort(portId: string, inputNode: GraphNode): void {
-    const inputNodes = this.getInputNodesAsMapByPort(portId);
-    if (inputNodes.has(inputNode.getId())) {
+    const inputPortData = this.getPortDataByPort(
+      this.inputPortIdToPortData,
+      portId,
+    );
+
+    if (inputPortData.nodeIdToNodes.has(inputNode.getId())) {
       throw new Error(
         `Input node ${inputNode.getId()} already exists by port ${portId}`,
       );
     }
-    inputNodes.set(inputNode.getId(), inputNode);
+
+    if (
+      inputPortData.nodeIdToNodes.size >= 1 &&
+      !inputPortData.port.isAllowMultiEdges()
+    ) {
+      throw new Error(
+        `Input port ${inputPortData.port.getId()} doesn't allow multiple edges`,
+      );
+    }
+
+    inputPortData.nodeIdToNodes.set(inputNode.getId(), inputNode);
   }
 
   addOutputNode(outputNode: GraphNode): void {
-    if (this.outputNodes.has(outputNode.getId())) {
+    const outputPortData = this.getPortDataByPort(
+      this.outputPortIdToPortData,
+      this.outputPort.getId(),
+    );
+    if (outputPortData.nodeIdToNodes.has(outputNode.getId())) {
       throw new Error(`Output node ${outputNode.getId()} already exists`);
     }
-    this.outputNodes.set(outputNode.getId(), outputNode);
+    outputPortData.nodeIdToNodes.set(outputNode.getId(), outputNode);
   }
 
-  removeInputNodeByPort(portId: string, inputNode: GraphNode): void {
-    const inputNodes = this.getInputNodesAsMapByPort(portId);
-    const success = inputNodes.delete(inputNode.getId());
+  removeInputNodeByPort(portId: string, nodeId: string): void {
+    const inputPortData = this.getPortDataByPort(
+      this.inputPortIdToPortData,
+      portId,
+    );
+    const success = inputPortData.nodeIdToNodes.delete(nodeId);
     if (!success) {
-      throw new Error(
-        `Input node ${inputNode.getId()} doesn't exist by port ${portId}`,
-      );
+      throw new Error(`Input node ${nodeId} doesn't exist by port ${portId}`);
     }
   }
 
-  removeOutputNode(outputNode: GraphNode): void {
-    const success = this.outputNodes.delete(outputNode.getId());
+  removeOutputNode(nodeId: string): void {
+    const outputPortData = this.getPortDataByPort(
+      this.outputPortIdToPortData,
+      this.outputPort.getId(),
+    );
+    const success = outputPortData.nodeIdToNodes.delete(nodeId);
     if (!success) {
-      throw new Error(`Output node ${outputNode.getId()} doesn't exist`);
+      throw new Error(`Output node ${nodeId} doesn't exist`);
     }
   }
 
-  private getInputNodesAsMapByPort(portId: string): Map<string, GraphNode> {
-    const inputNodes = this.inputPortToNodes.get(portId);
-    if (inputNodes === undefined) {
+  private initInputPortIdToPortData(inputPorts: Port[]): void {
+    inputPorts.forEach((inputPort) => {
+      const portData: PortData = {
+        port: inputPort,
+        nodeIdToNodes: new Map<string, GraphNode>(),
+      };
+      this.inputPortIdToPortData.set(inputPort.getId(), portData);
+    });
+  }
+
+  private initOutputPortIdToPortData(): void {
+    const portData: PortData = {
+      port: this.outputPort,
+      nodeIdToNodes: new Map<string, GraphNode>(),
+    };
+    this.outputPortIdToPortData.set(this.outputPort.getId(), portData);
+  }
+
+  private getPortDataByPort(
+    portIdToPortData: Map<string, PortData>,
+    portId: string,
+  ): PortData {
+    const portData = portIdToPortData.get(portId);
+    if (portData === undefined) {
       throw new Error(`Input port ${portId} doesn't exist`);
     }
-    return inputNodes;
+    return portData;
   }
 }
 

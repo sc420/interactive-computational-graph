@@ -1,3 +1,4 @@
+import type DifferentiationMode from "./DifferentiationMode";
 import type GraphNode from "./GraphNode";
 
 class Graph {
@@ -45,12 +46,46 @@ class Graph {
     // TODO(sc420)
   }
 
-  updateNodeValue(nodeId: string, value: number): void {
+  setDifferentiationMode(mode: DifferentiationMode): void {
     // TODO(sc420)
   }
 
-  updateTargetNode(nodeId: string): void {
+  getNodeValue(nodeId: string): number {
     // TODO(sc420)
+    return 0;
+  }
+
+  getNodeDfdy(nodeId: string): number {
+    // TODO(sc420)
+    return 0;
+  }
+
+  setNodeValue(nodeId: string, value: number): void {
+    // TODO(sc420)
+  }
+
+  getTargetNode(): string {
+    // TODO(sc420)
+    return "";
+  }
+
+  setTargetNode(nodeId: string): void {
+    // TODO(sc420)
+  }
+
+  update(): string[] {
+    // TODO(sc420): update from dirty nodes
+    return [];
+  }
+
+  private updateF(): string[] {
+    // TODO(sc420): update from dirty nodes
+    return [];
+  }
+
+  private updateDfdy(): string[] {
+    // TODO(sc420): update from dirty nodes
+    return [];
   }
 }
 

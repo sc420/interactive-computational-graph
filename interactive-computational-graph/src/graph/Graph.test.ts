@@ -40,11 +40,11 @@ describe("sequential testing to manipulate a graph", () => {
     }).toThrow(nodeNotExistError);
 
     expect(() => {
-      graph.updateNodeValue("v1", 1);
+      graph.setNodeValue("v1", 1);
     }).toThrow(nodeNotExistError);
 
     expect(() => {
-      graph.updateTargetNode("v1");
+      graph.setTargetNode("v1");
     }).toThrow(nodeNotExistError);
   });
 
@@ -195,24 +195,268 @@ describe("sequential testing to manipulate a graph", () => {
 
     nodeIdToNodes.clear();
   });
-
-  function buildSumNode(id: string): GraphNode {
-    const ports: Port[] = [new Port("x_i", true)];
-    const operation = new Operation(SUM_F_CODE, SUM_DFDY_CODE);
-    return new OperationNode(id, ports, operation);
-  }
-
-  function buildProductNode(id: string): GraphNode {
-    const ports: Port[] = [new Port("x_i", true)];
-    const operation = new Operation(PRODUCT_F_CODE, PRODUCT_DFDY_CODE);
-    return new OperationNode(id, ports, operation);
-  }
-
-  function buildIdentityNode(id: string): GraphNode {
-    const ports: Port[] = [new Port("x", false)];
-    const operation = new Operation(IDENTITY_F_CODE, IDENTITY_DFDY_CODE);
-    return new OperationNode(id, ports, operation);
-  }
 });
 
-// TODO(sc420): Verify updateNodeValue and updateTargetNode and also when connecting/disconnecting
+describe("sequential testing to update f and dfdy", () => {
+  const graph = new Graph();
+
+  test("1. should add the nodes successfully", () => {
+    const varNode1 = new VariableNode("v1");
+    const varNode2 = new VariableNode("v2");
+    const constNode1 = new ConstantNode("c1");
+    const sumNode1 = buildSumNode("sum1");
+    const sumNode2 = buildSumNode("sum2");
+    const productNode1 = buildProductNode("product1");
+    const identityNode1 = buildIdentityNode("identity1");
+    const newNodes = [
+      varNode1,
+      varNode2,
+      constNode1,
+      sumNode1,
+      sumNode2,
+      productNode1,
+      identityNode1,
+    ];
+
+    // Add the nodes
+    newNodes.forEach((newNode) => {
+      graph.addNode(newNode);
+    });
+  });
+
+  test("2. target node should be the first added node", () => {
+    expect(graph.getTargetNode()).toBe("v1");
+  });
+
+  test("3. updating operation node values should fail", () => {
+    expect(() => {
+      graph.setNodeValue("sum1", 5);
+    }).toThrow("Should not update node values on operation node sum1");
+  });
+
+  test("4. should have f and dfdy after first connection", () => {
+    graph.setNodeValue("v1", 2);
+    graph.connect("v1", "sum1", "x_i");
+
+    const updatedNodes = graph.update();
+    const expectedUpdatedNodes = ["v1", "sum1"];
+    expect(updatedNodes.sort()).toEqual(expectedUpdatedNodes.sort());
+
+    // sum1 = v1
+    expect(graph.getNodeValue("v1")).toBeCloseTo(2);
+    expect(graph.getNodeValue("sum1")).toBeCloseTo(2);
+    // d(v1)/d(v1) = 1
+    expect(graph.getNodeDfdy("v1")).toBeCloseTo(1);
+    // d(v1)/d(sum1) = 0
+    expect(graph.getNodeDfdy("sum1")).toBeCloseTo(0);
+  });
+
+  test("5. should have correct f and dfdy after changing the target node", () => {
+    graph.setTargetNode("sum1");
+
+    const updatedNodes = graph.update();
+    const expectedUpdatedNodes = ["v1", "sum1"];
+    expect(updatedNodes.sort()).toEqual(expectedUpdatedNodes.sort());
+
+    // sum1 = v1
+    expect(graph.getNodeValue("v1")).toBeCloseTo(2);
+    expect(graph.getNodeValue("sum1")).toBeCloseTo(2);
+    // d(sum1)/d(v1) = 1
+    expect(graph.getNodeDfdy("v1")).toBeCloseTo(1);
+    // d(sum1)/d(sum1) = 1
+    expect(graph.getNodeDfdy("sum1")).toBeCloseTo(1);
+  });
+
+  test("6. should have correct f and dfdy in forward-mode differentiation", () => {
+    graph.setDifferentiationMode("FORWARD");
+
+    const updatedNodes = graph.update();
+    const expectedUpdatedNodes = ["v1", "sum1"];
+    expect(updatedNodes.sort()).toEqual(expectedUpdatedNodes.sort());
+
+    // sum1 = v1
+    expect(graph.getNodeValue("v1")).toBeCloseTo(2);
+    expect(graph.getNodeValue("sum1")).toBeCloseTo(2);
+    // d(v1)/d(sum1) = 0
+    expect(graph.getNodeDfdy("v1")).toBeCloseTo(0);
+    // d(sum1)/d(sum1) = 1
+    expect(graph.getNodeDfdy("sum1")).toBeCloseTo(1);
+  });
+
+  test("7. should have correct f and dfdy after new connection", () => {
+    graph.setDifferentiationMode("REVERSE");
+    graph.connect("v2", "sum1", "x_i");
+    graph.setNodeValue("v2", 1);
+
+    const updatedNodes = graph.update();
+    const expectedUpdatedNodes = ["v1", "v2", "sum1"];
+    expect(updatedNodes.sort()).toEqual(expectedUpdatedNodes.sort());
+
+    // sum1 = v1 + v2
+    expect(graph.getNodeValue("v1")).toBeCloseTo(2);
+    expect(graph.getNodeValue("v2")).toBeCloseTo(1);
+    expect(graph.getNodeValue("sum1")).toBeCloseTo(3);
+    // d(sum1)/d(v1) = 1
+    expect(graph.getNodeDfdy("v1")).toBeCloseTo(1);
+    // d(sum1)/d(v2) = 1
+    expect(graph.getNodeDfdy("v2")).toBeCloseTo(1);
+    // d(sum1)/d(sum1) = 1
+    expect(graph.getNodeDfdy("sum1")).toBeCloseTo(1);
+  });
+
+  test("8. should have correct f and dfdy after disconnection", () => {
+    graph.disconnect("v1", "sum1", "x_i");
+
+    const updatedNodes = graph.update();
+    const expectedUpdatedNodes = ["v1", "v2", "sum1"];
+    expect(updatedNodes.sort()).toEqual(expectedUpdatedNodes.sort());
+
+    // sum1 = v2
+    expect(graph.getNodeValue("v1")).toBeCloseTo(2);
+    expect(graph.getNodeValue("v2")).toBeCloseTo(1);
+    expect(graph.getNodeValue("sum1")).toBeCloseTo(1);
+    // d(sum1)/d(v1) = 0
+    expect(graph.getNodeDfdy("v1")).toBeCloseTo(0);
+    // d(sum2)/d(v2) = 1
+    expect(graph.getNodeDfdy("v2")).toBeCloseTo(1);
+    // d(sum1)/d(sum1) = 1
+    expect(graph.getNodeDfdy("sum1")).toBeCloseTo(1);
+  });
+
+  test("9. should have correct f and dfdy in reverse mode", () => {
+    graph.setDifferentiationMode("REVERSE");
+
+    graph.connect("v1", "sum1", "x_i");
+    graph.connect("v2", "sum1", "x_i");
+    graph.connect("v2", "sum2", "x_i");
+    graph.connect("c1", "sum2", "x_i");
+    graph.connect("sum1", "product1", "x_i");
+    graph.connect("sum2", "product1", "x_i");
+    graph.connect("product1", "identity1", "x");
+
+    graph.setNodeValue("v1", 2);
+    graph.setNodeValue("v2", 1);
+    graph.setNodeValue("c1", 1);
+
+    graph.setTargetNode("identity1");
+
+    const updatedNodes = graph.update();
+    const expectedUpdatedNodes = [
+      "v1",
+      "v2",
+      "c1",
+      "sum1",
+      "sum2",
+      "product1",
+      "identity1",
+    ];
+    expect(updatedNodes.sort()).toEqual(expectedUpdatedNodes.sort());
+
+    expect(graph.getNodeValue("v1")).toBeCloseTo(2);
+    expect(graph.getNodeValue("v2")).toBeCloseTo(1);
+    expect(graph.getNodeValue("c1")).toBeCloseTo(1);
+    // sum1 = v1 + v2 = 3
+    expect(graph.getNodeValue("sum1")).toBeCloseTo(3);
+    // sum2 = v2 + c1 = 2
+    expect(graph.getNodeValue("sum2")).toBeCloseTo(2);
+    // product1 = sum1 * sum2
+    expect(graph.getNodeValue("product1")).toBeCloseTo(6);
+    // identity1 = product1
+    expect(graph.getNodeValue("identity1")).toBeCloseTo(6);
+
+    // d(identity1)/d(identity1) = 1
+    expect(graph.getNodeDfdy("identity1")).toBeCloseTo(1);
+    // d(identity1)/d(product1) = 1
+    expect(graph.getNodeDfdy("product1")).toBeCloseTo(1);
+    // d(identity1)/d(sum1) = sum2 = 2
+    expect(graph.getNodeDfdy("sum1")).toBeCloseTo(2);
+    // d(identity1)/d(sum2) = sum1 = 3
+    expect(graph.getNodeDfdy("sum2")).toBeCloseTo(3);
+    // d(identity1)/d(v1) = d(sum1)/d(v1) * d(product1)/d(sum1) = 1 * 2 = 2
+    expect(graph.getNodeDfdy("v1")).toBeCloseTo(2);
+    // d(identity1)/d(v2) = d(sum1)/d(v2) * d(product1)/d(sum1) +
+    // d(sum2)/d(v2) * d(product1)/d(sum2) = 1 * 2 + 1 * 3 = 5
+    expect(graph.getNodeDfdy("v2")).toBeCloseTo(5);
+    //  d(identity1)/d(c1) = 0 (constant)
+    expect(graph.getNodeDfdy("c1")).toBeCloseTo(0);
+  });
+
+  test("10. should have correct f and dfdy in forward mode", () => {
+    graph.setDifferentiationMode("FORWARD");
+
+    graph.connect("v1", "sum1", "x_i");
+    graph.connect("v2", "sum1", "x_i");
+    graph.connect("v2", "sum2", "x_i");
+    graph.connect("c1", "sum2", "x_i");
+    graph.connect("sum1", "product1", "x_i");
+    graph.connect("sum2", "product1", "x_i");
+    graph.connect("product1", "identity1", "x");
+
+    graph.setNodeValue("v1", 2);
+    graph.setNodeValue("v2", 1);
+    graph.setNodeValue("c1", 1);
+
+    graph.setTargetNode("v2");
+
+    const updatedNodes = graph.update();
+    const expectedUpdatedNodes = [
+      "v1",
+      "v2",
+      "c1",
+      "sum1",
+      "sum2",
+      "product1",
+      "identity1",
+    ];
+    expect(updatedNodes.sort()).toEqual(expectedUpdatedNodes.sort());
+
+    expect(graph.getNodeValue("v1")).toBeCloseTo(2);
+    expect(graph.getNodeValue("v2")).toBeCloseTo(1);
+    expect(graph.getNodeValue("c1")).toBeCloseTo(1);
+    // sum1 = v1 + v2 = 3
+    expect(graph.getNodeValue("sum1")).toBeCloseTo(3);
+    // sum2 = v2 + c1 = 2
+    expect(graph.getNodeValue("sum2")).toBeCloseTo(2);
+    // product1 = sum1 * sum2
+    expect(graph.getNodeValue("product1")).toBeCloseTo(6);
+    // identity1 = product1
+    expect(graph.getNodeValue("identity1")).toBeCloseTo(6);
+
+    // d(v1)/d(v2) = 0 (not in it's forward path)
+    expect(graph.getNodeDfdy("v1")).toBeCloseTo(0);
+    // d(v2)/d(v2) = 1
+    expect(graph.getNodeDfdy("v2")).toBeCloseTo(1);
+    // d(c1)/d(v2) = 0 (constant)
+    expect(graph.getNodeDfdy("c1")).toBeCloseTo(0);
+    // d(sum1)/d(v2) = d(v1)/d(v2) * d(sum1)/d(v1) +
+    // d(v2)/d(v2) * d(sum1)/d(v2) = 0 * 1 + 1 * 1 = 1
+    expect(graph.getNodeDfdy("sum1")).toBeCloseTo(1);
+    // d(sum2)/d(v2) = d(v2)/d(v2) * d(sum2)/d(v2) +
+    // d(c1)/d(v2) * d(sum2)/d(c1) = 1 * 1 + 0 * 0 = 1
+    expect(graph.getNodeDfdy("sum2")).toBeCloseTo(1);
+    // d(product1)/d(v2) = d(sum1)/d(v2) * d(product1)/d(sum1) +
+    // d(sum2)/d(v2) * d(product1)/d(sum2) = 1 * sum2 + 1 * sum1 = 5
+    expect(graph.getNodeDfdy("product1")).toBeCloseTo(5);
+    // d(identity1)/d(v2) = d(product1)/d(v2) * d(identity1)/d(product1) =
+    // 5 * 1 = 5
+    expect(graph.getNodeDfdy("identity1")).toBeCloseTo(5);
+  });
+});
+
+function buildSumNode(id: string): GraphNode {
+  const ports: Port[] = [new Port("x_i", true)];
+  const operation = new Operation(SUM_F_CODE, SUM_DFDY_CODE);
+  return new OperationNode(id, ports, operation);
+}
+
+function buildProductNode(id: string): GraphNode {
+  const ports: Port[] = [new Port("x_i", true)];
+  const operation = new Operation(PRODUCT_F_CODE, PRODUCT_DFDY_CODE);
+  return new OperationNode(id, ports, operation);
+}
+
+function buildIdentityNode(id: string): GraphNode {
+  const ports: Port[] = [new Port("x", false)];
+  const operation = new Operation(IDENTITY_F_CODE, IDENTITY_DFDY_CODE);
+  return new OperationNode(id, ports, operation);
+}

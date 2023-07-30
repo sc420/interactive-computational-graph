@@ -55,7 +55,7 @@ class Graph {
     return 0;
   }
 
-  getNodeDfdy(nodeId: string): number {
+  getNodeDerivative(nodeId: string): number {
     // TODO(sc420)
     return 0;
   }

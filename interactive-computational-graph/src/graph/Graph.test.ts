@@ -246,9 +246,9 @@ describe("sequential testing to update f and dfdy", () => {
     expect(graph.getNodeValue("v1")).toBeCloseTo(2);
     expect(graph.getNodeValue("sum1")).toBeCloseTo(2);
     // d(v1)/d(v1) = 1
-    expect(graph.getNodeDfdy("v1")).toBeCloseTo(1);
+    expect(graph.getNodeDerivative("v1")).toBeCloseTo(1);
     // d(v1)/d(sum1) = 0
-    expect(graph.getNodeDfdy("sum1")).toBeCloseTo(0);
+    expect(graph.getNodeDerivative("sum1")).toBeCloseTo(0);
   });
 
   test("5. should have correct f and dfdy after changing the target node", () => {
@@ -262,9 +262,9 @@ describe("sequential testing to update f and dfdy", () => {
     expect(graph.getNodeValue("v1")).toBeCloseTo(2);
     expect(graph.getNodeValue("sum1")).toBeCloseTo(2);
     // d(sum1)/d(v1) = 1
-    expect(graph.getNodeDfdy("v1")).toBeCloseTo(1);
+    expect(graph.getNodeDerivative("v1")).toBeCloseTo(1);
     // d(sum1)/d(sum1) = 1
-    expect(graph.getNodeDfdy("sum1")).toBeCloseTo(1);
+    expect(graph.getNodeDerivative("sum1")).toBeCloseTo(1);
   });
 
   test("6. should have correct f and dfdy in forward-mode differentiation", () => {
@@ -278,9 +278,9 @@ describe("sequential testing to update f and dfdy", () => {
     expect(graph.getNodeValue("v1")).toBeCloseTo(2);
     expect(graph.getNodeValue("sum1")).toBeCloseTo(2);
     // d(v1)/d(sum1) = 0
-    expect(graph.getNodeDfdy("v1")).toBeCloseTo(0);
+    expect(graph.getNodeDerivative("v1")).toBeCloseTo(0);
     // d(sum1)/d(sum1) = 1
-    expect(graph.getNodeDfdy("sum1")).toBeCloseTo(1);
+    expect(graph.getNodeDerivative("sum1")).toBeCloseTo(1);
   });
 
   test("7. should have correct f and dfdy after new connection", () => {
@@ -297,11 +297,11 @@ describe("sequential testing to update f and dfdy", () => {
     expect(graph.getNodeValue("v2")).toBeCloseTo(1);
     expect(graph.getNodeValue("sum1")).toBeCloseTo(3);
     // d(sum1)/d(v1) = 1
-    expect(graph.getNodeDfdy("v1")).toBeCloseTo(1);
+    expect(graph.getNodeDerivative("v1")).toBeCloseTo(1);
     // d(sum1)/d(v2) = 1
-    expect(graph.getNodeDfdy("v2")).toBeCloseTo(1);
+    expect(graph.getNodeDerivative("v2")).toBeCloseTo(1);
     // d(sum1)/d(sum1) = 1
-    expect(graph.getNodeDfdy("sum1")).toBeCloseTo(1);
+    expect(graph.getNodeDerivative("sum1")).toBeCloseTo(1);
   });
 
   test("8. should have correct f and dfdy after disconnection", () => {
@@ -316,11 +316,11 @@ describe("sequential testing to update f and dfdy", () => {
     expect(graph.getNodeValue("v2")).toBeCloseTo(1);
     expect(graph.getNodeValue("sum1")).toBeCloseTo(1);
     // d(sum1)/d(v1) = 0
-    expect(graph.getNodeDfdy("v1")).toBeCloseTo(0);
+    expect(graph.getNodeDerivative("v1")).toBeCloseTo(0);
     // d(sum2)/d(v2) = 1
-    expect(graph.getNodeDfdy("v2")).toBeCloseTo(1);
+    expect(graph.getNodeDerivative("v2")).toBeCloseTo(1);
     // d(sum1)/d(sum1) = 1
-    expect(graph.getNodeDfdy("sum1")).toBeCloseTo(1);
+    expect(graph.getNodeDerivative("sum1")).toBeCloseTo(1);
   });
 
   test("9. should have correct f and dfdy in reverse mode", () => {
@@ -365,20 +365,20 @@ describe("sequential testing to update f and dfdy", () => {
     expect(graph.getNodeValue("identity1")).toBeCloseTo(6);
 
     // d(identity1)/d(identity1) = 1
-    expect(graph.getNodeDfdy("identity1")).toBeCloseTo(1);
+    expect(graph.getNodeDerivative("identity1")).toBeCloseTo(1);
     // d(identity1)/d(product1) = 1
-    expect(graph.getNodeDfdy("product1")).toBeCloseTo(1);
+    expect(graph.getNodeDerivative("product1")).toBeCloseTo(1);
     // d(identity1)/d(sum1) = sum2 = 2
-    expect(graph.getNodeDfdy("sum1")).toBeCloseTo(2);
+    expect(graph.getNodeDerivative("sum1")).toBeCloseTo(2);
     // d(identity1)/d(sum2) = sum1 = 3
-    expect(graph.getNodeDfdy("sum2")).toBeCloseTo(3);
+    expect(graph.getNodeDerivative("sum2")).toBeCloseTo(3);
     // d(identity1)/d(v1) = d(sum1)/d(v1) * d(product1)/d(sum1) = 1 * 2 = 2
-    expect(graph.getNodeDfdy("v1")).toBeCloseTo(2);
+    expect(graph.getNodeDerivative("v1")).toBeCloseTo(2);
     // d(identity1)/d(v2) = d(sum1)/d(v2) * d(product1)/d(sum1) +
     // d(sum2)/d(v2) * d(product1)/d(sum2) = 1 * 2 + 1 * 3 = 5
-    expect(graph.getNodeDfdy("v2")).toBeCloseTo(5);
+    expect(graph.getNodeDerivative("v2")).toBeCloseTo(5);
     //  d(identity1)/d(c1) = 0 (constant)
-    expect(graph.getNodeDfdy("c1")).toBeCloseTo(0);
+    expect(graph.getNodeDerivative("c1")).toBeCloseTo(0);
   });
 
   test("10. should have correct f and dfdy in forward mode", () => {
@@ -423,23 +423,23 @@ describe("sequential testing to update f and dfdy", () => {
     expect(graph.getNodeValue("identity1")).toBeCloseTo(6);
 
     // d(v1)/d(v2) = 0 (not in it's forward path)
-    expect(graph.getNodeDfdy("v1")).toBeCloseTo(0);
+    expect(graph.getNodeDerivative("v1")).toBeCloseTo(0);
     // d(v2)/d(v2) = 1
-    expect(graph.getNodeDfdy("v2")).toBeCloseTo(1);
+    expect(graph.getNodeDerivative("v2")).toBeCloseTo(1);
     // d(c1)/d(v2) = 0 (constant)
-    expect(graph.getNodeDfdy("c1")).toBeCloseTo(0);
+    expect(graph.getNodeDerivative("c1")).toBeCloseTo(0);
     // d(sum1)/d(v2) = d(v1)/d(v2) * d(sum1)/d(v1) +
     // d(v2)/d(v2) * d(sum1)/d(v2) = 0 * 1 + 1 * 1 = 1
-    expect(graph.getNodeDfdy("sum1")).toBeCloseTo(1);
+    expect(graph.getNodeDerivative("sum1")).toBeCloseTo(1);
     // d(sum2)/d(v2) = d(v2)/d(v2) * d(sum2)/d(v2) +
     // d(c1)/d(v2) * d(sum2)/d(c1) = 1 * 1 + 0 * 0 = 1
-    expect(graph.getNodeDfdy("sum2")).toBeCloseTo(1);
+    expect(graph.getNodeDerivative("sum2")).toBeCloseTo(1);
     // d(product1)/d(v2) = d(sum1)/d(v2) * d(product1)/d(sum1) +
     // d(sum2)/d(v2) * d(product1)/d(sum2) = 1 * sum2 + 1 * sum1 = 5
-    expect(graph.getNodeDfdy("product1")).toBeCloseTo(5);
+    expect(graph.getNodeDerivative("product1")).toBeCloseTo(5);
     // d(identity1)/d(v2) = d(product1)/d(v2) * d(identity1)/d(product1) =
     // 5 * 1 = 5
-    expect(graph.getNodeDfdy("identity1")).toBeCloseTo(5);
+    expect(graph.getNodeDerivative("identity1")).toBeCloseTo(5);
   });
 });
 

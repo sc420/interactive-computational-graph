@@ -11,10 +11,9 @@ describe("sequential testing of using node", () => {
   const opNode = new OperationNode("op1", ports, operation);
   let varNode1: GraphNode;
 
-  test("1. should have correct ID and initial values", () => {
+  test("1. should have correct ID and initial value", () => {
     expect(opNode.getId()).toBe("op1");
     expect(opNode.getValue()).toBe(0);
-    expect(opNode.getDfdy()).toBe(0);
   });
 
   test("2. should throw error when setting value", () => {
@@ -37,13 +36,20 @@ describe("sequential testing of using node", () => {
     opNode.getRelationship().addInputNodeByPort("x_i", varNode3);
   });
 
-  test("4. should have correct f and dfdy after updating", () => {
+  test("4. should have correct f after updating", () => {
     opNode.updateF();
-    opNode.updateDfdy(varNode1);
 
     // 1 + 2 + 3 = 6
     expect(opNode.getValue()).toBe(6);
+  });
+
+  test("5. should have correct dfdy", () => {
     // d(op1)/d(v1) = 1
-    expect(opNode.getDfdy()).toBe(1);
+    expect(opNode.calculateDfdy(varNode1)).toBe(1);
+    // d(op1)/d(op1) = 1
+    expect(opNode.calculateDfdy(opNode)).toBe(1);
+    // d(op1)/d(v4) = 0
+    const varNode4 = new VariableNode("v4");
+    expect(opNode.calculateDfdy(varNode4)).toBe(0);
   });
 });

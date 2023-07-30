@@ -10,8 +10,6 @@ class VariableNode implements GraphNode {
 
   private value: number = 0;
 
-  private dfdy: number = 0;
-
   constructor(id: string) {
     this.id = id;
   }
@@ -28,18 +26,13 @@ class VariableNode implements GraphNode {
     this.value = value;
   }
 
-  getDfdy(): number {
-    return this.dfdy;
-  }
-
   updateF(): void {}
 
-  updateDfdy(y: GraphNode): void {
+  calculateDfdy(y: GraphNode): number {
     if (y.getId() === this.getId()) {
-      this.dfdy = 1;
-    } else {
-      this.dfdy = 0;
+      return 1;
     }
+    return 0;
   }
 
   getRelationship(): NodeRelationship {

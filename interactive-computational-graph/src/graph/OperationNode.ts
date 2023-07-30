@@ -19,8 +19,6 @@ class OperationNode implements GraphNode {
 
   private value: number = 0;
 
-  private dfdy: number = 0;
-
   constructor(id: string, inputPorts: Port[], operation: Operation) {
     this.id = id;
     this.inputPorts = inputPorts;
@@ -40,19 +38,18 @@ class OperationNode implements GraphNode {
     throw new Error("Operation node should only update f, not set a value");
   }
 
-  getDfdy(): number {
-    return this.dfdy;
-  }
-
   updateF(): void {
     const portToNodeData = this.buildPortToNodesData();
     this.value = this.operation.evalF(portToNodeData);
   }
 
-  updateDfdy(y: GraphNode): void {
+  calculateDfdy(y: GraphNode): number {
+    if (y.getId() === this.getId()) {
+      return 1;
+    }
     const portToNodeData = this.buildPortToNodesData();
     const yNodeData = this.buildNodeData(y);
-    this.dfdy = this.operation.evalDfdy(portToNodeData, yNodeData);
+    return this.operation.evalDfdy(portToNodeData, yNodeData);
   }
 
   getRelationship(): NodeRelationship {

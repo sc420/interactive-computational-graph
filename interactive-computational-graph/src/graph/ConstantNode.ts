@@ -10,8 +10,6 @@ class ConstantNode implements GraphNode {
 
   private value: number = 0;
 
-  private readonly dfdy: number = 0;
-
   constructor(id: string) {
     this.id = id;
   }
@@ -28,13 +26,11 @@ class ConstantNode implements GraphNode {
     this.value = value;
   }
 
-  getDfdy(): number {
-    return this.dfdy;
-  }
-
   updateF(): void {}
 
-  updateDfdy(y: GraphNode): void {}
+  calculateDfdy(y: GraphNode): number {
+    return 0;
+  }
 
   getRelationship(): NodeRelationship {
     return this.nodeRelationship;

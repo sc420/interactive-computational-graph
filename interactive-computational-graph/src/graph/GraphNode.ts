@@ -7,11 +7,9 @@ interface GraphNode {
 
   setValue: (value: number) => void;
 
-  getDfdy: () => number;
-
   updateF: () => void;
 
-  updateDfdy: (y: GraphNode) => void;
+  calculateDfdy: (y: GraphNode) => number;
 
   getRelationship: () => NodeRelationship;
 }

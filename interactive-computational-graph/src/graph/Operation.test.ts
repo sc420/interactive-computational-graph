@@ -148,25 +148,27 @@ describe("evaluating problematic code", () => {
     );
   });
 
-  afterEach(() => {
-    // restore the spy created with spyOn
-    jest.restoreAllMocks();
-  });
-
   test("should throw error when eval f", () => {
     const mockConsole = jest.spyOn(console, "error").mockImplementation();
+
+    const topLineMessages = [
+      "Error occurred when running eval with the user code: ",
+      "portToNodes.x_i.forEach is not a function\n",
+      "Please make sure the following code is executable:",
+    ].join("");
+
     expect(() => {
       operation.evalF(portToNodesData);
-    }).toThrow("portToNodes.x_i.forEach is not a function");
-    expect(mockConsole.mock.calls[0][0]).toEqual(
-      "Error occurred when running eval with the user code: portToNodes.x_i.forEach is not a function",
+    }).toThrow(topLineMessages);
+
+    expect(mockConsole).toHaveBeenCalledWith(
+      expect.stringContaining(topLineMessages),
     );
-    expect(mockConsole.mock.calls[1][0]).toEqual(`\
-Please make sure the following code is executable:
-${BROKEN_SUM_F_CODE}
-f(${JSON.stringify(portToNodesData)})
-`);
-    expect(mockConsole.mock.calls[2][0]).toMatch(/^Stack trace:\n/);
+    expect(mockConsole).toHaveBeenCalledWith(
+      expect.stringContaining("Stack trace:"),
+    );
+
+    jest.restoreAllMocks(); // restores the spy created with spyOn
   });
 
   test("should throw error when eval dfdy", () => {

@@ -222,18 +222,37 @@ describe("updating f values", () => {
   test("should update f values for medium graph", () => {
     const graph = buildMediumGraph();
 
-    graph.updateFValues();
+    // Update all f values
+    let updatedNodes = graph.updateFValues();
+    let expectedUpdatedNodes = new Set<string>([
+      "v1",
+      "v2",
+      "c1",
+      "sum1",
+      "sum2",
+      "v3",
+      "product1",
+      "identity1",
+    ]);
+    expect(updatedNodes).toEqual(expectedUpdatedNodes);
+    expect(graph.getNodeValue("sum1")).toBeCloseTo(3);
+    expect(graph.getNodeValue("sum2")).toBeCloseTo(2);
+    expect(graph.getNodeValue("product1")).toBeCloseTo(30);
+    expect(graph.getNodeValue("identity1")).toBeCloseTo(30);
 
+    // Update f values from one node
     graph.setNodeValue("v1", 0);
-
-    const updatedNodes = graph.updateFValuesFrom("v1");
-    const expectedUpdatedNodes = new Set<string>([
+    updatedNodes = graph.updateFValuesFrom("v1");
+    expectedUpdatedNodes = new Set<string>([
       "v1",
       "sum1",
       "product1",
       "identity1",
     ]);
     expect(updatedNodes).toEqual(expectedUpdatedNodes);
+    expect(graph.getNodeValue("sum1")).toBeCloseTo(1);
+    expect(graph.getNodeValue("sum2")).toBeCloseTo(2);
+    expect(graph.getNodeValue("product1")).toBeCloseTo(10);
     expect(graph.getNodeValue("identity1")).toBeCloseTo(10);
   });
 });

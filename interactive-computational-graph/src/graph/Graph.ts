@@ -98,6 +98,7 @@ class Graph {
     return new Set<string>(); // TODO(sc420)
   }
 
+  // TODO(sc420): should use BFS
   updateFValuesFrom(startNodeId: string): Set<string> {
     const nodeIdsToBeUpdated = new Set<string>([startNodeId]);
     const updatedNodeIds = new Set<string>();

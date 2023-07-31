@@ -53,7 +53,7 @@ describe("sequential testing to manipulate a graph", () => {
     graph.addNode(varNode1);
     nodeIdToNodes.set(varNode1.getId(), varNode1);
 
-    expect(graph.getNodes()).toEqual(nodeIdToNodes.values());
+    expect(graph.getNodes()).toEqual(nodeIdToNodes.values()); // TODO(sc420): just check node IDS and sort
 
     expect(graph.getOneNode("v1")).toEqual(varNode1);
 
@@ -78,7 +78,7 @@ describe("sequential testing to manipulate a graph", () => {
     nodeIdToNodes.set(varNode2.getId(), varNode2);
 
     const varNode1 = nodeIdToNodes.get("v1");
-    expect(graph.getNodes()).toEqual([varNode1, varNode2]);
+    expect(graph.getNodes()).toEqual([varNode1, varNode2]); // TODO(sc420): just check node IDS and sort
 
     expect(graph.getOneNode("v2")).toEqual(varNode2);
 
@@ -107,7 +107,7 @@ describe("sequential testing to manipulate a graph", () => {
 
     const varNode1 = nodeIdToNodes.get("v1");
     const varNode2 = nodeIdToNodes.get("v2");
-    expect(graph.getNodes()).toEqual([varNode1, varNode2, ...newNodes]);
+    expect(graph.getNodes()).toEqual([varNode1, varNode2, ...newNodes]);  // TODO(sc420): just check node IDS and sort
 
     expect(graph.getOneNode("c1")).toEqual(constNode1);
     expect(graph.getOneNode("sum1")).toEqual(sumNode1);
@@ -125,7 +125,7 @@ describe("sequential testing to manipulate a graph", () => {
   test("7. should throw error when connecting to non-existent port", () => {
     expect(() => {
       graph.connect("sum1", "v1", "x");
-    }).toThrow("Input port x_i doesn't exist");
+    }).toThrow("Input port x doesn't exist");
   });
 
   test("8. should connect nodes successfully", () => {
@@ -224,23 +224,20 @@ describe("sequential testing to update f and dfdy", () => {
     });
   });
 
-  test("2. target node should be the first added node", () => {
-    expect(graph.getTargetNode()).toBe("v1");
-  });
-
-  test("3. updating operation node values should fail", () => {
+  test("2. updating operation node values should fail", () => {
     expect(() => {
       graph.setNodeValue("sum1", 5);
-    }).toThrow("Should not update node values on operation node sum1");
+    }).toThrow("Operation node should only update f, not set a value");
   });
 
-  test("4. should have f and dfdy after first connection", () => {
+  test("3. should have f and dfdy after first connection", () => {
+    graph.setTargetNode("v1");
     graph.setNodeValue("v1", 2);
     graph.connect("v1", "sum1", "x_i");
 
     const updatedNodes = graph.update();
-    const expectedUpdatedNodes = ["v1", "sum1"];
-    expect(updatedNodes.sort()).toEqual(expectedUpdatedNodes.sort());
+    const expectedUpdatedNodes = new Set<string>(["v1", "sum1"]);
+    expect(updatedNodes).toEqual(expectedUpdatedNodes);
 
     // sum1 = v1
     expect(graph.getNodeValue("v1")).toBeCloseTo(2);
@@ -251,12 +248,12 @@ describe("sequential testing to update f and dfdy", () => {
     expect(graph.getNodeDerivative("sum1")).toBeCloseTo(0);
   });
 
-  test("5. should have correct f and dfdy after changing the target node", () => {
+  test("4. should have correct f and dfdy after changing the target node", () => {
     graph.setTargetNode("sum1");
 
     const updatedNodes = graph.update();
-    const expectedUpdatedNodes = ["v1", "sum1"];
-    expect(updatedNodes.sort()).toEqual(expectedUpdatedNodes.sort());
+    const expectedUpdatedNodes = new Set<string>(["v1", "sum1"]);
+    expect(updatedNodes).toEqual(expectedUpdatedNodes);
 
     // sum1 = v1
     expect(graph.getNodeValue("v1")).toBeCloseTo(2);
@@ -267,12 +264,12 @@ describe("sequential testing to update f and dfdy", () => {
     expect(graph.getNodeDerivative("sum1")).toBeCloseTo(1);
   });
 
-  test("6. should have correct f and dfdy in forward-mode differentiation", () => {
+  test("5. should have correct f and dfdy in forward-mode differentiation", () => {
     graph.setDifferentiationMode("FORWARD");
 
     const updatedNodes = graph.update();
-    const expectedUpdatedNodes = ["v1", "sum1"];
-    expect(updatedNodes.sort()).toEqual(expectedUpdatedNodes.sort());
+    const expectedUpdatedNodes = new Set<string>(["v1", "sum1"]);
+    expect(updatedNodes).toEqual(expectedUpdatedNodes);
 
     // sum1 = v1
     expect(graph.getNodeValue("v1")).toBeCloseTo(2);
@@ -283,14 +280,14 @@ describe("sequential testing to update f and dfdy", () => {
     expect(graph.getNodeDerivative("sum1")).toBeCloseTo(1);
   });
 
-  test("7. should have correct f and dfdy after new connection", () => {
+  test("6. should have correct f and dfdy after new connection", () => {
     graph.setDifferentiationMode("REVERSE");
     graph.connect("v2", "sum1", "x_i");
     graph.setNodeValue("v2", 1);
 
     const updatedNodes = graph.update();
-    const expectedUpdatedNodes = ["v1", "v2", "sum1"];
-    expect(updatedNodes.sort()).toEqual(expectedUpdatedNodes.sort());
+    const expectedUpdatedNodes = new Set<string>(["v1", "v2", "sum1"]);
+    expect(updatedNodes).toEqual(expectedUpdatedNodes);
 
     // sum1 = v1 + v2
     expect(graph.getNodeValue("v1")).toBeCloseTo(2);
@@ -304,12 +301,12 @@ describe("sequential testing to update f and dfdy", () => {
     expect(graph.getNodeDerivative("sum1")).toBeCloseTo(1);
   });
 
-  test("8. should have correct f and dfdy after disconnection", () => {
+  test("7. should have correct f and dfdy after disconnection", () => {
     graph.disconnect("v1", "sum1", "x_i");
 
     const updatedNodes = graph.update();
-    const expectedUpdatedNodes = ["v1", "v2", "sum1"];
-    expect(updatedNodes.sort()).toEqual(expectedUpdatedNodes.sort());
+    const expectedUpdatedNodes = new Set<string>(["v1", "v2", "sum1"]);
+    expect(updatedNodes).toEqual(expectedUpdatedNodes);
 
     // sum1 = v2
     expect(graph.getNodeValue("v1")).toBeCloseTo(2);
@@ -323,11 +320,10 @@ describe("sequential testing to update f and dfdy", () => {
     expect(graph.getNodeDerivative("sum1")).toBeCloseTo(1);
   });
 
-  test("9. should have correct f and dfdy in reverse mode", () => {
+  test("8. should have correct f and dfdy in reverse mode", () => {
     graph.setDifferentiationMode("REVERSE");
 
     graph.connect("v1", "sum1", "x_i");
-    graph.connect("v2", "sum1", "x_i");
     graph.connect("v2", "sum2", "x_i");
     graph.connect("c1", "sum2", "x_i");
     graph.connect("sum1", "product1", "x_i");
@@ -341,7 +337,7 @@ describe("sequential testing to update f and dfdy", () => {
     graph.setTargetNode("identity1");
 
     const updatedNodes = graph.update();
-    const expectedUpdatedNodes = [
+    const expectedUpdatedNodes = new Set<string>([
       "v1",
       "v2",
       "c1",
@@ -349,8 +345,8 @@ describe("sequential testing to update f and dfdy", () => {
       "sum2",
       "product1",
       "identity1",
-    ];
-    expect(updatedNodes.sort()).toEqual(expectedUpdatedNodes.sort());
+    ]);
+    expect(updatedNodes).toEqual(expectedUpdatedNodes);
 
     expect(graph.getNodeValue("v1")).toBeCloseTo(2);
     expect(graph.getNodeValue("v2")).toBeCloseTo(1);
@@ -381,16 +377,8 @@ describe("sequential testing to update f and dfdy", () => {
     expect(graph.getNodeDerivative("c1")).toBeCloseTo(0);
   });
 
-  test("10. should have correct f and dfdy in forward mode", () => {
+  test("9. should have correct f and dfdy in forward mode", () => {
     graph.setDifferentiationMode("FORWARD");
-
-    graph.connect("v1", "sum1", "x_i");
-    graph.connect("v2", "sum1", "x_i");
-    graph.connect("v2", "sum2", "x_i");
-    graph.connect("c1", "sum2", "x_i");
-    graph.connect("sum1", "product1", "x_i");
-    graph.connect("sum2", "product1", "x_i");
-    graph.connect("product1", "identity1", "x");
 
     graph.setNodeValue("v1", 2);
     graph.setNodeValue("v2", 1);
@@ -399,7 +387,7 @@ describe("sequential testing to update f and dfdy", () => {
     graph.setTargetNode("v2");
 
     const updatedNodes = graph.update();
-    const expectedUpdatedNodes = [
+    const expectedUpdatedNodes = new Set<string>([
       "v1",
       "v2",
       "c1",
@@ -407,8 +395,8 @@ describe("sequential testing to update f and dfdy", () => {
       "sum2",
       "product1",
       "identity1",
-    ];
-    expect(updatedNodes.sort()).toEqual(expectedUpdatedNodes.sort());
+    ]);
+    expect(updatedNodes).toEqual(expectedUpdatedNodes);
 
     expect(graph.getNodeValue("v1")).toBeCloseTo(2);
     expect(graph.getNodeValue("v2")).toBeCloseTo(1);
@@ -441,6 +429,8 @@ describe("sequential testing to update f and dfdy", () => {
     // 5 * 1 = 5
     expect(graph.getNodeDerivative("identity1")).toBeCloseTo(5);
   });
+
+  // TODO(sc420): Add a test to set target node to product1 and check if all nodes before product1 derivative is updated to 0
 });
 
 function buildSumNode(id: string): GraphNode {

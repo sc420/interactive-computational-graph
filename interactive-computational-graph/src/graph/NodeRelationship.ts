@@ -42,12 +42,12 @@ class NodeRelationship {
     return Array.from(inputPortData.nodeIdToNodes.values());
   }
 
-  getOneInputNodeByPort(portId: string): GraphNode {
-    const inputNodes = this.getInputNodesByPort(portId);
-    if (inputNodes.length !== 1) {
-      throw new Error(`Input port ${portId} has ${inputNodes.length} nodes`);
-    }
-    return inputNodes[0];
+  getInputNodes(): GraphNode[] {
+    const inputNodes: GraphNode[] = [];
+    this.inputPortIdToPortData.forEach((_, inputPort) => {
+      inputNodes.push(...this.getInputNodesByPort(inputPort));
+    });
+    return inputNodes;
   }
 
   getOutputNodes(): GraphNode[] {

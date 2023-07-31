@@ -23,6 +23,8 @@ describe("sequential testing to check input behavior", () => {
     expect(nodeRelationship.getInputNodesByPort("a")).toEqual([]);
     expect(nodeRelationship.getInputNodesByPort("b")).toEqual([]);
 
+    expect(nodeRelationship.getInputNodes()).toEqual([]);
+
     expect(nodeRelationship.hasInputNodeByPort("a", "v1")).toBe(false);
   });
 
@@ -39,6 +41,8 @@ describe("sequential testing to check input behavior", () => {
 
     expect(nodeRelationship.getInputNodesByPort("a")).toEqual(aInputNodes);
     expect(nodeRelationship.getInputNodesByPort("b")).toEqual(bInputNodes);
+
+    checkInputNodes();
 
     expect(nodeRelationship.hasInputNodeByPort("a", "v1")).toBe(true);
     expect(nodeRelationship.hasInputNodeByPort("b", "c1")).toBe(true);
@@ -71,6 +75,8 @@ describe("sequential testing to check input behavior", () => {
 
     expect(nodeRelationship.getInputNodesByPort("b")).toEqual(bInputNodes);
 
+    checkInputNodes();
+
     expect(nodeRelationship.hasInputNodeByPort("b", "c1")).toBe(true);
     expect(nodeRelationship.hasInputNodeByPort("b", "c2")).toBe(true);
   });
@@ -82,6 +88,8 @@ describe("sequential testing to check input behavior", () => {
     expect(nodeRelationship.isInputPortEmpty("b")).toBe(false);
 
     expect(nodeRelationship.getInputNodesByPort("b")).toEqual(bInputNodes);
+
+    checkInputNodes();
 
     expect(nodeRelationship.hasInputNodeByPort("b", "c1")).toBe(false);
     expect(nodeRelationship.hasInputNodeByPort("b", "c2")).toBe(true);
@@ -95,8 +103,21 @@ describe("sequential testing to check input behavior", () => {
 
     expect(nodeRelationship.getInputNodesByPort("a")).toEqual(aInputNodes);
 
+    checkInputNodes();
+
     expect(nodeRelationship.hasInputNodeByPort("a", "v1")).toBe(false);
   });
+
+  function checkInputNodes(): void {
+    const aInputNodeIds = aInputNodes.map((node) => node.getId());
+    const bInputNodeIds = bInputNodes.map((node) => node.getId());
+    const expectedInputNodeIds = [...aInputNodeIds, ...bInputNodeIds];
+
+    const inputNodes = nodeRelationship.getInputNodes();
+    const inputNodeIds = inputNodes.map((node) => node.getId());
+
+    expect(inputNodeIds.sort()).toEqual(expectedInputNodeIds.sort());
+  }
 });
 
 describe("sequential testing to check output behavior", () => {

@@ -120,7 +120,7 @@ const IDENTITY_F_CODE = `\
  */
 function f(portToNodes) {
   let value = 0;
-  Object.values(portToNodes.x_i).forEach((nodeData) => {
+  Object.values(portToNodes.x).forEach((nodeData) => {
     value = nodeData.value;
   });
   return value;

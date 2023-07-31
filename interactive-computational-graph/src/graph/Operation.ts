@@ -51,16 +51,13 @@ ${fnName}(${argsSeparatedByComma})
         throw new Error(`Unknown error type ${typeof error}`);
       }
 
-      console.error(
-        `Error occurred when running eval with the user code: ${error.message}`,
-      );
-      console.error(
-        `Please make sure the following code is executable:\n${fullCode}`,
-      );
-      console.error(
-        `Stack trace:\n${error.stack?.toString() ?? "Unavailable"}`,
-      );
-      throw error;
+      const message = `\
+Error occurred when running eval with the user code: ${error.message}
+Please make sure the following code is executable:\n${fullCode}
+Stack trace:\n${error.stack?.toString() ?? "Unavailable"}
+`;
+      console.error(message);
+      throw new Error(message);
     }
   }
 }

@@ -15,21 +15,6 @@ class Graph {
    */
   private readonly nodeIdToDerivatives = new Map<string, number>();
 
-  // TODO(sc420): Consider the use case and return updated nodes when appropriate
-  /**
-   * When either the differentiation mode or the target node is changed, we
-   * should invalidate the old derivatives and record the invalidated nodes.
-   * These invalidated nodes should be returned when the next update() is
-   * called to let users know these nodes have been invalidated.
-   */
-  private readonly invalidatedNodeIds = new Set<string>();
-
-  /**
-   * When update() is called, we should start updating f() values from these
-   * nodes since the connections have been changed.
-   */
-  private readonly nodeIdsToUpdateF = new Set<string>();
-
   getNodes(): GraphNode[] {
     return Array.from(this.nodeIdToNodes.values());
   }
@@ -66,26 +51,16 @@ class Graph {
     const node2 = this.getOneNode(node2Id);
     node1.getRelationship().addOutputNode(node2);
     node2.getRelationship().addInputNodeByPort(node2PortId, node1);
-
-    // When one input changes, it could update f() of node 2
-    this.nodeIdsToUpdateF.add(node2Id);
   }
 
   disconnect(node1Id: string, node2Id: string, node2PortId: string): void {
-    this.invalidateDerivativesFromDisconnectedNode(node2Id);
-
     const node1 = this.getOneNode(node1Id);
     const node2 = this.getOneNode(node2Id);
     node1.getRelationship().removeOutputNode(node2Id);
     node2.getRelationship().removeInputNodeByPort(node2PortId, node1Id);
-
-    // When one input changes, it could update f() of node 2
-    this.nodeIdsToUpdateF.add(node2Id);
   }
 
   setDifferentiationMode(mode: DifferentiationMode): void {
-    this.invalidateDerivativesFromTargetNode();
-
     this.differentiationMode = mode;
   }
 
@@ -105,14 +80,6 @@ class Graph {
   setNodeValue(nodeId: string, value: number): void {
     const node = this.getOneNode(nodeId);
     node.setValue(value);
-
-    // When the node value changes, it could update f() of all its output nodes
-    node
-      .getRelationship()
-      .getOutputNodes()
-      .forEach((outputNode) => {
-        this.nodeIdsToUpdateF.add(outputNode.getId());
-      });
   }
 
   getTargetNode(): string | null {
@@ -124,27 +91,15 @@ class Graph {
       this.getOneNode(nodeId); // checks if the node exists
     }
 
-    this.invalidateDerivativesFromTargetNode();
-
     this.targetNodeId = nodeId;
   }
 
-  update(): Set<string> {
-    const updatedFNodes = this.updateF();
-    const updatedDerivativeNodes = this.updateDerivatives();
-    const updatedNodes = new Set<string>([
-      ...this.invalidatedNodeIds,
-      ...updatedFNodes,
-      ...updatedDerivativeNodes,
-    ]);
-
-    this.invalidatedNodeIds.clear();
-
-    return updatedNodes;
+  updateFValues(): Set<string> {
+    return new Set<string>(); // TODO(sc420)
   }
 
-  private updateF(): Set<string> {
-    const nodeIdsToBeUpdated: Set<string> = this.nodeIdsToUpdateF;
+  updateFValuesFrom(startNodeId: string): Set<string> {
+    const nodeIdsToBeUpdated = new Set<string>([startNodeId]);
     const updatedNodeIds = new Set<string>();
     while (nodeIdsToBeUpdated.size > 0) {
       const nodeId = Graph.popFromSet(nodeIdsToBeUpdated);
@@ -157,7 +112,7 @@ class Graph {
       node.updateF();
       updatedNodeIds.add(nodeId);
 
-      const neighborNodeIds = this.getDifferentiationNeighborNodeIds(nodeId);
+      const neighborNodeIds = this.getFDirectionNeighborNodeIds(nodeId);
       neighborNodeIds.forEach((neighborNodeId) => {
         if (updatedNodeIds.has(neighborNodeId)) {
           return;
@@ -166,12 +121,11 @@ class Graph {
       });
     }
 
-    this.nodeIdsToUpdateF.clear();
-
     return updatedNodeIds;
   }
 
-  private updateDerivatives(): Set<string> {
+  // TODO(sc420): should use BFS
+  updateDerivatives(): Set<string> {
     if (this.targetNodeId === null) {
       return new Set<string>();
     }
@@ -222,7 +176,8 @@ class Graph {
       this.nodeIdToDerivatives.set(nodeId, totalDerivative);
       updatedNodeIds.add(nodeId);
 
-      const neighborNodeIds = this.getDifferentiationNeighborNodeIds(nodeId);
+      const neighborNodeIds =
+        this.getDerivativeDirectionNeighborNodeIds(nodeId);
       neighborNodeIds.forEach((neighborNodeId) => {
         if (updatedNodeIds.has(neighborNodeId)) {
           return;
@@ -234,62 +189,14 @@ class Graph {
     return updatedNodeIds;
   }
 
-  private invalidateDerivativesFromTargetNode(): void {
-    if (this.targetNodeId !== null) {
-      this.invalidateDerivativesFromNode(this.targetNodeId).forEach(
-        (invalidatedNode) => {
-          this.invalidatedNodeIds.add(invalidatedNode);
-        },
-      );
-    }
+  private getFDirectionNeighborNodeIds(nodeId: string): Set<string> {
+    const node = this.getOneNode(nodeId);
+    const neighborNodes = node.getRelationship().getOutputNodes();
+    const neighborNodeIds = neighborNodes.map((node) => node.getId());
+    return new Set<string>(neighborNodeIds);
   }
 
-  private invalidateDerivativesFromDisconnectedNode(node2Id: string): void {
-    if (this.differentiationMode === "FORWARD") {
-      // The sibling nodes of node1 won't be affected because the chain rule of
-      // other sibling nodes only involve nodes of either the sibling nodes
-      // themselves or the input nodes of the sibling nodes
-      this.invalidateDerivativesFromNode(node2Id).forEach((invalidatedNode) => {
-        this.invalidatedNodeIds.add(invalidatedNode);
-      });
-    } else {
-      // It could affect the derivatives of other sibling nodes of node1
-      // because the chain rule of other sibling nodes involve
-      // d(node2)/d(siblingNode). When d(node2)/d(siblingNode) involves node1,
-      // the derivative will change (e.g., node2 is product operation), so we
-      // should invalidate from node2 instead of node1
-      this.invalidateDerivativesFromNode(node2Id).forEach((invalidatedNode) => {
-        this.invalidatedNodeIds.add(invalidatedNode);
-      });
-    }
-  }
-
-  private invalidateDerivativesFromNode(nodeId: string): Set<string> {
-    const nodeIdsToBeUpdated = new Set<string>([nodeId]);
-    const updatedNodeIds = new Set<string>();
-    while (nodeIdsToBeUpdated.size > 0) {
-      const nodeId = Graph.popFromSet(nodeIdsToBeUpdated);
-      if (nodeId === undefined) {
-        throw new Error("Should have at least one node in the queue");
-      }
-
-      // Invalidate
-      this.nodeIdToDerivatives.delete(nodeId);
-      updatedNodeIds.add(nodeId);
-
-      const neighborNodeIds = this.getDifferentiationNeighborNodeIds(nodeId);
-      neighborNodeIds.forEach((neighborNodeId) => {
-        if (updatedNodeIds.has(neighborNodeId)) {
-          return;
-        }
-        nodeIdsToBeUpdated.add(neighborNodeId);
-      });
-    }
-
-    return updatedNodeIds;
-  }
-
-  private getDifferentiationNeighborNodeIds(nodeId: string): Set<string> {
+  private getDerivativeDirectionNeighborNodeIds(nodeId: string): Set<string> {
     const node = this.getOneNode(nodeId);
     let neighborNodes: GraphNode[] = [];
     if (this.differentiationMode === "FORWARD") {

@@ -1,6 +1,14 @@
 import type DifferentiationMode from "./DifferentiationMode";
 import type GraphNode from "./GraphNode";
 
+/**
+ * A state for updating f(). It's similar to the call stack data.
+ */
+interface UpdateFState {
+  nodeId: string;
+  allInputFValuesUpdated: boolean;
+}
+
 class Graph {
   private readonly nodeIdToNodes = new Map<string, GraphNode>();
 
@@ -94,8 +102,91 @@ class Graph {
     this.targetNodeId = nodeId;
   }
 
+  /**
+   * Update all f() values.
+   *
+   * The algorithm simulates recursive calls to the subfunctions. For example,
+   * to calculate op1 = f(op2(),op3(),op4()), we call op2(), op3() and op4() to
+   * update their f() values and finally call f() on op1. We use a stack
+   * updateStates to represent the call stack.
+   *
+   * Since we use the top-down approach by working on right-hand side nodes
+   * first, we should fill updateStates with terminal nodes first.
+   *
+   * It's as if we have written a recursive function like this:
+   * function update(node) {
+   *   node.getInputNodes().forEach((inputNode) => {  // (1)
+   *     if (!updatedNodeIds.has(inputNode.getId())) {  // (2)
+   *       update(inputNode);  // (3)
+   *     }
+   *   });
+   *   node.updateF();  // (4)
+   *   updatedNodeIds.add(node.getId());  // (5)
+   * }
+   *
+   * and call update function initially:
+   * terminalNodes.forEach((terminalNode) => {
+   *   update(terminalNode);
+   * });
+   *
+   * Before calling op2(), op3() and op4(), allInputFValuesUpdated is false,
+   * which represents we're currently at (1). We then visit op2(), op3() and
+   * op4() by adding them to the stack with allInputFValuesUpdated==false to
+   * represent (3). After calling op2(), op3() and op4(),
+   * allInputFValuesUpdated is true, which represents (4) and the f() is ready
+   * to be called.
+   *
+   * Since it's possible to connect the output port of one node to multiple
+   * nodes, we could visit the same input node multiple times. To avoid
+   * duplicate f() call, we use a set updatedNodeIds to record a list of nodes
+   * that have updated f(). It represents (2) and (5).
+   *
+   * @returns Node IDs of all nodes that have their f() updated.
+   */
   updateFValues(): Set<string> {
-    return new Set<string>(); // TODO(sc420)
+    const updateStates: UpdateFState[] = this.getInitialUpdateStates();
+    const updatedNodeIds = new Set<string>();
+    while (updateStates.length > 0) {
+      const curNodeState = updateStates.pop();
+      if (curNodeState === undefined) {
+        throw new Error("The stack shouldn't be empty");
+      }
+
+      const node = this.getOneNode(curNodeState.nodeId);
+      if (curNodeState.allInputFValuesUpdated) {
+        // Update f of the current node (4)
+        node.updateF();
+        // Mark the current node as updated (5)
+        updatedNodeIds.add(curNodeState.nodeId);
+      } else {
+        // Make the current node ready to calculate f() when all input nodes
+        // have been updated
+        const readyNodeState: UpdateFState = {
+          nodeId: curNodeState.nodeId,
+          allInputFValuesUpdated: true,
+        };
+        updateStates.push(readyNodeState);
+
+        // Update f of all input nodes (1)
+        node
+          .getRelationship()
+          .getInputNodes()
+          .forEach((inputNode) => {
+            // Skip the input node if it has been updated (2)
+            if (updatedNodeIds.has(inputNode.getId())) {
+              return;
+            }
+
+            // Make the input node ready to be updated later (3)
+            const inputNodeState: UpdateFState = {
+              nodeId: inputNode.getId(),
+              allInputFValuesUpdated: false,
+            };
+            updateStates.push(inputNodeState);
+          });
+      }
+    }
+    return updatedNodeIds;
   }
 
   // TODO(sc420): should use BFS
@@ -188,6 +279,25 @@ class Graph {
     }
 
     return updatedNodeIds;
+  }
+
+  /**
+   * Gets initial update states by finding all terminal nodes (nodes that don't
+   * have any output nodes).
+   *
+   * @returns Initial update states of all terminal nodes.
+   */
+  private getInitialUpdateStates(): UpdateFState[] {
+    const updateStates: UpdateFState[] = [];
+    this.getNodes().forEach((node) => {
+      if (node.getRelationship().isOutputPortEmpty()) {
+        updateStates.push({
+          nodeId: node.getId(),
+          allInputFValuesUpdated: false,
+        });
+      }
+    });
+    return updateStates;
   }
 
   private getFDirectionNeighborNodeIds(nodeId: string): Set<string> {

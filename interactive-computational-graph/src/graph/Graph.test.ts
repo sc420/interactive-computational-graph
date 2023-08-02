@@ -266,7 +266,7 @@ describe("updating derivative values", () => {
 
     graph.setTargetNode("v1");
     let updatedNodes = graph.updateDerivatives();
-    let expectedUpdatedNodes = new Set<string>(["sum1"]);
+    let expectedUpdatedNodes = new Set<string>(["v1"]);
     expect(updatedNodes).toEqual(expectedUpdatedNodes);
     // d(v1)/d(v1) = 1
     expect(graph.getNodeDerivative("v1")).toBeCloseTo(1);
@@ -277,7 +277,7 @@ describe("updating derivative values", () => {
 
     graph.setTargetNode("sum1");
     updatedNodes = graph.updateDerivatives();
-    expectedUpdatedNodes = new Set<string>(["v1", "sum1"]);
+    expectedUpdatedNodes = new Set<string>(["v1", "v2", "sum1"]);
     expect(updatedNodes).toEqual(expectedUpdatedNodes);
     // d(sum1)/d(v1) = 1
     expect(graph.getNodeDerivative("v1")).toBeCloseTo(1);
@@ -297,11 +297,11 @@ describe("updating derivative values", () => {
     let updatedNodes = graph.updateDerivatives();
     let expectedUpdatedNodes = new Set<string>(["v1", "sum1"]);
     expect(updatedNodes).toEqual(expectedUpdatedNodes);
-    // d(v1)/d(sum1) = 0
-    expect(graph.getNodeDerivative("v1")).toBeCloseTo(0);
+    // d(v1)/d(v1) = 1
+    expect(graph.getNodeDerivative("v1")).toBeCloseTo(1);
     // not in the forward path
     expect(graph.getNodeDerivative("v2")).toBeCloseTo(0);
-    // d(sum1)/d(sum1) = 1
+    // d(sum1)/d(v1) = 1
     expect(graph.getNodeDerivative("sum1")).toBeCloseTo(1);
 
     graph.setTargetNode("sum1");
@@ -330,6 +330,7 @@ describe("updating derivative values", () => {
       "c1",
       "sum1",
       "sum2",
+      "v3",
       "product1",
       "identity1",
     ]);
@@ -363,9 +364,7 @@ describe("updating derivative values", () => {
 
     const updatedNodes = graph.updateDerivatives();
     const expectedUpdatedNodes = new Set<string>([
-      "v1",
       "v2",
-      "c1",
       "sum1",
       "sum2",
       "product1",

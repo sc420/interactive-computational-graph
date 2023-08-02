@@ -142,8 +142,8 @@ describe("sequential testing to manipulate a graph", () => {
 
   test("9. should throw error when connecting to single-connection port", () => {
     expect(() => {
-      graph.connect("sum1", "identity1", "x_i");
-    }).toThrow("Input port x_i doesn't allow multiple edges");
+      graph.connect("sum1", "identity1", "x");
+    }).toThrow("Input port x doesn't allow multiple edges");
 
     // Should not be half-connected
     const sumNode1 = nodeIdToNodes.get("sum1");

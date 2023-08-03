@@ -1,12 +1,11 @@
 import type DifferentiationMode from "./DifferentiationMode";
 import type GraphNode from "./GraphNode";
 
-/**
- * A state for updating f(). It's similar to the call stack data.
- */
-interface UpdateFState {
+type TopologicalSortDirection = "TO_OUTPUT" | "TO_INPUT";
+
+interface TopologicalSortCallStackElement {
   nodeId: string;
-  allInputFValuesUpdated: boolean;
+  allDependentsVisited: boolean;
 }
 
 class Graph {
@@ -105,88 +104,152 @@ class Graph {
   /**
    * Update all f() values.
    *
-   * The algorithm simulates recursive calls to the subfunctions. For example,
-   * to calculate op1 = f(op2(),op3(),op4()), we call op2(), op3() and op4() to
-   * update their f() values and finally call f() on op1. We use a stack
-   * updateStates to represent the call stack.
+   * We can use the following graph as an example:
+   * - op4=f(op1(),op2(),op3())
+   * - op5=f(op1(),op3())
+   * - op1=f(v1,v2)
+   * - op2=f(v2,v3)
+   * - op3=v4
    *
-   * Since we use the top-down approach by working on right-hand side nodes
-   * first, we should fill updateStates with terminal nodes first.
-   *
-   * It's as if we have written a recursive function like this:
-   * function update(node) {
-   *   node.getInputNodes().forEach((inputNode) => {  // (1)
-   *     if (!updatedNodeIds.has(inputNode.getId())) {  // (2)
-   *       update(inputNode);  // (3)
-   *     }
-   *   });
-   *   node.updateF();  // (4)
-   *   updatedNodeIds.add(node.getId());  // (5)
-   * }
-   *
-   * and call update function initially:
-   * terminalNodes.forEach((terminalNode) => {
-   *   update(terminalNode);
-   * });
-   *
-   * Before calling op2(), op3() and op4(), allInputFValuesUpdated is false,
-   * which represents we're currently at (1). We then visit op2(), op3() and
-   * op4() by adding them to the stack with allInputFValuesUpdated==false to
-   * represent (3). After calling op2(), op3() and op4(),
-   * allInputFValuesUpdated is true, which represents (4) and the f() is ready
-   * to be called.
-   *
-   * Since it's possible to connect the output port of one node to multiple
-   * nodes, we could visit the same input node multiple times. To avoid
-   * duplicate f() call, we use a set updatedNodeIds to record a list of nodes
-   * that have updated f(). It represents (2) and (5).
+   * The algorithm runs as follows:
+   * 1. Find all terminal nodes like op4 and op5
+   * 2. Perform a topological sort to find nodes in reverse order, a valid
+   *    order could be [v1,v2,v3,v4,op1,op2,op3,op4,op5] or
+   *    [v4,v3,v2,v1,op3,op2,op1,op5,op4]
+   * 3. Update f() for nodes in the reverse topological order
    *
    * @returns Node IDs of all nodes that have their f() updated.
    */
   updateFValues(): Set<string> {
-    const updateStates: UpdateFState[] = this.getInitialUpdateStates();
+    const terminalNodeIds = this.getTerminalNodeIds();
+    const topologicalOrderedNodeIds = this.topologicalSort(
+      terminalNodeIds,
+      "TO_INPUT",
+    );
     const updatedNodeIds = new Set<string>();
-    while (updateStates.length > 0) {
-      const curNodeState = updateStates.pop();
-      if (curNodeState === undefined) {
-        throw new Error("The stack shouldn't be empty");
+    topologicalOrderedNodeIds.forEach((nodeId) => {
+      const node = this.getOneNode(nodeId);
+      node.updateF();
+      updatedNodeIds.add(nodeId);
+    });
+    return updatedNodeIds;
+  }
+
+  /**
+   * Perform a topological sort on the graph.
+   *
+   * We use DFS variant of the topological sort algorithm on wiki. Since the
+   * graph is acyclic, we can ignore temporary marks. The recursive algorithm
+   * can be written as follows:
+   *
+   * L ← Empty list that will contain the sorted nodes
+   * while exists nodes without a permanent mark do // (1)
+   *     select an unmarked node n
+   *     visit(n) // (2)
+   *
+   * function visit(node n)
+   *     if n has a permanent mark then // (3)
+   *         return
+   *
+   *     for each node m with an edge from n to m do // (4)
+   *         visit(m)
+   *
+   *     mark n with a permanent mark // (5)
+   *     add n to head of L // (6)
+   *
+   * We can maintain our own call stack to simulate the recursion in the above
+   * code. Each element in the call stack stores (n, allDependentsVisited) to
+   * represent the position in the above recursive algorithm. We have another
+   * set visitedNodes to record nodes that have reached the position (5).
+   *
+   * Initially, all nodes in startNodes are added to the call stack with
+   * allDependentsVisited set to false. It represents the positions (1) and
+   * (2). Other nodes not in startNodes are the nodes we don't care about, so
+   * we don't need to call visit() on them.
+   *
+   * Instead of checking if the node is in the set visitedNodes when we pop an
+   * element from the call stack, we move the check earlier when we call
+   * visit() recursively in position (4).
+   *
+   * Then, we iterate through all dependent nodes of node n by the topological
+   * sort direction. We add these dependent nodes to the call stack with
+   * allDependentsVisited set to false initially just like startNodes. It
+   * should not be confused with differentiation mode. It represents the
+   * position (4). To make sure we know the node has reached position (5)
+   * later, we push (n, allDependentsVisited==true) to the call stack before
+   * adding dependent nodes.
+   *
+   * Later, when we pop an element from the stack and see that
+   * allDependentsVisited is true, we add the node n to the set visitedNodes
+   * and output the node n to the list L. It represents the positions (5) and
+   * (6).
+   *
+   * NOTE: The results is reversed because prepend operation for array is O(n),
+   * but append operation is amortized O(1) which is more efficient. If you
+   * want it in the classic order, just reverse the list.
+   *
+   * References:
+   * - https://en.wikipedia.org/wiki/Topological_sorting#Depth-first_search
+   *
+   * @param startNodes List of starting nodes (unmarked nodes).
+   *
+   * @returns List of Node IDs in reverse topological order.
+   */
+  private topologicalSort(
+    startNodeIds: string[],
+    direction: TopologicalSortDirection,
+  ): string[] {
+    const callStack: TopologicalSortCallStackElement[] = [];
+    // Call visit() for the root nodes (not depending on other nodes) (1) (2)
+    startNodeIds.forEach((startNodeId) => {
+      callStack.push({
+        nodeId: startNodeId,
+        allDependentsVisited: false,
+      });
+    });
+
+    const visitedNodeIds = new Set<string>();
+    const reverseResult: string[] = [];
+    while (callStack.length > 0) {
+      const callStackElem = callStack.pop();
+      if (callStackElem === undefined) {
+        throw new Error("The call stack shouldn't be empty");
       }
 
-      const node = this.getOneNode(curNodeState.nodeId);
-      if (curNodeState.allInputFValuesUpdated) {
-        // Update f of the current node (4)
-        node.updateF();
-        // Mark the current node as updated (5)
-        updatedNodeIds.add(curNodeState.nodeId);
-      } else {
-        // Make the current node ready to calculate f() when all input nodes
-        // have been updated
-        const readyNodeState: UpdateFState = {
-          nodeId: curNodeState.nodeId,
-          allInputFValuesUpdated: true,
-        };
-        updateStates.push(readyNodeState);
+      const node = this.getOneNode(callStackElem.nodeId);
+      if (!callStackElem.allDependentsVisited) {
+        // Make sure the node n will be visited again after all dependents are
+        // visited
+        callStack.push({
+          nodeId: callStackElem.nodeId,
+          allDependentsVisited: true,
+        });
 
-        // Update f of all input nodes (1)
-        node
-          .getRelationship()
-          .getInputNodes()
-          .forEach((inputNode) => {
-            // Skip the input node if it has been updated (2)
-            if (updatedNodeIds.has(inputNode.getId())) {
-              return;
-            }
+        const dependentNodeIds = this.getTopologicalSortDirectionNodeIds(
+          node,
+          direction,
+        );
+        dependentNodeIds.forEach((dependentNodeId) => {
+          // Check if the dependent node has been visited (3)
+          if (visitedNodeIds.has(dependentNodeId)) {
+            return;
+          }
 
-            // Make the input node ready to be updated later (3)
-            const inputNodeState: UpdateFState = {
-              nodeId: inputNode.getId(),
-              allInputFValuesUpdated: false,
-            };
-            updateStates.push(inputNodeState);
+          // Call visit() on the dependent node (4)
+          callStack.push({
+            nodeId: dependentNodeId,
+            allDependentsVisited: false,
           });
+        });
+      } else {
+        // Mark the node as visited (5)
+        visitedNodeIds.add(callStackElem.nodeId);
+        // Add node to the results (6)
+        reverseResult.push(callStackElem.nodeId);
       }
     }
-    return updatedNodeIds;
+
+    return reverseResult;
   }
 
   // TODO(sc420): should use BFS
@@ -282,22 +345,18 @@ class Graph {
   }
 
   /**
-   * Gets initial update states by finding all terminal nodes (nodes that don't
-   * have any output nodes).
+   * Gets terminal node (nodes that don't have any output nodes) IDs.
    *
-   * @returns Initial update states of all terminal nodes.
+   * @returns List of terminal node IDs.
    */
-  private getInitialUpdateStates(): UpdateFState[] {
-    const updateStates: UpdateFState[] = [];
+  private getTerminalNodeIds(): string[] {
+    const terminalNodeIds: string[] = [];
     this.getNodes().forEach((node) => {
       if (node.getRelationship().isOutputPortEmpty()) {
-        updateStates.push({
-          nodeId: node.getId(),
-          allInputFValuesUpdated: false,
-        });
+        terminalNodeIds.push(node.getId());
       }
     });
-    return updateStates;
+    return terminalNodeIds;
   }
 
   private getFDirectionNeighborNodeIds(nodeId: string): Set<string> {
@@ -305,6 +364,19 @@ class Graph {
     const neighborNodes = node.getRelationship().getOutputNodes();
     const neighborNodeIds = neighborNodes.map((node) => node.getId());
     return new Set<string>(neighborNodeIds);
+  }
+
+  private getTopologicalSortDirectionNodeIds(
+    node: GraphNode,
+    direction: TopologicalSortDirection,
+  ): string[] {
+    let neighborNodes: GraphNode[] = [];
+    if (direction === "TO_INPUT") {
+      neighborNodes = node.getRelationship().getInputNodes();
+    } else {
+      neighborNodes = node.getRelationship().getOutputNodes();
+    }
+    return neighborNodes.map((node) => node.getId());
   }
 
   private getDerivativeDirectionNeighborNodeIds(nodeId: string): Set<string> {

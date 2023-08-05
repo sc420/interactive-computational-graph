@@ -17,10 +17,13 @@ class NodeRelationship {
     PortData
   >();
 
+  public readonly inputPorts: Port[];
+
   public readonly outputPort: Port = new Port("output", true);
 
   constructor(inputPorts: Port[]) {
-    this.initInputPortIdToPortData(inputPorts);
+    this.inputPorts = inputPorts;
+    this.initInputPortIdToPortData();
     this.initOutputPortIdToPortData();
   }
 
@@ -120,8 +123,8 @@ class NodeRelationship {
     }
   }
 
-  private initInputPortIdToPortData(inputPorts: Port[]): void {
-    inputPorts.forEach((inputPort) => {
+  private initInputPortIdToPortData(): void {
+    this.inputPorts.forEach((inputPort) => {
       const portData: PortData = {
         port: inputPort,
         nodeIdToNodes: new Map<string, GraphNode>(),

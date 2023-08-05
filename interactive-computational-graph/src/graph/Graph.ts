@@ -47,6 +47,9 @@ class Graph {
   }
 
   removeNode(nodeId: string): void {
+    const node = this.getOneNode(nodeId);
+    this.removeNodeConnections(node);
+
     const success = this.nodeIdToNodes.delete(nodeId);
     if (!success) {
       throw new Error(`Node ${nodeId} doesn't exist`);
@@ -195,6 +198,61 @@ class Graph {
       updatedNodeIds.add(nodeId);
     }
     return updatedNodeIds;
+  }
+
+  /**
+   * Removes connections of a node to all its neighboring nodes.
+   * @param node The node to remove the input/output connections.
+   */
+  private removeNodeConnections(node: GraphNode): void {
+    this.removeInputNodeConnections(node);
+    this.removeOutputNodeConnections(node);
+  }
+
+  /**
+   * Removes connections of a node to all its input nodes.
+   * @param node The node to remove the input connections.
+   */
+  private removeInputNodeConnections(node: GraphNode): void {
+    const nodeRelationship = node.getRelationship();
+    nodeRelationship.inputPorts.forEach((inputPort) => {
+      nodeRelationship
+        .getInputNodesByPort(inputPort.getId())
+        .forEach((inputNode) => {
+          this.disconnect(inputNode.getId(), node.getId(), inputPort.getId());
+        });
+    });
+  }
+
+  /**
+   * Removes connections of a node to all its output nodes.
+   * @param node The node to remove the output connections.
+   */
+  private removeOutputNodeConnections(node: GraphNode): void {
+    node
+      .getRelationship()
+      .getOutputNodes()
+      .forEach((outputNode) => {
+        // The node may connect to more than one port of the output node, so we
+        // need to check every input port of the output node
+        const outputNodeRelationship = outputNode.getRelationship();
+        outputNodeRelationship.inputPorts.forEach((outputNodeInputPort) => {
+          if (
+            !outputNodeRelationship.hasInputNodeByPort(
+              outputNodeInputPort.getId(),
+              node.getId(),
+            )
+          ) {
+            return;
+          }
+
+          this.disconnect(
+            node.getId(),
+            outputNode.getId(),
+            outputNodeInputPort.getId(),
+          );
+        });
+      });
   }
 
   /**

@@ -135,32 +135,6 @@ class Graph {
     return updatedNodeIds;
   }
 
-  updateFValuesFrom(startNodeId: string): Set<string> {
-    const nodeIdsToBeUpdated = new Set<string>([startNodeId]);
-    const updatedNodeIds = new Set<string>();
-    while (nodeIdsToBeUpdated.size > 0) {
-      const nodeId = Graph.popFromSet(nodeIdsToBeUpdated);
-      if (nodeId === undefined) {
-        throw new Error("Should have at least one node in the queue");
-      }
-
-      // Update f()
-      const node = this.getOneNode(nodeId);
-      node.updateF();
-      updatedNodeIds.add(nodeId);
-
-      const neighborNodeIds = this.getFDirectionNeighborNodeIds(nodeId);
-      neighborNodeIds.forEach((neighborNodeId) => {
-        if (updatedNodeIds.has(neighborNodeId)) {
-          return;
-        }
-        nodeIdsToBeUpdated.add(neighborNodeId);
-      });
-    }
-
-    return updatedNodeIds;
-  }
-
   updateDerivatives(): Set<string> {
     this.nodeIdToDerivatives.clear();
 

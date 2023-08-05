@@ -197,7 +197,17 @@ describe("sequential testing to manipulate a graph", () => {
   });
 });
 
-describe("updating f values", () => {
+describe("setting node values", () => {
+  test("updating non-operation node values should success", () => {
+    const graph = buildSmallGraph();
+
+    graph.setNodeValue("v1", 10);
+    graph.setNodeValue("v2", 20);
+
+    expect(graph.getNodeValue("v1")).toBeCloseTo(10);
+    expect(graph.getNodeValue("v2")).toBeCloseTo(20);
+  });
+
   test("updating operation node values should fail", () => {
     const graph = new Graph();
     const sumNode1 = buildSumNode("sum1");
@@ -207,24 +217,23 @@ describe("updating f values", () => {
       graph.setNodeValue("sum1", 5);
     }).toThrow("Operation node should only update f, not set a value");
   });
+});
 
+describe("updating f values", () => {
   test("should update f values for small graph", () => {
     const graph = buildSmallGraph();
 
-    graph.setNodeValue("v1", 0);
-
-    const updatedNodes = graph.updateFValuesFrom("v1");
-    const expectedUpdatedNodes = new Set<string>(["v1", "sum1"]);
+    const updatedNodes = graph.updateFValues();
+    const expectedUpdatedNodes = new Set<string>(["v1", "v2", "sum1"]);
     expect(updatedNodes).toEqual(expectedUpdatedNodes);
-    expect(graph.getNodeValue("sum1")).toBeCloseTo(1);
+    expect(graph.getNodeValue("sum1")).toBeCloseTo(3);
   });
 
   test("should update f values for medium graph", () => {
     const graph = buildMediumGraph();
 
-    // Update all f values
-    let updatedNodes = graph.updateFValues();
-    let expectedUpdatedNodes = new Set<string>([
+    const updatedNodes = graph.updateFValues();
+    const expectedUpdatedNodes = new Set<string>([
       "v1",
       "v2",
       "c1",
@@ -239,21 +248,6 @@ describe("updating f values", () => {
     expect(graph.getNodeValue("sum2")).toBeCloseTo(2);
     expect(graph.getNodeValue("product1")).toBeCloseTo(30);
     expect(graph.getNodeValue("identity1")).toBeCloseTo(30);
-
-    // Update f values from one node
-    graph.setNodeValue("v1", 0);
-    updatedNodes = graph.updateFValuesFrom("v1");
-    expectedUpdatedNodes = new Set<string>([
-      "v1",
-      "sum1",
-      "product1",
-      "identity1",
-    ]);
-    expect(updatedNodes).toEqual(expectedUpdatedNodes);
-    expect(graph.getNodeValue("sum1")).toBeCloseTo(1);
-    expect(graph.getNodeValue("sum2")).toBeCloseTo(2);
-    expect(graph.getNodeValue("product1")).toBeCloseTo(10);
-    expect(graph.getNodeValue("identity1")).toBeCloseTo(10);
   });
 });
 

@@ -14,186 +14,134 @@ import {
   SUM_F_CODE,
 } from "./test_utils";
 
-describe("sequential testing to manipulate a graph", () => {
-  const graph = new Graph();
-  const nodeIdToNodes = new Map<string, GraphNode>();
+describe("manipulating the graph", () => {
+  test("should get a list of nodes", () => {
+    const emptyGraph = new Graph();
+    expect(emptyGraph.getNodes()).toEqual([]);
 
-  test("1. should have correct initial properties", () => {
-    expect(graph.getNodes()).toEqual([]);
-
-    expect(graph.hasNode("v1")).toBe(false);
+    const smallGraph = buildSmallGraph();
+    const nodeIds = smallGraph.getNodes().map((node) => node.getId());
+    expect(nodeIds.sort()).toEqual(["v1", "v2", "sum1"].sort());
   });
 
-  test("2. should throw error when referring non-existent node", () => {
+  test("node should exist after adding", () => {
+    const graph = new Graph();
+    const varNode1 = new VariableNode("v1");
+    graph.addNode(varNode1);
+
+    expect(graph.getNodes()).toEqual([varNode1]);
+    expect(graph.getOneNode("v1")).toEqual(varNode1);
+    expect(graph.hasNode("v1")).toBe(true);
+  });
+
+  test("should throw error when referring non-existent node", () => {
+    const emptyGraph = new Graph();
     const nodeNotExistError = "Node v1 doesn't exist";
 
     expect(() => {
-      graph.removeNode("v1");
+      emptyGraph.removeNode("v1");
     }).toThrow(nodeNotExistError);
 
     expect(() => {
-      graph.connect("v1", "v2", "x");
+      emptyGraph.connect("v1", "v2", "x");
     }).toThrow(nodeNotExistError);
 
     expect(() => {
-      graph.disconnect("v1", "v2", "x");
+      emptyGraph.disconnect("v1", "v2", "x");
     }).toThrow(nodeNotExistError);
 
     expect(() => {
-      graph.setNodeValue("v1", 1);
+      emptyGraph.setNodeValue("v1", 1);
     }).toThrow(nodeNotExistError);
 
     expect(() => {
-      graph.setTargetNode("v1");
-    }).toThrow(nodeNotExistError);
-  });
-
-  test("3. should have one node after adding one", () => {
-    const varNode1 = new VariableNode("v1");
-    graph.addNode(varNode1);
-    nodeIdToNodes.set(varNode1.getId(), varNode1);
-
-    expect(graph.getNodes()).toEqual(nodeIdToNodes.values()); // TODO(sc420): just check node IDS and sort
-
-    expect(graph.getOneNode("v1")).toEqual(varNode1);
-
-    expect(graph.hasNode("v1")).toBe(true);
-  });
-
-  test("4. should throw error when referring another non-existent node", () => {
-    const nodeNotExistError = "Node v2 doesn't exist";
-
-    expect(() => {
-      graph.connect("v1", "v2", "x");
-    }).toThrow(nodeNotExistError);
-
-    expect(() => {
-      graph.disconnect("v1", "v2", "x");
+      emptyGraph.setTargetNode("v1");
     }).toThrow(nodeNotExistError);
   });
 
-  test("5. should have two nodes after adding one", () => {
-    const varNode2 = new VariableNode("v2");
-    graph.addNode(varNode2);
-    nodeIdToNodes.set(varNode2.getId(), varNode2);
+  test("should throw error when referring another non-existent node", () => {
+    const graph = buildSmallGraph();
+    const nodeNotExistError = "Node v3 doesn't exist";
 
-    const varNode1 = nodeIdToNodes.get("v1");
-    expect(graph.getNodes()).toEqual([varNode1, varNode2]); // TODO(sc420): just check node IDS and sort
-
-    expect(graph.getOneNode("v2")).toEqual(varNode2);
-
-    expect(graph.hasNode("v1")).toBe(true);
-    expect(graph.hasNode("v2")).toBe(true);
-  });
-
-  test("6. should have multiple nodes after adding some", () => {
-    const constNode1 = new ConstantNode("c1");
-    const sumNode1 = buildSumNode("sum1");
-    const sumNode2 = buildSumNode("sum2");
-    const productNode1 = buildProductNode("product1");
-    const identityNode1 = buildIdentityNode("identity1");
-    const newNodes = [
-      constNode1,
-      sumNode1,
-      sumNode2,
-      productNode1,
-      identityNode1,
-    ];
-
-    newNodes.forEach((node) => {
-      graph.addNode(node);
-      nodeIdToNodes.set(node.getId(), node);
-    });
-
-    const varNode1 = nodeIdToNodes.get("v1");
-    const varNode2 = nodeIdToNodes.get("v2");
-    expect(graph.getNodes()).toEqual([varNode1, varNode2, ...newNodes]); // TODO(sc420): just check node IDS and sort
-
-    expect(graph.getOneNode("c1")).toEqual(constNode1);
-    expect(graph.getOneNode("sum1")).toEqual(sumNode1);
-    expect(graph.getOneNode("sum2")).toEqual(sumNode2);
-    expect(graph.getOneNode("product1")).toEqual(productNode1);
-    expect(graph.getOneNode("identity1")).toEqual(identityNode1);
-
-    expect(graph.hasNode("c1")).toBe(true);
-    expect(graph.hasNode("sum1")).toBe(true);
-    expect(graph.hasNode("sum2")).toBe(true);
-    expect(graph.hasNode("product1")).toBe(true);
-    expect(graph.hasNode("identity1")).toBe(true);
-  });
-
-  test("7. should throw error when connecting to non-existent port", () => {
     expect(() => {
-      graph.connect("sum1", "v1", "x");
+      graph.connect("v1", "v3", "x");
+    }).toThrow(nodeNotExistError);
+
+    expect(() => {
+      graph.disconnect("v1", "v3", "x");
+    }).toThrow(nodeNotExistError);
+  });
+
+  test("should disconnect successfully", () => {
+    const graph = buildSmallGraph();
+
+    graph.disconnect("v1", "sum1", "x_i");
+    graph.disconnect("v2", "sum1", "x_i");
+
+    const varNode1 = graph.getOneNode("v1");
+    const varNode2 = graph.getOneNode("v2");
+    const sumNode1 = graph.getOneNode("sum1");
+    expect(varNode1.getRelationship().isOutputPortEmpty()).toBe(true);
+    expect(varNode2.getRelationship().isOutputPortEmpty()).toBe(true);
+    expect(sumNode1.getRelationship().isInputPortEmpty("x_i")).toBe(true);
+  });
+
+  test("should remove connections automatically when removing nodes", () => {
+    const graph = buildSmallGraph();
+
+    graph.removeNode("sum1");
+
+    const varNode1 = graph.getOneNode("v1");
+    const varNode2 = graph.getOneNode("v2");
+    expect(varNode1.getRelationship().isOutputPortEmpty()).toBe(true);
+    expect(varNode2.getRelationship().isOutputPortEmpty()).toBe(true);
+  });
+
+  test("should throw error when connecting the same edge again", () => {
+    const graph = buildSmallGraph();
+
+    expect(() => {
+      graph.connect("v1", "sum1", "x_i");
+    }).toThrow("Output node sum1 already exists");
+  });
+
+  test("should throw error when connecting to non-existent port", () => {
+    const graph = buildSmallGraph();
+    const varNode3 = new VariableNode("v3");
+    graph.addNode(varNode3);
+
+    expect(() => {
+      graph.connect("v3", "sum1", "x");
     }).toThrow("Input port x doesn't exist");
   });
 
-  test("8. should connect nodes successfully", () => {
-    graph.connect("v1", "sum1", "x_i");
-    graph.connect("v2", "sum1", "x_i");
-    graph.connect("v2", "sum2", "x_i");
-    graph.connect("c1", "sum2", "x_i");
+  test("should throw error when connecting to single-connection port", () => {
+    const graph = buildMediumGraph();
+    const varNode4 = new VariableNode("v4");
+    graph.addNode(varNode4);
 
-    graph.connect("sum1", "product1", "x_i");
-    graph.connect("sum2", "product1", "x_i");
-
-    graph.connect("product1", "identity1", "x");
-  });
-
-  test("9. should throw error when connecting to single-connection port", () => {
     expect(() => {
-      graph.connect("sum1", "identity1", "x");
+      graph.connect("v4", "identity1", "x");
     }).toThrow("Input port x doesn't allow multiple edges");
 
     // Should not be half-connected
-    const sumNode1 = nodeIdToNodes.get("sum1");
-    const productNode1 = nodeIdToNodes.get("product1");
-    const identityNode1 = nodeIdToNodes.get("identity1");
-    expect(sumNode1?.getRelationship().getOutputNodes()).toEqual([
-      productNode1,
-    ]);
-    expect(identityNode1?.getRelationship().isInputPortEmpty("x")).toBe(true);
+    const identityNode1 = graph.getOneNode("identity1");
+    expect(varNode4.getRelationship().isOutputPortEmpty()).toBe(true);
+    expect(
+      identityNode1.getRelationship().getInputNodesByPort("x"),
+    ).toHaveLength(1);
   });
 
-  test("10. should throw error when the graph will not be DAG", () => {
+  test("should throw error when the graph will not be DAG", () => {
+    const graph = buildMediumGraph();
+
     expect(() => {
       graph.connect("identity1", "sum1", "x_i");
     }).toThrow("Connecting node identity1 to node sum1 would have cycle");
-  });
 
-  test("11. should remove connections automatically when removing nodes", () => {
-    graph.removeNode("sum1");
-    nodeIdToNodes.delete("sum1");
-
-    expect(graph.hasNode("sum1")).toBe(false);
-
-    const varNode1 = nodeIdToNodes.get("v1");
-    const varNode2 = nodeIdToNodes.get("v2");
-    const productNode1 = nodeIdToNodes.get("op");
-    const sumNode2 = nodeIdToNodes.get("sum2");
-    expect(varNode1?.getRelationship().isOutputPortEmpty()).toBe(true);
-    expect(varNode2?.getRelationship().isOutputPortEmpty()).toBe(true);
-    expect(productNode1?.getRelationship().getInputNodesByPort("x_i")).toEqual([
-      sumNode2,
-    ]);
-  });
-
-  test("12. should disconnect nodes successfully", () => {
-    graph.disconnect("v2", "sum2", "x_i");
-    graph.disconnect("c1", "sum2", "x_i");
-    graph.disconnect("sum2", "product1", "x_i");
-    graph.disconnect("product1", "identity1", "x");
-  });
-
-  test("13. should remove nodes successfully", () => {
-    graph.removeNode("v1");
-    graph.removeNode("v2");
-    graph.removeNode("c1");
-    graph.removeNode("sum2");
-    graph.removeNode("product1");
-    graph.removeNode("identity1");
-
-    nodeIdToNodes.clear();
+    expect(() => {
+      graph.connect("identity1", "identity1", "x");
+    }).toThrow("Connecting node identity1 to node identity1 would have cycle");
   });
 });
 

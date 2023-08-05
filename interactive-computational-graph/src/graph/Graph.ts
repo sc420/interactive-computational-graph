@@ -377,13 +377,13 @@ class Graph {
     return terminalNodeIds;
   }
 
-  private getFDirectionNeighborNodeIds(nodeId: string): Set<string> {
-    const node = this.getOneNode(nodeId);
-    const neighborNodes = node.getRelationship().getOutputNodes();
-    const neighborNodeIds = neighborNodes.map((node) => node.getId());
-    return new Set<string>(neighborNodeIds);
-  }
-
+  /**
+   * Gets the neighboring nodes of a node x by following the topological sort
+   * direction.
+   * @param node The node x.
+   * @param direction Topological sort direction.
+   * @returns Neighboring node IDs in the topological sort direction.
+   */
   private getTopologicalSortDirectionNodeIds(
     node: GraphNode,
     direction: TopologicalSortDirection,
@@ -395,28 +395,6 @@ class Graph {
       neighborNodes = node.getRelationship().getOutputNodes();
     }
     return neighborNodes.map((node) => node.getId());
-  }
-
-  private getDerivativeDirectionNeighborNodeIds(nodeId: string): Set<string> {
-    const node = this.getOneNode(nodeId);
-    let neighborNodes: GraphNode[] = [];
-    if (this.differentiationMode === "FORWARD") {
-      neighborNodes = node.getRelationship().getOutputNodes();
-    } else {
-      neighborNodes = node.getRelationship().getInputNodes();
-    }
-    const neighborNodeIds = neighborNodes.map((node) => node.getId());
-    return new Set<string>(neighborNodeIds);
-  }
-
-  private static popFromSet(inputSet: Set<string>): string {
-    const iterator = inputSet.values();
-    const { value } = iterator.next();
-    if (value === undefined) {
-      throw new Error("The input set should be non-empty");
-    }
-    inputSet.delete(value);
-    return value;
   }
 }
 

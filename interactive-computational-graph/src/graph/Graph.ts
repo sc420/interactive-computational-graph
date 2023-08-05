@@ -135,6 +135,97 @@ class Graph {
     return updatedNodeIds;
   }
 
+  updateFValuesFrom(startNodeId: string): Set<string> {
+    const nodeIdsToBeUpdated = new Set<string>([startNodeId]);
+    const updatedNodeIds = new Set<string>();
+    while (nodeIdsToBeUpdated.size > 0) {
+      const nodeId = Graph.popFromSet(nodeIdsToBeUpdated);
+      if (nodeId === undefined) {
+        throw new Error("Should have at least one node in the queue");
+      }
+
+      // Update f()
+      const node = this.getOneNode(nodeId);
+      node.updateF();
+      updatedNodeIds.add(nodeId);
+
+      const neighborNodeIds = this.getFDirectionNeighborNodeIds(nodeId);
+      neighborNodeIds.forEach((neighborNodeId) => {
+        if (updatedNodeIds.has(neighborNodeId)) {
+          return;
+        }
+        nodeIdsToBeUpdated.add(neighborNodeId);
+      });
+    }
+
+    return updatedNodeIds;
+  }
+
+  updateDerivatives(): Set<string> {
+    this.nodeIdToDerivatives.clear();
+
+    if (this.targetNodeId === null) {
+      return new Set<string>();
+    }
+
+    const topologicalSortDirection: TopologicalSortDirection =
+      this.differentiationMode === "FORWARD" ? "TO_OUTPUT" : "TO_INPUT";
+    const topologicalOrderedNodeIds = this.topologicalSort(
+      [this.targetNodeId],
+      topologicalSortDirection,
+    );
+
+    // We have to visit the nodes in reverse because we want to visit from the
+    // target node
+    const updatedNodeIds = new Set<string>();
+    for (let i = topologicalOrderedNodeIds.length - 1; i >= 0; i--) {
+      const nodeId = topologicalOrderedNodeIds[i];
+      const node = this.getOneNode(nodeId);
+      const derivative = this.calculateNodeDerivative(node);
+      this.nodeIdToDerivatives.set(node.getId(), derivative);
+      updatedNodeIds.add(nodeId);
+    }
+    return updatedNodeIds;
+  }
+
+  private calculateNodeDerivative(node: GraphNode): number {
+    if (node.getId() === this.targetNodeId) {
+      return node.calculateDfdy(node);
+    }
+
+    let totalDerivative = 0;
+    if (this.differentiationMode === "FORWARD") {
+      // Update d(node)/d(targetNode) for forward mode
+      node
+        .getRelationship()
+        .getInputNodes()
+        .forEach((inputNode) => {
+          // d(inputNode)/d(targetNode)
+          const derivative1 = this.getNodeDerivative(inputNode.getId());
+          // d(node)/d(inputNode)
+          const derivative2 = node.calculateDfdy(inputNode);
+          // d(node)/d(targetNode) = d(inputNode)/d(targetNode) *
+          // d(node)/d(inputNode) (chain rule)
+          totalDerivative += derivative1 * derivative2;
+        });
+    } else {
+      // Update d(targetNode)/d(node) for reverse mode
+      node
+        .getRelationship()
+        .getOutputNodes()
+        .forEach((outputNode) => {
+          // d(outputNode)/d(node)
+          const derivative1 = outputNode.calculateDfdy(node);
+          // d(targetNode)/d(outputNode)
+          const derivative2 = this.getNodeDerivative(outputNode.getId());
+          // d(targetNode)/d(node) = d(outputNode)/d(node) *
+          // d(targetNode)/d(outputNode)
+          totalDerivative += derivative1 * derivative2;
+        });
+    }
+    return totalDerivative;
+  }
+
   /**
    * Perform a topological sort on the graph.
    *
@@ -250,98 +341,6 @@ class Graph {
     }
 
     return reverseResult;
-  }
-
-  // TODO(sc420): should use BFS
-  updateFValuesFrom(startNodeId: string): Set<string> {
-    const nodeIdsToBeUpdated = new Set<string>([startNodeId]);
-    const updatedNodeIds = new Set<string>();
-    while (nodeIdsToBeUpdated.size > 0) {
-      const nodeId = Graph.popFromSet(nodeIdsToBeUpdated);
-      if (nodeId === undefined) {
-        throw new Error("Should have at least one node in the queue");
-      }
-
-      // Update f()
-      const node = this.getOneNode(nodeId);
-      node.updateF();
-      updatedNodeIds.add(nodeId);
-
-      const neighborNodeIds = this.getFDirectionNeighborNodeIds(nodeId);
-      neighborNodeIds.forEach((neighborNodeId) => {
-        if (updatedNodeIds.has(neighborNodeId)) {
-          return;
-        }
-        nodeIdsToBeUpdated.add(neighborNodeId);
-      });
-    }
-
-    return updatedNodeIds;
-  }
-
-  // TODO(sc420): should use BFS
-  updateDerivatives(): Set<string> {
-    if (this.targetNodeId === null) {
-      return new Set<string>();
-    }
-
-    const nodeIdsToBeUpdated = new Set<string>([this.targetNodeId]);
-    const updatedNodeIds = new Set<string>();
-    while (nodeIdsToBeUpdated.size > 0) {
-      const nodeId = Graph.popFromSet(nodeIdsToBeUpdated);
-      if (nodeId === undefined) {
-        throw new Error("Should have at least one node in the queue");
-      }
-
-      const node = this.getOneNode(nodeId);
-      let totalDerivative = 0;
-      if (nodeId === this.targetNodeId) {
-        totalDerivative = node.calculateDfdy(node);
-      } else {
-        if (this.differentiationMode === "FORWARD") {
-          // Update d(node)/d(targetNode) for forward mode
-          node
-            .getRelationship()
-            .getInputNodes()
-            .forEach((inputNode) => {
-              // d(inputNode)/d(targetNode)
-              const derivative1 = this.getNodeDerivative(inputNode.getId());
-              // d(node)/d(inputNode)
-              const derivative2 = node.calculateDfdy(inputNode);
-              // d(node)/d(targetNode) = d(inputNode)/d(targetNode) *
-              // d(node)/d(inputNode) (chain rule)
-              totalDerivative += derivative1 * derivative2;
-            });
-        } else {
-          // Update d(targetNode)/d(node) for reverse mode
-          node
-            .getRelationship()
-            .getOutputNodes()
-            .forEach((outputNode) => {
-              // d(outputNode)/d(node)
-              const derivative1 = outputNode.calculateDfdy(node);
-              // d(targetNode)/d(outputNode)
-              const derivative2 = this.getNodeDerivative(outputNode.getId());
-              // d(targetNode)/d(node) = d(outputNode)/d(node) *
-              // d(targetNode)/d(outputNode)
-              totalDerivative += derivative1 * derivative2;
-            });
-        }
-      }
-      this.nodeIdToDerivatives.set(nodeId, totalDerivative);
-      updatedNodeIds.add(nodeId);
-
-      const neighborNodeIds =
-        this.getDerivativeDirectionNeighborNodeIds(nodeId);
-      neighborNodeIds.forEach((neighborNodeId) => {
-        if (updatedNodeIds.has(neighborNodeId)) {
-          return;
-        }
-        nodeIdsToBeUpdated.add(neighborNodeId);
-      });
-    }
-
-    return updatedNodeIds;
   }
 
   /**

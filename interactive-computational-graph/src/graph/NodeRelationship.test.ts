@@ -6,6 +6,24 @@ import OperationNode from "./OperationNode";
 import Port from "./Port";
 import VariableNode from "./VariableNode";
 
+test("should indicate if we can add input node by port", () => {
+  const nodeRelationship = buildTwoPortsNodeRelationship();
+
+  // Should be true when the port is empty
+  expect(nodeRelationship.canAddInputNodeByPort("a")).toBe(true);
+  expect(nodeRelationship.canAddInputNodeByPort("b")).toBe(true);
+
+  // Should be false when the port is connected and multiple connections isn't
+  // allowed
+  const varNode1 = new VariableNode("v1");
+  nodeRelationship.addInputNodeByPort("a", varNode1);
+  expect(nodeRelationship.canAddInputNodeByPort("a")).toBe(false);
+
+  // Should be true when multiple connections is allowed
+  nodeRelationship.addInputNodeByPort("b", varNode1);
+  expect(nodeRelationship.canAddInputNodeByPort("b")).toBe(true);
+});
+
 describe("sequential testing to check input behavior", () => {
   let nodeRelationship: NodeRelationship;
   let aInputNodes: GraphNode[] = [];
@@ -182,3 +200,8 @@ describe("sequential testing to check output behavior", () => {
     return new OperationNode(id, [new Port("in1", false)], op);
   }
 });
+
+function buildTwoPortsNodeRelationship(): NodeRelationship {
+  const ports = [new Port("a", false), new Port("b", true)];
+  return new NodeRelationship(ports);
+}

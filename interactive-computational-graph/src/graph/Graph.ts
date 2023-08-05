@@ -59,6 +59,14 @@ class Graph {
   connect(node1Id: string, node2Id: string, node2PortId: string): void {
     const node1 = this.getOneNode(node1Id);
     const node2 = this.getOneNode(node2Id);
+
+    if (!node2.getRelationship().canAddInputNodeByPort(node2PortId)) {
+      throw new Error(
+        `Couldn't add to input port ${node2PortId} of node ${node2Id},
+ please check if the port allows multiple edges`,
+      );
+    }
+
     node1.getRelationship().addOutputNode(node2);
     node2.getRelationship().addInputNodeByPort(node2PortId, node1);
   }

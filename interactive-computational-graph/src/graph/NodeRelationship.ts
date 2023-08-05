@@ -66,6 +66,22 @@ class NodeRelationship {
     return inputNodes.some((node) => node.getId() === nodeId);
   }
 
+  canAddInputNodeByPort(portId: string): boolean {
+    const inputPortData = this.getPortDataByPort(
+      this.inputPortIdToPortData,
+      portId,
+    );
+
+    if (
+      !inputPortData.port.isAllowMultiEdges() &&
+      inputPortData.nodeIdToNodes.size > 0
+    ) {
+      return false;
+    }
+
+    return true;
+  }
+
   addInputNodeByPort(portId: string, inputNode: GraphNode): void {
     const inputPortData = this.getPortDataByPort(
       this.inputPortIdToPortData,

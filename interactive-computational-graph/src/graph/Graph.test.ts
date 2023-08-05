@@ -122,7 +122,8 @@ describe("manipulating the graph", () => {
 
     expect(() => {
       graph.connect("v4", "identity1", "x");
-    }).toThrow("Input port x doesn't allow multiple edges");
+    }).toThrow(`Couldn't add to input port x of node identity1,
+ please check if the port allows multiple edges`);
 
     // Should not be half-connected
     const identityNode1 = graph.getOneNode("identity1");

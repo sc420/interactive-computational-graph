@@ -18,6 +18,10 @@ class ConstantNode implements GraphNode {
     return this.id;
   }
 
+  isConstant(): boolean {
+    return true;
+  }
+
   getValue(): number {
     return this.value;
   }

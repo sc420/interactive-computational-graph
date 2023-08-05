@@ -3,6 +3,8 @@ import type NodeRelationship from "./NodeRelationship";
 interface GraphNode {
   getId: () => string;
 
+  isConstant: () => boolean;
+
   getValue: () => number;
 
   setValue: (value: number) => void;

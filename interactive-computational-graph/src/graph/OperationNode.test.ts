@@ -13,6 +13,7 @@ describe("sequential testing of using node", () => {
 
   test("1. should have correct ID and initial value", () => {
     expect(opNode.getId()).toBe("op1");
+    expect(opNode.isConstant()).toBe(false);
     expect(opNode.getValue()).toBe(0);
   });
 

@@ -18,6 +18,10 @@ class VariableNode implements GraphNode {
     return this.id;
   }
 
+  isConstant(): boolean {
+    return false;
+  }
+
   getValue(): number {
     return this.value;
   }
@@ -29,6 +33,9 @@ class VariableNode implements GraphNode {
   updateF(): void {}
 
   calculateDfdy(y: GraphNode): number {
+    if (y.isConstant()) {
+      return 0;
+    }
     if (y.getId() === this.getId()) {
       return 1;
     }

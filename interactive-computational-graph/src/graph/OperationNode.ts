@@ -30,6 +30,10 @@ class OperationNode implements GraphNode {
     return this.id;
   }
 
+  isConstant(): boolean {
+    return false;
+  }
+
   getValue(): number {
     return this.value;
   }
@@ -44,6 +48,9 @@ class OperationNode implements GraphNode {
   }
 
   calculateDfdy(y: GraphNode): number {
+    if (y.isConstant()) {
+      return 0;
+    }
     if (y.getId() === this.getId()) {
       return 1;
     }

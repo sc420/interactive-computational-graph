@@ -388,11 +388,12 @@ describe("updating derivative values", () => {
     expect(graph.getNodeDerivative("v3")).toBeCloseTo(0);
     // d(product1)/d(v2) = d(sum1)/d(v2) * d(product1)/d(sum1) +
     // d(sum2)/d(v2) * d(product1)/d(sum2) +
-    // d(v3)/d(v2) * d(product1)/d(v3) = 1 * sum2 + 1 * sum1 + 0 * 6 = 5
-    expect(graph.getNodeDerivative("product1")).toBeCloseTo(5);
+    // d(v3)/d(v2) * d(product1)/d(v3) =
+    // 1 * (sum2 * v3) + 1 * (sum1 * v3) + 0 * (sum1 * sum2) = 25
+    expect(graph.getNodeDerivative("product1")).toBeCloseTo(25);
     // d(identity1)/d(v2) = d(product1)/d(v2) * d(identity1)/d(product1) =
-    // 5 * 1 = 5
-    expect(graph.getNodeDerivative("identity1")).toBeCloseTo(5);
+    // 25 * 1 = 25
+    expect(graph.getNodeDerivative("identity1")).toBeCloseTo(25);
   });
 });
 

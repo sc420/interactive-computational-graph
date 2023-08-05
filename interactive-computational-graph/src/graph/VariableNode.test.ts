@@ -6,6 +6,7 @@ describe("sequential testing of using node", () => {
 
   test("1. should have correct id and initial value", () => {
     expect(varNode.getId()).toBe("v1");
+    expect(varNode.isConstant()).toBe(false);
     expect(varNode.getValue()).toBe(0);
   });
 

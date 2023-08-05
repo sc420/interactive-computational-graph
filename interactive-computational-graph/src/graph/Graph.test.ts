@@ -14,7 +14,7 @@ import {
   SUM_F_CODE,
 } from "./test_utils";
 
-describe("manipulating the graph", () => {
+describe("manipulating connections", () => {
   test("should get a list of nodes", () => {
     const emptyGraph = new Graph();
     expect(emptyGraph.getNodes()).toEqual([]);
@@ -201,6 +201,32 @@ describe("updating f values", () => {
 });
 
 describe("updating derivative values", () => {
+  test("should clear derivatives when changing mode", () => {
+    const graph = buildSmallGraph();
+    graph.setDifferentiationMode("REVERSE");
+    graph.setTargetNode("sum1");
+    graph.updateFValues();
+    graph.updateDerivatives();
+
+    graph.setDifferentiationMode("FORWARD");
+    expect(graph.getNodeDerivative("v1")).toBeCloseTo(0);
+    expect(graph.getNodeDerivative("v2")).toBeCloseTo(0);
+    expect(graph.getNodeDerivative("sum1")).toBeCloseTo(0);
+  });
+
+  test("should clear derivatives when changing target", () => {
+    const graph = buildSmallGraph();
+    graph.setDifferentiationMode("FORWARD");
+    graph.setTargetNode("sum1");
+    graph.updateFValues();
+    graph.updateDerivatives();
+
+    graph.setTargetNode("v1");
+    expect(graph.getNodeDerivative("v1")).toBeCloseTo(0);
+    expect(graph.getNodeDerivative("v2")).toBeCloseTo(0);
+    expect(graph.getNodeDerivative("sum1")).toBeCloseTo(0);
+  });
+
   test("should update derivatives in reverse mode for small graph", () => {
     const graph = buildSmallGraph();
     graph.updateFValues();

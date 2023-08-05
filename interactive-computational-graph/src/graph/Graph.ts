@@ -85,6 +85,7 @@ class Graph {
   }
 
   setDifferentiationMode(mode: DifferentiationMode): void {
+    this.nodeIdToDerivatives.clear();
     this.differentiationMode = mode;
   }
 
@@ -115,6 +116,7 @@ class Graph {
       this.getOneNode(nodeId); // checks if the node exists
     }
 
+    this.nodeIdToDerivatives.clear();
     this.targetNodeId = nodeId;
   }
 

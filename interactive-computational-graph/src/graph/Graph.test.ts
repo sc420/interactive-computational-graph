@@ -173,8 +173,8 @@ describe("updating f values", () => {
     const graph = buildSmallGraph();
 
     const updatedNodes = graph.updateFValues();
-    const expectedUpdatedNodes = new Set<string>(["v1", "v2", "sum1"]);
-    expect(updatedNodes).toEqual(expectedUpdatedNodes);
+    const expectedUpdatedNodes: string[] = ["v1", "v2", "sum1"];
+    expect(updatedNodes.sort()).toEqual(expectedUpdatedNodes.sort());
     expect(graph.getNodeValue("sum1")).toBeCloseTo(3);
   });
 
@@ -182,7 +182,7 @@ describe("updating f values", () => {
     const graph = buildMediumGraph();
 
     const updatedNodes = graph.updateFValues();
-    const expectedUpdatedNodes = new Set<string>([
+    const expectedUpdatedNodes: string[] = [
       "v1",
       "v2",
       "c1",
@@ -191,8 +191,8 @@ describe("updating f values", () => {
       "v3",
       "product1",
       "identity1",
-    ]);
-    expect(updatedNodes).toEqual(expectedUpdatedNodes);
+    ];
+    expect(updatedNodes.sort()).toEqual(expectedUpdatedNodes.sort());
     expect(graph.getNodeValue("sum1")).toBeCloseTo(3);
     expect(graph.getNodeValue("sum2")).toBeCloseTo(2);
     expect(graph.getNodeValue("product1")).toBeCloseTo(30);
@@ -209,8 +209,8 @@ describe("updating derivative values", () => {
 
     graph.setTargetNode("v1");
     let updatedNodes = graph.updateDerivatives();
-    let expectedUpdatedNodes = new Set<string>(["v1"]);
-    expect(updatedNodes).toEqual(expectedUpdatedNodes);
+    let expectedUpdatedNodes: string[] = ["v1"];
+    expect(updatedNodes.sort()).toEqual(expectedUpdatedNodes.sort());
     // d(v1)/d(v1) = 1
     expect(graph.getNodeDerivative("v1")).toBeCloseTo(1);
     // not in the reverse path
@@ -220,8 +220,8 @@ describe("updating derivative values", () => {
 
     graph.setTargetNode("sum1");
     updatedNodes = graph.updateDerivatives();
-    expectedUpdatedNodes = new Set<string>(["v1", "v2", "sum1"]);
-    expect(updatedNodes).toEqual(expectedUpdatedNodes);
+    expectedUpdatedNodes = ["v1", "v2", "sum1"];
+    expect(updatedNodes.sort()).toEqual(expectedUpdatedNodes.sort());
     // d(sum1)/d(v1) = 1
     expect(graph.getNodeDerivative("v1")).toBeCloseTo(1);
     // d(sum1)/d(v2) = 1
@@ -238,8 +238,8 @@ describe("updating derivative values", () => {
 
     graph.setTargetNode("v1");
     let updatedNodes = graph.updateDerivatives();
-    let expectedUpdatedNodes = new Set<string>(["v1", "sum1"]);
-    expect(updatedNodes).toEqual(expectedUpdatedNodes);
+    let expectedUpdatedNodes: string[] = ["v1", "sum1"];
+    expect(updatedNodes.sort()).toEqual(expectedUpdatedNodes.sort());
     // d(v1)/d(v1) = 1
     expect(graph.getNodeDerivative("v1")).toBeCloseTo(1);
     // not in the forward path
@@ -249,8 +249,8 @@ describe("updating derivative values", () => {
 
     graph.setTargetNode("sum1");
     updatedNodes = graph.updateDerivatives();
-    expectedUpdatedNodes = new Set<string>(["sum1"]);
-    expect(updatedNodes).toEqual(expectedUpdatedNodes);
+    expectedUpdatedNodes = ["sum1"];
+    expect(updatedNodes.sort()).toEqual(expectedUpdatedNodes.sort());
     // not in the forward path
     expect(graph.getNodeDerivative("v1")).toBeCloseTo(0);
     // not in the forward path
@@ -267,7 +267,7 @@ describe("updating derivative values", () => {
     graph.setTargetNode("identity1");
 
     const updatedNodes = graph.updateDerivatives();
-    const expectedUpdatedNodes = new Set<string>([
+    const expectedUpdatedNodes: string[] = [
       "v1",
       "v2",
       "c1",
@@ -276,8 +276,8 @@ describe("updating derivative values", () => {
       "v3",
       "product1",
       "identity1",
-    ]);
-    expect(updatedNodes).toEqual(expectedUpdatedNodes);
+    ];
+    expect(updatedNodes.sort()).toEqual(expectedUpdatedNodes.sort());
 
     // d(identity1)/d(identity1) = 1
     expect(graph.getNodeDerivative("identity1")).toBeCloseTo(1);
@@ -306,14 +306,14 @@ describe("updating derivative values", () => {
     graph.setTargetNode("v2");
 
     const updatedNodes = graph.updateDerivatives();
-    const expectedUpdatedNodes = new Set<string>([
+    const expectedUpdatedNodes: string[] = [
       "v2",
       "sum1",
       "sum2",
       "product1",
       "identity1",
-    ]);
-    expect(updatedNodes).toEqual(expectedUpdatedNodes);
+    ];
+    expect(updatedNodes.sort()).toEqual(expectedUpdatedNodes.sort());
 
     // not in the forward path
     expect(graph.getNodeDerivative("v1")).toBeCloseTo(0);

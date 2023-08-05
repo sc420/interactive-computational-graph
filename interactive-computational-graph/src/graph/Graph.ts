@@ -138,7 +138,7 @@ class Graph {
    *
    * @returns Node IDs of all nodes that have their f() updated.
    */
-  updateFValues(): Set<string> {
+  updateFValues(): string[] {
     // Step 1
     const terminalNodeIds = this.getTerminalNodeIds();
 
@@ -149,11 +149,11 @@ class Graph {
     );
 
     // Step 3
-    const updatedNodeIds = new Set<string>();
+    const updatedNodeIds: string[] = [];
     topologicalOrderedNodeIds.forEach((nodeId) => {
       const node = this.getOneNode(nodeId);
       node.updateF();
-      updatedNodeIds.add(nodeId);
+      updatedNodeIds.push(nodeId);
     });
     return updatedNodeIds;
   }
@@ -185,13 +185,13 @@ class Graph {
    *
    * @returns Node IDs of all nodes that have their derivatives updated.
    */
-  updateDerivatives(): Set<string> {
+  updateDerivatives(): string[] {
     // Step 1
     this.nodeIdToDerivatives.clear();
 
     // Step 2
     if (this.targetNodeId === null) {
-      return new Set<string>();
+      return [];
     }
 
     // Step 3
@@ -203,13 +203,13 @@ class Graph {
     );
 
     // Step 4
-    const updatedNodeIds = new Set<string>();
+    const updatedNodeIds: string[] = [];
     for (let i = topologicalOrderedNodeIds.length - 1; i >= 0; i--) {
       const nodeId = topologicalOrderedNodeIds[i];
       const node = this.getOneNode(nodeId);
       const derivative = this.calculateNodeDerivative(node);
       this.nodeIdToDerivatives.set(node.getId(), derivative);
-      updatedNodeIds.add(nodeId);
+      updatedNodeIds.push(nodeId);
     }
     return updatedNodeIds;
   }
@@ -232,7 +232,7 @@ class Graph {
     }
 
     const nodeIdsToVisit: string[] = [fromNodeId];
-    const visitedNodes = new Set<string>();
+    const visitedNodeIds = new Set<string>();
     while (nodeIdsToVisit.length > 0) {
       const nodeId = nodeIdsToVisit.pop();
       if (nodeId === undefined) {
@@ -242,7 +242,7 @@ class Graph {
       const outputNodes = node.getRelationship().getOutputNodes();
       for (let i = 0; i < outputNodes.length; i++) {
         const outputNode = outputNodes[i];
-        if (visitedNodes.has(outputNode.getId())) {
+        if (visitedNodeIds.has(outputNode.getId())) {
           continue;
         }
 
@@ -251,7 +251,7 @@ class Graph {
         }
 
         nodeIdsToVisit.push(outputNode.getId());
-        visitedNodes.add(outputNode.getId());
+        visitedNodeIds.add(outputNode.getId());
       }
     }
 

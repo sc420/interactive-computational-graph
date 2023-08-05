@@ -138,11 +138,11 @@ describe("manipulating the graph", () => {
 
     expect(() => {
       graph.connect("identity1", "sum1", "x_i");
-    }).toThrow("Connecting node identity1 to node sum1 would have cycle");
+    }).toThrow("Connecting node identity1 to node sum1 would cause a cycle");
 
     expect(() => {
-      graph.connect("identity1", "identity1", "x");
-    }).toThrow("Connecting node identity1 to node identity1 would have cycle");
+      graph.connect("sum1", "sum1", "x_i");
+    }).toThrow("Connecting node sum1 to node sum1 would cause a cycle");
   });
 });
 

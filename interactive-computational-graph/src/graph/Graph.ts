@@ -67,6 +67,12 @@ class Graph {
       );
     }
 
+    if (this.canVisit(node2Id, node1Id)) {
+      throw new Error(
+        `Connecting node ${node1Id} to node ${node2Id} would cause a cycle`,
+      );
+    }
+
     node1.getRelationship().addOutputNode(node2);
     node2.getRelationship().addInputNodeByPort(node2PortId, node1);
   }
@@ -206,6 +212,50 @@ class Graph {
       updatedNodeIds.add(nodeId);
     }
     return updatedNodeIds;
+  }
+
+  /**
+   * Checks if we can visit the node y from node x in an acyclic graph.
+   *
+   * The algorithm runs as follows:
+   * 1. Visit all nodes from node x by DFS
+   * 2. If we can visit node y, return true
+   * 3. Otherwise, return false
+   *
+   * @param fromNodeId Node ID of node x.
+   * @param toNodeId Node ID of node y.
+   * @returns Whether we can visit from node x to node y.
+   */
+  private canVisit(fromNodeId: string, toNodeId: string): boolean {
+    if (fromNodeId === toNodeId) {
+      return true;
+    }
+
+    const nodeIdsToVisit: string[] = [fromNodeId];
+    const visitedNodes = new Set<string>();
+    while (nodeIdsToVisit.length > 0) {
+      const nodeId = nodeIdsToVisit.pop();
+      if (nodeId === undefined) {
+        throw new Error(`The stack shouldn't be empty`);
+      }
+      const node = this.getOneNode(nodeId);
+      const outputNodes = node.getRelationship().getOutputNodes();
+      for (let i = 0; i < outputNodes.length; i++) {
+        const outputNode = outputNodes[i];
+        if (visitedNodes.has(outputNode.getId())) {
+          continue;
+        }
+
+        if (outputNode.getId() === toNodeId) {
+          return true;
+        }
+
+        nodeIdsToVisit.push(outputNode.getId());
+        visitedNodes.add(outputNode.getId());
+      }
+    }
+
+    return false;
   }
 
   /**

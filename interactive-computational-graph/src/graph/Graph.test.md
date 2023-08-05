@@ -44,3 +44,23 @@ flowchart LR
     %% Layer 3
     product2 --> identity1[identity1=10]
 ```
+
+## Multi-Output Graph
+
+This graph is used mostly in the comments.
+
+```mermaid
+flowchart LR
+    %% Layer 1
+    v3 --> op2
+    v2 --> op2
+    v2 --> op1
+    v1 --> op1
+    v4 --> op3
+    %% Layer 2
+    op2 --> op4
+    op1 --> op4
+    op3 --> op4
+    op1 --> op5
+    op3 --> op5
+```

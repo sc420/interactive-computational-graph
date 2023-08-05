@@ -102,30 +102,36 @@ class Graph {
   }
 
   /**
-   * Update all f() values.
+   * Updates all f() values.
    *
-   * We can use the following graph as an example:
-   * - op4=f(op1(),op2(),op3())
-   * - op5=f(op1(),op3())
-   * - op1=f(v1,v2)
-   * - op2=f(v2,v3)
+   * We can use the multi-output graph as an example:
+   * - op2=f(v3,v2)
+   * - op1=f(v2,v1)
    * - op3=v4
+   * - op4=f(op2(),op1(),op3())
+   * - op5=f(op1(),op3())
    *
    * The algorithm runs as follows:
-   * 1. Find all terminal nodes like op4 and op5
-   * 2. Perform a topological sort to find nodes in reverse order, a valid
-   *    order could be [v1,v2,v3,v4,op1,op2,op3,op4,op5] or
-   *    [v4,v3,v2,v1,op3,op2,op1,op5,op4]
-   * 3. Update f() for nodes in the reverse topological order
+   * 1. Find all terminal nodes: op4 and op5
+   * 2. Perform a topological sort from the terminal nodes toward its input
+   *    nodes to find nodes in reverse order, a valid order could be
+   *    [v1,v2,v3,v4,op1,op2,op3,op4,op5] or
+   *    [v4,v3,v2,v1,op3,op2,op1,op5,op4].
+   * 3. Update f() for nodes in the topological sort result
    *
    * @returns Node IDs of all nodes that have their f() updated.
    */
   updateFValues(): Set<string> {
+    // Step 1
     const terminalNodeIds = this.getTerminalNodeIds();
+
+    // Step 2
     const topologicalOrderedNodeIds = this.topologicalSort(
       terminalNodeIds,
       "TO_INPUT",
     );
+
+    // Step 3
     const updatedNodeIds = new Set<string>();
     topologicalOrderedNodeIds.forEach((nodeId) => {
       const node = this.getOneNode(nodeId);
@@ -135,13 +141,43 @@ class Graph {
     return updatedNodeIds;
   }
 
+  /**
+   * Updates all derivatives.
+   *
+   * We can use the multi-output graph as an example:
+   * - op2=f(v3,v2)
+   * - op1=f(v2,v1)
+   * - op3=v4
+   * - op4=f(op2(),op1(),op3())
+   * - op5=f(op1(),op3())
+   *
+   * The algorithm runs as follows:
+   * 1. Remove all previous derivative results
+   * 2. Return if the target node is null
+   * 3. Perform a topological sort from the target node toward its output nodes
+   *    (forward mode) or input nodes (reverse mode) based on the
+   *    differentiation mode. The topological sort result will be in reverse
+   *    order. For example, if the target node is op4 and the differentiation
+   *    mode is reverse, a valid order could be
+   *    [v1,v2,v3,v4,op1,op2,op3,op4] or
+   *    [v4,v3,v2,v1,op3,op2,op1,op4]. If the target node is v2 and the
+   *    differentiation mode is forward, a valid order could be
+   *    [op4,op5,op1,op2,v2] or [op5,op4,op2,op1,v2].
+   * 4. Update derivatives for nodes in the topological sort result in reverse
+   *    order because we want to visit from the target node first
+   *
+   * @returns Node IDs of all nodes that have their derivatives updated.
+   */
   updateDerivatives(): Set<string> {
+    // Step 1
     this.nodeIdToDerivatives.clear();
 
+    // Step 2
     if (this.targetNodeId === null) {
       return new Set<string>();
     }
 
+    // Step 3
     const topologicalSortDirection: TopologicalSortDirection =
       this.differentiationMode === "FORWARD" ? "TO_OUTPUT" : "TO_INPUT";
     const topologicalOrderedNodeIds = this.topologicalSort(
@@ -149,8 +185,7 @@ class Graph {
       topologicalSortDirection,
     );
 
-    // We have to visit the nodes in reverse because we want to visit from the
-    // target node
+    // Step 4
     const updatedNodeIds = new Set<string>();
     for (let i = topologicalOrderedNodeIds.length - 1; i >= 0; i--) {
       const nodeId = topologicalOrderedNodeIds[i];
@@ -162,8 +197,20 @@ class Graph {
     return updatedNodeIds;
   }
 
+  /**
+   * Calculates the node derivative.
+   *
+   * It uses chain rule to update the derivatives. For results to be correct,
+   * the order of visiting the nodes must follow the topological sort order.
+   *
+   * @param node The node to calculate the derivative.
+   * @returns The derivative of the node. That is, d(node)/d(targetNode) for
+   * forward differentiation mode and d(targetNode)/d(node) for reverse
+   * differentiation mode.
+   */
   private calculateNodeDerivative(node: GraphNode): number {
     if (node.getId() === this.targetNodeId) {
+      // d(node)/d(node) = 1 (non-constant) or 0 (constant)
       return node.calculateDfdy(node);
     }
 
@@ -201,7 +248,7 @@ class Graph {
   }
 
   /**
-   * Perform a topological sort on the graph.
+   * Performs a topological sort on the graph.
    *
    * We use DFS variant of the topological sort algorithm on wiki. Since the
    * graph is acyclic, we can ignore temporary marks. The recursive algorithm
@@ -257,7 +304,6 @@ class Graph {
    * - https://en.wikipedia.org/wiki/Topological_sorting#Depth-first_search
    *
    * @param startNodes List of starting nodes (unmarked nodes).
-   *
    * @returns List of Node IDs in reverse topological order.
    */
   private topologicalSort(
@@ -319,7 +365,6 @@ class Graph {
 
   /**
    * Gets terminal node (nodes that don't have any output nodes) IDs.
-   *
    * @returns List of terminal node IDs.
    */
   private getTerminalNodeIds(): string[] {

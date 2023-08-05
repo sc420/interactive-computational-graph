@@ -10,7 +10,7 @@ const SUM_F_CODE = `\
  *     "v2": { "id": "v2", "value": 2 },
  *   }
  * }
- * @return {number} Evaluated f value. For example: 6 given the above example
+ * @returns {number} Evaluated f value. For example: 6 given the above example
  * data because f({v1, v3, v2}) = v1.value + v3.value + v2.value.
  */
 function f(portToNodes) {
@@ -34,8 +34,8 @@ const SUM_DFDY_CODE = `\
  *     "v2": { "id": "v2", "value": 3 },
  *   }
  * }
- * @param y Node data of y. y will not be the current node. Example data for
- * product: { "id": "v2", "value": 3 }
+ * @param y Node data of y. y will not be a constant node. y will not be the
+ * current node. Example data for product: { "id": "v2", "value": 3 }
  * @returns Evaluated derivative df/dy. For example, 1.0 given the above example
  * data because df/dy = v1.value * v3.value.
  */
@@ -59,7 +59,7 @@ const PRODUCT_F_CODE = `\
  *     "v2": { "id": "v2", "value": 2 },
  *   }
  * }
- * @return {number} Evaluated f value. For example: 6 given the above example
+ * @returns {number} Evaluated f value. For example: 6 given the above example
  * data because f({v1, v3, v2}) = v1.value + v3.value + v2.value.
  */
 function f(portToNodes) {
@@ -83,8 +83,8 @@ const PRODUCT_DFDY_CODE = `\
  *     "v2": { "id": "v2", "value": 3 },
  *   }
  * }
- * @param y Node data of y. y will not be the current node. Example data for
- * product: { "id": "v2", "value": 3 }
+ * @param y Node data of y. y will not be a constant node. y will not be the
+ * current node. Example data for product: { "id": "v2", "value": 3 }
  * @returns Evaluated derivative df/dy. For example, 1.0 given the above example
  * data because df/dy = v1.value * v3.value.
  */
@@ -115,7 +115,7 @@ const IDENTITY_F_CODE = `\
  *     "v2": { "id": "v2", "value": 2 },
  *   }
  * }
- * @return {number} Evaluated f value. For example: 6 given the above example
+ * @returns {number} Evaluated f value. For example: 6 given the above example
  * data because f({v1, v3, v2}) = v1.value + v3.value + v2.value.
  */
 function f(portToNodes) {
@@ -139,8 +139,8 @@ const IDENTITY_DFDY_CODE = `\
  *     "v2": { "id": "v2", "value": 3 },
  *   }
  * }
- * @param y Node data of y. y will not be the current node. Example data for
- * product: { "id": "v2", "value": 3 }
+ * @param y Node data of y. y will not be a constant node. y will not be the
+ * current node. Example data for product: { "id": "v2", "value": 3 }
  * @returns Evaluated derivative df/dy. For example, 1.0 given the above example
  * data because df/dy = v1.value * v3.value.
  */

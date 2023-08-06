@@ -5,7 +5,7 @@ type TopologicalSortDirection = "TO_OUTPUT" | "TO_INPUT";
 
 interface TopologicalSortCallStackElement {
   nodeId: string;
-  allDependentsVisited: boolean;
+  hasVisitedDependents: boolean;
 }
 
 class Graph {
@@ -388,95 +388,108 @@ class Graph {
    *     add n to head of L // (6)
    *
    * We can maintain our own call stack to simulate the recursion in the above
-   * code. Each element in the call stack stores (n, allDependentsVisited) to
-   * represent the position in the above recursive algorithm. We have another
-   * set visitedNodes to record nodes that have reached the position (5).
+   * code. Each element in the call stack stores (n, hasVisitedDependents) to
+   * represent the next position to execute in the above recursive algorithm.
+   * When hasVisitedDependents==false, it's ready to run at the position (3).
+   * When hasVisitedDependents==true, it's ready to run at the position (5).
    *
-   * Initially, all nodes in startNodes are added to the call stack with
-   * allDependentsVisited set to false. It represents the positions (1) and
-   * (2). Other nodes not in startNodes are the nodes we don't care about, so
-   * we don't need to call visit() on them.
+   * We use a set markedPermanent to record nodes that have executed at the
+   * position (5).
    *
-   * Instead of checking if the node is in the set visitedNodes when we pop an
-   * element from the call stack, we move the check earlier when we call
-   * visit() recursively in position (4).
+   * Initially, each node from the startNodeIds is added to the call stack with
+   * hasVisitedDependents set to false if it the node is not in the set
+   * markedPermanent. It represents the positions (1) and (2). Other nodes not
+   * in startNodeIds are the nodes we don't care about, so we don't need to
+   * call visit() on them.
    *
    * Then, we iterate through all dependent nodes of node n by the topological
-   * sort direction. We add these dependent nodes to the call stack with
-   * allDependentsVisited set to false initially just like startNodes. It
-   * should not be confused with differentiation mode. It represents the
-   * position (4). To make sure we know the node has reached position (5)
-   * later, we push (n, allDependentsVisited==true) to the call stack before
-   * adding dependent nodes.
+   * sort direction. The direction should not be confused with differentiation
+   * mode since it knows nothing about differentiation. We add these dependent
+   * nodes to the call stack with hasVisitedDependents set to false initially
+   * just like startNodeIds. It represents the position (4). To make sure we
+   * know the node is ready to execute at the position (5) later, we push
+   * (n, hasVisitedDependents==true) to the call stack before adding dependent
+   * nodes to the call stack.
    *
-   * Later, when we pop an element from the stack and see that
-   * allDependentsVisited is true, we add the node n to the set visitedNodes
-   * and output the node n to the list L. It represents the positions (5) and
-   * (6).
+   * Later, when we pop an element from the call stack and see
+   * hasVisitedDependents is true, we add the node n to the set markedPermanent
+   * and add the node n to the output list L. It represents the positions (5)
+   * and (6).
    *
-   * NOTE: The results is reversed because prepend operation for array is O(n),
+   * NOTE: The result is reversed because prepend operation for array is O(n),
    * but append operation is amortized O(1) which is more efficient. If you
    * want it in the classic order, just reverse the list.
    *
    * References:
    * - https://en.wikipedia.org/wiki/Topological_sorting#Depth-first_search
    *
-   * @param startNodes List of starting nodes (unmarked nodes).
-   * @returns List of Node IDs in reverse topological order.
+   * @param startNodeIds List of node IDs of the starting nodes (unmarked
+   * nodes).
+   * @returns List of node IDs in reverse topological order.
    */
   private topologicalSort(
     startNodeIds: string[],
     direction: TopologicalSortDirection,
   ): string[] {
     const callStack: TopologicalSortCallStackElement[] = [];
+    const markedPermanent = new Set<string>();
+    const reverseResult: string[] = [];
+
     // Call visit() for the root nodes (not depending on other nodes) (1) (2)
     startNodeIds.forEach((startNodeId) => {
+      // Check if it has permanent mark (1)
+      if (markedPermanent.has(startNodeId)) {
+        return;
+      }
+
+      // Call visit() for the root node (2)
       callStack.push({
         nodeId: startNodeId,
-        allDependentsVisited: false,
+        hasVisitedDependents: false,
       });
-    });
+      while (callStack.length > 0) {
+        const callStackElem = callStack.pop();
+        if (callStackElem === undefined) {
+          throw new Error("The call stack shouldn't be empty");
+        }
 
-    const visitedNodeIds = new Set<string>();
-    const reverseResult: string[] = [];
-    while (callStack.length > 0) {
-      const callStackElem = callStack.pop();
-      if (callStackElem === undefined) {
-        throw new Error("The call stack shouldn't be empty");
-      }
+        // Is it ready to execute the position (3) or (5)?
+        if (!callStackElem.hasVisitedDependents) {
+          // Ready to execute at the position (3)
 
-      const node = this.getOneNode(callStackElem.nodeId);
-      if (!callStackElem.allDependentsVisited) {
-        // Make sure the node n will be visited again after all dependents are
-        // visited
-        callStack.push({
-          nodeId: callStackElem.nodeId,
-          allDependentsVisited: true,
-        });
-
-        const dependentNodeIds = this.getTopologicalSortDirectionNodeIds(
-          node,
-          direction,
-        );
-        dependentNodeIds.forEach((dependentNodeId) => {
-          // Check if the dependent node has been visited (3)
-          if (visitedNodeIds.has(dependentNodeId)) {
-            return;
+          // Check if the node n has permanent mark (3)
+          if (markedPermanent.has(callStackElem.nodeId)) {
+            continue;
           }
 
-          // Call visit() on the dependent node (4)
+          // Make sure the node n will execute at the position (5) later
           callStack.push({
-            nodeId: dependentNodeId,
-            allDependentsVisited: false,
+            nodeId: callStackElem.nodeId,
+            hasVisitedDependents: true,
           });
-        });
-      } else {
-        // Mark the node as visited (5)
-        visitedNodeIds.add(callStackElem.nodeId);
-        // Add node to the results (6)
-        reverseResult.push(callStackElem.nodeId);
+
+          // Call visit() for each dependent node (4)
+          const node = this.getOneNode(callStackElem.nodeId);
+          const dependentNodeIds = this.getTopologicalSortDirectionNodeIds(
+            node,
+            direction,
+          );
+          dependentNodeIds.forEach((dependentNodeId) => {
+            callStack.push({
+              nodeId: dependentNodeId,
+              hasVisitedDependents: false,
+            });
+          });
+        } else {
+          // Ready to execute at the position (5)
+
+          // Mark the node n with a permanent mark (5)
+          markedPermanent.add(callStackElem.nodeId);
+          // Add node n to the result (6)
+          reverseResult.push(callStackElem.nodeId);
+        }
       }
-    }
+    });
 
     return reverseResult;
   }

@@ -482,7 +482,7 @@ describe("updating derivative values", () => {
     // d(product1)/d(v1) * d(product1)/d(product1) +
     // d(sum1)/d(v1) * d(product1)/d(sum1) =
     // (sum1 * sum2 * v3) * (1) + (1) * (20) = 30 + 20 = 50
-    expect(graph.getNodeDerivative("v3")).toBeCloseTo(50);
+    expect(graph.getNodeDerivative("v1")).toBeCloseTo(50);
     // d(product1)/d(v2) =
     // d(sum1)/d(v2) * d(product1)/d(sum1) +
     // d(sum2)/d(v2) * d(product1)/d(sum2) =

@@ -60,6 +60,7 @@
     "eslint-plugin-react": "^7.32.2",
     "prettier": "^3.0.0",
     "react-test-renderer": "^18.2.0",
+    "resize-observer-polyfill": "^1.5.1",
     "stylelint": "^15.10.1",
     "stylelint-config-standard": "^34.0.0",
     "typescript": "^5.1.6"

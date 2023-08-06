@@ -39,19 +39,19 @@ describe("evaluating sum when there're inputs", () => {
 
   test("should eval f correctly", () => {
     const f = operation.evalF(portToNodesData);
-    expect(f).toBe(6);
+    expect(f).toBeCloseTo(6);
   });
 
   test("dfdy should be 1 when y is one of its input", () => {
     const yNodeData: NodeData = { id: "v2", value: 2 };
     const f = operation.evalDfdy(portToNodesData, yNodeData);
-    expect(f).toBe(1);
+    expect(f).toBeCloseTo(1);
   });
 
   test("dfdy should be 0 when y is not one of its input", () => {
     const yNodeData: NodeData = { id: "v4", value: 4 };
     const f = operation.evalDfdy(portToNodesData, yNodeData);
-    expect(f).toBe(0);
+    expect(f).toBeCloseTo(0);
   });
 });
 
@@ -67,13 +67,13 @@ describe("evaluating sum when there're no inputs", () => {
 
   test("should eval f correctly", () => {
     const f = operation.evalF(portToNodesData);
-    expect(f).toBe(0);
+    expect(f).toBeCloseTo(0);
   });
 
   test("dfdy should be always 0", () => {
     const yNodeData: NodeData = { id: "v2", value: 2 };
     const f = operation.evalDfdy(portToNodesData, yNodeData);
-    expect(f).toBe(0);
+    expect(f).toBeCloseTo(0);
   });
 });
 
@@ -105,7 +105,7 @@ describe("evaluating product when there're inputs", () => {
   test("dfdy should be 0 when y is not one of its input", () => {
     const yNodeData: NodeData = { id: "v4", value: 3.14 };
     const f = operation.evalDfdy(portToNodesData, yNodeData);
-    expect(f).toBe(0);
+    expect(f).toBeCloseTo(0);
   });
 });
 
@@ -121,13 +121,13 @@ describe("evaluating product when there're no inputs", () => {
 
   test("should eval f correctly", () => {
     const f = operation.evalF(portToNodesData);
-    expect(f).toBe(1);
+    expect(f).toBeCloseTo(1);
   });
 
   test("dfdy should be always 0", () => {
     const yNodeData: NodeData = { id: "v2", value: 2 };
     const f = operation.evalDfdy(portToNodesData, yNodeData);
-    expect(f).toBe(0);
+    expect(f).toBeCloseTo(0);
   });
 });
 

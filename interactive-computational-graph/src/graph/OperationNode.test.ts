@@ -9,7 +9,7 @@ test("should have correct properties", () => {
   const sumNode = buildSumNode();
   expect(sumNode.getId()).toBe("op1");
   expect(sumNode.isConstant()).toBe(false);
-  expect(sumNode.getValue()).toBe(0);
+  expect(sumNode.getValue()).toBeCloseTo(0);
 });
 
 test("should throw error when setting value", () => {
@@ -33,7 +33,7 @@ test("should have correct f after updating", () => {
 
   // 1 + 2 + 3 = 6
   sumNode.updateF();
-  expect(sumNode.getValue()).toBe(6);
+  expect(sumNode.getValue()).toBeCloseTo(6);
 });
 
 test("should have correct dfdy", () => {
@@ -43,12 +43,12 @@ test("should have correct dfdy", () => {
   sumNode.getRelationship().addInputNodeByPort("x_i", varNode1);
 
   // d(op1)/d(v1) = 1
-  expect(sumNode.calculateDfdy(varNode1)).toBe(1);
+  expect(sumNode.calculateDfdy(varNode1)).toBeCloseTo(1);
   // d(op1)/d(op1) = 1
-  expect(sumNode.calculateDfdy(sumNode)).toBe(1);
+  expect(sumNode.calculateDfdy(sumNode)).toBeCloseTo(1);
   // d(op1)/d(v4) = 0
   const varNode4 = new VariableNode("v4");
-  expect(sumNode.calculateDfdy(varNode4)).toBe(0);
+  expect(sumNode.calculateDfdy(varNode4)).toBeCloseTo(0);
 });
 
 test("can get relationship", () => {

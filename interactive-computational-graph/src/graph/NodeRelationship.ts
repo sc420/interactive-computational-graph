@@ -7,15 +7,9 @@ interface PortData {
 }
 
 class NodeRelationship {
-  private readonly inputPortIdToPortData: Map<string, PortData> = new Map<
-    string,
-    PortData
-  >();
+  private readonly inputPortIdToPortData = new Map<string, PortData>();
 
-  private readonly outputPortIdToPortData: Map<string, PortData> = new Map<
-    string,
-    PortData
-  >();
+  private readonly outputPortIdToPortData = new Map<string, PortData>();
 
   public readonly inputPorts: Port[];
 

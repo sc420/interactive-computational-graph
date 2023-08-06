@@ -10,6 +10,7 @@ If you use VSCode, please open the subdirectory `./interactive-computational-gra
 
 ### Recommended VSCode Extensions
 
+- Jest: Runs Jest tests
 - Code Spell Checker: Checks common spelling errors
 - ESLint: Lints Typescript files
 - Stylelint: Lints CSS files

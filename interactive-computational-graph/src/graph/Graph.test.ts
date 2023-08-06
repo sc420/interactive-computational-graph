@@ -10,6 +10,12 @@ import {
   IDENTITY_F_CODE,
   PRODUCT_DFDY_CODE,
   PRODUCT_F_CODE,
+  RELU_DFDY_CODE,
+  RELU_F_CODE,
+  SIGMOID_DFDY_CODE,
+  SIGMOID_F_CODE,
+  SQUARED_ERROR_DFDY_CODE,
+  SQUARED_ERROR_F_CODE,
   SUM_DFDY_CODE,
   SUM_F_CODE,
 } from "./test_utils";
@@ -220,6 +226,55 @@ describe("updating f values", () => {
     expect(graph.getNodeValue("product1")).toBeCloseTo(60);
     expect(graph.getNodeValue("product2")).toBeCloseTo(10);
     expect(graph.getNodeValue("identity1")).toBeCloseTo(10);
+  });
+
+  test("should update f values for neural network graph", () => {
+    const graph = buildNeuralNetworkGraph();
+
+    const updatedNodes = graph.updateFValues();
+    const expectedUpdatedNodes: string[] = [
+      "i_1",
+      "i_2",
+      "w_h1_1_1",
+      "w_h1_1_2",
+      "w_h1_2_1",
+      "w_h1_2_2",
+      "mul_h1_1_1",
+      "mul_h1_1_2",
+      "mul_h1_2_1",
+      "mul_h1_2_2",
+      "b_h1_1",
+      "b_h1_2",
+      "sum_h1_1",
+      "sum_h1_2",
+      "relu_h1_1",
+      "relu_h1_2",
+      "w_o_1_1",
+      "w_o_1_2",
+      "mul_o_1_1",
+      "mul_o_1_2",
+      "b_o_1",
+      "sum_o_1",
+      "sigmoid_o_1",
+      "y_estimate",
+      "y",
+      "se",
+    ];
+    expect(updatedNodes.sort()).toEqual(expectedUpdatedNodes.sort());
+    expect(graph.getNodeValue("mul_h1_1_1")).toBeCloseTo(0);
+    expect(graph.getNodeValue("mul_h1_1_2")).toBeCloseTo(-0.2);
+    expect(graph.getNodeValue("mul_h1_2_1")).toBeCloseTo(0);
+    expect(graph.getNodeValue("mul_h1_2_2")).toBeCloseTo(0.2);
+    expect(graph.getNodeValue("sum_h1_1")).toBeCloseTo(-0.5);
+    expect(graph.getNodeValue("sum_h1_2")).toBeCloseTo(0.5);
+    expect(graph.getNodeValue("relu_h1_1")).toBeCloseTo(0);
+    expect(graph.getNodeValue("relu_h1_2")).toBeCloseTo(0.5);
+    expect(graph.getNodeValue("mul_o_1_1")).toBeCloseTo(0);
+    expect(graph.getNodeValue("mul_o_1_2")).toBeCloseTo(0.25);
+    expect(graph.getNodeValue("sum_o_1")).toBeCloseTo(0);
+    expect(graph.getNodeValue("sigmoid_o_1")).toBeCloseTo(0.5);
+    expect(graph.getNodeValue("y_estimate")).toBeCloseTo(0.5);
+    expect(graph.getNodeValue("se")).toBeCloseTo(0.25);
   });
 });
 
@@ -574,6 +629,72 @@ describe("updating derivative values", () => {
     // 5 * 1 = 5
     expect(graph.getNodeDerivative("identity1")).toBeCloseTo(5);
   });
+
+  test("should update derivatives in reverse mode for neural network graph", () => {
+    const graph = buildNeuralNetworkGraph();
+    graph.updateFValues();
+
+    graph.setDifferentiationMode("REVERSE");
+    graph.setTargetNode("se");
+
+    const updatedNodes = graph.updateDerivatives();
+    expect(updatedNodes).toHaveLength(graph.getNodes().length);
+
+    // d(se)/d(se) = 1
+    expect(graph.getNodeDerivative("se")).toBeCloseTo(1);
+    // d(se)/d(y_estimate) =
+    // d(se)/d(y_estimate) * d(se)/d(se) =
+    // (2 * (y_estimate - y)) * (1) = 1
+    expect(graph.getNodeDerivative("y_estimate")).toBeCloseTo(1);
+    // d(se)/d(y) =
+    // d(se)/d(y) * d(se)/d(se) =
+    // 0 * 1 = 0
+    expect(graph.getNodeDerivative("y")).toBeCloseTo(0);
+    // d(se)/d(sigmoid_o_1) =
+    // d(y_estimate)/d(sigmoid_o_1) * d(se)/d(y_estimate) =
+    // 1 * 1 = 1
+    expect(graph.getNodeDerivative("sigmoid_o_1")).toBeCloseTo(1);
+    // d(se)/d(sum_o_1) =
+    // d(sigmoid_o_1)/d(sum_o_1) * d(se)/d(sigmoid_o_1) =
+    // (sigmoid_o_1 * (1 - sigmoid_o_1)) * (1) = 0.25
+    expect(graph.getNodeDerivative("sum_o_1")).toBeCloseTo(0.25);
+    // d(se)/d(mul_o_1_1) =
+    // d(sum_o_1)/d(mul_o_1_1) * d(se)/d(sum_o_1) =
+    // 1 * 0.25 = 0.25
+    expect(graph.getNodeDerivative("mul_o_1_1")).toBeCloseTo(0.25);
+    // d(se)/d(mul_o_1_2) =
+    // d(sum_o_1)/d(mul_o_1_2) * d(se)/d(sum_o_1) =
+    // 1 * 0.25 = 0.25
+    expect(graph.getNodeDerivative("mul_o_1_2")).toBeCloseTo(0.25);
+    // d(se)/d(b_o_1) =
+    // d(sum_o_1)/d(b_o_1) * d(se)/d(sum_o_1) =
+    // 1 * 0.25 = 0.25
+    expect(graph.getNodeDerivative("b_o_1")).toBeCloseTo(0.25);
+    // d(se)/d(relu_h1_1) =
+    // d(mul_o_1_1)/d(relu_h1_1) * d(se)/d(mul_o_1_1) =
+    // w_o_1_1 * 0.25 = -0.125
+    expect(graph.getNodeDerivative("relu_h1_1")).toBeCloseTo(-0.125);
+    // d(se)/d(w_o_1_1) =
+    // d(mul_o_1_1)/d(w_o_1_1) * d(se)/d(mul_o_1_1) =
+    // relu_h1_1 * 0.25 = 0
+    expect(graph.getNodeDerivative("w_o_1_1")).toBeCloseTo(0);
+    // d(se)/d(relu_h1_2) =
+    // d(mul_o_1_1)/d(relu_h1_2) * d(se)/d(mul_o_1_1) =
+    // w_o_1_2 * 0.25 = 0.125
+    expect(graph.getNodeDerivative("relu_h1_2")).toBeCloseTo(0.125);
+    // d(se)/d(w_o_1_2) =
+    // d(mul_o_1_1)/d(w_o_1_2) * d(se)/d(mul_o_1_1) =
+    // relu_h1_2 * 0.25 = 0.125
+    expect(graph.getNodeDerivative("w_o_1_2")).toBeCloseTo(0.125);
+    // d(se)/d(sum_h1_1) =
+    // d(relu_h1_1)/d(sum_h1_1) * d(se)/d(relu_h1_1) =
+    // 0 * -0.125 = 0
+    expect(graph.getNodeDerivative("sum_h1_1")).toBeCloseTo(0);
+    // d(se)/d(sum_h1_2) =
+    // d(relu_h1_2)/d(sum_h1_2) * d(se)/d(relu_h1_2) =
+    // 1 * 0.125 = 0.125
+    expect(graph.getNodeDerivative("sum_h1_2")).toBeCloseTo(0.125);
+  });
 });
 
 function buildSmallGraph(): Graph {
@@ -586,7 +707,7 @@ function buildSmallGraph(): Graph {
   const sumNode1 = buildSumNode("sum1");
 
   // Add the nodes
-  const newNodes = [varNode1, varNode2, sumNode1];
+  const newNodes: GraphNode[] = [varNode1, varNode2, sumNode1];
   newNodes.forEach((newNode) => {
     graph.addNode(newNode);
   });
@@ -618,7 +739,7 @@ function buildMediumGraph(): Graph {
   const identityNode1 = buildIdentityNode("identity1");
 
   // Add the nodes
-  const newNodes = [
+  const newNodes: GraphNode[] = [
     varNode1,
     varNode2,
     constNode1,
@@ -672,7 +793,7 @@ function buildComplexGraph(): Graph {
   const identityNode1 = buildIdentityNode("identity1");
 
   // Add the nodes
-  const newNodes = [
+  const newNodes: GraphNode[] = [
     varNode1,
     varNode2,
     constNode1,
@@ -712,6 +833,148 @@ function buildComplexGraph(): Graph {
   return graph;
 }
 
+/* eslint-disable @typescript-eslint/naming-convention */
+function buildNeuralNetworkGraph(): Graph {
+  const graph = new Graph();
+
+  // Input layer
+  const i_1 = new VariableNode("i_1");
+  const i_2 = new VariableNode("i_2");
+  // Hidden layer 1: Weights
+  const w_h1_1_1 = new VariableNode("w_h1_1_1");
+  const w_h1_1_2 = new VariableNode("w_h1_1_2");
+  const w_h1_2_1 = new VariableNode("w_h1_2_1");
+  const w_h1_2_2 = new VariableNode("w_h1_2_2");
+  // Hidden layer 1: Multiplication
+  const mul_h1_1_1 = buildProductNode("mul_h1_1_1");
+  const mul_h1_1_2 = buildProductNode("mul_h1_1_2");
+  const mul_h1_2_1 = buildProductNode("mul_h1_2_1");
+  const mul_h1_2_2 = buildProductNode("mul_h1_2_2");
+  // Hidden layer 1: Biases
+  const b_h1_1 = new VariableNode("b_h1_1");
+  const b_h1_2 = new VariableNode("b_h1_2");
+  // Hidden layer 1: Sum
+  const sum_h1_1 = buildSumNode("sum_h1_1");
+  const sum_h1_2 = buildSumNode("sum_h1_2");
+  // Hidden layer 1: Activation
+  const relu_h1_1 = buildReluNode("relu_h1_1");
+  const relu_h1_2 = buildReluNode("relu_h1_2");
+  // Output layer: Weights
+  const w_o_1_1 = new VariableNode("w_o_1_1");
+  const w_o_1_2 = new VariableNode("w_o_1_2");
+  // Output layer: Multiplication
+  const mul_o_1_1 = buildProductNode("mul_o_1_1");
+  const mul_o_1_2 = buildProductNode("mul_o_1_2");
+  // Output layer: Biases
+  const b_o_1 = new VariableNode("b_o_1");
+  // Output layer: Sum
+  const sum_o_1 = buildSumNode("sum_o_1");
+  // Output layer: Activation
+  const sigmoid_o_1 = buildSigmoidNode("sigmoid_o_1");
+  // Loss function input: Estimate y
+  const y_estimate = buildIdentityNode("y_estimate");
+  // Loss function input: True y
+  const y = new VariableNode("y");
+  // Loss function
+  const se = buildSquaredErrorNode("se");
+
+  // Add the nodes
+  const newNodes: GraphNode[] = [
+    i_1,
+    i_2,
+    w_h1_1_1,
+    w_h1_1_2,
+    w_h1_2_1,
+    w_h1_2_2,
+    mul_h1_1_1,
+    mul_h1_1_2,
+    mul_h1_2_1,
+    mul_h1_2_2,
+    b_h1_1,
+    b_h1_2,
+    sum_h1_1,
+    sum_h1_2,
+    relu_h1_1,
+    relu_h1_2,
+    w_o_1_1,
+    w_o_1_2,
+    mul_o_1_1,
+    mul_o_1_2,
+    b_o_1,
+    sum_o_1,
+    sigmoid_o_1,
+    y_estimate,
+    y,
+    se,
+  ];
+  newNodes.forEach((newNode) => {
+    graph.addNode(newNode);
+  });
+
+  // Input layer --> Hidden layer 1: Multiplication
+  graph.connect(i_1.getId(), mul_h1_1_1.getId(), "x_i");
+  graph.connect(i_2.getId(), mul_h1_1_2.getId(), "x_i");
+  graph.connect(i_1.getId(), mul_h1_2_1.getId(), "x_i");
+  graph.connect(i_2.getId(), mul_h1_2_2.getId(), "x_i");
+  // Hidden layer 1: Weights --> Hidden layer 1: Multiplication
+  graph.connect(w_h1_1_1.getId(), mul_h1_1_1.getId(), "x_i");
+  graph.connect(w_h1_1_2.getId(), mul_h1_1_2.getId(), "x_i");
+  graph.connect(w_h1_2_1.getId(), mul_h1_2_1.getId(), "x_i");
+  graph.connect(w_h1_2_2.getId(), mul_h1_2_2.getId(), "x_i");
+  // Hidden layer 1: Multiplication --> Hidden layer 1: Sum
+  graph.connect(mul_h1_1_1.getId(), sum_h1_1.getId(), "x_i");
+  graph.connect(mul_h1_1_2.getId(), sum_h1_1.getId(), "x_i");
+  graph.connect(mul_h1_2_1.getId(), sum_h1_2.getId(), "x_i");
+  graph.connect(mul_h1_2_2.getId(), sum_h1_2.getId(), "x_i");
+  // Hidden layer 1: Biases --> Hidden layer 1: Sum
+  graph.connect(b_h1_1.getId(), sum_h1_1.getId(), "x_i");
+  graph.connect(b_h1_2.getId(), sum_h1_2.getId(), "x_i");
+  // Hidden layer 1: Sum --> Hidden layer 1: Activation
+  graph.connect(sum_h1_1.getId(), relu_h1_1.getId(), "x");
+  graph.connect(sum_h1_2.getId(), relu_h1_2.getId(), "x");
+  // Hidden layer 1: Activation --> Output layer: Multiplication
+  graph.connect(relu_h1_1.getId(), mul_o_1_1.getId(), "x_i");
+  graph.connect(relu_h1_2.getId(), mul_o_1_2.getId(), "x_i");
+  // Output layer: Weights --> Output layer: Multiplication
+  graph.connect(w_o_1_1.getId(), mul_o_1_1.getId(), "x_i");
+  graph.connect(w_o_1_2.getId(), mul_o_1_2.getId(), "x_i");
+  // Output layer: Multiplication --> Output layer: Sum
+  graph.connect(mul_o_1_1.getId(), sum_o_1.getId(), "x_i");
+  graph.connect(mul_o_1_2.getId(), sum_o_1.getId(), "x_i");
+  // Output layer: Biases --> Output layer: Sum
+  graph.connect(b_o_1.getId(), sum_o_1.getId(), "x_i");
+  // Output layer: Sum --> Output layer: Activation
+  graph.connect(sum_o_1.getId(), sigmoid_o_1.getId(), "x");
+  // Output layer: Activation --> Loss function input: Estimate y
+  graph.connect(sigmoid_o_1.getId(), y_estimate.getId(), "x");
+  // Loss function input: Estimate y --> Loss function
+  graph.connect(y_estimate.getId(), se.getId(), "y_estimate");
+  // Loss function input: True y --> Loss function
+  graph.connect(y.getId(), se.getId(), "y_true");
+
+  // Input layer values
+  graph.setNodeValue(i_1.getId(), 0.0);
+  graph.setNodeValue(i_2.getId(), 1.0);
+  // Hidden layer 1: Weights random values
+  graph.setNodeValue(w_h1_1_1.getId(), -0.1);
+  graph.setNodeValue(w_h1_1_2.getId(), -0.2);
+  graph.setNodeValue(w_h1_2_1.getId(), 0.1);
+  graph.setNodeValue(w_h1_2_2.getId(), 0.2);
+  // Hidden layer 1: Biases random values
+  graph.setNodeValue(b_h1_1.getId(), -0.3);
+  graph.setNodeValue(b_h1_2.getId(), 0.3);
+  // Output layer: Weights random values
+  graph.setNodeValue(w_o_1_1.getId(), -0.5);
+  graph.setNodeValue(w_o_1_2.getId(), 0.5);
+  // Output layer: Biases random values
+  graph.setNodeValue(b_o_1.getId(), -0.25);
+  // Loss function input: True y value
+  graph.setNodeValue(y.getId(), 0.0);
+
+  return graph;
+}
+/* eslint-enable @typescript-eslint/naming-convention */
+
 function buildSumNode(id: string): GraphNode {
   const ports: Port[] = [new Port("x_i", true)];
   const operation = new Operation(SUM_F_CODE, SUM_DFDY_CODE);
@@ -727,5 +990,29 @@ function buildProductNode(id: string): GraphNode {
 function buildIdentityNode(id: string): GraphNode {
   const ports: Port[] = [new Port("x", false)];
   const operation = new Operation(IDENTITY_F_CODE, IDENTITY_DFDY_CODE);
+  return new OperationNode(id, ports, operation);
+}
+
+function buildReluNode(id: string): GraphNode {
+  const ports: Port[] = [new Port("x", false)];
+  const operation = new Operation(RELU_F_CODE, RELU_DFDY_CODE);
+  return new OperationNode(id, ports, operation);
+}
+
+function buildSigmoidNode(id: string): GraphNode {
+  const ports: Port[] = [new Port("x", false)];
+  const operation = new Operation(SIGMOID_F_CODE, SIGMOID_DFDY_CODE);
+  return new OperationNode(id, ports, operation);
+}
+
+function buildSquaredErrorNode(id: string): GraphNode {
+  const ports: Port[] = [
+    new Port("y_estimate", false),
+    new Port("y_true", false),
+  ];
+  const operation = new Operation(
+    SQUARED_ERROR_F_CODE,
+    SQUARED_ERROR_DFDY_CODE,
+  );
   return new OperationNode(id, ports, operation);
 }

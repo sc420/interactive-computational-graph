@@ -1,31 +1,64 @@
 import { Box, Button } from "@mui/material";
-import { CanvasWidget } from "@projectstorm/react-diagrams";
-import React from "react";
-import DiagramsHandler from "../diagrams/diagrams_handler";
+import { useCallback, useState, type FunctionComponent } from "react";
+import ReactFlow, {
+  Background,
+  Controls,
+  addEdge,
+  applyEdgeChanges,
+  applyNodeChanges,
+  type Edge,
+  type Node,
+  type OnConnect,
+  type OnEdgesChange,
+  type OnNodesChange,
+} from "reactflow";
+import "reactflow/dist/style.css";
 
-const Graph: React.FunctionComponent = () => {
-  const diagramsHandlerRef: React.MutableRefObject<DiagramsHandler | null> =
-    React.useRef(null);
-  const [isDiagramsReady, setDiagramsReady] = React.useState(false);
+const initialNodes: Node[] = [
+  {
+    id: "1",
+    data: { label: "Hello" },
+    position: { x: 0, y: 0 },
+    type: "input",
+  },
+  {
+    id: "2",
+    data: { label: "World" },
+    position: { x: 100, y: 100 },
+  },
+];
 
-  React.useEffect(() => {
-    diagramsHandlerRef.current = new DiagramsHandler();
-    setDiagramsReady(true);
+const initialEdges: Edge[] = [];
+
+const Graph: FunctionComponent = () => {
+  const [nodes, setNodes] = useState<Node[]>(initialNodes);
+  const [edges, setEdges] = useState<Edge[]>(initialEdges);
+
+  const onNodesChange: OnNodesChange = useCallback((changes) => {
+    setNodes((nds) => applyNodeChanges(changes, nds));
+  }, []);
+
+  const onEdgesChange: OnEdgesChange = useCallback((changes) => {
+    setEdges((eds) => applyEdgeChanges(changes, eds));
+  }, []);
+
+  const onConnect: OnConnect = useCallback((params) => {
+    setEdges((eds) => addEdge(params, eds));
   }, []);
 
   const handleAddNode = (): void => {
-    const diagramsHandle = diagramsHandlerRef.current;
-    if (diagramsHandle === null) {
-      return;
-    }
-
-    diagramsHandle.addNode();
-    diagramsHandle.repaint();
+    const newNode: Node = {
+      id: `${nodes.length + 1}`,
+      data: { label: `New ${nodes.length + 1}` },
+      position: { x: 200, y: 200 },
+      type: "default",
+    };
+    setNodes((nds) => nds.concat(newNode));
   };
 
   // TODO(sc420): Remove the "Add Node" Button
   return (
-    <React.Fragment>
+    <>
       <Button
         variant="contained"
         onClick={handleAddNode}
@@ -37,15 +70,21 @@ const Graph: React.FunctionComponent = () => {
         display="flex"
         flexGrow={1}
         sx={{
-          backgroundColor: "lightgray",
           "> *": { flexGrow: 1 },
         }}
       >
-        {isDiagramsReady && diagramsHandlerRef.current !== null && (
-          <CanvasWidget engine={diagramsHandlerRef.current.getEngine()} />
-        )}
+        <ReactFlow
+          nodes={nodes}
+          onNodesChange={onNodesChange}
+          edges={edges}
+          onEdgesChange={onEdgesChange}
+          onConnect={onConnect}
+        >
+          <Background />
+          <Controls />
+        </ReactFlow>
       </Box>
-    </React.Fragment>
+    </>
   );
 };
 

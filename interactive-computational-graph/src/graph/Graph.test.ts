@@ -198,6 +198,29 @@ describe("updating f values", () => {
     expect(graph.getNodeValue("product1")).toBeCloseTo(30);
     expect(graph.getNodeValue("identity1")).toBeCloseTo(30);
   });
+
+  test("should update f values for complex graph", () => {
+    const graph = buildComplexGraph();
+
+    const updatedNodes = graph.updateFValues();
+    const expectedUpdatedNodes: string[] = [
+      "v1",
+      "v2",
+      "c1",
+      "sum1",
+      "sum2",
+      "v3",
+      "product1",
+      "product2",
+      "identity1",
+    ];
+    expect(updatedNodes.sort()).toEqual(expectedUpdatedNodes.sort());
+    expect(graph.getNodeValue("sum1")).toBeCloseTo(3);
+    expect(graph.getNodeValue("sum2")).toBeCloseTo(2);
+    expect(graph.getNodeValue("product1")).toBeCloseTo(60);
+    expect(graph.getNodeValue("product2")).toBeCloseTo(10);
+    expect(graph.getNodeValue("identity1")).toBeCloseTo(10);
+  });
 });
 
 describe("updating derivative values", () => {
@@ -307,20 +330,32 @@ describe("updating derivative values", () => {
 
     // d(identity1)/d(identity1) = 1
     expect(graph.getNodeDerivative("identity1")).toBeCloseTo(1);
-    // d(identity1)/d(product1) = 1
+    // d(identity1)/d(product1) =
+    // d(identity1)/d(product1) * d(identity1)/d(identity1) =
+    // 1 * 1 = 1
     expect(graph.getNodeDerivative("product1")).toBeCloseTo(1);
-    // d(identity1)/d(sum1) = d(product1)/d(sum1) = sum2 * v3 = 2 * 5 = 10
+    // d(identity1)/d(sum1) =
+    // d(product1)/d(sum1) * d(identity1)/d(product1) =
+    // (sum2 * v3) * (1) = 10 * 1 = 10
     expect(graph.getNodeDerivative("sum1")).toBeCloseTo(10);
-    // d(identity1)/d(sum2) = d(product1)/d(sum2) = sum1 * v3 = 3 * 5 = 15
+    // d(identity1)/d(sum2) =
+    // d(product1)/d(sum2) * d(identity1)/d(product1) =
+    // (sum1 * v3) * (1) = 15 * 1 = 15
     expect(graph.getNodeDerivative("sum2")).toBeCloseTo(15);
-    // d(identity1)/d(v3) = d(product1)/d(v3) = sum1 * sum2 = 6
+    // d(identity1)/d(v3) =
+    // d(product1)/d(v3) * d(identity1)/d(product1) =
+    // (sum1 * sum2) * (1) = 6 * 1 = 6
     expect(graph.getNodeDerivative("v3")).toBeCloseTo(6);
-    // d(identity1)/d(v1) = d(sum1)/d(v1) * d(product1)/d(sum1) = 1 * 10 = 10
+    // d(identity1)/d(v1) =
+    // d(sum1)/d(v1) * d(identity1)/d(sum1) =
+    // 1 * 10 = 10
     expect(graph.getNodeDerivative("v1")).toBeCloseTo(10);
-    // d(identity1)/d(v2) = d(sum1)/d(v2) * d(product1)/d(sum1) +
-    // d(sum2)/d(v2) * d(product1)/d(sum2) = 1 * 10 + 1 * 15 = 25
+    // d(identity1)/d(v2) =
+    // d(sum1)/d(v2) * d(identity1)/d(sum1) +
+    // d(sum2)/d(v2) * d(identity1)/d(sum2) =
+    // 1 * 10 + 1 * 15 = 25
     expect(graph.getNodeDerivative("v2")).toBeCloseTo(25);
-    //  d(identity1)/d(c1) = 0 (constant)
+    // d(identity1)/d(c1) = 0 (constant)
     expect(graph.getNodeDerivative("c1")).toBeCloseTo(0);
   });
 
@@ -347,22 +382,197 @@ describe("updating derivative values", () => {
     expect(graph.getNodeDerivative("v2")).toBeCloseTo(1);
     // d(c1)/d(v2) = 0 (constant)
     expect(graph.getNodeDerivative("c1")).toBeCloseTo(0);
-    // d(sum1)/d(v2) = d(v1)/d(v2) * d(sum1)/d(v1) +
-    // d(v2)/d(v2) * d(sum1)/d(v2) = 0 * 1 + 1 * 1 = 1
+    // d(sum1)/d(v2) =
+    // d(v1)/d(v2) * d(sum1)/d(v1) + d(v2)/d(v2) * d(sum1)/d(v2) =
+    // 0 * 1 + 1 * 1 = 1
     expect(graph.getNodeDerivative("sum1")).toBeCloseTo(1);
-    // d(sum2)/d(v2) = d(v2)/d(v2) * d(sum2)/d(v2) +
-    // d(c1)/d(v2) * d(sum2)/d(c1) = 1 * 1 + 0 * 0 = 1
+    // d(sum2)/d(v2) =
+    // d(v2)/d(v2) * d(sum2)/d(v2) + d(c1)/d(v2) * d(sum2)/d(c1) =
+    // 1 * 1 + 0 * 0 = 1
     expect(graph.getNodeDerivative("sum2")).toBeCloseTo(1);
     // not in the forward path
     expect(graph.getNodeDerivative("v3")).toBeCloseTo(0);
-    // d(product1)/d(v2) = d(sum1)/d(v2) * d(product1)/d(sum1) +
+    // d(product1)/d(v2) =
+    // d(sum1)/d(v2) * d(product1)/d(sum1) +
     // d(sum2)/d(v2) * d(product1)/d(sum2) +
     // d(v3)/d(v2) * d(product1)/d(v3) =
-    // 1 * (sum2 * v3) + 1 * (sum1 * v3) + 0 * (sum1 * sum2) = 25
+    // (1) * (sum2 * v3) + (1) * (sum1 * v3) + (0) * (sum1 * sum2) = 25
     expect(graph.getNodeDerivative("product1")).toBeCloseTo(25);
-    // d(identity1)/d(v2) = d(product1)/d(v2) * d(identity1)/d(product1) =
+    // d(identity1)/d(v2) =
+    // d(product1)/d(v2) * d(identity1)/d(product1) =
     // 25 * 1 = 25
     expect(graph.getNodeDerivative("identity1")).toBeCloseTo(25);
+  });
+
+  test("should update derivatives in reverse mode for complex graph", () => {
+    const graph = buildComplexGraph();
+    graph.updateFValues();
+
+    graph.setDifferentiationMode("REVERSE");
+    graph.setTargetNode("identity1");
+
+    let updatedNodes = graph.updateDerivatives();
+    let expectedUpdatedNodes: string[] = [
+      "v2",
+      "c1",
+      "sum2",
+      "v3",
+      "product2",
+      "identity1",
+    ];
+    expect(updatedNodes.sort()).toEqual(expectedUpdatedNodes.sort());
+
+    // d(identity1)/d(identity1) = 1
+    expect(graph.getNodeDerivative("identity1")).toBeCloseTo(1);
+    // not in the reverse path
+    expect(graph.getNodeDerivative("product1")).toBeCloseTo(0);
+    // d(identity1)/d(product2) =
+    // d(identity1)/d(product2) * d(identity1)/d(identity1) =
+    // 1 * 1 = 1
+    expect(graph.getNodeDerivative("product2")).toBeCloseTo(1);
+    // not in the reverse path
+    expect(graph.getNodeDerivative("sum1")).toBeCloseTo(0);
+    // d(identity1)/d(sum2) =
+    // d(product1)/d(sum2) * d(identity1)/d(product1) +
+    // d(product2)/d(sum2) * d(identity1)/d(product2) =
+    // (sum1 * v3) * (0) + (v3) * (1) = 0 + 5 = 5
+    expect(graph.getNodeDerivative("sum2")).toBeCloseTo(5);
+    // d(identity1)/d(v3) =
+    // d(product1)/d(v3) * d(identity1)/d(product1) +
+    // d(product2)/d(v3) * d(identity1)/d(product2) =
+    // (sum1 * sum2) * (0) + (sum2) * (1) = 0 + 2 = 2
+    expect(graph.getNodeDerivative("v3")).toBeCloseTo(2);
+    // not in the reverse path
+    expect(graph.getNodeDerivative("v1")).toBeCloseTo(0);
+    // d(identity1)/d(v2) =
+    // d(sum1)/d(v2) * d(identity1)/d(sum1) +
+    // d(sum2)/d(v2) * d(identity1)/d(sum2) =
+    // 1 * 0 + 1 * 5 = 5
+    expect(graph.getNodeDerivative("v2")).toBeCloseTo(5);
+    //  d(identity1)/d(c1) = 0 (constant)
+    expect(graph.getNodeDerivative("c1")).toBeCloseTo(0);
+
+    graph.setTargetNode("product1");
+
+    updatedNodes = graph.updateDerivatives();
+    expectedUpdatedNodes = ["v1", "v2", "c1", "sum1", "sum2", "v3", "product1"];
+    expect(updatedNodes.sort()).toEqual(expectedUpdatedNodes.sort());
+
+    // not in the reverse path
+    expect(graph.getNodeDerivative("identity1")).toBeCloseTo(0);
+    // d(product1)/d(product1) = 1
+    expect(graph.getNodeDerivative("product1")).toBeCloseTo(1);
+    // not in the reverse path
+    expect(graph.getNodeDerivative("product2")).toBeCloseTo(0);
+    // d(product1)/d(sum1) =
+    // d(product1)/d(sum1) * d(product1)/d(product1) =
+    // (v1 * sum2 * v3) * (1) = 20
+    expect(graph.getNodeDerivative("sum1")).toBeCloseTo(20);
+    // d(product1)/d(sum2) =
+    // d(product1)/d(sum2) * d(product1)/d(product1) +
+    // d(product2)/d(sum2) * d(product1)/d(product2) =
+    // (v1 * sum1 * v3) * (1) + (v3) * (0) = 30 + 0 = 30
+    expect(graph.getNodeDerivative("sum2")).toBeCloseTo(30);
+    // d(product1)/d(v3) =
+    // d(product1)/d(v3) * d(product1)/d(product1) +
+    // d(product2)/d(v3) * d(product1)/d(product2) =
+    // (v1 * sum1 * sum2) * (1) + (sum2) * (0) = 12 + 0 = 12
+    expect(graph.getNodeDerivative("v3")).toBeCloseTo(12);
+    // d(product1)/d(v1) =
+    // d(product1)/d(v1) * d(product1)/d(product1) +
+    // d(sum1)/d(v1) * d(product1)/d(sum1) =
+    // (sum1 * sum2 * v3) * (1) + (1) * (20) = 30 + 20 = 50
+    expect(graph.getNodeDerivative("v3")).toBeCloseTo(50);
+    // d(product1)/d(v2) =
+    // d(sum1)/d(v2) * d(product1)/d(sum1) +
+    // d(sum2)/d(v2) * d(product1)/d(sum2) =
+    // 1 * 20 + 1 * 30 = 50
+    expect(graph.getNodeDerivative("v2")).toBeCloseTo(50);
+    // d(product1)/d(c1) = 0 (constant)
+    expect(graph.getNodeDerivative("c1")).toBeCloseTo(0);
+  });
+
+  test("should update derivatives in forward mode for complex graph", () => {
+    const graph = buildComplexGraph();
+    graph.updateFValues();
+
+    graph.setDifferentiationMode("FORWARD");
+    graph.setTargetNode("v1");
+
+    let updatedNodes = graph.updateDerivatives();
+    let expectedUpdatedNodes: string[] = ["v1", "sum1", "product1"];
+    expect(updatedNodes.sort()).toEqual(expectedUpdatedNodes.sort());
+
+    // d(v1)/d(v1) = 1
+    expect(graph.getNodeDerivative("v1")).toBeCloseTo(1);
+    // not in the forward path
+    expect(graph.getNodeDerivative("v2")).toBeCloseTo(0);
+    // d(c1)/d(v2) = 0 (constant)
+    expect(graph.getNodeDerivative("c1")).toBeCloseTo(0);
+    // d(sum1)/d(v1) =
+    // d(v1)/d(v1) * d(sum1)/d(v1) + d(v2)/d(v1) * d(sum1)/d(v2) =
+    // 1 * 1 + 0 * 1 = 1
+    expect(graph.getNodeDerivative("sum1")).toBeCloseTo(1);
+    // not in the forward path
+    expect(graph.getNodeDerivative("sum2")).toBeCloseTo(0);
+    // not in the forward path
+    expect(graph.getNodeDerivative("v3")).toBeCloseTo(0);
+    // d(product1)/d(v1) =
+    // d(v1)/d(v1) * d(product1)/d(v1) +
+    // d(sum1)/d(v1) * d(product1)/d(sum1) +
+    // d(sum2)/d(v1) * d(product1)/d(sum2) +
+    // d(v3)/d(v1) * d(product1)/d(v3) =
+    // (1) * (sum1 * sum2 * v3) +
+    // (1) * (v1 * sum2 * v3) +
+    // (0) * (v1 * sum1 * v3) +
+    // (0) * (v1 * sum1 * sum2) =
+    // 30 + 20 + 0 + 0 = 50
+    expect(graph.getNodeDerivative("product1")).toBeCloseTo(50);
+    // not in the forward path
+    expect(graph.getNodeDerivative("product2")).toBeCloseTo(0);
+    // not in the forward path
+    expect(graph.getNodeDerivative("identity1")).toBeCloseTo(0);
+
+    graph.setTargetNode("sum2");
+
+    updatedNodes = graph.updateDerivatives();
+    expectedUpdatedNodes = ["sum2", "product1", "product2", "identity1"];
+    expect(updatedNodes.sort()).toEqual(expectedUpdatedNodes.sort());
+
+    // not in the forward path
+    expect(graph.getNodeDerivative("v1")).toBeCloseTo(0);
+    // not in the forward path
+    expect(graph.getNodeDerivative("v2")).toBeCloseTo(0);
+    // not in the forward path
+    expect(graph.getNodeDerivative("c1")).toBeCloseTo(0);
+    // not in the forward path
+    expect(graph.getNodeDerivative("sum1")).toBeCloseTo(0);
+    // d(sum2)/d(sum2) = 1
+    expect(graph.getNodeDerivative("sum2")).toBeCloseTo(1);
+    // not in the forward path
+    expect(graph.getNodeDerivative("v3")).toBeCloseTo(0);
+    // d(product1)/d(sum2) =
+    // d(v1)/d(sum2) * d(product1)/d(v1) +
+    // d(sum1)/d(sum2) * d(product1)/d(sum1) +
+    // d(sum2)/d(sum2) * d(product1)/d(sum2) +
+    // d(v3)/d(sum2) * d(product1)/d(v3) =
+    // (0) * (sum1 * sum2 * v3) +
+    // (0) * (v1 * sum2 * v3) +
+    // (1) * (v1 * sum1 * v3) +
+    // (0) * (v1 * sum1 * sum2) =
+    // 0 + 0 + 30 + 0 = 30
+    expect(graph.getNodeDerivative("product1")).toBeCloseTo(30);
+    // d(product2)/d(sum2) =
+    // d(sum2)/d(sum2) * d(product2)/d(sum2) +
+    // d(v3)/d(sum2) * d(product2)/d(v3) =
+    // (1) * (v3) +
+    // (0) * (sum2) =
+    // 5 + 0 = 5
+    expect(graph.getNodeDerivative("product2")).toBeCloseTo(5);
+    // d(identity1)/d(sum2) =
+    // d(product2)/d(sum2) * d(identity1)/d(product2) =
+    // 5 * 1 = 5
+    expect(graph.getNodeDerivative("identity1")).toBeCloseTo(5);
   });
 });
 
@@ -374,9 +584,9 @@ function buildSmallGraph(): Graph {
   const varNode2 = new VariableNode("v2");
   // Layer 2
   const sumNode1 = buildSumNode("sum1");
-  const newNodes = [varNode1, varNode2, sumNode1];
 
   // Add the nodes
+  const newNodes = [varNode1, varNode2, sumNode1];
   newNodes.forEach((newNode) => {
     graph.addNode(newNode);
   });
@@ -401,23 +611,23 @@ function buildMediumGraph(): Graph {
   // Layer 2
   const sumNode1 = buildSumNode("sum1");
   const sumNode2 = buildSumNode("sum2");
+  const varNode3 = new VariableNode("v3");
   // Layer 3
   const productNode1 = buildProductNode("product1");
-  const varNode3 = new VariableNode("v3");
   // Layer 4
   const identityNode1 = buildIdentityNode("identity1");
+
+  // Add the nodes
   const newNodes = [
     varNode1,
     varNode2,
     constNode1,
     sumNode1,
     sumNode2,
-    productNode1,
     varNode3,
+    productNode1,
     identityNode1,
   ];
-
-  // Add the nodes
   newNodes.forEach((newNode) => {
     graph.addNode(newNode);
   });
@@ -433,6 +643,64 @@ function buildMediumGraph(): Graph {
   graph.connect(varNode3.getId(), productNode1.getId(), "x_i");
   // Layer 3 connections
   graph.connect(productNode1.getId(), identityNode1.getId(), "x");
+
+  // Layer 1 initial values
+  graph.setNodeValue(varNode1.getId(), 2);
+  graph.setNodeValue(varNode2.getId(), 1);
+  graph.setNodeValue(constNode1.getId(), 1);
+  // Layer 2 initial values
+  graph.setNodeValue(varNode3.getId(), 5);
+
+  return graph;
+}
+
+function buildComplexGraph(): Graph {
+  const graph = new Graph();
+
+  // Layer 1
+  const varNode1 = new VariableNode("v1");
+  const varNode2 = new VariableNode("v2");
+  const constNode1 = new ConstantNode("c1");
+  // Layer 2
+  const sumNode1 = buildSumNode("sum1");
+  const sumNode2 = buildSumNode("sum2");
+  const varNode3 = new VariableNode("v3");
+  // Layer 3
+  const productNode1 = buildProductNode("product1");
+  const productNode2 = buildProductNode("product2");
+  // Layer 4
+  const identityNode1 = buildIdentityNode("identity1");
+
+  // Add the nodes
+  const newNodes = [
+    varNode1,
+    varNode2,
+    constNode1,
+    sumNode1,
+    sumNode2,
+    varNode3,
+    productNode1,
+    productNode2,
+    identityNode1,
+  ];
+  newNodes.forEach((newNode) => {
+    graph.addNode(newNode);
+  });
+
+  // Layer 1 connections
+  graph.connect(varNode1.getId(), productNode1.getId(), "x_i");
+  graph.connect(varNode1.getId(), sumNode1.getId(), "x_i");
+  graph.connect(varNode2.getId(), sumNode1.getId(), "x_i");
+  graph.connect(varNode2.getId(), sumNode2.getId(), "x_i");
+  graph.connect(constNode1.getId(), sumNode2.getId(), "x_i");
+  // Layer 2 connections
+  graph.connect(sumNode1.getId(), productNode1.getId(), "x_i");
+  graph.connect(sumNode2.getId(), productNode1.getId(), "x_i");
+  graph.connect(sumNode2.getId(), productNode2.getId(), "x_i");
+  graph.connect(varNode3.getId(), productNode1.getId(), "x_i");
+  graph.connect(varNode3.getId(), productNode2.getId(), "x_i");
+  // Layer 3 connections
+  graph.connect(productNode2.getId(), identityNode1.getId(), "x");
 
   // Layer 1 initial values
   graph.setNodeValue(varNode1.getId(), 2);

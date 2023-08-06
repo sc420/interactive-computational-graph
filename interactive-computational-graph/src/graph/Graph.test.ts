@@ -317,9 +317,9 @@ describe("updating derivative values", () => {
     expect(updatedNodes.sort()).toEqual(expectedUpdatedNodes.sort());
     // d(v1)/d(v1) = 1
     expect(graph.getNodeDerivative("v1")).toBeCloseTo(1);
-    // not in the reverse path
+    // d(v1)/d(v2) = 0 (not in the reverse path)
     expect(graph.getNodeDerivative("v2")).toBeCloseTo(0);
-    // not in the reverse path
+    // d(v1)/d(sum1) = 0 (not in the reverse path)
     expect(graph.getNodeDerivative("sum1")).toBeCloseTo(0);
 
     graph.setTargetNode("sum1");
@@ -346,7 +346,7 @@ describe("updating derivative values", () => {
     expect(updatedNodes.sort()).toEqual(expectedUpdatedNodes.sort());
     // d(v1)/d(v1) = 1
     expect(graph.getNodeDerivative("v1")).toBeCloseTo(1);
-    // not in the forward path
+    // d(v2)/d(v1) = 0 (not in the forward path)
     expect(graph.getNodeDerivative("v2")).toBeCloseTo(0);
     // d(sum1)/d(v1) = 1
     expect(graph.getNodeDerivative("sum1")).toBeCloseTo(1);
@@ -355,9 +355,9 @@ describe("updating derivative values", () => {
     updatedNodes = graph.updateDerivatives();
     expectedUpdatedNodes = ["sum1"];
     expect(updatedNodes.sort()).toEqual(expectedUpdatedNodes.sort());
-    // not in the forward path
+    // d(v1)/d(sum1) = 0 (not in the forward path)
     expect(graph.getNodeDerivative("v1")).toBeCloseTo(0);
-    // not in the forward path
+    // d(v2)/d(sum1) = 0 (not in the forward path)
     expect(graph.getNodeDerivative("v2")).toBeCloseTo(0);
     // d(sum1)/d(sum1) = 1
     expect(graph.getNodeDerivative("sum1")).toBeCloseTo(1);
@@ -431,7 +431,7 @@ describe("updating derivative values", () => {
     ];
     expect(updatedNodes.sort()).toEqual(expectedUpdatedNodes.sort());
 
-    // not in the forward path
+    // d(v1)/d(v2) = 0 (not in the forward path)
     expect(graph.getNodeDerivative("v1")).toBeCloseTo(0);
     // d(v2)/d(v2) = 1
     expect(graph.getNodeDerivative("v2")).toBeCloseTo(1);
@@ -445,7 +445,7 @@ describe("updating derivative values", () => {
     // d(v2)/d(v2) * d(sum2)/d(v2) + d(c1)/d(v2) * d(sum2)/d(c1) =
     // 1 * 1 + 0 * 0 = 1
     expect(graph.getNodeDerivative("sum2")).toBeCloseTo(1);
-    // not in the forward path
+    // d(v3)/d(v2) = 0 (not in the forward path)
     expect(graph.getNodeDerivative("v3")).toBeCloseTo(0);
     // d(product1)/d(v2) =
     // d(sum1)/d(v2) * d(product1)/d(sum1) +
@@ -479,13 +479,13 @@ describe("updating derivative values", () => {
 
     // d(identity1)/d(identity1) = 1
     expect(graph.getNodeDerivative("identity1")).toBeCloseTo(1);
-    // not in the reverse path
+    // d(identity1)/d(product1) = 0 (not in the reverse path)
     expect(graph.getNodeDerivative("product1")).toBeCloseTo(0);
     // d(identity1)/d(product2) =
     // d(identity1)/d(product2) * d(identity1)/d(identity1) =
     // 1 * 1 = 1
     expect(graph.getNodeDerivative("product2")).toBeCloseTo(1);
-    // not in the reverse path
+    // d(identity1)/d(sum1) = 0 (not in the reverse path)
     expect(graph.getNodeDerivative("sum1")).toBeCloseTo(0);
     // d(identity1)/d(sum2) =
     // d(product1)/d(sum2) * d(identity1)/d(product1) +
@@ -497,7 +497,7 @@ describe("updating derivative values", () => {
     // d(product2)/d(v3) * d(identity1)/d(product2) =
     // (sum1 * sum2) * (0) + (sum2) * (1) = 0 + 2 = 2
     expect(graph.getNodeDerivative("v3")).toBeCloseTo(2);
-    // not in the reverse path
+    // d(identity1)/d(v1) = 0 (not in the reverse path)
     expect(graph.getNodeDerivative("v1")).toBeCloseTo(0);
     // d(identity1)/d(v2) =
     // d(sum1)/d(v2) * d(identity1)/d(sum1) +
@@ -513,11 +513,11 @@ describe("updating derivative values", () => {
     expectedUpdatedNodes = ["v1", "v2", "c1", "sum1", "sum2", "v3", "product1"];
     expect(updatedNodes.sort()).toEqual(expectedUpdatedNodes.sort());
 
-    // not in the reverse path
+    // d(product1)/d(identity1) = 0 (not in the reverse path)
     expect(graph.getNodeDerivative("identity1")).toBeCloseTo(0);
     // d(product1)/d(product1) = 1
     expect(graph.getNodeDerivative("product1")).toBeCloseTo(1);
-    // not in the reverse path
+    // d(product1)/d(product2) = 0 (not in the reverse path)
     expect(graph.getNodeDerivative("product2")).toBeCloseTo(0);
     // d(product1)/d(sum1) =
     // d(product1)/d(sum1) * d(product1)/d(product1) =
@@ -560,17 +560,17 @@ describe("updating derivative values", () => {
 
     // d(v1)/d(v1) = 1
     expect(graph.getNodeDerivative("v1")).toBeCloseTo(1);
-    // not in the forward path
+    // d(v2)/d(v1) = 0 (not in the forward path)
     expect(graph.getNodeDerivative("v2")).toBeCloseTo(0);
-    // d(c1)/d(v2) = 0 (constant)
+    // d(c1)/d(v1) = 0 (constant)
     expect(graph.getNodeDerivative("c1")).toBeCloseTo(0);
     // d(sum1)/d(v1) =
     // d(v1)/d(v1) * d(sum1)/d(v1) + d(v2)/d(v1) * d(sum1)/d(v2) =
     // 1 * 1 + 0 * 1 = 1
     expect(graph.getNodeDerivative("sum1")).toBeCloseTo(1);
-    // not in the forward path
+    // d(sum2)/d(v1) = 0 (not in the forward path)
     expect(graph.getNodeDerivative("sum2")).toBeCloseTo(0);
-    // not in the forward path
+    // d(v3)/d(v1) = 0 (not in the forward path)
     expect(graph.getNodeDerivative("v3")).toBeCloseTo(0);
     // d(product1)/d(v1) =
     // d(v1)/d(v1) * d(product1)/d(v1) +
@@ -583,9 +583,9 @@ describe("updating derivative values", () => {
     // (0) * (v1 * sum1 * sum2) =
     // 30 + 20 + 0 + 0 = 50
     expect(graph.getNodeDerivative("product1")).toBeCloseTo(50);
-    // not in the forward path
+    // d(product2)/d(v1) = 0 (not in the forward path)
     expect(graph.getNodeDerivative("product2")).toBeCloseTo(0);
-    // not in the forward path
+    // d(identity1)/d(v1) = 0 (not in the forward path)
     expect(graph.getNodeDerivative("identity1")).toBeCloseTo(0);
 
     graph.setTargetNode("sum2");
@@ -594,17 +594,17 @@ describe("updating derivative values", () => {
     expectedUpdatedNodes = ["sum2", "product1", "product2", "identity1"];
     expect(updatedNodes.sort()).toEqual(expectedUpdatedNodes.sort());
 
-    // not in the forward path
+    // d(v1)/d(sum2) = 0 (not in the forward path)
     expect(graph.getNodeDerivative("v1")).toBeCloseTo(0);
-    // not in the forward path
+    // d(v2)/d(sum2) = 0 (not in the forward path)
     expect(graph.getNodeDerivative("v2")).toBeCloseTo(0);
-    // not in the forward path
+    // d(c1)/d(sum2) = 0 (not in the forward path)
     expect(graph.getNodeDerivative("c1")).toBeCloseTo(0);
-    // not in the forward path
+    // d(sum1)/d(sum2) = 0 (not in the forward path)
     expect(graph.getNodeDerivative("sum1")).toBeCloseTo(0);
     // d(sum2)/d(sum2) = 1
     expect(graph.getNodeDerivative("sum2")).toBeCloseTo(1);
-    // not in the forward path
+    // d(v3)/d(sum2) = 0 (not in the forward path)
     expect(graph.getNodeDerivative("v3")).toBeCloseTo(0);
     // d(product1)/d(sum2) =
     // d(v1)/d(sum2) * d(product1)/d(v1) +

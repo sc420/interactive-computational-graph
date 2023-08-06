@@ -43,6 +43,7 @@ function dfdy(portToNodes, y) {
   if (!(y.id in portToNodes.x_i)) {
     return 0;
   }
+
   return 1;
 }
 `;
@@ -123,7 +124,8 @@ function f(portToNodes) {
   if (nodeData.length !== 1) {
     throw new Error("Should have exactly 1 node data for port x");
   }
-  return nodeData[0].value;
+  const x = nodeData[0].value;
+  return x;
 }
 `;
 
@@ -148,6 +150,7 @@ function dfdy(portToNodes, y) {
   if (!(y.id in portToNodes.x)) {
     return 0;
   }
+
   return 1;
 }
 `;
@@ -202,7 +205,8 @@ function dfdy(portToNodes, y) {
   if (nodeData.length !== 1) {
     throw new Error("Should have exactly 1 node data for port x");
   }
-  return nodeData[0].value > 0 ? 1 : 0;
+  const x = nodeData[0].value;
+  return x > 0 ? 1 : 0;
 }
 `;
 
@@ -226,7 +230,8 @@ function f(portToNodes) {
   if (nodeData.length !== 1) {
     throw new Error("Should have exactly 1 node data for port x");
   }
-  return 1 / (1 + Math.exp(-nodeData[0].value));
+  const x = nodeData[0].value;
+  return 1 / (1 + Math.exp(-x));
 }
 `;
 
@@ -256,7 +261,8 @@ function dfdy(portToNodes, y) {
   if (nodeData.length !== 1) {
     throw new Error("Should have exactly 1 node data for port x");
   }
-  const sigmoid = 1 / (1 + Math.exp(-nodeData[0].value));
+  const x = nodeData[0].value;
+  const sigmoid = 1 / (1 + Math.exp(-x));
   return sigmoid * (1 - sigmoid);
 }
 `;
@@ -285,8 +291,9 @@ function f(portToNodes) {
   if (nodeDataEstimate.length !== 1) {
     throw new Error("Should have exactly 1 node data for port y_estimate");
   }
-
-  return Math.pow(nodeDataTrue[0].value - nodeDataEstimate[0].value, 2);
+  const yTrue = nodeDataTrue[0].value;
+  const yEstimate = nodeDataEstimate[0].value;
+  return Math.pow(yTrue - yEstimate, 2);
 }
 `;
 
@@ -320,8 +327,9 @@ function dfdy(portToNodes, y) {
   if (nodeDataEstimate.length !== 1) {
     throw new Error("Should have exactly 1 node data for port y_estimate");
   }
-
-  return 2 * (nodeDataEstimate[0].value - nodeDataTrue[0].value);
+  const yTrue = nodeDataTrue[0].value;
+  const yEstimate = nodeDataEstimate[0].value;
+  return 2 * (yEstimate - yTrue);
 }
 `;
 

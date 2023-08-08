@@ -1,12 +1,12 @@
 import { Grid, Toolbar } from "@mui/material";
-import PropTypes from "prop-types";
 import React from "react";
 import FeaturePanel from "../components/FeaturePanel";
 import { TITLE_HEIGHT } from "../constants";
+import type SelectedFeature from "../features/SelectedFeature";
 import GraphContainer from "./GraphContainer";
 
 interface MainContainerProps {
-  selectedFeature: string | null;
+  selectedFeature: SelectedFeature | null;
 }
 
 const MainContainer: React.FunctionComponent<MainContainerProps> = ({
@@ -33,10 +33,6 @@ const MainContainer: React.FunctionComponent<MainContainerProps> = ({
       </Grid>
     </React.Fragment>
   );
-};
-
-MainContainer.propTypes = {
-  selectedFeature: PropTypes.string.isRequired,
 };
 
 export default MainContainer;

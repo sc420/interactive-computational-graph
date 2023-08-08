@@ -1,18 +1,25 @@
 import { Box } from "@mui/material";
-import PropTypes from "prop-types";
+import { type FunctionComponent } from "react";
+import type SelectedFeature from "../features/SelectedFeature";
+import AddNodesPanel from "./AddNodesPanel";
+import EditNodesPanel from "./EditNodesPanel";
 
 interface FeaturePanelProps {
-  feature: string;
+  feature: SelectedFeature;
 }
 
-const FeaturePanel: React.FunctionComponent<FeaturePanelProps> = ({
-  feature,
-}) => {
-  return <Box sx={{ width: 250 }}>FeaturePanel {feature}</Box>;
-};
+const FeaturePanel: FunctionComponent<FeaturePanelProps> = ({ feature }) => {
+  const featureToPanel: Record<SelectedFeature, React.FC> = {
+    dashboard: AddNodesPanel,
+    orders: EditNodesPanel,
+    customers: AddNodesPanel,
+    reports: EditNodesPanel,
+    integrations: EditNodesPanel,
+  };
 
-FeaturePanel.propTypes = {
-  feature: PropTypes.string.isRequired,
+  const SelectedPanel = featureToPanel[feature];
+
+  return <Box sx={{ width: 250 }}>{<SelectedPanel />}</Box>;
 };
 
 export default FeaturePanel;

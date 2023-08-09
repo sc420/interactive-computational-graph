@@ -6,10 +6,7 @@ interface DraggableItemProps {
 }
 
 const DraggableItem: FunctionComponent<DraggableItemProps> = ({ text }) => {
-  const handleDragStart = (
-    event: DragEvent<HTMLLIElement>,
-    nodeType: string,
-  ): void => {
+  const handleDragStart = (event: DragEvent, nodeType: string): void => {
     event.dataTransfer.setData("application/reactflow", nodeType);
     event.dataTransfer.effectAllowed = "move";
   };
@@ -18,7 +15,7 @@ const DraggableItem: FunctionComponent<DraggableItemProps> = ({ text }) => {
     <ListItem
       draggable
       onDragStart={(event) => {
-        handleDragStart(event, "variable");
+        handleDragStart(event, text);
       }}
       className="draggable-item"
     >

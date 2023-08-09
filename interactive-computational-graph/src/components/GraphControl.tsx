@@ -8,7 +8,7 @@ import {
 
 const GraphControl: React.FunctionComponent = () => {
   return (
-    <AppBar position="static" color="transparent">
+    <AppBar elevation={0} position="static" sx={{ bgcolor: "primary.light" }}>
       <Toolbar variant="dense">
         <FormGroup>
           <FormControlLabel

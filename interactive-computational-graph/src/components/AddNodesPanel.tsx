@@ -12,7 +12,7 @@ import DraggableItem from "./DraggableItem";
 const AddNodesPanel: FunctionComponent = () => {
   return (
     <>
-      <Accordion>
+      <Accordion disableGutters>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="value-content"
@@ -27,7 +27,7 @@ const AddNodesPanel: FunctionComponent = () => {
           </List>
         </AccordionDetails>
       </Accordion>
-      <Accordion>
+      <Accordion disableGutters>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="simple-content"

@@ -1,4 +1,4 @@
-import { ListItem } from "@mui/material";
+import { ListItemButton } from "@mui/material";
 import { type DragEvent, type FunctionComponent } from "react";
 
 interface DraggableItemProps {
@@ -12,15 +12,14 @@ const DraggableItem: FunctionComponent<DraggableItemProps> = ({ text }) => {
   };
 
   return (
-    <ListItem
+    <ListItemButton
       draggable
       onDragStart={(event) => {
         handleDragStart(event, text);
       }}
-      className="draggable-item"
     >
       {text}
-    </ListItem>
+    </ListItemButton>
   );
 };
 

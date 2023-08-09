@@ -9,9 +9,7 @@ import {
 import ReactFlow, {
   Background,
   Controls,
-  addEdge,
-  applyEdgeChanges,
-  applyNodeChanges,
+  type XYPosition,
   type Edge,
   type Node,
   type OnConnect,
@@ -22,47 +20,29 @@ import ReactFlow, {
 } from "reactflow";
 import "reactflow/dist/style.css";
 
-const initialNodes: Node[] = [
-  {
-    id: "1",
-    data: { label: "Hello" },
-    position: { x: 0, y: 0 },
-    type: "input",
-  },
-  {
-    id: "2",
-    data: { label: "World" },
-    position: { x: 100, y: 100 },
-  },
-];
+interface GraphProps {
+  nodes: Node[];
+  edges: Edge[];
+  onNodesChange: OnNodesChange;
+  onEdgesChange: OnEdgesChange;
+  onConnect: OnConnect;
+  onDropNode: (nodeType: string, position: XYPosition) => void;
+}
 
-const initialEdges: Edge[] = [];
-
-let nodeId = 0;
-
-const getNewNodeId = (): string => `node ${nodeId++}`;
-
-const Graph: FunctionComponent = () => {
+const Graph: FunctionComponent<GraphProps> = ({
+  nodes,
+  edges,
+  onNodesChange,
+  onEdgesChange,
+  onConnect,
+  onDropNode,
+}) => {
   const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
-  const [nodes, setNodes] = useState<Node[]>(initialNodes);
-  const [edges, setEdges] = useState<Edge[]>(initialEdges);
   const [reactFlowInstance, setReactFlowInstance] =
     useState<ReactFlowInstance | null>(null);
 
   const onInit: OnInit = useCallback((reactFlowInstance: ReactFlowInstance) => {
     setReactFlowInstance(reactFlowInstance);
-  }, []);
-
-  const onNodesChange: OnNodesChange = useCallback((changes) => {
-    setNodes((nds) => applyNodeChanges(changes, nds));
-  }, []);
-
-  const onEdgesChange: OnEdgesChange = useCallback((changes) => {
-    setEdges((eds) => applyEdgeChanges(changes, eds));
-  }, []);
-
-  const onConnect: OnConnect = useCallback((params) => {
-    setEdges((eds) => addEdge(params, eds));
   }, []);
 
   const onDragOver = useCallback((event: DragEvent) => {
@@ -90,44 +70,36 @@ const Graph: FunctionComponent = () => {
         x: event.clientX - reactFlowBounds.left,
         y: event.clientY - reactFlowBounds.top,
       });
-      const newNode = {
-        id: getNewNodeId(),
-        type: "default", // TODO(sc420): pass type instead of default
-        position,
-        data: { label: `${type} node` },
-      };
 
-      setNodes((nds) => nds.concat(newNode));
+      onDropNode(type, position);
     },
     [reactFlowInstance],
   );
 
   return (
-    <>
-      <Box
-        display="flex"
-        flexGrow={1}
-        sx={{
-          "> *": { flexGrow: 1 },
-        }}
-      >
-        <div ref={reactFlowWrapper}>
-          <ReactFlow
-            edges={edges}
-            nodes={nodes}
-            onConnect={onConnect}
-            onDragOver={onDragOver}
-            onDrop={onDrop}
-            onEdgesChange={onEdgesChange}
-            onInit={onInit}
-            onNodesChange={onNodesChange}
-          >
-            <Background />
-            <Controls />
-          </ReactFlow>
-        </div>
-      </Box>
-    </>
+    <Box
+      display="flex"
+      flexGrow={1}
+      sx={{
+        "> *": { flexGrow: 1 },
+      }}
+    >
+      <div ref={reactFlowWrapper}>
+        <ReactFlow
+          edges={edges}
+          nodes={nodes}
+          onConnect={onConnect}
+          onDragOver={onDragOver}
+          onDrop={onDrop}
+          onEdgesChange={onEdgesChange}
+          onInit={onInit}
+          onNodesChange={onNodesChange}
+        >
+          <Background />
+          <Controls />
+        </ReactFlow>
+      </div>
+    </Box>
   );
 };
 

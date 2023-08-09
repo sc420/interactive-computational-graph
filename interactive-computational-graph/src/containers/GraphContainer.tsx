@@ -1,9 +1,18 @@
 import { Grid, Toolbar } from "@mui/material";
-import React from "react";
+import React, { useCallback, useState } from "react";
+import {
+  type Edge,
+  type Node,
+  type OnConnect,
+  type OnEdgesChange,
+  type OnNodesChange,
+  type XYPosition,
+} from "reactflow";
 import FeaturePanel from "../components/FeaturePanel";
 import Graph from "../components/Graph";
 import GraphToolbar from "../components/GraphToolbar";
 import { TITLE_HEIGHT } from "../constants";
+import GraphStateController from "../features/GraphStateController";
 import type SelectedFeature from "../features/SelectedFeature";
 
 interface GraphContainerProps {
@@ -13,9 +22,40 @@ interface GraphContainerProps {
 const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
   selectedFeature,
 }) => {
-  const handleAddNode = (nodeType: string): void => {
-    // TODO(sc420): Call API in GraphStateController
-  };
+  const [graphStateController] = useState(new GraphStateController());
+
+  const [nodes, setNodes] = useState<Node[]>([
+    {
+      id: "-1",
+      data: { label: "Hello" },
+      position: { x: 0, y: 0 },
+      type: "input",
+    },
+    {
+      id: "-2",
+      data: { label: "World" },
+      position: { x: 100, y: 100 },
+    },
+  ]);
+  const [edges, setEdges] = useState<Edge[]>([]);
+
+  const onNodesChange: OnNodesChange = useCallback((changes) => {
+    setNodes((nodes) => graphStateController.handleNodesChange(changes, nodes));
+  }, []);
+
+  const onEdgesChange: OnEdgesChange = useCallback((changes) => {
+    setEdges((edges) => graphStateController.handleEdgesChange(changes, edges));
+  }, []);
+
+  const onConnect: OnConnect = useCallback((connection) => {
+    setEdges((edges) => graphStateController.handleConnect(connection, edges));
+  }, []);
+
+  const onDropNode = useCallback((nodeType: string, position: XYPosition) => {
+    setNodes((nodes) =>
+      graphStateController.handleDropNode(nodeType, position, nodes),
+    );
+  }, []);
 
   return (
     <React.Fragment>
@@ -28,7 +68,10 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
         {/* Feature panel */}
         {selectedFeature !== null && (
           <Grid item borderRight="1px solid" borderColor="divider">
-            <FeaturePanel feature={selectedFeature} onAddNode={handleAddNode} />
+            <FeaturePanel
+              feature={selectedFeature}
+              onAddNode={graphStateController.addNode}
+            />
           </Grid>
         )}
 
@@ -40,7 +83,14 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
             </Grid>
             {/* Graph */}
             <Grid item display="flex" flexGrow={1}>
-              <Graph />
+              <Graph
+                nodes={nodes}
+                edges={edges}
+                onNodesChange={onNodesChange}
+                onEdgesChange={onEdgesChange}
+                onConnect={onConnect}
+                onDropNode={onDropNode}
+              />
             </Grid>
           </Grid>
         </Grid>

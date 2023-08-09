@@ -6,7 +6,7 @@ import {
   Toolbar,
 } from "@mui/material";
 
-const GraphControl: React.FunctionComponent = () => {
+const GraphToolbar: React.FunctionComponent = () => {
   return (
     <AppBar elevation={0} position="static" sx={{ bgcolor: "primary.light" }}>
       <Toolbar variant="dense">
@@ -21,4 +21,4 @@ const GraphControl: React.FunctionComponent = () => {
   );
 };
 
-export default GraphControl;
+export default GraphToolbar;

@@ -3,7 +3,7 @@ import { useState } from "react";
 import FeatureNavigator from "./components/FeatureNavigator";
 import Sidebar from "./components/Sidebar";
 import Title from "./components/Title";
-import MainContainer from "./containers/MainContainer";
+import GraphContainer from "./containers/GraphContainer";
 import type SelectedFeature from "./features/SelectedFeature";
 
 const App: React.FunctionComponent = () => {
@@ -38,9 +38,9 @@ const App: React.FunctionComponent = () => {
             onItemClick={toggleFeature}
           />
         </Sidebar>
-        {/* Main */}
+        {/* Graph */}
         <Box component="main" flexGrow={1}>
-          <MainContainer selectedFeature={selectedFeature} />
+          <GraphContainer selectedFeature={selectedFeature} />
         </Box>
       </Box>
     </ThemeProvider>

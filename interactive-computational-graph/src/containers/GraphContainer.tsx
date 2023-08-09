@@ -39,22 +39,29 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
   ]);
   const [edges, setEdges] = useState<Edge[]>([]);
 
-  const onNodesChange: OnNodesChange = useCallback((changes) => {
-    setNodes((nodes) => graphStateController.handleNodesChange(changes, nodes));
+  const handleNodesChange: OnNodesChange = useCallback((changes) => {
+    setNodes((nodes) => graphStateController.changeNodes(changes, nodes));
   }, []);
 
-  const onEdgesChange: OnEdgesChange = useCallback((changes) => {
-    setEdges((edges) => graphStateController.handleEdgesChange(changes, edges));
+  const handleEdgesChange: OnEdgesChange = useCallback((changes) => {
+    setEdges((edges) => graphStateController.changeEdges(changes, edges));
   }, []);
 
-  const onConnect: OnConnect = useCallback((connection) => {
-    setEdges((edges) => graphStateController.handleConnect(connection, edges));
+  const handleConnect: OnConnect = useCallback((connection) => {
+    setEdges((edges) => graphStateController.connect(connection, edges));
   }, []);
 
-  const onDropNode = useCallback((nodeType: string, position: XYPosition) => {
-    setNodes((nodes) =>
-      graphStateController.handleDropNode(nodeType, position, nodes),
-    );
+  const handleDropNode = useCallback(
+    (nodeType: string, position: XYPosition) => {
+      setNodes((nodes) =>
+        graphStateController.dropNode(nodeType, position, nodes),
+      );
+    },
+    [],
+  );
+
+  const handleAddNode = useCallback((nodeType: string) => {
+    setNodes((nodes) => graphStateController.addNode(nodeType, nodes));
   }, []);
 
   return (
@@ -68,10 +75,7 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
         {/* Feature panel */}
         {selectedFeature !== null && (
           <Grid item borderRight="1px solid" borderColor="divider">
-            <FeaturePanel
-              feature={selectedFeature}
-              onAddNode={graphStateController.addNode}
-            />
+            <FeaturePanel feature={selectedFeature} onAddNode={handleAddNode} />
           </Grid>
         )}
 
@@ -86,10 +90,10 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
               <Graph
                 nodes={nodes}
                 edges={edges}
-                onNodesChange={onNodesChange}
-                onEdgesChange={onEdgesChange}
-                onConnect={onConnect}
-                onDropNode={onDropNode}
+                onNodesChange={handleNodesChange}
+                onEdgesChange={handleEdgesChange}
+                onConnect={handleConnect}
+                onDropNode={handleDropNode}
               />
             </Grid>
           </Grid>

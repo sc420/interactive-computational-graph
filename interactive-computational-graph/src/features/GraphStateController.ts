@@ -13,23 +13,19 @@ import {
 class GraphStateController {
   private nextNodeId = 0;
 
-  handleNodesChange(changes: NodeChange[], nodes: Node[]): Node[] {
+  changeNodes(changes: NodeChange[], nodes: Node[]): Node[] {
     return applyNodeChanges(changes, nodes);
   }
 
-  handleEdgesChange(changes: EdgeChange[], edges: Edge[]): Edge[] {
+  changeEdges(changes: EdgeChange[], edges: Edge[]): Edge[] {
     return applyEdgeChanges(changes, edges);
   }
 
-  handleConnect(connection: Connection, edges: Edge[]): Edge[] {
+  connect(connection: Connection, edges: Edge[]): Edge[] {
     return addEdge(connection, edges);
   }
 
-  handleDropNode(
-    nodeType: string,
-    position: XYPosition,
-    nodes: Node[],
-  ): Node[] {
+  dropNode(nodeType: string, position: XYPosition, nodes: Node[]): Node[] {
     const newNode = {
       id: this.getNewNodeId(),
       type: "default", // TODO(sc420): pass type instead of default
@@ -40,8 +36,15 @@ class GraphStateController {
     return nodes.concat(newNode);
   }
 
-  addNode(nodeType: string): void {
-    console.log(nodeType);
+  addNode(nodeType: string, nodes: Node[]): Node[] {
+    const newNode = {
+      id: this.getNewNodeId(),
+      type: "default", // TODO(sc420): pass type instead of default
+      position: { x: 150, y: 150 },
+      data: { label: `${nodeType} node` },
+    };
+
+    return nodes.concat(newNode);
   }
 
   private getNewNodeId(): string {

@@ -1,4 +1,4 @@
-import { Box, Button } from "@mui/material";
+import { Box } from "@mui/material";
 import {
   useCallback,
   useRef,
@@ -102,26 +102,8 @@ const Graph: FunctionComponent = () => {
     [reactFlowInstance],
   );
 
-  const handleAddNode = (): void => {
-    const newNode: Node = {
-      id: `${nodes.length + 1}`,
-      data: { label: `New ${nodes.length + 1}` },
-      position: { x: 200, y: 200 },
-      type: "default",
-    };
-    setNodes((nds) => nds.concat(newNode));
-  };
-
-  // TODO(sc420): Remove the "Add Node" Button
   return (
     <>
-      <Button
-        variant="contained"
-        onClick={handleAddNode}
-        sx={{ width: 100, height: 50 }}
-      >
-        Add Node
-      </Button>
       <Box
         display="flex"
         flexGrow={1}

@@ -8,9 +8,9 @@ import {
   type OnNodesChange,
   type XYPosition,
 } from "reactflow";
-import FeaturePanel from "../components/FeaturePanel";
-import Graph from "../components/Graph";
-import GraphToolbar from "../components/GraphToolbar";
+import FeaturePanel from "./FeaturePanel";
+import Graph from "./Graph";
+import GraphToolbar from "./GraphToolbar";
 import { TITLE_HEIGHT } from "../constants";
 import GraphStateController from "../features/GraphStateController";
 import type SelectedFeature from "../features/SelectedFeature";

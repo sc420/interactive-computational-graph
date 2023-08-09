@@ -1,9 +1,9 @@
 import { Box, CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import { useState } from "react";
 import FeatureNavigator from "./components/FeatureNavigator";
+import GraphContainer from "./components/GraphContainer";
 import Sidebar from "./components/Sidebar";
 import Title from "./components/Title";
-import GraphContainer from "./containers/GraphContainer";
 import type SelectedFeature from "./features/SelectedFeature";
 
 const App: React.FunctionComponent = () => {

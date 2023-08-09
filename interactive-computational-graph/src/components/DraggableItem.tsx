@@ -3,9 +3,13 @@ import { type DragEvent, type FunctionComponent } from "react";
 
 interface DraggableItemProps {
   text: string;
+  onClick: (nodeType: string) => void;
 }
 
-const DraggableItem: FunctionComponent<DraggableItemProps> = ({ text }) => {
+const DraggableItem: FunctionComponent<DraggableItemProps> = ({
+  text,
+  onClick,
+}) => {
   const handleDragStart = (event: DragEvent, nodeType: string): void => {
     event.dataTransfer.setData("application/reactflow", nodeType);
     event.dataTransfer.effectAllowed = "move";
@@ -16,6 +20,9 @@ const DraggableItem: FunctionComponent<DraggableItemProps> = ({ text }) => {
       draggable
       onDragStart={(event) => {
         handleDragStart(event, text);
+      }}
+      onClick={() => {
+        onClick(text);
       }}
     >
       {text}

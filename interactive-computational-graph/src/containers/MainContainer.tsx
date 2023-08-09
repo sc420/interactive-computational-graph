@@ -12,6 +12,10 @@ interface MainContainerProps {
 const MainContainer: React.FunctionComponent<MainContainerProps> = ({
   selectedFeature,
 }) => {
+  const handleAddNode = (nodeType: string): void => {
+    // TODO(sc420): Call API in GraphStateController
+  };
+
   return (
     <React.Fragment>
       <Toolbar />
@@ -23,7 +27,7 @@ const MainContainer: React.FunctionComponent<MainContainerProps> = ({
         {/* Feature panel */}
         {selectedFeature !== null && (
           <Grid item borderRight="1px solid" borderColor="divider">
-            <FeaturePanel feature={selectedFeature} />
+            <FeaturePanel feature={selectedFeature} onAddNode={handleAddNode} />
           </Grid>
         )}
         {/* Graph container */}

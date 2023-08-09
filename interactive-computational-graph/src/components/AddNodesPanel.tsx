@@ -9,7 +9,13 @@ import {
 import { type FunctionComponent } from "react";
 import DraggableItem from "./DraggableItem";
 
-const AddNodesPanel: FunctionComponent = () => {
+interface AddNodesPanelProps {
+  onAddNode: (nodeType: string) => void;
+}
+
+const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
+  onAddNode,
+}) => {
   return (
     <>
       <Accordion disableGutters>
@@ -22,8 +28,8 @@ const AddNodesPanel: FunctionComponent = () => {
         </AccordionSummary>
         <AccordionDetails id="value-content">
           <List>
-            <DraggableItem text="Variable" />
-            <DraggableItem text="Constant" />
+            <DraggableItem onClick={onAddNode} text="Variable" />
+            <DraggableItem onClick={onAddNode} text="Constant" />
           </List>
         </AccordionDetails>
       </Accordion>
@@ -37,10 +43,10 @@ const AddNodesPanel: FunctionComponent = () => {
         </AccordionSummary>
         <AccordionDetails id="simple-content">
           <List>
-            <DraggableItem text="Sum" />
-            <DraggableItem text="Product" />
-            <DraggableItem text="Pow" />
-            <DraggableItem text="Log" />
+            <DraggableItem onClick={onAddNode} text="Sum" />
+            <DraggableItem onClick={onAddNode} text="Product" />
+            <DraggableItem onClick={onAddNode} text="Pow" />
+            <DraggableItem onClick={onAddNode} text="Log" />
           </List>
         </AccordionDetails>
       </Accordion>

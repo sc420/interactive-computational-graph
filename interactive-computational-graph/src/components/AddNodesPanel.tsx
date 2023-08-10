@@ -35,7 +35,13 @@ const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
 
   return (
     <>
-      <Box display="flex" justifyContent="flex-end">
+      <Box
+        alignItems="center"
+        display="flex"
+        justifyContent="space-between"
+        px={2}
+      >
+        <Typography fontWeight="500">Add nodes</Typography>
         <Button startIcon={<EditIcon />}>Edit</Button>
       </Box>
 

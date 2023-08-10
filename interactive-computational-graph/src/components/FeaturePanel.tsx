@@ -9,21 +9,35 @@ interface FeaturePanelProps {
   feature: SelectedFeature;
   operations: Operation[];
   onAddNode: (nodeType: string) => void;
+  onAddOperation: () => void;
 }
 
 const FeaturePanel: FunctionComponent<FeaturePanelProps> = ({
   feature,
   operations,
   onAddNode,
+  onAddOperation,
 }) => {
   const renderSelectedPanel = (): ReactElement => {
     switch (feature) {
       case "dashboard":
-        return <AddNodesPanel operations={operations} onAddNode={onAddNode} />;
+        return (
+          <AddNodesPanel
+            operations={operations}
+            onAddNode={onAddNode}
+            onAddOperation={onAddOperation}
+          />
+        );
       case "orders":
         return <EditNodesPanel />;
       case "customers":
-        return <AddNodesPanel operations={operations} onAddNode={onAddNode} />;
+        return (
+          <AddNodesPanel
+            operations={operations}
+            onAddNode={onAddNode}
+            onAddOperation={onAddOperation}
+          />
+        );
       case "reports":
         return <EditNodesPanel />;
       case "integrations":

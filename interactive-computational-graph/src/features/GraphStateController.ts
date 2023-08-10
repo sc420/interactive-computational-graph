@@ -9,9 +9,12 @@ import {
   type NodeChange,
   type XYPosition,
 } from "reactflow";
+import { TEMPLATE_DFDY_CODE, TEMPLATE_F_CODE } from "./BuiltInCode";
+import type Operation from "./Operation";
 
 class GraphStateController {
-  private nextNodeId = 0;
+  private nextNodeId = 1;
+  private nextOperationId = 1;
 
   changeNodes(changes: NodeChange[], nodes: Node[]): Node[] {
     return applyNodeChanges(changes, nodes);
@@ -26,7 +29,7 @@ class GraphStateController {
   }
 
   dropNode(nodeType: string, position: XYPosition, nodes: Node[]): Node[] {
-    const newNode = {
+    const newNode: Node = {
       id: this.getNewNodeId(),
       type: "default", // TODO(sc420): pass type instead of default
       position,
@@ -37,7 +40,7 @@ class GraphStateController {
   }
 
   addNode(nodeType: string, nodes: Node[]): Node[] {
-    const newNode = {
+    const newNode: Node = {
       id: this.getNewNodeId(),
       type: "default", // TODO(sc420): pass type instead of default
       position: { x: 150, y: 150 },
@@ -47,8 +50,25 @@ class GraphStateController {
     return nodes.concat(newNode);
   }
 
+  addOperation(operations: Operation[]): Operation[] {
+    const newOperation: Operation = {
+      id: this.getNewOperationId(),
+      category: "CUSTOM",
+      fCode: TEMPLATE_F_CODE,
+      dfdyCode: TEMPLATE_DFDY_CODE,
+      inputPorts: [],
+      helpText: "Write some Markdown and LaTeX here",
+    };
+
+    return operations.concat(newOperation);
+  }
+
   private getNewNodeId(): string {
     return `${this.nextNodeId++}`;
+  }
+
+  private getNewOperationId(): string {
+    return `Custom ${this.nextOperationId++}`;
   }
 }
 

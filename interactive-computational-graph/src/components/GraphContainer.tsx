@@ -45,14 +45,14 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
     },
   ]);
   const [edges, setEdges] = useState<Edge[]>([]);
-  const [operations] = useState<Operation[]>([
+  const [operations, setOperations] = useState<Operation[]>([
     {
       id: "Sum",
       category: "SIMPLE",
       fCode: SUM_F_CODE,
       dfdyCode: SUM_DFDY_CODE,
       inputPorts: ["x_i"],
-      helpText: "Sum all inputs $ \\sum_i x_{i} $",
+      helpText: "Add all inputs $ \\sum_i x_{i} $",
     },
     {
       id: "Product",
@@ -60,7 +60,7 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
       fCode: PRODUCT_F_CODE,
       dfdyCode: PRODUCT_DFDY_CODE,
       inputPorts: ["x_i"],
-      helpText: "Sum all inputs $ \\sum_i x_{i} $",
+      helpText: "Multiply all inputs $ \\prod_i x_{i} $",
     },
   ]);
 
@@ -89,6 +89,12 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
     setNodes((nodes) => graphStateController.addNode(nodeType, nodes));
   }, []);
 
+  const handleAddOperation = useCallback(() => {
+    setOperations((operations) =>
+      graphStateController.addOperation(operations),
+    );
+  }, []);
+
   return (
     <React.Fragment>
       <Toolbar />
@@ -104,6 +110,7 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
               feature={selectedFeature}
               operations={operations}
               onAddNode={handleAddNode}
+              onAddOperation={handleAddOperation}
             />
           </Grid>
         )}

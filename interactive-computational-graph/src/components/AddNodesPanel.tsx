@@ -1,9 +1,12 @@
+import AddIcon from "@mui/icons-material/Add";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Button,
   List,
+  ListItem,
   Typography,
 } from "@mui/material";
 import { type FunctionComponent } from "react";
@@ -12,11 +15,13 @@ import DraggableItem from "./DraggableItem";
 
 interface AddNodesPanelProps {
   onAddNode: (nodeType: string) => void;
+  onAddOperation: () => void;
   operations: Operation[];
 }
 
 const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
   onAddNode,
+  onAddOperation,
   operations,
 }) => {
   const simpleOperations = operations.filter(
@@ -82,6 +87,9 @@ const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
                 text={operation.id}
               />
             ))}
+            <ListItem onClick={onAddOperation}>
+              <Button startIcon={<AddIcon />}>Add Operation</Button>
+            </ListItem>
           </List>
         </AccordionDetails>
       </Accordion>

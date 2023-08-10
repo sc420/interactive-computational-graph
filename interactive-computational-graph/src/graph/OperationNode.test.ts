@@ -1,9 +1,9 @@
+import { SUM_DFDY_CODE, SUM_F_CODE } from "../features/BuiltInCode";
 import NodeRelationship from "./NodeRelationship";
 import Operation from "./Operation";
 import OperationNode from "./OperationNode";
 import Port from "./Port";
 import VariableNode from "./VariableNode";
-import { SUM_DFDY_CODE, SUM_F_CODE } from "./test_utils";
 
 test("should have correct properties", () => {
   const sumNode = buildSumNode();

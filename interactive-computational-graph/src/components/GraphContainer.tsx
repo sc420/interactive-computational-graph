@@ -8,12 +8,19 @@ import {
   type OnNodesChange,
   type XYPosition,
 } from "reactflow";
+import { TITLE_HEIGHT } from "../constants";
+import {
+  PRODUCT_DFDY_CODE,
+  PRODUCT_F_CODE,
+  SUM_DFDY_CODE,
+  SUM_F_CODE,
+} from "../features/BuiltInCode";
+import GraphStateController from "../features/GraphStateController";
+import type Operation from "../features/Operation";
+import type SelectedFeature from "../features/SelectedFeature";
 import FeaturePanel from "./FeaturePanel";
 import Graph from "./Graph";
 import GraphToolbar from "./GraphToolbar";
-import { TITLE_HEIGHT } from "../constants";
-import GraphStateController from "../features/GraphStateController";
-import type SelectedFeature from "../features/SelectedFeature";
 
 interface GraphContainerProps {
   selectedFeature: SelectedFeature | null;
@@ -38,6 +45,24 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
     },
   ]);
   const [edges, setEdges] = useState<Edge[]>([]);
+  const [operations] = useState<Operation[]>([
+    {
+      id: "Sum",
+      category: "SIMPLE",
+      fCode: SUM_F_CODE,
+      dfdyCode: SUM_DFDY_CODE,
+      inputPorts: ["x_i"],
+      helpText: "Sum all inputs $ \\sum_i x_{i} $",
+    },
+    {
+      id: "Product",
+      category: "SIMPLE",
+      fCode: PRODUCT_F_CODE,
+      dfdyCode: PRODUCT_DFDY_CODE,
+      inputPorts: ["x_i"],
+      helpText: "Sum all inputs $ \\sum_i x_{i} $",
+    },
+  ]);
 
   const handleNodesChange: OnNodesChange = useCallback((changes) => {
     setNodes((nodes) => graphStateController.changeNodes(changes, nodes));
@@ -75,7 +100,11 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
         {/* Feature panel */}
         {selectedFeature !== null && (
           <Grid item borderRight="1px solid" borderColor="divider">
-            <FeaturePanel feature={selectedFeature} onAddNode={handleAddNode} />
+            <FeaturePanel
+              feature={selectedFeature}
+              operations={operations}
+              onAddNode={handleAddNode}
+            />
           </Grid>
         )}
 

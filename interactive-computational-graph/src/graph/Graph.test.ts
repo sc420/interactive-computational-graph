@@ -1,10 +1,3 @@
-import ConstantNode from "./ConstantNode";
-import Graph from "./Graph";
-import type GraphNode from "./GraphNode";
-import Operation from "./Operation";
-import OperationNode from "./OperationNode";
-import Port from "./Port";
-import VariableNode from "./VariableNode";
 import {
   IDENTITY_DFDY_CODE,
   IDENTITY_F_CODE,
@@ -18,7 +11,14 @@ import {
   SQUARED_ERROR_F_CODE,
   SUM_DFDY_CODE,
   SUM_F_CODE,
-} from "./test_utils";
+} from "../features/BuiltInCode";
+import ConstantNode from "./ConstantNode";
+import Graph from "./Graph";
+import type GraphNode from "./GraphNode";
+import Operation from "./Operation";
+import OperationNode from "./OperationNode";
+import Port from "./Port";
+import VariableNode from "./VariableNode";
 
 describe("manipulating connections", () => {
   test("should get a list of nodes", () => {

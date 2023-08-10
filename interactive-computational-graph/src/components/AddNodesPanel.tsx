@@ -7,15 +7,25 @@ import {
   Typography,
 } from "@mui/material";
 import { type FunctionComponent } from "react";
+import type Operation from "../features/Operation";
 import DraggableItem from "./DraggableItem";
 
 interface AddNodesPanelProps {
   onAddNode: (nodeType: string) => void;
+  operations: Operation[];
 }
 
 const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
   onAddNode,
+  operations,
 }) => {
+  const simpleOperations = operations.filter(
+    (operation) => operation.category === "SIMPLE",
+  );
+  const customOperations = operations.filter(
+    (operation) => operation.category === "CUSTOM",
+  );
+
   return (
     <>
       <Accordion disableGutters>
@@ -33,6 +43,7 @@ const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
           </List>
         </AccordionDetails>
       </Accordion>
+
       <Accordion disableGutters>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
@@ -43,10 +54,34 @@ const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
         </AccordionSummary>
         <AccordionDetails id="simple-content" sx={{ p: 0 }}>
           <List>
-            <DraggableItem onClick={onAddNode} text="Sum" />
-            <DraggableItem onClick={onAddNode} text="Product" />
-            <DraggableItem onClick={onAddNode} text="Pow" />
-            <DraggableItem onClick={onAddNode} text="Log" />
+            {simpleOperations.map((operation) => (
+              <DraggableItem
+                key={operation.id}
+                onClick={onAddNode}
+                text={operation.id}
+              />
+            ))}
+          </List>
+        </AccordionDetails>
+      </Accordion>
+
+      <Accordion disableGutters>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="custom-content"
+          id="custom-header"
+        >
+          <Typography>Custom</Typography>
+        </AccordionSummary>
+        <AccordionDetails id="custom-content" sx={{ p: 0 }}>
+          <List>
+            {customOperations.map((operation) => (
+              <DraggableItem
+                key={operation.id}
+                onClick={onAddNode}
+                text={operation.id}
+              />
+            ))}
           </List>
         </AccordionDetails>
       </Accordion>

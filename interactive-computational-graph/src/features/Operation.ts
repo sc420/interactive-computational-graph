@@ -1,5 +1,8 @@
+import type OperationCategory from "./OperationCategory";
+
 interface Operation {
   id: string;
+  category: OperationCategory;
   // f() code
   fCode: string;
   // d(f)/d(y) code

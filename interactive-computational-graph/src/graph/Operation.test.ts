@@ -1,11 +1,11 @@
-import Operation from "./Operation";
-import { type NodeData, type PortToNodesData } from "./PortToNodesData";
 import {
   PRODUCT_DFDY_CODE,
   PRODUCT_F_CODE,
   SUM_DFDY_CODE,
   SUM_F_CODE,
-} from "./test_utils";
+} from "../features/BuiltInCode";
+import Operation from "./Operation";
+import { type NodeData, type PortToNodesData } from "./PortToNodesData";
 
 const BROKEN_SUM_F_CODE = `\
 function f(portToNodes) {

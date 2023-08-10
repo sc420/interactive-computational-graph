@@ -26,7 +26,7 @@ const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
         >
           <Typography>Value</Typography>
         </AccordionSummary>
-        <AccordionDetails id="value-content">
+        <AccordionDetails id="value-content" sx={{ p: 0 }}>
           <List>
             <DraggableItem onClick={onAddNode} text="Variable" />
             <DraggableItem onClick={onAddNode} text="Constant" />
@@ -41,7 +41,7 @@ const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
         >
           <Typography>Simple</Typography>
         </AccordionSummary>
-        <AccordionDetails id="simple-content">
+        <AccordionDetails id="simple-content" sx={{ p: 0 }}>
           <List>
             <DraggableItem onClick={onAddNode} text="Sum" />
             <DraggableItem onClick={onAddNode} text="Product" />

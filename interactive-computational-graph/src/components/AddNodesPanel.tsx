@@ -1,9 +1,11 @@
 import AddIcon from "@mui/icons-material/Add";
+import EditIcon from "@mui/icons-material/Edit";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Box,
   Button,
   List,
   ListItem,
@@ -33,6 +35,11 @@ const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
 
   return (
     <>
+      <Box display="flex" justifyContent="flex-end">
+        <Button startIcon={<EditIcon />}>Edit</Button>
+      </Box>
+
+      {/* Value nodes */}
       <Accordion disableGutters>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
@@ -49,6 +56,7 @@ const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
         </AccordionDetails>
       </Accordion>
 
+      {/* Simple operations */}
       <Accordion disableGutters>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
@@ -70,6 +78,7 @@ const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
         </AccordionDetails>
       </Accordion>
 
+      {/* Custom operations */}
       <Accordion disableGutters>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
@@ -87,6 +96,7 @@ const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
                 text={operation.id}
               />
             ))}
+            {/* Add operation */}
             <ListItem onClick={onAddOperation}>
               <Button startIcon={<AddIcon />}>Add Operation</Button>
             </ListItem>

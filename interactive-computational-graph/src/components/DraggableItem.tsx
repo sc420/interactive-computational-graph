@@ -1,4 +1,5 @@
-import { ListItemButton } from "@mui/material";
+import DragHandleIcon from "@mui/icons-material/DragHandle";
+import { ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
 import { type DragEvent, type FunctionComponent } from "react";
 
 interface DraggableItemProps {
@@ -17,6 +18,7 @@ const DraggableItem: FunctionComponent<DraggableItemProps> = ({
 
   return (
     <ListItemButton
+      dense
       draggable
       onDragStart={(event) => {
         handleDragStart(event, text);
@@ -25,7 +27,10 @@ const DraggableItem: FunctionComponent<DraggableItemProps> = ({
         onClick(text);
       }}
     >
-      {text}
+      <ListItemIcon>
+        <DragHandleIcon />
+      </ListItemIcon>
+      <ListItemText primary={text} />
     </ListItemButton>
   );
 };

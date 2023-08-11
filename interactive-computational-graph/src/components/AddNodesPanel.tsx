@@ -11,7 +11,7 @@ import {
   ListItem,
   Typography,
 } from "@mui/material";
-import { type FunctionComponent } from "react";
+import { useState, type FunctionComponent } from "react";
 import type Operation from "../features/Operation";
 import DraggableItem from "./DraggableItem";
 
@@ -26,6 +26,10 @@ const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
   onAddOperation,
   operations,
 }) => {
+  const [valueExpanded, setValueExpanded] = useState<boolean>(true);
+  const [simpleExpanded, setSimpleExpanded] = useState<boolean>(true);
+  const [customExpanded, setCustomExpanded] = useState<boolean>(true);
+
   const simpleOperations = operations.filter(
     (operation) => operation.category === "SIMPLE",
   );
@@ -46,7 +50,13 @@ const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
       </Grid>
 
       {/* Value nodes */}
-      <Accordion disableGutters>
+      <Accordion
+        disableGutters
+        expanded={valueExpanded}
+        onChange={() => {
+          setValueExpanded(!valueExpanded);
+        }}
+      >
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="value-content"
@@ -63,7 +73,13 @@ const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
       </Accordion>
 
       {/* Simple operations */}
-      <Accordion disableGutters>
+      <Accordion
+        disableGutters
+        expanded={simpleExpanded}
+        onChange={() => {
+          setSimpleExpanded(!simpleExpanded);
+        }}
+      >
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="simple-content"
@@ -85,7 +101,13 @@ const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
       </Accordion>
 
       {/* Custom operations */}
-      <Accordion disableGutters>
+      <Accordion
+        disableGutters
+        expanded={customExpanded}
+        onChange={() => {
+          setCustomExpanded(!customExpanded);
+        }}
+      >
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="custom-content"

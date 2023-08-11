@@ -82,7 +82,7 @@ const OperationNode: FunctionComponent<OperationNodeProps> = ({ data }) => {
             borderColor="divider"
             // corresponds to dragHandle when creating new reactflow.Node
             className="drag-handle"
-            px={1}
+            px={0.5}
           >
             <Grid alignItems="center" container justifyContent="space-between">
               <Grid item>

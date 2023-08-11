@@ -105,7 +105,7 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
       >
         {/* Feature panel */}
         {selectedFeature !== null && (
-          <Grid item borderRight="1px solid" borderColor="divider">
+          <Grid item borderRight={1} borderColor="divider">
             <FeaturePanel
               feature={selectedFeature}
               operations={operations}

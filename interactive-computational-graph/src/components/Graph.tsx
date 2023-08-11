@@ -1,6 +1,7 @@
 import { Box } from "@mui/material";
 import {
   useCallback,
+  useMemo,
   useRef,
   useState,
   type DragEvent,
@@ -9,7 +10,6 @@ import {
 import ReactFlow, {
   Background,
   Controls,
-  type XYPosition,
   type Edge,
   type Node,
   type OnConnect,
@@ -17,8 +17,10 @@ import ReactFlow, {
   type OnInit,
   type OnNodesChange,
   type ReactFlowInstance,
+  type XYPosition,
 } from "reactflow";
 import "reactflow/dist/style.css";
+import OperationNode from "./OperationNode";
 
 interface GraphProps {
   nodes: Node[];
@@ -40,6 +42,8 @@ const Graph: FunctionComponent<GraphProps> = ({
   const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
   const [reactFlowInstance, setReactFlowInstance] =
     useState<ReactFlowInstance | null>(null);
+
+  const nodeTypes = useMemo(() => ({ operation: OperationNode }), []);
 
   const onInit: OnInit = useCallback((reactFlowInstance: ReactFlowInstance) => {
     setReactFlowInstance(reactFlowInstance);
@@ -88,6 +92,7 @@ const Graph: FunctionComponent<GraphProps> = ({
         <ReactFlow
           edges={edges}
           nodes={nodes}
+          nodeTypes={nodeTypes}
           onConnect={onConnect}
           onDragOver={onDragOver}
           onDrop={onDrop}

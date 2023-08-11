@@ -29,25 +29,29 @@ class GraphStateController {
   }
 
   dropNode(nodeType: string, position: XYPosition, nodes: Node[]): Node[] {
-    const newNode: Node = {
-      id: this.getNewNodeId(),
-      type: "default", // TODO(sc420): pass type instead of default
-      position,
-      data: { label: `${nodeType} node` },
-    };
+    let newNode: Node;
+    if (nodeType === "Sum" || nodeType === "Product") {
+      newNode = {
+        id: this.getNewNodeId(),
+        type: "operation",
+        position,
+        data: { inputPorts: ["a", "bb", "ccc"] },
+      };
+    } else {
+      newNode = {
+        id: this.getNewNodeId(),
+        type: "default", // TODO(sc420): pass type instead of default
+        position,
+        data: { label: `${nodeType} node` },
+      };
+    }
 
     return nodes.concat(newNode);
   }
 
   addNode(nodeType: string, nodes: Node[]): Node[] {
-    const newNode: Node = {
-      id: this.getNewNodeId(),
-      type: "default", // TODO(sc420): pass type instead of default
-      position: { x: 150, y: 150 },
-      data: { label: `${nodeType} node` },
-    };
-
-    return nodes.concat(newNode);
+    const position: XYPosition = { x: 150, y: 150 };
+    return this.dropNode(nodeType, position, nodes);
   }
 
   addOperation(operations: Operation[]): Operation[] {

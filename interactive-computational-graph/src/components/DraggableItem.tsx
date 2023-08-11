@@ -1,5 +1,10 @@
 import DragHandleIcon from "@mui/icons-material/DragHandle";
-import { ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
+import {
+  IconButton,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+} from "@mui/material";
 import { type DragEvent, type FunctionComponent } from "react";
 
 interface DraggableItemProps {
@@ -17,21 +22,27 @@ const DraggableItem: FunctionComponent<DraggableItemProps> = ({
   };
 
   return (
-    <ListItemButton
-      dense
-      draggable
-      onDragStart={(event) => {
-        handleDragStart(event, text);
-      }}
-      onClick={() => {
-        onClick(text);
-      }}
+    <ListItem
+      disablePadding
+      secondaryAction={
+        <IconButton edge="end">
+          <DragHandleIcon />
+        </IconButton>
+      }
     >
-      <ListItemIcon>
-        <DragHandleIcon />
-      </ListItemIcon>
-      <ListItemText primary={text} />
-    </ListItemButton>
+      <ListItemButton
+        dense
+        draggable
+        onDragStart={(event) => {
+          handleDragStart(event, text);
+        }}
+        onClick={() => {
+          onClick(text);
+        }}
+      >
+        <ListItemText primary={text} />
+      </ListItemButton>
+    </ListItem>
   );
 };
 

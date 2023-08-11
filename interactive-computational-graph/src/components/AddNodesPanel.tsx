@@ -5,8 +5,8 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
-  Box,
   Button,
+  Grid,
   List,
   ListItem,
   Typography,
@@ -35,15 +35,15 @@ const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
 
   return (
     <>
-      <Box
-        alignItems="center"
-        display="flex"
-        justifyContent="space-between"
-        px={2}
-      >
-        <Typography fontWeight="500">Add nodes</Typography>
-        <Button startIcon={<EditIcon />}>Edit</Button>
-      </Box>
+      {/* Header and toolbar */}
+      <Grid alignItems="center" container justifyContent="space-between" px={2}>
+        <Grid item>
+          <Typography fontWeight="500">Add nodes</Typography>
+        </Grid>
+        <Grid item>
+          <Button startIcon={<EditIcon />}>Edit</Button>
+        </Grid>
+      </Grid>
 
       {/* Value nodes */}
       <Accordion disableGutters>

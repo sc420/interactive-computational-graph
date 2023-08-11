@@ -34,15 +34,17 @@ class GraphStateController {
       newNode = {
         id: this.getNewNodeId(),
         type: "operation",
-        position,
         data: { inputPorts: ["a", "bb", "ccc"] },
+        dragHandle: ".drag-handle",
+        position,
       };
     } else {
       newNode = {
         id: this.getNewNodeId(),
         type: "default", // TODO(sc420): pass type instead of default
-        position,
         data: { label: `${nodeType} node` },
+        dragHandle: ".drag-handle",
+        position,
       };
     }
 

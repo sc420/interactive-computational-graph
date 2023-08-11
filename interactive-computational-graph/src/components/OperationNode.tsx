@@ -77,7 +77,13 @@ const OperationNode: FunctionComponent<OperationNodeProps> = ({ data }) => {
       >
         <Stack height={getHeight(data.inputPorts.length)}>
           {/* Title */}
-          <Box borderBottom={1} borderColor="divider" px={1}>
+          <Box
+            borderBottom={1}
+            borderColor="divider"
+            // corresponds to dragHandle when creating new reactflow.Node
+            className="drag-handle"
+            px={1}
+          >
             <Grid alignItems="center" container justifyContent="space-between">
               <Grid item>
                 <Box display="flex" alignItems="center">
@@ -173,7 +179,7 @@ const OperationNode: FunctionComponent<OperationNodeProps> = ({ data }) => {
             top: "50%",
             right: -defaultHandleSize,
             width: defaultHandleSize,
-            height: "calc(100%)",
+            height: "100%",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",

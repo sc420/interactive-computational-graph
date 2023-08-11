@@ -8,27 +8,16 @@ interface OperationNodeProps extends NodeProps {
   };
 }
 
-const baseHeight = 100;
-const inputPortMargin = 20;
+const baseHeight = 130;
+const inputPortMargin = 10;
 const defaultHandleSize = 20;
 const handlePadding = 8;
 
 const OperationNode: FunctionComponent<OperationNodeProps> = ({ data }) => {
-  const additionalHeight = data.inputPorts.length * inputPortMargin;
-  const height = baseHeight + additionalHeight;
-
-  const measureTextWidth = useCallback((text: string): number => {
-    const dummyElement = document.createElement("div");
-    dummyElement.style.visibility = "hidden";
-    dummyElement.style.position = "absolute";
-    dummyElement.style.whiteSpace = "nowrap";
-    dummyElement.innerText = text;
-    document.body.appendChild(dummyElement);
-
-    const width = dummyElement.getBoundingClientRect().width;
-    document.body.removeChild(dummyElement);
-
-    return width;
+  const getHeight = useCallback((numInputPorts: number): number => {
+    // height is divided by (numInputPorts + 1) gaps
+    const inputPortHeight = (data.inputPorts.length + 1) * inputPortMargin;
+    return Math.max(baseHeight, inputPortHeight);
   }, []);
 
   const getHandleTop = useCallback(
@@ -45,6 +34,20 @@ const OperationNode: FunctionComponent<OperationNodeProps> = ({ data }) => {
     return 16 + measureTextWidth(portName);
   }, []);
 
+  const measureTextWidth = useCallback((text: string): number => {
+    const dummyElement = document.createElement("div");
+    dummyElement.style.visibility = "hidden";
+    dummyElement.style.position = "absolute";
+    dummyElement.style.whiteSpace = "nowrap";
+    dummyElement.innerText = text;
+    document.body.appendChild(dummyElement);
+
+    const width = dummyElement.getBoundingClientRect().width;
+    document.body.removeChild(dummyElement);
+
+    return width;
+  }, []);
+
   return (
     <>
       <Box
@@ -53,7 +56,7 @@ const OperationNode: FunctionComponent<OperationNodeProps> = ({ data }) => {
         borderColor="primary"
         borderRadius={1}
       >
-        <Stack height={height} p={2} spacing={1}>
+        <Stack height={getHeight(data.inputPorts.length)} p={2} spacing={1}>
           <TextField defaultValue="0" fullWidth label="Value" size="small" />
           <TextField
             InputProps={{
@@ -74,7 +77,7 @@ const OperationNode: FunctionComponent<OperationNodeProps> = ({ data }) => {
           position={Position.Left}
           style={{
             background: "#555",
-            borderRadius: "inherit",
+            borderRadius: "10px 0px 0px 10px",
             top: getHandleTop(index, data.inputPorts.length),
             left: -getHandleWidth(portName),
             width: getHandleWidth(portName),
@@ -94,7 +97,7 @@ const OperationNode: FunctionComponent<OperationNodeProps> = ({ data }) => {
         position={Position.Right}
         style={{
           background: "#555",
-          borderRadius: "inherit",
+          borderRadius: "0px 10px 10px 0px",
           top: "50%",
           right: -defaultHandleSize,
           width: defaultHandleSize,

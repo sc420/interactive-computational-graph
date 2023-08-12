@@ -18,8 +18,8 @@ import {
 import GraphStateController from "../features/GraphStateController";
 import type Operation from "../features/Operation";
 import type SelectedFeature from "../features/SelectedFeature";
+import Graph from "../reactflow/Graph";
 import FeaturePanel from "./FeaturePanel";
-import Graph from "./Graph";
 import GraphToolbar from "./GraphToolbar";
 
 interface GraphContainerProps {

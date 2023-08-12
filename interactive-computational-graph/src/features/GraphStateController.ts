@@ -74,7 +74,7 @@ class GraphStateController {
       };
       newNode = {
         id,
-        type: "operation",
+        type: "custom",
         data,
         dragHandle: ".drag-handle",
         position,

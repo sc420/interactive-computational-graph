@@ -9,11 +9,11 @@ import OutputHandle from "./OutputHandle";
 import OutputItems from "./OutputItems";
 import { bodyPadding, handleSize, inputWidth, itemHeight } from "./styles";
 
-interface OperationNodeProps extends NodeProps {
+interface CustomNodeProps extends NodeProps {
   data: NodeData;
 }
 
-const OperationNode: FunctionComponent<OperationNodeProps> = ({ data }) => {
+const CustomNode: FunctionComponent<CustomNodeProps> = ({ data }) => {
   const theme = useTheme();
 
   return (
@@ -65,4 +65,4 @@ const OperationNode: FunctionComponent<OperationNodeProps> = ({ data }) => {
   );
 };
 
-export default OperationNode;
+export default CustomNode;

@@ -20,7 +20,7 @@ import ReactFlow, {
   type XYPosition,
 } from "reactflow";
 import "reactflow/dist/style.css";
-import OperationNode from "./OperationNode";
+import CustomNode from "./CustomNode";
 
 interface GraphProps {
   nodes: Node[];
@@ -43,7 +43,7 @@ const Graph: FunctionComponent<GraphProps> = ({
   const [reactFlowInstance, setReactFlowInstance] =
     useState<ReactFlowInstance | null>(null);
 
-  const nodeTypes = useMemo(() => ({ operation: OperationNode }), []);
+  const nodeTypes = useMemo(() => ({ custom: CustomNode }), []);
 
   const onInit: OnInit = useCallback((reactFlowInstance: ReactFlowInstance) => {
     setReactFlowInstance(reactFlowInstance);

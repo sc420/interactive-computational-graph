@@ -29,7 +29,7 @@ const InputItems: FunctionComponent<InputItemProps> = ({ data }) => {
             height={itemHeight}
           >
             {/* Label */}
-            <InputLabel htmlFor={getOutputId(item.id)}>{item.id}</InputLabel>
+            <InputLabel htmlFor={getOutputId(item.id)}>{item.label}</InputLabel>
           </Box>
         ))}
       </Grid>

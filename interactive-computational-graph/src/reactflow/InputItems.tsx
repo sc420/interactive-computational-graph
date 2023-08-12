@@ -62,7 +62,7 @@ const InputItems: FunctionComponent<InputItemProps> = ({
             )}
 
             {/* Label */}
-            <InputLabel htmlFor={getInputId(item.id)}>{item.id}</InputLabel>
+            <InputLabel htmlFor={getInputId(item.id)}>{item.label}</InputLabel>
           </Box>
         ))}
       </Grid>

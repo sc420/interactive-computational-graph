@@ -7,6 +7,8 @@ interface InputItemProps {
   data: NodeData;
   itemHeight: number;
   inputWidth: number;
+  // If we don't offset the handle, the handle would align its left edge with
+  // the left edge of the input label
   handleLeftOffset: string;
   handleSize: number;
 }

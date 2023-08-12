@@ -11,10 +11,16 @@ import OutputItems from "./OutputItems";
 import { bodyPadding, handleSize, inputWidth, itemHeight } from "./styles";
 
 interface CustomNodeProps extends NodeProps {
+  id: string;
   data: NodeData;
+  selected: boolean;
 }
 
-const CustomNode: FunctionComponent<CustomNodeProps> = ({ data }) => {
+const CustomNode: FunctionComponent<CustomNodeProps> = ({
+  id,
+  data,
+  selected,
+}) => {
   const theme = useTheme();
 
   const getColorTheme = useCallback((): Record<string, string> => {
@@ -30,13 +36,17 @@ const CustomNode: FunctionComponent<CustomNodeProps> = ({ data }) => {
 
   const headerBackgroundColor = getColorTheme();
 
+  const borderColor = selected
+    ? headerBackgroundColor[700]
+    : headerBackgroundColor[300];
+
   return (
     <>
       {/* Node frame */}
       <Box
         bgcolor="background.default"
         border={1}
-        borderColor={headerBackgroundColor[500]}
+        borderColor={borderColor}
         borderRadius={1}
       >
         <Stack>
@@ -56,6 +66,7 @@ const CustomNode: FunctionComponent<CustomNodeProps> = ({ data }) => {
               spacing={1}
             >
               <InputItems
+                id={id}
                 data={data}
                 itemHeight={itemHeight}
                 inputWidth={inputWidth}
@@ -67,6 +78,7 @@ const CustomNode: FunctionComponent<CustomNodeProps> = ({ data }) => {
             {/* Output items */}
             <Stack p={bodyPadding} spacing={1}>
               <OutputItems
+                id={id}
                 itemHeight={itemHeight}
                 inputWidth={inputWidth}
                 data={data}

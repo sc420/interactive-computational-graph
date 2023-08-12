@@ -4,6 +4,7 @@ import { Handle, Position } from "reactflow";
 import type NodeData from "../features/NodeData";
 
 interface InputItemProps {
+  id: string;
   data: NodeData;
   itemHeight: number;
   inputWidth: number;
@@ -14,6 +15,7 @@ interface InputItemProps {
 }
 
 const InputItems: FunctionComponent<InputItemProps> = ({
+  id,
   data,
   itemHeight,
   inputWidth,
@@ -24,9 +26,9 @@ const InputItems: FunctionComponent<InputItemProps> = ({
 
   const getInputId = useCallback(
     (portId: string): string => {
-      return `input-item-${data.id}-${portId}`;
+      return `input-item-${id}-${portId}`;
     },
-    [data],
+    [id],
   );
 
   const getInputHandleLeft = useCallback((): string => {

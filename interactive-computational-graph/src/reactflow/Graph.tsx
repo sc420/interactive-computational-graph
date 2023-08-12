@@ -45,11 +45,14 @@ const Graph: FunctionComponent<GraphProps> = ({
 
   const nodeTypes = useMemo(() => ({ custom: CustomNode }), []);
 
-  const onInit: OnInit = useCallback((reactFlowInstance: ReactFlowInstance) => {
-    setReactFlowInstance(reactFlowInstance);
-  }, []);
+  const handleInit: OnInit = useCallback(
+    (reactFlowInstance: ReactFlowInstance) => {
+      setReactFlowInstance(reactFlowInstance);
+    },
+    [],
+  );
 
-  const onDragOver = useCallback((event: DragEvent) => {
+  const handleDragOver = useCallback((event: DragEvent) => {
     event.preventDefault();
     event.dataTransfer.dropEffect = "move";
   }, []);
@@ -59,7 +62,7 @@ const Graph: FunctionComponent<GraphProps> = ({
    *
    * Reference: https://reactflow.dev/docs/examples/interaction/drag-and-drop/
    */
-  const onDrop = useCallback(
+  const handleDrop = useCallback(
     (event: DragEvent) => {
       event.preventDefault();
 
@@ -93,12 +96,12 @@ const Graph: FunctionComponent<GraphProps> = ({
           edges={edges}
           nodes={nodes}
           nodeTypes={nodeTypes}
-          onConnect={onConnect}
-          onDragOver={onDragOver}
-          onDrop={onDrop}
-          onEdgesChange={onEdgesChange}
-          onInit={onInit}
+          onInit={handleInit}
           onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+          onConnect={onConnect}
+          onDragOver={handleDragOver}
+          onDrop={handleDrop}
         >
           <Background />
           <Controls />

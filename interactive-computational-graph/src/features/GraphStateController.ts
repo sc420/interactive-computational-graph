@@ -71,7 +71,6 @@ class GraphStateController {
     switch (nodeType) {
       case constantType: {
         return {
-          id,
           text: `c${id}`,
           nodeType,
           inputItems: [
@@ -88,7 +87,6 @@ class GraphStateController {
       }
       case variableType: {
         return {
-          id,
           text: `v${id}`,
           nodeType,
           inputItems: [
@@ -112,7 +110,6 @@ class GraphStateController {
       default: {
         // Operation
         return {
-          id,
           text: `${nodeType}${id}`,
           nodeType,
           inputItems: [

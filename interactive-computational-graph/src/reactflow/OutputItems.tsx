@@ -3,21 +3,23 @@ import { useCallback, type FunctionComponent } from "react";
 import type NodeData from "../features/NodeData";
 
 interface InputItemProps {
+  id: string;
   data: NodeData;
   itemHeight: number;
   inputWidth: number;
 }
 
 const InputItems: FunctionComponent<InputItemProps> = ({
+  id,
   data,
   itemHeight,
   inputWidth,
 }) => {
   const getOutputId = useCallback(
     (portId: string): string => {
-      return `output-item-${data.id}-${portId}`;
+      return `output-item-${id}-${portId}`;
     },
-    [data],
+    [id],
   );
 
   return (

@@ -1,19 +1,23 @@
-import { Box, useTheme } from "@mui/material";
+import { Box } from "@mui/material";
 import { type FunctionComponent } from "react";
 import { Handle, Position } from "reactflow";
 
 interface OutputHandleProps {
   handleSize: number;
+  handleColor: string;
+  handleHoverColor: string;
 }
 
-const OutputHandle: FunctionComponent<OutputHandleProps> = ({ handleSize }) => {
-  const theme = useTheme();
-
+const OutputHandle: FunctionComponent<OutputHandleProps> = ({
+  handleSize,
+  handleColor,
+  handleHoverColor,
+}) => {
   return (
     <Box
       sx={{
         "& .react-flow__handle:hover": {
-          backgroundColor: `${theme.palette.grey[300]} !important`,
+          backgroundColor: `${handleHoverColor} !important`,
         },
       }}
     >
@@ -21,7 +25,7 @@ const OutputHandle: FunctionComponent<OutputHandleProps> = ({ handleSize }) => {
         id="output"
         position={Position.Right}
         style={{
-          background: theme.palette.grey[500],
+          background: handleColor,
           borderRadius: "0px 10px 10px 0px",
           top: "50%", // centers the handle
           // adds 1 to hide the tiny gap between the node body and the handle

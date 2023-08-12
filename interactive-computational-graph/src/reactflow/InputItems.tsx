@@ -1,4 +1,4 @@
-import { Box, Grid, InputLabel, OutlinedInput, useTheme } from "@mui/material";
+import { Box, Grid, InputLabel, OutlinedInput } from "@mui/material";
 import { useCallback, type FunctionComponent } from "react";
 import { Handle, Position } from "reactflow";
 import type NodeData from "../features/NodeData";
@@ -12,6 +12,8 @@ interface InputItemProps {
   // the left edge of the input label
   handleLeftOffset: string;
   handleSize: number;
+  handleColor: string;
+  handleHoverColor: string;
 }
 
 const InputItems: FunctionComponent<InputItemProps> = ({
@@ -21,9 +23,9 @@ const InputItems: FunctionComponent<InputItemProps> = ({
   inputWidth,
   handleLeftOffset,
   handleSize,
+  handleColor,
+  handleHoverColor,
 }) => {
-  const theme = useTheme();
-
   const getInputId = useCallback(
     (portId: string): string => {
       return `input-item-${id}-${portId}`;
@@ -52,7 +54,7 @@ const InputItems: FunctionComponent<InputItemProps> = ({
               <Box
                 sx={{
                   "& .react-flow__handle:hover": {
-                    backgroundColor: `${theme.palette.grey[300]} !important`,
+                    backgroundColor: `${handleHoverColor} !important`,
                   },
                 }}
               >
@@ -61,7 +63,7 @@ const InputItems: FunctionComponent<InputItemProps> = ({
                   position={Position.Left}
                   style={{
                     position: "absolute", // needs position="relative" on parent
-                    background: theme.palette.grey[500],
+                    background: handleColor,
                     borderRadius: "10px 0px 0px 10px",
                     top: 20, // manual offset
                     left: getInputHandleLeft(),

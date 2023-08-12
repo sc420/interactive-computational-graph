@@ -34,11 +34,11 @@ const CustomNode: FunctionComponent<CustomNodeProps> = ({
     }
   }, [data]);
 
-  const headerBackgroundColor = getColorTheme();
-
-  const borderColor = selected
-    ? headerBackgroundColor[800]
-    : headerBackgroundColor[200];
+  const colorTheme = getColorTheme();
+  const borderColor = selected ? colorTheme[800] : colorTheme[200];
+  const titleColor = selected ? colorTheme[300] : colorTheme[200];
+  const handleColor = titleColor;
+  const handleHoverColor = selected ? colorTheme[200] : colorTheme[100];
 
   return (
     <>
@@ -51,10 +51,7 @@ const CustomNode: FunctionComponent<CustomNodeProps> = ({
       >
         <Stack>
           {/* Header */}
-          <NodeTitle
-            text={data.text}
-            backgroundColor={headerBackgroundColor[300]}
-          />
+          <NodeTitle text={data.text} backgroundColor={titleColor} />
 
           {/* Body */}
           <Box sx={{ cursor: "default" }}>
@@ -72,6 +69,8 @@ const CustomNode: FunctionComponent<CustomNodeProps> = ({
                 inputWidth={inputWidth}
                 handleLeftOffset={`-${theme.spacing(bodyPadding)}`}
                 handleSize={handleSize}
+                handleColor={handleColor}
+                handleHoverColor={handleHoverColor}
               />
             </Stack>
 
@@ -89,7 +88,11 @@ const CustomNode: FunctionComponent<CustomNodeProps> = ({
       </Box>
 
       {/* Output handle */}
-      <OutputHandle handleSize={handleSize} />
+      <OutputHandle
+        handleSize={handleSize}
+        handleColor={handleColor}
+        handleHoverColor={handleHoverColor}
+      />
     </>
   );
 };

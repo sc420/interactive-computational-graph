@@ -2,7 +2,7 @@ import { Box, Stack, useTheme } from "@mui/material";
 import { type FunctionComponent } from "react";
 import { type NodeProps } from "reactflow";
 import type NodeData from "../features/NodeData";
-import InputItems from "./InputItems";
+import InputHandleItems from "./InputHandleItems";
 import NodeTitle from "./NodeTitle";
 import OutputHandle from "./OutputHandle";
 import { blue } from "@mui/material/colors";
@@ -60,8 +60,8 @@ const OperationNode: FunctionComponent<OperationNodeProps> = ({ data }) => {
               variant="standard"
             /> */}
 
-            {/* Input items */}
-            <InputItems
+            {/* Input handle items */}
+            <InputHandleItems
               data={data}
               handleLeft={theme.spacing(contentPadding)}
               handleSize={handleSize}

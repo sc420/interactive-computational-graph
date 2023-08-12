@@ -14,7 +14,7 @@ interface InputItemProps {
 const itemHeight = 40;
 const inputWidth = 120;
 
-const InputItems: FunctionComponent<InputItemProps> = ({
+const InputHandleItems: FunctionComponent<InputItemProps> = ({
   data,
   handleLeft,
   handleSize,
@@ -96,4 +96,4 @@ const InputItems: FunctionComponent<InputItemProps> = ({
   );
 };
 
-export default InputItems;
+export default InputHandleItems;

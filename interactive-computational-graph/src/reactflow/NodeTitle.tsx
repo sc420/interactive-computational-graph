@@ -24,11 +24,14 @@ const NodeTitle: FunctionComponent<NodeTitleProps> = ({
       <Grid alignItems="center" container justifyContent="space-between">
         <Grid item>
           <Box display="flex" alignItems="center">
+            {/* Drag indicator */}
             <DragIndicatorIcon fontSize="small" />
+            {/* Graph ID */}
             <Typography fontWeight={500}>{graphId}</Typography>
           </Box>
         </Grid>
         <Grid item>
+          {/* Edit button */}
           <IconButton size="small">
             <EditIcon fontSize="small" />
           </IconButton>

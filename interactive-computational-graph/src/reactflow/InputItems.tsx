@@ -84,6 +84,7 @@ const InputItems: FunctionComponent<InputItemProps> = ({
               inputProps={{
                 style: {
                   padding: "4px 8px",
+                  textAlign: "right",
                   width: inputWidth,
                 },
               }}

@@ -10,6 +10,7 @@ import {
   type XYPosition,
 } from "reactflow";
 import { TEMPLATE_DFDY_CODE, TEMPLATE_F_CODE } from "./BuiltInCode";
+import type NodeData from "./NodeData";
 import type Operation from "./Operation";
 
 class GraphStateController {
@@ -32,13 +33,19 @@ class GraphStateController {
     const id = this.getNewReactFlowId();
     let newNode: Node;
     if (nodeType === "Sum" || nodeType === "Product") {
+      const data: NodeData = {
+        graphId: nodeType,
+        reactFlowId: id,
+        inputPorts: [
+          { id: "a", connected: true, defaultValue: 0 },
+          { id: "bb", connected: true, defaultValue: 3 },
+          { id: "ccc", connected: true, defaultValue: 0 },
+        ],
+      };
       newNode = {
         id,
         type: "operation",
-        data: {
-          graphId: nodeType,
-          inputPorts: ["a", "bb", "ccc"],
-        },
+        data,
         dragHandle: ".drag-handle",
         position,
       };

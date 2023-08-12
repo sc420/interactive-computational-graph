@@ -4,41 +4,42 @@ import {
   Box,
   Grid,
   IconButton,
+  InputLabel,
+  OutlinedInput,
   Stack,
-  TextField,
   Typography,
   useTheme,
 } from "@mui/material";
 import { blue } from "@mui/material/colors";
 import { useCallback, type FunctionComponent } from "react";
 import { Handle, Position, type NodeProps } from "reactflow";
+import type NodeData from "../features/NodeData";
 
 interface OperationNodeProps extends NodeProps {
-  data: {
-    graphId: string;
-    inputPorts: string[];
-  };
+  data: NodeData;
 }
 
 /* Shape sizes */
-const minNodeHeight = 300;
-const textFieldWidth = 120;
-const inputPortMargin = 10;
+// const minNodeHeight = 300;
+// const textFieldWidth = 120;
+// const inputPortMargin = 10;
 const defaultHandleSize = 20;
 const handlePadding = 8;
+const inputPortItemHeight = 40;
 /* Font sizes */
 const idFontSize = 14;
-const textFieldFontSize = 14;
+// const textFieldFontSize = 14;
+// const inputPortIdFontSize = 14;
 // const inputPortFontSize = 12;
 
 const OperationNode: FunctionComponent<OperationNodeProps> = ({ data }) => {
   const theme = useTheme();
 
-  const getHeight = useCallback((numInputPorts: number): number => {
-    // height is divided by (numInputPorts + 1) gaps
-    const inputPortHeight = (data.inputPorts.length + 1) * inputPortMargin;
-    return Math.max(minNodeHeight, inputPortHeight);
-  }, []);
+  // const getHeight = useCallback((numInputPorts: number): number => {
+  //   // height is divided by (numInputPorts + 1) gaps
+  //   const inputPortHeight = (data.inputPorts.length + 1) * inputPortMargin;
+  //   return Math.max(minNodeHeight, inputPortHeight);
+  // }, []);
 
   // const getHandleTop = useCallback(
   //   (index: number, numInputPorts: number): string => {
@@ -68,6 +69,13 @@ const OperationNode: FunctionComponent<OperationNodeProps> = ({ data }) => {
   //   return width;
   // }, []);
 
+  const getInputPortInputId = useCallback(
+    (reactFlowId: string, portId: string): string => {
+      return `node-input-${reactFlowId}-${portId}`;
+    },
+    [],
+  );
+
   const getInputHandleLeft = useCallback((): string => {
     const contentSpacing = theme.spacing(1);
     return `calc(-1 * (${contentSpacing} + ${defaultHandleSize}px))`;
@@ -82,7 +90,7 @@ const OperationNode: FunctionComponent<OperationNodeProps> = ({ data }) => {
         borderColor="primary"
         borderRadius={1}
       >
-        <Stack height={getHeight(data.inputPorts.length)}>
+        <Stack>
           {/* Title */}
           <Box
             borderBottom={1}
@@ -113,7 +121,7 @@ const OperationNode: FunctionComponent<OperationNodeProps> = ({ data }) => {
 
           {/* Content */}
           <Stack sx={{ cursor: "default" }} p={1} spacing={0.5}>
-            <TextField
+            {/* <TextField
               InputLabelProps={{ style: { fontSize: textFieldFontSize } }}
               InputProps={{
                 style: { fontSize: textFieldFontSize },
@@ -139,43 +147,71 @@ const OperationNode: FunctionComponent<OperationNodeProps> = ({ data }) => {
                 width: textFieldWidth,
               }}
               variant="standard"
-            />
+            /> */}
 
-            {/* Input ports */}
-            {data.inputPorts.map((portName) => (
-              <Box key={portName} position="relative">
-                <Handle
-                  id={portName}
-                  position={Position.Left}
-                  style={{
-                    position: "absolute",
-                    background: theme.palette.grey[700],
-                    borderRadius: "10px 0px 0px 10px",
-                    top: 27,
-                    left: getInputHandleLeft(),
-                    width: defaultHandleSize,
-                    height: defaultHandleSize,
-                    zIndex: -1,
-                  }}
-                  type="target"
-                />
-                <TextField
-                  InputLabelProps={{
-                    style: { fontSize: textFieldFontSize },
-                  }}
-                  InputProps={{
-                    style: { fontSize: textFieldFontSize },
-                  }}
-                  defaultValue="0"
-                  label={portName}
-                  size="small"
-                  sx={{
-                    width: textFieldWidth,
-                  }}
-                  variant="standard"
-                />
-              </Box>
-            ))}
+            {/* Input port items */}
+            <Grid container columnSpacing={1} wrap="nowrap">
+              {/* Input handles */}
+              <Grid item xs>
+                {data.inputPorts.map((portData) => (
+                  <Box
+                    key={portData.id}
+                    display="flex"
+                    alignItems="center"
+                    position="relative"
+                    height={inputPortItemHeight}
+                  >
+                    <Handle
+                      id={portData.id}
+                      position={Position.Left}
+                      style={{
+                        position: "absolute",
+                        background: theme.palette.grey[700],
+                        borderRadius: "10px 0px 0px 10px",
+                        top: 20,
+                        left: getInputHandleLeft(),
+                        width: defaultHandleSize,
+                        height: defaultHandleSize,
+                        zIndex: -1,
+                      }}
+                      type="target"
+                    />
+                    <InputLabel
+                      htmlFor={getInputPortInputId(
+                        data.reactFlowId,
+                        portData.id,
+                      )}
+                    >
+                      {portData.id}
+                    </InputLabel>
+                  </Box>
+                ))}
+              </Grid>
+              {/* Input default values */}
+              <Grid item xs>
+                {data.inputPorts.map((portData) => (
+                  <Box
+                    key={portData.id}
+                    display="flex"
+                    alignItems="center"
+                    height={inputPortItemHeight}
+                  >
+                    {portData.connected && (
+                      <OutlinedInput
+                        id={getInputPortInputId(data.reactFlowId, portData.id)}
+                        size="small"
+                        inputProps={{
+                          style: {
+                            padding: "4px 8px",
+                            width: "120px",
+                          },
+                        }}
+                      ></OutlinedInput>
+                    )}
+                  </Box>
+                ))}
+              </Grid>
+            </Grid>
           </Stack>
         </Stack>
       </Box>

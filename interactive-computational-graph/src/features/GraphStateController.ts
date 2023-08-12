@@ -43,7 +43,6 @@ class GraphStateController {
         id: this.getNewNodeId(),
         type: "default", // TODO(sc420): pass type instead of default
         data: { label: `${nodeType} node` },
-        dragHandle: ".drag-handle",
         position,
       };
     }

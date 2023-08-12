@@ -47,21 +47,29 @@ const InputItems: FunctionComponent<InputItemProps> = ({
           >
             {/* Handle */}
             {item.showHandle && (
-              <Handle
-                id={item.id}
-                position={Position.Left}
-                style={{
-                  position: "absolute", // needs position="relative" on parent
-                  background: theme.palette.grey[700],
-                  borderRadius: "10px 0px 0px 10px",
-                  top: 20, // manual offset
-                  left: getInputHandleLeft(),
-                  width: handleSize,
-                  height: handleSize,
-                  zIndex: -1, // shows under the node body
+              <Box
+                sx={{
+                  "& .react-flow__handle:hover": {
+                    backgroundColor: `${theme.palette.grey[300]} !important`,
+                  },
                 }}
-                type="target"
-              />
+              >
+                <Handle
+                  id={item.id}
+                  position={Position.Left}
+                  style={{
+                    position: "absolute", // needs position="relative" on parent
+                    background: theme.palette.grey[500],
+                    borderRadius: "10px 0px 0px 10px",
+                    top: 20, // manual offset
+                    left: getInputHandleLeft(),
+                    width: handleSize,
+                    height: handleSize,
+                    zIndex: -1, // shows under the node body
+                  }}
+                  type="target"
+                />
+              </Box>
             )}
 
             {/* Label */}

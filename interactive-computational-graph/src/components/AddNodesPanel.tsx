@@ -12,6 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 import { type FunctionComponent } from "react";
+import { constantType, variableType } from "../features/KnownNodeTypes";
 import type Operation from "../features/Operation";
 import DraggableItem from "./DraggableItem";
 
@@ -57,13 +58,13 @@ const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
         <AccordionDetails id="value-content" sx={{ p: 0 }}>
           <List>
             <DraggableItem
-              nodeType="_variable"
-              text="Variable"
+              nodeType={constantType}
+              text="Constant"
               onClick={onAddNode}
             />
             <DraggableItem
-              nodeType="_constant"
-              text="Constant"
+              nodeType={variableType}
+              text="Variable"
               onClick={onAddNode}
             />
           </List>

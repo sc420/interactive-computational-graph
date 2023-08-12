@@ -13,7 +13,7 @@ const OutputHandle: FunctionComponent<OutputHandleProps> = ({ handleSize }) => {
     <Box
       sx={{
         "& .react-flow__handle:hover": {
-          backgroundColor: `${theme.palette.grey[500]} !important`,
+          backgroundColor: `${theme.palette.grey[300]} !important`,
         },
       }}
     >
@@ -21,7 +21,7 @@ const OutputHandle: FunctionComponent<OutputHandleProps> = ({ handleSize }) => {
         id="output"
         position={Position.Right}
         style={{
-          background: theme.palette.grey[700],
+          background: theme.palette.grey[500],
           borderRadius: "0px 10px 10px 0px",
           top: "50%", // centers the handle
           // adds 1 to hide the tiny gap between the node body and the handle

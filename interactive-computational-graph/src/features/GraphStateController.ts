@@ -10,6 +10,7 @@ import {
   type XYPosition,
 } from "reactflow";
 import { TEMPLATE_DFDY_CODE, TEMPLATE_F_CODE } from "./BuiltInCode";
+import { constantType, variableType } from "./KnownNodeTypes";
 import type NodeData from "./NodeData";
 import type Operation from "./Operation";
 
@@ -68,10 +69,11 @@ class GraphStateController {
 
   private buildNodeData(nodeType: string, id: string): NodeData {
     switch (nodeType) {
-      case "_constant": {
+      case constantType: {
         return {
           id,
           text: `c${id}`,
+          nodeType,
           inputItems: [
             {
               id: "value",
@@ -84,10 +86,11 @@ class GraphStateController {
           outputItems: [],
         };
       }
-      case "_variable": {
+      case variableType: {
         return {
           id,
           text: `v${id}`,
+          nodeType,
           inputItems: [
             {
               id: "value",
@@ -111,6 +114,7 @@ class GraphStateController {
         return {
           id,
           text: `${nodeType}${id}`,
+          nodeType,
           inputItems: [
             {
               id: "a",

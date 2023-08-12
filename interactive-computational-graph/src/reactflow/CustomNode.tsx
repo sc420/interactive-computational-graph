@@ -1,7 +1,8 @@
 import { Box, Stack, useTheme } from "@mui/material";
-import { blue } from "@mui/material/colors";
-import { type FunctionComponent } from "react";
+import { blue, green, lime } from "@mui/material/colors";
+import { useCallback, type FunctionComponent } from "react";
 import { type NodeProps } from "reactflow";
+import { constantType, variableType } from "../features/KnownNodeTypes";
 import type NodeData from "../features/NodeData";
 import InputItems from "./InputItems";
 import NodeTitle from "./NodeTitle";
@@ -16,18 +17,34 @@ interface CustomNodeProps extends NodeProps {
 const CustomNode: FunctionComponent<CustomNodeProps> = ({ data }) => {
   const theme = useTheme();
 
+  const getColorTheme = useCallback((): Record<string, string> => {
+    switch (data.nodeType) {
+      case constantType:
+        return green;
+      case variableType:
+        return lime;
+      default:
+        return blue;
+    }
+  }, [data]);
+
+  const headerBackgroundColor = getColorTheme();
+
   return (
     <>
       {/* Node frame */}
       <Box
         bgcolor="background.default"
         border={1}
-        borderColor="primary"
+        borderColor={headerBackgroundColor[500]}
         borderRadius={1}
       >
         <Stack>
           {/* Header */}
-          <NodeTitle text={data.text} backgroundColor={blue[300]} />
+          <NodeTitle
+            text={data.text}
+            backgroundColor={headerBackgroundColor[300]}
+          />
 
           {/* Body */}
           <Box sx={{ cursor: "default" }}>

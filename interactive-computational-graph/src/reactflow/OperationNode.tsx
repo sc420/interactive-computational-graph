@@ -15,12 +15,13 @@ import { Handle, Position, type NodeProps } from "reactflow";
 
 interface OperationNodeProps extends NodeProps {
   data: {
+    graphId: string;
     inputPorts: string[];
   };
 }
 
 /* Shape sizes */
-const minNodeHeight = 140;
+const minNodeHeight = 300;
 const textFieldWidth = 120;
 const inputPortMargin = 10;
 const defaultHandleSize = 20;
@@ -28,7 +29,7 @@ const handlePadding = 8;
 /* Font sizes */
 const idFontSize = 14;
 const textFieldFontSize = 14;
-const inputPortFontSize = 12;
+// const inputPortFontSize = 12;
 
 const OperationNode: FunctionComponent<OperationNodeProps> = ({ data }) => {
   const theme = useTheme();
@@ -39,32 +40,37 @@ const OperationNode: FunctionComponent<OperationNodeProps> = ({ data }) => {
     return Math.max(minNodeHeight, inputPortHeight);
   }, []);
 
-  const getHandleTop = useCallback(
-    (index: number, numInputPorts: number): string => {
-      // height is divided by (numInputPorts + 1) gaps
-      // port is located at the bottom of the index-th gap
-      const percentage = ((index + 1) / (numInputPorts + 1)) * 100;
-      return `${percentage}%`;
-    },
-    [],
-  );
+  // const getHandleTop = useCallback(
+  //   (index: number, numInputPorts: number): string => {
+  //     // height is divided by (numInputPorts + 1) gaps
+  //     // port is located at the bottom of the index-th gap
+  //     const percentage = ((index + 1) / (numInputPorts + 1)) * 100;
+  //     return `${percentage}%`;
+  //   },
+  //   [],
+  // );
 
-  const getHandleWidth = useCallback((portName: string): number => {
-    return 16 + measureTextWidth(portName);
-  }, []);
+  // const getHandleWidth = useCallback((portName: string): number => {
+  //   return 16 + measureTextWidth(portName);
+  // }, []);
 
-  const measureTextWidth = useCallback((text: string): number => {
-    const dummyElement = document.createElement("div");
-    dummyElement.style.visibility = "hidden";
-    dummyElement.style.position = "absolute";
-    dummyElement.style.whiteSpace = "nowrap";
-    dummyElement.innerText = text;
-    document.body.appendChild(dummyElement);
+  // const measureTextWidth = useCallback((text: string): number => {
+  //   const dummyElement = document.createElement("div");
+  //   dummyElement.style.visibility = "hidden";
+  //   dummyElement.style.position = "absolute";
+  //   dummyElement.style.whiteSpace = "nowrap";
+  //   dummyElement.innerText = text;
+  //   document.body.appendChild(dummyElement);
 
-    const width = dummyElement.getBoundingClientRect().width;
-    document.body.removeChild(dummyElement);
+  //   const width = dummyElement.getBoundingClientRect().width;
+  //   document.body.removeChild(dummyElement);
 
-    return width;
+  //   return width;
+  // }, []);
+
+  const getInputHandleLeft = useCallback((): string => {
+    const contentSpacing = theme.spacing(1);
+    return `calc(-1 * (${contentSpacing} + ${defaultHandleSize}px))`;
   }, []);
 
   return (
@@ -93,7 +99,7 @@ const OperationNode: FunctionComponent<OperationNodeProps> = ({ data }) => {
                 <Box display="flex" alignItems="center">
                   <DragIndicatorIcon fontSize="small" />
                   <Typography fontSize={idFontSize} fontWeight={500}>
-                    Sum
+                    {data.graphId}
                   </Typography>
                 </Box>
               </Grid>
@@ -106,7 +112,7 @@ const OperationNode: FunctionComponent<OperationNodeProps> = ({ data }) => {
           </Box>
 
           {/* Content */}
-          <Stack sx={{ cursor: "default" }} p={1} spacing={1}>
+          <Stack sx={{ cursor: "default" }} p={1} spacing={0.5}>
             <TextField
               InputLabelProps={{ style: { fontSize: textFieldFontSize } }}
               InputProps={{
@@ -134,6 +140,42 @@ const OperationNode: FunctionComponent<OperationNodeProps> = ({ data }) => {
               }}
               variant="standard"
             />
+
+            {/* Input ports */}
+            {data.inputPorts.map((portName) => (
+              <Box key={portName} position="relative">
+                <Handle
+                  id={portName}
+                  position={Position.Left}
+                  style={{
+                    position: "absolute",
+                    background: theme.palette.grey[700],
+                    borderRadius: "10px 0px 0px 10px",
+                    top: 27,
+                    left: getInputHandleLeft(),
+                    width: defaultHandleSize,
+                    height: defaultHandleSize,
+                    zIndex: -1,
+                  }}
+                  type="target"
+                />
+                <TextField
+                  InputLabelProps={{
+                    style: { fontSize: textFieldFontSize },
+                  }}
+                  InputProps={{
+                    style: { fontSize: textFieldFontSize },
+                  }}
+                  defaultValue="0"
+                  label={portName}
+                  size="small"
+                  sx={{
+                    width: textFieldWidth,
+                  }}
+                  variant="standard"
+                />
+              </Box>
+            ))}
           </Stack>
         </Stack>
       </Box>
@@ -147,7 +189,7 @@ const OperationNode: FunctionComponent<OperationNodeProps> = ({ data }) => {
         }}
       >
         {/* Input ports */}
-        {data.inputPorts.map((portName, index) => (
+        {/* {data.inputPorts.map((portName, index) => (
           <Handle
             id={portName}
             key={portName}
@@ -173,7 +215,7 @@ const OperationNode: FunctionComponent<OperationNodeProps> = ({ data }) => {
               {portName}
             </Typography>
           </Handle>
-        ))}
+        ))} */}
 
         {/* Output port */}
         <Handle
@@ -183,7 +225,7 @@ const OperationNode: FunctionComponent<OperationNodeProps> = ({ data }) => {
             background: theme.palette.grey[700],
             borderRadius: "0px 10px 10px 0px",
             top: "50%",
-            right: -defaultHandleSize,
+            right: -defaultHandleSize + 1,
             width: defaultHandleSize,
             height: "100%",
             display: "flex",

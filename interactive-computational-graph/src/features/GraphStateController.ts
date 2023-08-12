@@ -13,7 +13,7 @@ import { TEMPLATE_DFDY_CODE, TEMPLATE_F_CODE } from "./BuiltInCode";
 import type Operation from "./Operation";
 
 class GraphStateController {
-  private nextNodeId = 1;
+  private nextReactFlowId = 1;
   private nextOperationId = 1;
 
   changeNodes(changes: NodeChange[], nodes: Node[]): Node[] {
@@ -29,20 +29,24 @@ class GraphStateController {
   }
 
   dropNode(nodeType: string, position: XYPosition, nodes: Node[]): Node[] {
+    const id = this.getNewReactFlowId();
     let newNode: Node;
     if (nodeType === "Sum" || nodeType === "Product") {
       newNode = {
-        id: this.getNewNodeId(),
+        id,
         type: "operation",
-        data: { inputPorts: ["a", "bb", "ccc"] },
+        data: {
+          graphId: nodeType,
+          inputPorts: ["a", "bb", "ccc"],
+        },
         dragHandle: ".drag-handle",
         position,
       };
     } else {
       newNode = {
-        id: this.getNewNodeId(),
+        id: this.getNewReactFlowId(),
         type: "default", // TODO(sc420): pass type instead of default
-        data: { label: `${nodeType} node` },
+        data: { id, label: `${nodeType} node` },
         position,
       };
     }
@@ -68,8 +72,8 @@ class GraphStateController {
     return operations.concat(newOperation);
   }
 
-  private getNewNodeId(): string {
-    return `${this.nextNodeId++}`;
+  private getNewReactFlowId(): string {
+    return `${this.nextReactFlowId++}`;
   }
 
   private getNewOperationId(): string {

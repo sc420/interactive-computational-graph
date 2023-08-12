@@ -1,4 +1,4 @@
-import { Box, Stack, useTheme } from "@mui/material";
+import { Box, Stack, Typography, useTheme } from "@mui/material";
 import { blue } from "@mui/material/colors";
 import { type FunctionComponent } from "react";
 import { type NodeProps } from "reactflow";
@@ -43,6 +43,12 @@ const OperationNode: FunctionComponent<OperationNodeProps> = ({ data }) => {
               handleLeftOffset={`-${theme.spacing(contentPadding)}`}
               handleSize={handleSize}
             />
+          </Stack>
+
+          {/* Output items */}
+          <Stack p={contentPadding} spacing={1} sx={{ cursor: "default" }}>
+            <Typography>Value: {data.value}</Typography>
+            <Typography>Derivative: {data.derivative}</Typography>
           </Stack>
         </Stack>
       </Box>

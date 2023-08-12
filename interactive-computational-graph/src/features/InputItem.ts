@@ -1,6 +1,7 @@
 interface InputItem {
   id: string;
-  connected: boolean;
+  showHandle: boolean;
+  readOnly: boolean;
   value: string;
 }
 

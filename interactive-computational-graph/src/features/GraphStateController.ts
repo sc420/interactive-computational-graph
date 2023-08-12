@@ -39,20 +39,25 @@ class GraphStateController {
         inputItems: [
           {
             id: "a",
-            connected: true,
+            showHandle: true,
+            readOnly: true,
             value: "",
           },
           {
             id: "bb",
-            connected: false,
+            showHandle: true,
+            readOnly: false,
             value: "3",
           },
           {
             id: "ccc",
-            connected: true,
+            showHandle: true,
+            readOnly: true,
             value: "",
           },
         ],
+        value: "123",
+        derivative: "456",
       };
       newNode = {
         id,

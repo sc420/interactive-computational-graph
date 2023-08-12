@@ -37,8 +37,8 @@ const CustomNode: FunctionComponent<CustomNodeProps> = ({
   const headerBackgroundColor = getColorTheme();
 
   const borderColor = selected
-    ? headerBackgroundColor[700]
-    : headerBackgroundColor[300];
+    ? headerBackgroundColor[800]
+    : headerBackgroundColor[200];
 
   return (
     <>

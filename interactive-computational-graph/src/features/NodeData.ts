@@ -1,9 +1,9 @@
-import type PortData from "./PortData";
+import type NodeItem from "./NodeItem";
 
 interface NodeData {
   graphId: string;
   reactFlowId: string;
-  inputPorts: PortData[];
+  items: NodeItem[];
 }
 
 export default NodeData;

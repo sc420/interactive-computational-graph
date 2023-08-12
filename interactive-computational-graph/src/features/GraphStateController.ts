@@ -36,10 +36,28 @@ class GraphStateController {
       const data: NodeData = {
         graphId: nodeType,
         reactFlowId: id,
-        inputPorts: [
-          { id: "a", connected: true, value: 1 },
-          { id: "bb", connected: false, value: 2 },
-          { id: "ccc", connected: true, value: 3 },
+        items: [
+          {
+            id: "a",
+            label: "a",
+            showInputHandle: true,
+            readOnly: true,
+            value: "",
+          },
+          {
+            id: "bb",
+            label: "bb",
+            showInputHandle: true,
+            readOnly: false,
+            value: "3",
+          },
+          {
+            id: "ccc",
+            label: "ccc",
+            showInputHandle: true,
+            readOnly: true,
+            value: "",
+          },
         ],
       };
       newNode = {

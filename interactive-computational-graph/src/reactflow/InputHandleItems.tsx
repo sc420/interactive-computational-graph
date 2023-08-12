@@ -21,9 +21,9 @@ const InputHandleItems: FunctionComponent<InputItemProps> = ({
 }) => {
   const theme = useTheme();
 
-  const getInputPortInputId = useCallback(
+  const getInputId = useCallback(
     (reactFlowId: string, portId: string): string => {
-      return `node-input-${reactFlowId}-${portId}`;
+      return `input-handle-item-${reactFlowId}-${portId}`;
     },
     [],
   );
@@ -34,52 +34,57 @@ const InputHandleItems: FunctionComponent<InputItemProps> = ({
 
   return (
     <Grid container columnSpacing={1} wrap="nowrap">
-      {/* Input handles */}
+      {/* Handles and labels */}
       <Grid item xs>
-        {data.inputPorts.map((portData) => (
+        {data.items.map((item) => (
           <Box
-            key={portData.id}
+            key={item.id}
             display="flex"
             alignItems="center"
             position="relative" // for Handle
             height={itemHeight}
           >
-            <Handle
-              id={portData.id}
-              position={Position.Left}
-              style={{
-                position: "absolute", // needs position="relative" on parent
-                background: theme.palette.grey[700],
-                borderRadius: "10px 0px 0px 10px",
-                top: 20, // manual offset
-                left: getInputHandleLeft(),
-                width: handleSize,
-                height: handleSize,
-                zIndex: -1, // shows under the node body
-              }}
-              type="target"
-            />
-            <InputLabel
-              htmlFor={getInputPortInputId(data.reactFlowId, portData.id)}
-            >
-              {portData.id}
+            {/* Input handle */}
+            {item.showInputHandle && (
+              <Handle
+                id={item.id}
+                position={Position.Left}
+                style={{
+                  position: "absolute", // needs position="relative" on parent
+                  background: theme.palette.grey[700],
+                  borderRadius: "10px 0px 0px 10px",
+                  top: 20, // manual offset
+                  left: getInputHandleLeft(),
+                  width: handleSize,
+                  height: handleSize,
+                  zIndex: -1, // shows under the node body
+                }}
+                type="target"
+              />
+            )}
+
+            {/* Label */}
+            <InputLabel htmlFor={getInputId(data.reactFlowId, item.id)}>
+              {item.label}
             </InputLabel>
           </Box>
         ))}
       </Grid>
-      {/* Input values */}
+
+      {/* Inputs */}
       <Grid item xs>
-        {data.inputPorts.map((portData) => (
+        {data.items.map((item) => (
           <Box
-            key={portData.id}
+            key={item.id}
             display="flex"
             alignItems="center"
             height={itemHeight}
           >
+            {/* Input */}
             <OutlinedInput
-              id={getInputPortInputId(data.reactFlowId, portData.id)}
-              disabled={portData.connected}
-              defaultValue={portData.value}
+              id={getInputId(data.reactFlowId, item.id)}
+              readOnly={item.readOnly}
+              defaultValue={item.value}
               size="small"
               inputProps={{
                 style: {

@@ -56,33 +56,32 @@ const CustomNode: FunctionComponent<CustomNodeProps> = ({
           {/* Body */}
           <Box sx={{ cursor: "default" }}>
             {/* Input items */}
-            <Stack
-              borderBottom={1}
-              borderColor="divider"
-              p={bodyPadding}
-              spacing={1}
-            >
-              <InputItems
-                id={id}
-                data={data}
-                itemHeight={itemHeight}
-                inputWidth={inputWidth}
-                handleLeftOffset={`-${theme.spacing(bodyPadding)}`}
-                handleSize={handleSize}
-                handleColor={handleColor}
-                handleHoverColor={handleHoverColor}
-              />
-            </Stack>
+            {data.inputItems.length > 0 && (
+              <Box borderTop={1} borderColor="divider" p={bodyPadding}>
+                <InputItems
+                  id={id}
+                  data={data}
+                  itemHeight={itemHeight}
+                  inputWidth={inputWidth}
+                  handleLeftOffset={`-${theme.spacing(bodyPadding)}`}
+                  handleSize={handleSize}
+                  handleColor={handleColor}
+                  handleHoverColor={handleHoverColor}
+                />
+              </Box>
+            )}
 
             {/* Output items */}
-            <Stack p={bodyPadding} spacing={1}>
-              <OutputItems
-                id={id}
-                itemHeight={itemHeight}
-                inputWidth={inputWidth}
-                data={data}
-              />
-            </Stack>
+            {data.outputItems.length > 0 && (
+              <Box borderTop={1} borderColor="divider" p={bodyPadding}>
+                <OutputItems
+                  id={id}
+                  itemHeight={itemHeight}
+                  inputWidth={inputWidth}
+                  data={data}
+                />
+              </Box>
+            )}
           </Box>
         </Stack>
       </Box>

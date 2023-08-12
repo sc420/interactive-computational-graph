@@ -14,8 +14,6 @@ const NodeTitle: FunctionComponent<NodeTitleProps> = ({
 }) => {
   return (
     <Box
-      borderBottom={1}
-      borderColor="divider"
       // corresponds to dragHandle when creating new reactflow.Node
       className="drag-handle"
       sx={{ backgroundColor }}

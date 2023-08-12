@@ -8,15 +8,16 @@ interface InputItemProps {
   // left position of the handle in the node body, used to offset the absolute
   // positioned handle
   handleLeft: string;
+  handleSize: number;
 }
 
-const handleSize = 20;
 const itemHeight = 40;
 const inputWidth = 120;
 
 const InputItems: FunctionComponent<InputItemProps> = ({
   data,
   handleLeft,
+  handleSize,
 }) => {
   const theme = useTheme();
 

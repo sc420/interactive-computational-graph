@@ -10,25 +10,17 @@ import {
 } from "@mui/material";
 import { blue } from "@mui/material/colors";
 import { type FunctionComponent } from "react";
-import { Handle, Position, type NodeProps } from "reactflow";
+import { type NodeProps } from "reactflow";
 import type NodeData from "../features/NodeData";
 import InputItems from "./InputItems";
+import OutputHandle from "./OutputHandle";
 
 interface OperationNodeProps extends NodeProps {
   data: NodeData;
 }
 
-/* Shape sizes */
-// const minNodeHeight = 300;
-// const textFieldWidth = 120;
-// const inputPortMargin = 10;
-const defaultHandleSize = 20;
-const handlePadding = 8;
-/* Font sizes */
+const handleSize = 20;
 const idFontSize = 14;
-// const textFieldFontSize = 14;
-// const inputPortIdFontSize = 14;
-// const inputPortFontSize = 12;
 const contentPadding = 1;
 
 const OperationNode: FunctionComponent<OperationNodeProps> = ({ data }) => {
@@ -136,71 +128,18 @@ const OperationNode: FunctionComponent<OperationNodeProps> = ({ data }) => {
               variant="standard"
             /> */}
 
-            {/* Input port items */}
+            {/* Input items */}
             <InputItems
               data={data}
               handleLeft={theme.spacing(contentPadding)}
+              handleSize={handleSize}
             />
           </Stack>
         </Stack>
       </Box>
 
-      {/* Node handles */}
-      <Box
-        sx={{
-          "& .react-flow__handle:hover": {
-            backgroundColor: `${theme.palette.grey[500]} !important`,
-          },
-        }}
-      >
-        {/* Input ports */}
-        {/* {data.inputPorts.map((portName, index) => (
-          <Handle
-            id={portName}
-            key={portName}
-            position={Position.Left}
-            style={{
-              background: theme.palette.grey[700],
-              borderRadius: "10px 0px 0px 10px",
-              top: getHandleTop(index, data.inputPorts.length),
-              left: -getHandleWidth(portName),
-              width: getHandleWidth(portName),
-              height: defaultHandleSize,
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              padding: handlePadding,
-            }}
-            type="target"
-          >
-            <Typography
-              color="primary.contrastText"
-              fontSize={inputPortFontSize}
-            >
-              {portName}
-            </Typography>
-          </Handle>
-        ))} */}
-
-        {/* Output port */}
-        <Handle
-          id="output"
-          position={Position.Right}
-          style={{
-            background: theme.palette.grey[700],
-            borderRadius: "0px 10px 10px 0px",
-            top: "50%",
-            right: -defaultHandleSize + 1,
-            width: defaultHandleSize,
-            height: "100%",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            padding: handlePadding,
-          }}
-          type="source"
-        />
-      </Box>
+      {/* Output handle */}
+      <OutputHandle handleSize={handleSize} />
     </>
   );
 };

@@ -37,9 +37,9 @@ class GraphStateController {
         graphId: nodeType,
         reactFlowId: id,
         inputPorts: [
-          { id: "a", connected: true, defaultValue: 1 },
-          { id: "bb", connected: false, defaultValue: 2 },
-          { id: "ccc", connected: true, defaultValue: 3 },
+          { id: "a", connected: true, value: 1 },
+          { id: "bb", connected: false, value: 2 },
+          { id: "ccc", connected: true, value: 3 },
         ],
       };
       newNode = {

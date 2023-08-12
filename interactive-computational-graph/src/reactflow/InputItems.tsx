@@ -66,7 +66,7 @@ const InputItems: FunctionComponent<InputItemProps> = ({
           </Box>
         ))}
       </Grid>
-      {/* Input default values */}
+      {/* Input values */}
       <Grid item xs>
         {data.inputPorts.map((portData) => (
           <Box
@@ -78,7 +78,7 @@ const InputItems: FunctionComponent<InputItemProps> = ({
             <OutlinedInput
               id={getInputPortInputId(data.reactFlowId, portData.id)}
               disabled={portData.connected}
-              defaultValue={portData.defaultValue}
+              defaultValue={portData.value}
               size="small"
               inputProps={{
                 style: {

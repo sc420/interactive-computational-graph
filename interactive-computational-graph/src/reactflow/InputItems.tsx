@@ -5,15 +5,16 @@ import type NodeData from "../features/NodeData";
 
 interface InputItemProps {
   data: NodeData;
+  itemHeight: number;
+  inputWidth: number;
   handleLeftOffset: string;
   handleSize: number;
 }
 
-const itemHeight = 40;
-const inputWidth = 120;
-
 const InputItems: FunctionComponent<InputItemProps> = ({
   data,
+  itemHeight,
+  inputWidth,
   handleLeftOffset,
   handleSize,
 }) => {

@@ -7,13 +7,11 @@ import InputItems from "./InputItems";
 import NodeTitle from "./NodeTitle";
 import OutputHandle from "./OutputHandle";
 import OutputItems from "./OutputItems";
+import { bodyPadding, handleSize, inputWidth, itemHeight } from "./styles";
 
 interface OperationNodeProps extends NodeProps {
   data: NodeData;
 }
-
-const handleSize = 20;
-const contentPadding = 1;
 
 const OperationNode: FunctionComponent<OperationNodeProps> = ({ data }) => {
   const theme = useTheme();
@@ -37,19 +35,25 @@ const OperationNode: FunctionComponent<OperationNodeProps> = ({ data }) => {
             <Stack
               borderBottom={1}
               borderColor="divider"
-              p={contentPadding}
+              p={bodyPadding}
               spacing={1}
             >
               <InputItems
                 data={data}
-                handleLeftOffset={`-${theme.spacing(contentPadding)}`}
+                itemHeight={itemHeight}
+                inputWidth={inputWidth}
+                handleLeftOffset={`-${theme.spacing(bodyPadding)}`}
                 handleSize={handleSize}
               />
             </Stack>
 
             {/* Output items */}
-            <Stack p={contentPadding} spacing={1}>
-              <OutputItems data={data} />
+            <Stack p={bodyPadding} spacing={1}>
+              <OutputItems
+                itemHeight={itemHeight}
+                inputWidth={inputWidth}
+                data={data}
+              />
             </Stack>
           </Box>
         </Stack>

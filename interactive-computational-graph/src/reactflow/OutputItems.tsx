@@ -4,12 +4,15 @@ import type NodeData from "../features/NodeData";
 
 interface InputItemProps {
   data: NodeData;
+  itemHeight: number;
+  inputWidth: number;
 }
 
-const itemHeight = 40;
-const inputWidth = 120;
-
-const InputItems: FunctionComponent<InputItemProps> = ({ data }) => {
+const InputItems: FunctionComponent<InputItemProps> = ({
+  data,
+  itemHeight,
+  inputWidth,
+}) => {
   const getOutputId = useCallback(
     (portId: string): string => {
       return `output-item-${data.reactFlowId}-${portId}`;

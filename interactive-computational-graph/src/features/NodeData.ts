@@ -1,9 +1,9 @@
-import type NodeItem from "./NodeItem";
+import type InputItem from "./InputItem";
 
 interface NodeData {
   graphId: string;
   reactFlowId: string;
-  items: NodeItem[];
+  inputItems: InputItem[];
 }
 
 export default NodeData;

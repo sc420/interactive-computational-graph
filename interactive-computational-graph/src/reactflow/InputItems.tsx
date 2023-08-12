@@ -12,7 +12,7 @@ interface InputItemProps {
 const itemHeight = 40;
 const inputWidth = 120;
 
-const InputHandleItems: FunctionComponent<InputItemProps> = ({
+const InputItems: FunctionComponent<InputItemProps> = ({
   data,
   handleLeftOffset,
   handleSize,
@@ -34,7 +34,7 @@ const InputHandleItems: FunctionComponent<InputItemProps> = ({
     <Grid container columnSpacing={1} wrap="nowrap">
       {/* Handles and labels */}
       <Grid item xs>
-        {data.items.map((item) => (
+        {data.inputItems.map((item) => (
           <Box
             key={item.id}
             display="flex"
@@ -42,28 +42,26 @@ const InputHandleItems: FunctionComponent<InputItemProps> = ({
             position="relative" // for Handle
             height={itemHeight}
           >
-            {/* Input handle */}
-            {item.showInputHandle && (
-              <Handle
-                id={item.id}
-                position={Position.Left}
-                style={{
-                  position: "absolute", // needs position="relative" on parent
-                  background: theme.palette.grey[700],
-                  borderRadius: "10px 0px 0px 10px",
-                  top: 20, // manual offset
-                  left: getInputHandleLeft(),
-                  width: handleSize,
-                  height: handleSize,
-                  zIndex: -1, // shows under the node body
-                }}
-                type="target"
-              />
-            )}
+            {/* Handle */}
+            <Handle
+              id={item.id}
+              position={Position.Left}
+              style={{
+                position: "absolute", // needs position="relative" on parent
+                background: theme.palette.grey[700],
+                borderRadius: "10px 0px 0px 10px",
+                top: 20, // manual offset
+                left: getInputHandleLeft(),
+                width: handleSize,
+                height: handleSize,
+                zIndex: -1, // shows under the node body
+              }}
+              type="target"
+            />
 
             {/* Label */}
             <InputLabel htmlFor={getInputId(data.reactFlowId, item.id)}>
-              {item.label}
+              {item.id}
             </InputLabel>
           </Box>
         ))}
@@ -71,7 +69,7 @@ const InputHandleItems: FunctionComponent<InputItemProps> = ({
 
       {/* Inputs */}
       <Grid item xs>
-        {data.items.map((item) => (
+        {data.inputItems.map((item) => (
           <Box
             key={item.id}
             display="flex"
@@ -81,7 +79,7 @@ const InputHandleItems: FunctionComponent<InputItemProps> = ({
             {/* Input */}
             <OutlinedInput
               id={getInputId(data.reactFlowId, item.id)}
-              readOnly={item.readOnly}
+              readOnly={item.connected}
               defaultValue={item.value}
               size="small"
               inputProps={{
@@ -99,4 +97,4 @@ const InputHandleItems: FunctionComponent<InputItemProps> = ({
   );
 };
 
-export default InputHandleItems;
+export default InputItems;

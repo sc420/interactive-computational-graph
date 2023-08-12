@@ -16,6 +16,7 @@ import ReactFlow, {
   type OnEdgesChange,
   type OnInit,
   type OnNodesChange,
+  type OnSelectionChangeParams,
   type ReactFlowInstance,
   type XYPosition,
 } from "reactflow";
@@ -27,6 +28,7 @@ interface GraphProps {
   edges: Edge[];
   onNodesChange: OnNodesChange;
   onEdgesChange: OnEdgesChange;
+  onSelectionChange: (params: OnSelectionChangeParams) => void;
   onConnect: OnConnect;
   onDropNode: (nodeType: string, position: XYPosition) => void;
 }
@@ -36,6 +38,7 @@ const Graph: FunctionComponent<GraphProps> = ({
   edges,
   onNodesChange,
   onEdgesChange,
+  onSelectionChange,
   onConnect,
   onDropNode,
 }) => {
@@ -99,6 +102,7 @@ const Graph: FunctionComponent<GraphProps> = ({
           onInit={handleInit}
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
+          onSelectionChange={onSelectionChange}
           onConnect={onConnect}
           onDragOver={handleDragOver}
           onDrop={handleDrop}

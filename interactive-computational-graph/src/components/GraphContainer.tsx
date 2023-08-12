@@ -6,6 +6,7 @@ import {
   type OnConnect,
   type OnEdgesChange,
   type OnNodesChange,
+  type OnSelectionChangeParams,
   type XYPosition,
 } from "reactflow";
 import { TITLE_HEIGHT } from "../constants";
@@ -61,6 +62,13 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
   const handleEdgesChange: OnEdgesChange = useCallback((changes) => {
     setEdges((edges) => graphStateController.changeEdges(changes, edges));
   }, []);
+
+  const handleSelectionChange = useCallback(
+    (params: OnSelectionChangeParams): void => {
+      graphStateController.updateSelectedNodes(params.nodes);
+    },
+    [],
+  );
 
   const handleConnect: OnConnect = useCallback((connection) => {
     setEdges((edges) => graphStateController.connect(connection, edges));
@@ -118,6 +126,7 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
                 edges={edges}
                 onNodesChange={handleNodesChange}
                 onEdgesChange={handleEdgesChange}
+                onSelectionChange={handleSelectionChange}
                 onConnect={handleConnect}
                 onDropNode={handleDropNode}
               />

@@ -19,7 +19,7 @@ const NodeTitle: FunctionComponent<NodeTitleProps> = ({
       // corresponds to dragHandle when creating new reactflow.Node
       className="drag-handle"
       sx={{ backgroundColor }}
-      px={0.5}
+      p={0.5}
     >
       <Grid alignItems="center" container justifyContent="space-between">
         <Grid item>

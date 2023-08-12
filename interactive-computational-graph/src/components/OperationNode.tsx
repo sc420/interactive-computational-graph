@@ -9,6 +9,7 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
+import { blue } from "@mui/material/colors";
 import { useCallback, type FunctionComponent } from "react";
 import { Handle, Position, type NodeProps } from "reactflow";
 
@@ -82,13 +83,18 @@ const OperationNode: FunctionComponent<OperationNodeProps> = ({ data }) => {
             borderColor="divider"
             // corresponds to dragHandle when creating new reactflow.Node
             className="drag-handle"
+            sx={{
+              bgcolor: blue[300],
+            }}
             px={0.5}
           >
             <Grid alignItems="center" container justifyContent="space-between">
               <Grid item>
                 <Box display="flex" alignItems="center">
                   <DragIndicatorIcon fontSize="small" />
-                  <Typography fontSize={idFontSize}>Sum</Typography>
+                  <Typography fontSize={idFontSize} fontWeight={500}>
+                    Sum
+                  </Typography>
                 </Box>
               </Grid>
               <Grid item>
@@ -100,7 +106,7 @@ const OperationNode: FunctionComponent<OperationNodeProps> = ({ data }) => {
           </Box>
 
           {/* Content */}
-          <Stack p={1} spacing={1}>
+          <Stack sx={{ cursor: "default" }} p={1} spacing={1}>
             <TextField
               InputLabelProps={{ style: { fontSize: textFieldFontSize } }}
               InputProps={{

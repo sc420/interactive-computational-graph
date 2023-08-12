@@ -32,9 +32,7 @@ const OutputHandle: FunctionComponent<OutputHandleProps> = ({
           right: -handleSize + 1,
           width: handleSize,
           height: "100%",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
+          zIndex: -1, // shows under the node body
         }}
         type="source"
       />

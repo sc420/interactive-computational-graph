@@ -29,6 +29,7 @@ const idFontSize = 14;
 // const textFieldFontSize = 14;
 // const inputPortIdFontSize = 14;
 // const inputPortFontSize = 12;
+const contentPadding = 1;
 
 const OperationNode: FunctionComponent<OperationNodeProps> = ({ data }) => {
   const theme = useTheme();
@@ -106,7 +107,7 @@ const OperationNode: FunctionComponent<OperationNodeProps> = ({ data }) => {
           </Box>
 
           {/* Content */}
-          <Stack sx={{ cursor: "default" }} p={1} spacing={0.5}>
+          <Stack sx={{ cursor: "default" }} p={contentPadding} spacing={0.5}>
             {/* <TextField
               InputLabelProps={{ style: { fontSize: textFieldFontSize } }}
               InputProps={{
@@ -136,7 +137,10 @@ const OperationNode: FunctionComponent<OperationNodeProps> = ({ data }) => {
             /> */}
 
             {/* Input port items */}
-            <InputItems data={data} />
+            <InputItems
+              data={data}
+              handleLeft={theme.spacing(contentPadding)}
+            />
           </Stack>
         </Stack>
       </Box>

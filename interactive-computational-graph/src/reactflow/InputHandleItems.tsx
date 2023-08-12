@@ -5,9 +5,7 @@ import type NodeData from "../features/NodeData";
 
 interface InputItemProps {
   data: NodeData;
-  // left position of the handle in the node body, used to offset the absolute
-  // positioned handle
-  handleLeft: string;
+  handleLeftOffset: string;
   handleSize: number;
 }
 
@@ -16,7 +14,7 @@ const inputWidth = 120;
 
 const InputHandleItems: FunctionComponent<InputItemProps> = ({
   data,
-  handleLeft,
+  handleLeftOffset,
   handleSize,
 }) => {
   const theme = useTheme();
@@ -29,8 +27,8 @@ const InputHandleItems: FunctionComponent<InputItemProps> = ({
   );
 
   const getInputHandleLeft = useCallback((): string => {
-    return `calc(-1 * (${handleLeft} + ${handleSize}px))`;
-  }, [handleLeft]);
+    return `calc(-1 * ${handleSize}px + ${handleLeftOffset})`;
+  }, [handleLeftOffset, handleSize]);
 
   return (
     <Grid container columnSpacing={1} wrap="nowrap">

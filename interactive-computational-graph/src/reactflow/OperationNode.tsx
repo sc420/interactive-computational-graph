@@ -35,7 +35,7 @@ const OperationNode: FunctionComponent<OperationNodeProps> = ({ data }) => {
             {/* Input handle items */}
             <InputHandleItems
               data={data}
-              handleLeft={theme.spacing(contentPadding)}
+              handleLeftOffset={`-${theme.spacing(contentPadding)}`}
               handleSize={handleSize}
             />
           </Stack>

@@ -2,7 +2,7 @@ interface InputItem {
   id: string;
   text: string;
   showHandle: boolean;
-  readOnly: boolean;
+  showInputField: boolean;
   value: string;
 }
 

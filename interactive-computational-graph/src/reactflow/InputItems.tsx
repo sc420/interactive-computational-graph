@@ -88,19 +88,20 @@ const InputItems: FunctionComponent<InputItemProps> = ({
             height={itemHeight}
           >
             {/* Input */}
-            <OutlinedInput
-              id={getInputId(item.id)}
-              readOnly={item.readOnly}
-              defaultValue={item.value}
-              size="small"
-              inputProps={{
-                style: {
-                  padding: "4px 8px",
-                  textAlign: "right",
-                  width: inputWidth,
-                },
-              }}
-            ></OutlinedInput>
+            {item.showInputField && (
+              <OutlinedInput
+                id={getInputId(item.id)}
+                defaultValue={item.value}
+                size="small"
+                inputProps={{
+                  style: {
+                    padding: "4px 8px",
+                    textAlign: "right",
+                    width: inputWidth,
+                  },
+                }}
+              ></OutlinedInput>
+            )}
           </Box>
         ))}
       </Grid>

@@ -39,25 +39,38 @@ class GraphStateController {
         inputItems: [
           {
             id: "a",
+            label: "a",
             showHandle: true,
             readOnly: true,
             value: "",
           },
           {
             id: "bb",
+            label: "bb",
             showHandle: true,
             readOnly: false,
             value: "3",
           },
           {
-            id: "ccc",
+            id: "x_i",
+            label: "x_i",
             showHandle: true,
             readOnly: true,
             value: "",
           },
         ],
-        value: "123",
-        derivative: "456",
+        outputItems: [
+          {
+            id: "value",
+            label: "=",
+            value: "123",
+          },
+          {
+            id: "derivative",
+            label: "d(y)/d(x) =",
+            value: "456",
+          },
+        ],
       };
       newNode = {
         id,

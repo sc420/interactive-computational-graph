@@ -1,11 +1,11 @@
 import type InputItem from "./InputItem";
+import type OutputItem from "./OutputItem";
 
 interface NodeData {
   graphId: string;
   reactFlowId: string;
   inputItems: InputItem[];
-  value: string;
-  derivative: string;
+  outputItems: OutputItem[];
 }
 
 export default NodeData;

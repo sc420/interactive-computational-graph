@@ -1,4 +1,4 @@
-import { Box, Stack, Typography, useTheme } from "@mui/material";
+import { Box, Stack, useTheme } from "@mui/material";
 import { blue } from "@mui/material/colors";
 import { type FunctionComponent } from "react";
 import { type NodeProps } from "reactflow";
@@ -6,6 +6,7 @@ import type NodeData from "../features/NodeData";
 import InputItems from "./InputItems";
 import NodeTitle from "./NodeTitle";
 import OutputHandle from "./OutputHandle";
+import OutputItems from "./OutputItems";
 
 interface OperationNodeProps extends NodeProps {
   data: NodeData;
@@ -19,7 +20,7 @@ const OperationNode: FunctionComponent<OperationNodeProps> = ({ data }) => {
 
   return (
     <>
-      {/* Node body */}
+      {/* Node frame */}
       <Box
         bgcolor="background.default"
         border={1}
@@ -27,29 +28,30 @@ const OperationNode: FunctionComponent<OperationNodeProps> = ({ data }) => {
         borderRadius={1}
       >
         <Stack>
-          {/* Title */}
+          {/* Header */}
           <NodeTitle graphId={data.graphId} backgroundColor={blue[300]} />
 
-          {/* Input items */}
-          <Stack
-            borderBottom={1}
-            borderColor="divider"
-            p={contentPadding}
-            spacing={1}
-            sx={{ cursor: "default" }}
-          >
-            <InputItems
-              data={data}
-              handleLeftOffset={`-${theme.spacing(contentPadding)}`}
-              handleSize={handleSize}
-            />
-          </Stack>
+          {/* Body */}
+          <Box sx={{ cursor: "default" }}>
+            {/* Input items */}
+            <Stack
+              borderBottom={1}
+              borderColor="divider"
+              p={contentPadding}
+              spacing={1}
+            >
+              <InputItems
+                data={data}
+                handleLeftOffset={`-${theme.spacing(contentPadding)}`}
+                handleSize={handleSize}
+              />
+            </Stack>
 
-          {/* Output items */}
-          <Stack p={contentPadding} spacing={1} sx={{ cursor: "default" }}>
-            <Typography>Value: {data.value}</Typography>
-            <Typography>Derivative: {data.derivative}</Typography>
-          </Stack>
+            {/* Output items */}
+            <Stack p={contentPadding} spacing={1}>
+              <OutputItems data={data} />
+            </Stack>
+          </Box>
         </Stack>
       </Box>
 

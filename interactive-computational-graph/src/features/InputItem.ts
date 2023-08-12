@@ -1,5 +1,6 @@
 interface InputItem {
   id: string;
+  label: string;
   showHandle: boolean;
   readOnly: boolean;
   value: string;

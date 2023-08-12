@@ -20,10 +20,10 @@ const InputItems: FunctionComponent<InputItemProps> = ({
   const theme = useTheme();
 
   const getInputId = useCallback(
-    (reactFlowId: string, portId: string): string => {
-      return `input-handle-item-${reactFlowId}-${portId}`;
+    (portId: string): string => {
+      return `input-item-${data.reactFlowId}-${portId}`;
     },
-    [],
+    [data],
   );
 
   const getInputHandleLeft = useCallback((): string => {
@@ -62,9 +62,7 @@ const InputItems: FunctionComponent<InputItemProps> = ({
             )}
 
             {/* Label */}
-            <InputLabel htmlFor={getInputId(data.reactFlowId, item.id)}>
-              {item.id}
-            </InputLabel>
+            <InputLabel htmlFor={getInputId(item.id)}>{item.id}</InputLabel>
           </Box>
         ))}
       </Grid>
@@ -80,7 +78,7 @@ const InputItems: FunctionComponent<InputItemProps> = ({
           >
             {/* Input */}
             <OutlinedInput
-              id={getInputId(data.reactFlowId, item.id)}
+              id={getInputId(item.id)}
               readOnly={item.readOnly}
               defaultValue={item.value}
               size="small"

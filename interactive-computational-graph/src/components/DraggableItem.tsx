@@ -5,21 +5,26 @@ import {
   ListItemButton,
   ListItemText,
 } from "@mui/material";
-import { type DragEvent, type FunctionComponent } from "react";
+import { useCallback, type DragEvent, type FunctionComponent } from "react";
 
 interface DraggableItemProps {
+  nodeType: string;
   text: string;
   onClick: (nodeType: string) => void;
 }
 
 const DraggableItem: FunctionComponent<DraggableItemProps> = ({
+  nodeType,
   text,
   onClick,
 }) => {
-  const handleDragStart = (event: DragEvent, nodeType: string): void => {
-    event.dataTransfer.setData("application/reactflow", nodeType);
-    event.dataTransfer.effectAllowed = "move";
-  };
+  const handleDragStart = useCallback(
+    (event: DragEvent): void => {
+      event.dataTransfer.setData("application/reactflow", nodeType);
+      event.dataTransfer.effectAllowed = "move";
+    },
+    [nodeType],
+  );
 
   return (
     <ListItem
@@ -34,10 +39,10 @@ const DraggableItem: FunctionComponent<DraggableItemProps> = ({
         dense
         draggable
         onDragStart={(event) => {
-          handleDragStart(event, text);
+          handleDragStart(event);
         }}
         onClick={() => {
-          onClick(text);
+          onClick(nodeType);
         }}
       >
         <ListItemText primary={text} />

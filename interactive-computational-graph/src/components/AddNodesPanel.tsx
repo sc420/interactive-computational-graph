@@ -27,10 +27,10 @@ const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
   operations,
 }) => {
   const simpleOperations = operations.filter(
-    (operation) => operation.category === "SIMPLE",
+    (operation) => operation.type === "SIMPLE",
   );
   const customOperations = operations.filter(
-    (operation) => operation.category === "CUSTOM",
+    (operation) => operation.type === "CUSTOM",
   );
 
   return (
@@ -56,8 +56,16 @@ const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
         </AccordionSummary>
         <AccordionDetails id="value-content" sx={{ p: 0 }}>
           <List>
-            <DraggableItem onClick={onAddNode} text="Variable" />
-            <DraggableItem onClick={onAddNode} text="Constant" />
+            <DraggableItem
+              nodeType="_variable"
+              text="Variable"
+              onClick={onAddNode}
+            />
+            <DraggableItem
+              nodeType="_constant"
+              text="Constant"
+              onClick={onAddNode}
+            />
           </List>
         </AccordionDetails>
       </Accordion>
@@ -76,8 +84,9 @@ const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
             {simpleOperations.map((operation) => (
               <DraggableItem
                 key={operation.id}
+                nodeType={operation.id}
+                text={operation.text}
                 onClick={onAddNode}
-                text={operation.id}
               />
             ))}
           </List>
@@ -98,8 +107,9 @@ const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
             {customOperations.map((operation) => (
               <DraggableItem
                 key={operation.id}
+                nodeType={operation.id}
+                text={operation.text}
                 onClick={onAddNode}
-                text={operation.id}
               />
             ))}
             {/* Add operation */}

@@ -4,12 +4,12 @@ import { Box, Grid, IconButton, Typography } from "@mui/material";
 import { type FunctionComponent } from "react";
 
 interface NodeTitleProps {
-  graphId: string;
+  text: string;
   backgroundColor: string;
 }
 
 const NodeTitle: FunctionComponent<NodeTitleProps> = ({
-  graphId,
+  text,
   backgroundColor,
 }) => {
   return (
@@ -27,7 +27,7 @@ const NodeTitle: FunctionComponent<NodeTitleProps> = ({
             {/* Drag indicator */}
             <DragIndicatorIcon fontSize="small" />
             {/* Graph ID */}
-            <Typography fontWeight={500}>{graphId}</Typography>
+            <Typography fontWeight={500}>{text}</Typography>
           </Box>
         </Grid>
         <Grid item>

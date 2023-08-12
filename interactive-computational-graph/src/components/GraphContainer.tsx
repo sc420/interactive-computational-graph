@@ -47,16 +47,18 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
   const [edges, setEdges] = useState<Edge[]>([]);
   const [operations, setOperations] = useState<Operation[]>([
     {
-      id: "Sum",
-      category: "SIMPLE",
+      id: "sum",
+      text: "Sum",
+      type: "SIMPLE",
       fCode: SUM_F_CODE,
       dfdyCode: SUM_DFDY_CODE,
       inputPorts: ["x_i"],
       helpText: "Add all inputs $ \\sum_i x_{i} $",
     },
     {
-      id: "Product",
-      category: "SIMPLE",
+      id: "product",
+      text: "Product",
+      type: "SIMPLE",
       fCode: PRODUCT_F_CODE,
       dfdyCode: PRODUCT_DFDY_CODE,
       inputPorts: ["x_i"],

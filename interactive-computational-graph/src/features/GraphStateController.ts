@@ -30,76 +30,22 @@ class GraphStateController {
   }
 
   dropNode(nodeType: string, position: XYPosition, nodes: Node[]): Node[] {
-    const id = this.getNewReactFlowId();
-    let newNode: Node;
-    if (nodeType === "Sum" || nodeType === "Product") {
-      const data: NodeData = {
-        graphId: nodeType,
-        reactFlowId: id,
-        inputItems: [
-          {
-            id: "a",
-            label: "a",
-            showHandle: true,
-            readOnly: true,
-            value: "",
-          },
-          {
-            id: "bb",
-            label: "bb",
-            showHandle: true,
-            readOnly: false,
-            value: "3",
-          },
-          {
-            id: "x_i",
-            label: "x_i",
-            showHandle: true,
-            readOnly: true,
-            value: "",
-          },
-        ],
-        outputItems: [
-          {
-            id: "value",
-            label: "=",
-            value: "123",
-          },
-          {
-            id: "derivative",
-            label: "d(y)/d(x) =",
-            value: "456",
-          },
-        ],
-      };
-      newNode = {
-        id,
-        type: "custom",
-        data,
-        dragHandle: ".drag-handle",
-        position,
-      };
-    } else {
-      newNode = {
-        id: this.getNewReactFlowId(),
-        type: "default", // TODO(sc420): pass type instead of default
-        data: { id, label: `${nodeType} node` },
-        position,
-      };
-    }
-
-    return nodes.concat(newNode);
+    const node = this.buildNode(nodeType, position);
+    return nodes.concat(node);
   }
 
   addNode(nodeType: string, nodes: Node[]): Node[] {
     const position: XYPosition = { x: 150, y: 150 };
-    return this.dropNode(nodeType, position, nodes);
+    const node = this.buildNode(nodeType, position);
+    return nodes.concat(node);
   }
 
   addOperation(operations: Operation[]): Operation[] {
+    const id = this.getNewOperationId();
     const newOperation: Operation = {
-      id: this.getNewOperationId(),
-      category: "CUSTOM",
+      id,
+      text: `Operation ${id}`,
+      type: "CUSTOM",
       fCode: TEMPLATE_F_CODE,
       dfdyCode: TEMPLATE_DFDY_CODE,
       inputPorts: [],
@@ -107,6 +53,102 @@ class GraphStateController {
     };
 
     return operations.concat(newOperation);
+  }
+
+  private buildNode(nodeType: string, position: XYPosition): Node {
+    const reactFlowId = this.getNewReactFlowId();
+    return {
+      id: reactFlowId,
+      type: "custom",
+      data: this.buildNodeData(nodeType, reactFlowId),
+      dragHandle: ".drag-handle",
+      position,
+    };
+  }
+
+  private buildNodeData(nodeType: string, id: string): NodeData {
+    switch (nodeType) {
+      case "_constant": {
+        return {
+          id,
+          text: `c${id}`,
+          inputItems: [
+            {
+              id: "value",
+              text: "=",
+              showHandle: false,
+              readOnly: false,
+              value: "0",
+            },
+          ],
+          outputItems: [],
+        };
+      }
+      case "_variable": {
+        return {
+          id,
+          text: `v${id}`,
+          inputItems: [
+            {
+              id: "value",
+              text: "=",
+              showHandle: false,
+              readOnly: false,
+              value: "0",
+            },
+          ],
+          outputItems: [
+            {
+              id: "derivative",
+              text: "d(y)/d(v) =",
+              value: "5",
+            },
+          ],
+        };
+      }
+      default: {
+        // Operation
+        return {
+          id,
+          text: `${nodeType}${id}`,
+          inputItems: [
+            {
+              id: "a",
+              text: "a",
+              showHandle: true,
+              readOnly: true,
+              value: "",
+            },
+            {
+              id: "bb",
+              text: "bb",
+              showHandle: true,
+              readOnly: false,
+              value: "3",
+            },
+            {
+              id: "x_i",
+              text: "x_i",
+              showHandle: true,
+              readOnly: true,
+              value: "",
+            },
+          ],
+          outputItems: [
+            {
+              id: "value",
+              text: "=",
+              value: "123",
+            },
+            {
+              id: "derivative",
+              text: "d(y)/d(x) =",
+              value: "456",
+            },
+          ],
+        };
+      }
+    }
   }
 
   private getNewReactFlowId(): string {

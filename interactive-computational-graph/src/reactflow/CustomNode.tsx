@@ -27,7 +27,7 @@ const CustomNode: FunctionComponent<CustomNodeProps> = ({ data }) => {
       >
         <Stack>
           {/* Header */}
-          <NodeTitle graphId={data.graphId} backgroundColor={blue[300]} />
+          <NodeTitle text={data.text} backgroundColor={blue[300]} />
 
           {/* Body */}
           <Box sx={{ cursor: "default" }}>

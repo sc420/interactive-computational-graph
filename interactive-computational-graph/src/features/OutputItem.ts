@@ -1,6 +1,6 @@
 interface OutputItem {
   id: string;
-  label: string;
+  text: string;
   value: string;
 }
 

@@ -2,8 +2,8 @@ import type InputItem from "./InputItem";
 import type OutputItem from "./OutputItem";
 
 interface NodeData {
-  graphId: string;
-  reactFlowId: string;
+  id: string;
+  text: string;
   inputItems: InputItem[];
   outputItems: OutputItem[];
 }

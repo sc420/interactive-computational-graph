@@ -68,14 +68,14 @@ const Graph: FunctionComponent<GraphProps> = ({
       }
 
       const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
-      const type = event.dataTransfer.getData("application/reactflow");
+      const nodeType = event.dataTransfer.getData("application/reactflow");
 
       const position = reactFlowInstance.project({
         x: event.clientX - reactFlowBounds.left,
         y: event.clientY - reactFlowBounds.top,
       });
 
-      onDropNode(type, position);
+      onDropNode(nodeType, position);
     },
     [reactFlowInstance],
   );

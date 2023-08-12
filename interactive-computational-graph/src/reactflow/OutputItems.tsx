@@ -15,7 +15,7 @@ const InputItems: FunctionComponent<InputItemProps> = ({
 }) => {
   const getOutputId = useCallback(
     (portId: string): string => {
-      return `output-item-${data.reactFlowId}-${portId}`;
+      return `output-item-${data.id}-${portId}`;
     },
     [data],
   );
@@ -32,7 +32,7 @@ const InputItems: FunctionComponent<InputItemProps> = ({
             height={itemHeight}
           >
             {/* Label */}
-            <InputLabel htmlFor={getOutputId(item.id)}>{item.label}</InputLabel>
+            <InputLabel htmlFor={getOutputId(item.id)}>{item.text}</InputLabel>
           </Box>
         ))}
       </Grid>

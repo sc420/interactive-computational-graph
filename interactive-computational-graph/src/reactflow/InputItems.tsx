@@ -45,6 +45,7 @@ const InputItems: FunctionComponent<InputItemProps> = ({
           <Box
             key={item.id}
             display="flex"
+            justifyContent="left"
             alignItems="center"
             position="relative" // for Handle
             height={itemHeight}
@@ -88,6 +89,7 @@ const InputItems: FunctionComponent<InputItemProps> = ({
           <Box
             key={item.id}
             display="flex"
+            justifyContent="right"
             alignItems="center"
             height={itemHeight}
           >

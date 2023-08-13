@@ -14,10 +14,14 @@ import { constantType, variableType } from "./KnownNodeTypes";
 import type NodeData from "./NodeData";
 import type Operation from "./Operation";
 
+type BodyClickCallback = (id: string) => void;
+
 class GraphStateController {
   private nextReactFlowId = 1;
   private nextOperationId = 1;
   private lastSelectedNodeId: string | null = null;
+
+  private onBodyClick: BodyClickCallback | null = null;
 
   changeNodes(changes: NodeChange[], nodes: Node[]): Node[] {
     return applyNodeChanges(changes, nodes);
@@ -66,6 +70,14 @@ class GraphStateController {
     return operations.concat(newOperation);
   }
 
+  handleBodyClick(id: string, nodes: Node[]): Node[] {
+    return this.selectNode(id, nodes);
+  }
+
+  setOnBodyClick(callback: BodyClickCallback): void {
+    this.onBodyClick = callback;
+  }
+
   private buildNode(nodeType: string, position: XYPosition): Node {
     const reactFlowId = this.getNewReactFlowId();
     return {
@@ -79,6 +91,10 @@ class GraphStateController {
   }
 
   private buildNodeData(nodeType: string, id: string): NodeData {
+    const callOnBodyClick = (id: string): void => {
+      this.onBodyClick?.(id);
+    };
+
     switch (nodeType) {
       case constantType: {
         return {
@@ -94,6 +110,7 @@ class GraphStateController {
             },
           ],
           outputItems: [],
+          onBodyClick: callOnBodyClick,
         };
       }
       case variableType: {
@@ -116,6 +133,7 @@ class GraphStateController {
               value: "5",
             },
           ],
+          onBodyClick: callOnBodyClick,
         };
       }
       default: {
@@ -158,6 +176,7 @@ class GraphStateController {
               value: "456",
             },
           ],
+          onBodyClick: callOnBodyClick,
         };
       }
     }
@@ -195,6 +214,18 @@ class GraphStateController {
         y: this.randomInteger(0, randomMax),
       };
     }
+  }
+
+  private selectNode(id: string, nodes: Node[]): Node[] {
+    return nodes.map((node) => {
+      if (node.id !== id) {
+        node.selected = false;
+        return node;
+      }
+
+      node.selected = true;
+      return node;
+    });
   }
 
   private deselectLastSelectedNode(nodes: Node[]): Node[] {

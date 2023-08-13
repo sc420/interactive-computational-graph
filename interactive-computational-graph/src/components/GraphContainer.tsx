@@ -1,5 +1,5 @@
 import { Grid, Toolbar } from "@mui/material";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   type Edge,
   type Node,
@@ -91,6 +91,14 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
     setOperations((operations) =>
       graphStateController.addOperation(operations),
     );
+  }, []);
+
+  useEffect(() => {
+    const handleBodyClick = (id: string): void => {
+      setNodes((nodes) => graphStateController.handleBodyClick(id, nodes));
+    };
+
+    graphStateController.setOnBodyClick(handleBodyClick);
   }, []);
 
   return (

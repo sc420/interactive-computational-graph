@@ -34,6 +34,11 @@ const CustomNode: FunctionComponent<CustomNodeProps> = ({
     }
   }, [data]);
 
+  const handleBodyClick = useCallback((): void => {
+    data.onBodyClick(id);
+  }, [id, data]);
+
+  // Set colors
   const colorTheme = getColorTheme();
   const borderColor = selected ? colorTheme[800] : colorTheme[200];
   const titleColor = selected ? colorTheme[300] : colorTheme[200];
@@ -54,7 +59,7 @@ const CustomNode: FunctionComponent<CustomNodeProps> = ({
           <NodeTitle text={data.text} backgroundColor={titleColor} />
 
           {/* Body */}
-          <Box sx={{ cursor: "default" }}>
+          <Box onClick={handleBodyClick} sx={{ cursor: "default" }}>
             {/* Input items */}
             {data.inputItems.length > 0 && (
               <Box borderTop={1} borderColor="divider" p={bodyPadding}>

@@ -9,21 +9,37 @@ import {
   type NodeChange,
   type XYPosition,
 } from "reactflow";
+import ConstantNode from "../graph/ConstantNode";
+import Graph from "../graph/Graph";
+import type GraphNode from "../graph/GraphNode";
+import Operation from "../graph/Operation";
+import OperationNode from "../graph/OperationNode";
+import VariableNode from "../graph/VariableNode";
 import { TEMPLATE_DFDY_CODE, TEMPLATE_F_CODE } from "./BuiltInCode";
+import type FeatureOperation from "./FeatureOperation";
 import { constantType, variableType } from "./KnownNodeTypes";
 import type NodeData from "./NodeData";
-import type Operation from "./Operation";
 
 type BodyClickCallback = (id: string) => void;
 
 class GraphController {
+  private readonly coreGraph = new Graph();
+
   private nextReactFlowId = 1;
-  private nextOperationId = 1;
+  private nextFeatureOperationId = 1;
   private lastSelectedNodeId: string | null = null;
 
   private onBodyClick: BodyClickCallback | null = null;
 
   changeNodes(changes: NodeChange[], nodes: Node[]): Node[] {
+    changes.forEach((change) => {
+      switch (change.type) {
+        case "remove": {
+          // TODO(sc420)
+          break;
+        }
+      }
+    });
     return applyNodeChanges(changes, nodes);
   }
 
@@ -42,37 +58,56 @@ class GraphController {
     return addEdge(connection, edges);
   }
 
-  addNode(nodeType: string, operations: Operation[], nodes: Node[]): Node[] {
-    nodes = this.deselectLastSelectedNode(nodes);
-    const position = this.getNewNodePosition(nodes);
-    const node = this.buildNode(nodeType, position, operations);
-    return nodes.concat(node);
+  addNode(
+    nodeType: string,
+    featureOperations: FeatureOperation[],
+    nodes: Node[],
+  ): Node[] {
+    const id = this.getNewReactFlowId();
+
+    this.addCoreNode(nodeType, id, featureOperations);
+
+    const position = this.getNewReactFlowNodePosition(nodes);
+    return this.addReactFlowNode(
+      nodeType,
+      id,
+      position,
+      featureOperations,
+      nodes,
+    );
   }
 
   dropNode(
     nodeType: string,
     position: XYPosition,
-    operations: Operation[],
+    featureOperations: FeatureOperation[],
     nodes: Node[],
   ): Node[] {
-    nodes = this.deselectLastSelectedNode(nodes);
-    const node = this.buildNode(nodeType, position, operations);
-    return nodes.concat(node);
+    const id = this.getNewReactFlowId();
+
+    this.addCoreNode(nodeType, id, featureOperations);
+
+    return this.addReactFlowNode(
+      nodeType,
+      id,
+      position,
+      featureOperations,
+      nodes,
+    );
   }
 
-  addOperation(operations: Operation[]): Operation[] {
-    const id = this.getNewOperationId();
-    const newOperation: Operation = {
+  addOperation(featureOperations: FeatureOperation[]): FeatureOperation[] {
+    const id = this.getNewFeatureOperationId();
+    const newFeatureOperation: FeatureOperation = {
       id,
       text: `Operation ${id}`,
       type: "CUSTOM",
-      fCode: TEMPLATE_F_CODE,
-      dfdyCode: TEMPLATE_DFDY_CODE,
+      operation: new Operation(TEMPLATE_F_CODE, TEMPLATE_DFDY_CODE),
       inputPorts: [],
       helpText: "Write some Markdown and LaTeX here",
     };
 
-    return operations.concat(newOperation);
+    return featureOperations.concat(newFeatureOperation);
   }
 
   handleBodyClick(id: string, nodes: Node[]): Node[] {
@@ -83,26 +118,79 @@ class GraphController {
     this.onBodyClick = callback;
   }
 
-  private buildNode(
+  private addCoreNode(
     nodeType: string,
+    id: string,
+    featureOperations: FeatureOperation[],
+  ): void {
+    const coreNode = this.buildCoreNode(nodeType, id, featureOperations);
+    this.coreGraph.addNode(coreNode);
+  }
+
+  private addReactFlowNode(
+    nodeType: string,
+    id: string,
     position: XYPosition,
-    operations: Operation[],
+    featureOperations: FeatureOperation[],
+    nodes: Node[],
+  ): Node[] {
+    nodes = this.deselectLastSelectedNode(nodes);
+    const node = this.buildReactFlowNode(
+      nodeType,
+      id,
+      position,
+      featureOperations,
+    );
+    return nodes.concat(node);
+  }
+
+  private buildCoreNode(
+    nodeType: string,
+    id: string,
+    featureOperations: FeatureOperation[],
+  ): GraphNode {
+    switch (nodeType) {
+      case constantType: {
+        return new ConstantNode(id);
+      }
+      case variableType: {
+        return new VariableNode(id);
+      }
+      default: {
+        // Operation
+        const featureOperation = this.findFeatureOperation(
+          nodeType,
+          featureOperations,
+        );
+        return new OperationNode(
+          id,
+          featureOperation.inputPorts,
+          featureOperation.operation,
+        );
+      }
+    }
+  }
+
+  private buildReactFlowNode(
+    nodeType: string,
+    id: string,
+    position: XYPosition,
+    featureOperations: FeatureOperation[],
   ): Node {
-    const reactFlowId = this.getNewReactFlowId();
     return {
-      id: reactFlowId,
+      id,
       type: "custom", // registered in Graph
-      data: this.buildNodeData(nodeType, reactFlowId, operations),
+      data: this.buildReactFlowNodeData(nodeType, id, featureOperations),
       dragHandle: ".drag-handle", // corresponds to className in NoteTitle
       selected: true,
       position,
     };
   }
 
-  private buildNodeData(
+  private buildReactFlowNodeData(
     nodeType: string,
     id: string,
-    operations: Operation[],
+    featureOperations: FeatureOperation[],
   ): NodeData {
     const callOnBodyClick = (id: string): void => {
       this.onBodyClick?.(id);
@@ -152,16 +240,19 @@ class GraphController {
       }
       default: {
         // Operation
-        const operation = this.findOperation(nodeType, operations);
+        const featureOperation = this.findFeatureOperation(
+          nodeType,
+          featureOperations,
+        );
 
         const text = `${nodeType}${id}`;
         return {
           text,
           nodeType,
-          inputItems: operation.inputPorts.map((inputPort) => {
+          inputItems: featureOperation.inputPorts.map((inputPort) => {
             return {
-              id: inputPort,
-              text: inputPort,
+              id: inputPort.getId(),
+              text: inputPort.getId(),
               showHandle: true,
               showInputField: true,
               value: "0",
@@ -189,19 +280,22 @@ class GraphController {
     return `${this.nextReactFlowId++}`;
   }
 
-  private getNewOperationId(): string {
-    return `Custom ${this.nextOperationId++}`;
+  private getNewFeatureOperationId(): string {
+    return `Custom ${this.nextFeatureOperationId++}`;
   }
 
-  private findOperation(nodeType: string, operations: Operation[]): Operation {
-    const operation = operations.find((operation) => operation.id === nodeType);
+  private findFeatureOperation(
+    nodeType: string,
+    featureOperations: FeatureOperation[],
+  ): FeatureOperation {
+    const operation = featureOperations.find((op) => op.id === nodeType);
     if (operation === undefined) {
-      throw new Error(`Couldn't find the operation ${nodeType}`);
+      throw new Error(`Couldn't find the feature operation ${nodeType}`);
     }
     return operation;
   }
 
-  private getNewNodePosition(nodes: Node[]): XYPosition {
+  private getNewReactFlowNodePosition(nodes: Node[]): XYPosition {
     const randomMin = -50;
     const randomMax = 50;
     let referenceNode: Node | null = null;

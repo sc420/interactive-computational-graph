@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import { type FunctionComponent, type ReactElement } from "react";
-import type Operation from "../features/Operation";
+import type Operation from "../features/FeatureOperation";
 import type SelectedFeature from "../features/SelectedFeature";
 import AddNodesPanel from "./AddNodesPanel";
 import EditNodesPanel from "./EditNodesPanel";

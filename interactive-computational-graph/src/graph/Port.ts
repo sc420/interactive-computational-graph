@@ -3,8 +3,8 @@ class Port {
 
   private readonly allowMultiEdges: boolean;
 
-  constructor(name: string, allowMultiEdges: boolean) {
-    this.id = name;
+  constructor(id: string, allowMultiEdges: boolean) {
+    this.id = id;
     this.allowMultiEdges = allowMultiEdges;
   }
 

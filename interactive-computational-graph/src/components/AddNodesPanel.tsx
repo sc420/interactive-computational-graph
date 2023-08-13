@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import { type FunctionComponent } from "react";
 import { constantType, variableType } from "../features/KnownNodeTypes";
-import type Operation from "../features/Operation";
+import type Operation from "../features/FeatureOperation";
 import DraggableItem from "./DraggableItem";
 
 interface AddNodesPanelProps {

@@ -18,12 +18,14 @@ import {
   SUM_DFDY_CODE,
   SUM_F_CODE,
 } from "../features/BuiltInCode";
+import type FeatureOperation from "../features/FeatureOperation";
 import GraphController from "../features/GraphController";
-import type Operation from "../features/Operation";
 import type SelectedFeature from "../features/SelectedFeature";
+import Port from "../graph/Port";
 import Graph from "../reactflow/Graph";
 import FeaturePanel from "./FeaturePanel";
 import GraphToolbar from "./GraphToolbar";
+import Operation from "../graph/Operation";
 
 interface GraphContainerProps {
   selectedFeature: SelectedFeature | null;
@@ -36,42 +38,45 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
 
   const [nodes, setNodes] = useState<Node[]>([]);
   const [edges, setEdges] = useState<Edge[]>([]);
-  const [operations, setOperations] = useState<Operation[]>([
+  const [featureOperations, setFeatureOperations] = useState<
+    FeatureOperation[]
+  >([
     {
       id: "sum",
       text: "Sum",
       type: "SIMPLE",
-      fCode: SUM_F_CODE,
-      dfdyCode: SUM_DFDY_CODE,
-      inputPorts: ["x_i"],
+      operation: new Operation(SUM_F_CODE, SUM_DFDY_CODE),
+      inputPorts: [new Port("x_i", true)],
       helpText: "Add all inputs $ \\sum_i x_{i} $",
     },
     {
       id: "product",
       text: "Product",
       type: "SIMPLE",
-      fCode: PRODUCT_F_CODE,
-      dfdyCode: PRODUCT_DFDY_CODE,
-      inputPorts: ["x_i"],
+      operation: new Operation(PRODUCT_F_CODE, PRODUCT_DFDY_CODE),
+      inputPorts: [new Port("x_i", true)],
       helpText: "Multiply all inputs $ \\prod_i x_{i} $",
     },
     {
       id: "squared_error",
       text: "Squared Error",
       type: "SIMPLE",
-      fCode: SQUARED_ERROR_F_CODE,
-      dfdyCode: SQUARED_ERROR_DFDY_CODE,
-      inputPorts: ["y_estimate", "y_true"],
+      operation: new Operation(SQUARED_ERROR_F_CODE, SQUARED_ERROR_DFDY_CODE),
+      inputPorts: [new Port("y_estimate", false), new Port("y_true", false)],
       helpText: "Calculates squared error $ (y_t - y_e)^2 $",
     },
   ]);
 
   const handleAddOperation = useCallback(() => {
-    setOperations((operations) => graphController.addOperation(operations));
+    setFeatureOperations((operations) =>
+      graphController.addOperation(operations),
+    );
   }, []);
 
   const handleAddNode = useCallback((nodeType: string) => {
-    setNodes((nodes) => graphController.addNode(nodeType, operations, nodes));
+    setNodes((nodes) =>
+      graphController.addNode(nodeType, featureOperations, nodes),
+    );
   }, []);
 
   const handleNodesChange: OnNodesChange = useCallback((changes) => {
@@ -96,7 +101,7 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
   const handleDropNode = useCallback(
     (nodeType: string, position: XYPosition) => {
       setNodes((nodes) =>
-        graphController.dropNode(nodeType, position, operations, nodes),
+        graphController.dropNode(nodeType, position, featureOperations, nodes),
       );
     },
     [],
@@ -123,7 +128,7 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
           <Grid item borderRight={1} borderColor="divider">
             <FeaturePanel
               feature={selectedFeature}
-              operations={operations}
+              operations={featureOperations}
               onAddNode={handleAddNode}
               onAddOperation={handleAddOperation}
             />

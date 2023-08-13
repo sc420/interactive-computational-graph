@@ -55,6 +55,14 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
     },
   ]);
 
+  const handleAddOperation = useCallback(() => {
+    setOperations((operations) => graphController.addOperation(operations));
+  }, []);
+
+  const handleAddNode = useCallback((nodeType: string) => {
+    setNodes((nodes) => graphController.addNode(nodeType, operations, nodes));
+  }, []);
+
   const handleNodesChange: OnNodesChange = useCallback((changes) => {
     setNodes((nodes) => graphController.changeNodes(changes, nodes));
   }, []);
@@ -76,18 +84,12 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
 
   const handleDropNode = useCallback(
     (nodeType: string, position: XYPosition) => {
-      setNodes((nodes) => graphController.dropNode(nodeType, position, nodes));
+      setNodes((nodes) =>
+        graphController.dropNode(nodeType, position, operations, nodes),
+      );
     },
     [],
   );
-
-  const handleAddNode = useCallback((nodeType: string) => {
-    setNodes((nodes) => graphController.addNode(nodeType, nodes));
-  }, []);
-
-  const handleAddOperation = useCallback(() => {
-    setOperations((operations) => graphController.addOperation(operations));
-  }, []);
 
   useEffect(() => {
     const handleBodyClick = (id: string): void => {

@@ -42,16 +42,21 @@ class GraphController {
     return addEdge(connection, edges);
   }
 
-  dropNode(nodeType: string, position: XYPosition, nodes: Node[]): Node[] {
+  addNode(nodeType: string, operations: Operation[], nodes: Node[]): Node[] {
     nodes = this.deselectLastSelectedNode(nodes);
-    const node = this.buildNode(nodeType, position);
+    const position = this.getNewNodePosition(nodes);
+    const node = this.buildNode(nodeType, position, operations);
     return nodes.concat(node);
   }
 
-  addNode(nodeType: string, nodes: Node[]): Node[] {
+  dropNode(
+    nodeType: string,
+    position: XYPosition,
+    operations: Operation[],
+    nodes: Node[],
+  ): Node[] {
     nodes = this.deselectLastSelectedNode(nodes);
-    const position = this.getNewNodePosition(nodes);
-    const node = this.buildNode(nodeType, position);
+    const node = this.buildNode(nodeType, position, operations);
     return nodes.concat(node);
   }
 
@@ -78,19 +83,27 @@ class GraphController {
     this.onBodyClick = callback;
   }
 
-  private buildNode(nodeType: string, position: XYPosition): Node {
+  private buildNode(
+    nodeType: string,
+    position: XYPosition,
+    operations: Operation[],
+  ): Node {
     const reactFlowId = this.getNewReactFlowId();
     return {
       id: reactFlowId,
-      type: "custom",
-      data: this.buildNodeData(nodeType, reactFlowId),
-      dragHandle: ".drag-handle",
+      type: "custom", // registered in Graph
+      data: this.buildNodeData(nodeType, reactFlowId, operations),
+      dragHandle: ".drag-handle", // corresponds to className in NoteTitle
       selected: true,
       position,
     };
   }
 
-  private buildNodeData(nodeType: string, id: string): NodeData {
+  private buildNodeData(
+    nodeType: string,
+    id: string,
+    operations: Operation[],
+  ): NodeData {
     const callOnBodyClick = (id: string): void => {
       this.onBodyClick?.(id);
     };
@@ -114,8 +127,9 @@ class GraphController {
         };
       }
       case variableType: {
+        const text = `v${id}`;
         return {
-          text: `v${id}`,
+          text,
           nodeType,
           inputItems: [
             {
@@ -129,7 +143,7 @@ class GraphController {
           outputItems: [
             {
               id: "derivative",
-              text: "d(y)/d(v) =",
+              text: `d(y)/d(${text}) =`,
               value: "5",
             },
           ],
@@ -138,42 +152,31 @@ class GraphController {
       }
       default: {
         // Operation
+        const operation = this.findOperation(nodeType, operations);
+
+        const text = `${nodeType}${id}`;
         return {
-          text: `${nodeType}${id}`,
+          text,
           nodeType,
-          inputItems: [
-            {
-              id: "a",
-              text: "a",
-              showHandle: true,
-              showInputField: false,
-              value: "",
-            },
-            {
-              id: "bb",
-              text: "bb",
+          inputItems: operation.inputPorts.map((inputPort) => {
+            return {
+              id: inputPort,
+              text: inputPort,
               showHandle: true,
               showInputField: true,
-              value: "3",
-            },
-            {
-              id: "x_i",
-              text: "x_i",
-              showHandle: true,
-              showInputField: false,
-              value: "",
-            },
-          ],
+              value: "0",
+            };
+          }),
           outputItems: [
             {
               id: "value",
               text: "=",
-              value: "123",
+              value: "0",
             },
             {
               id: "derivative",
-              text: "d(y)/d(x) =",
-              value: "456",
+              text: `d(y)/d(${text}) =`,
+              value: "0",
             },
           ],
           onBodyClick: callOnBodyClick,
@@ -188,6 +191,14 @@ class GraphController {
 
   private getNewOperationId(): string {
     return `Custom ${this.nextOperationId++}`;
+  }
+
+  private findOperation(nodeType: string, operations: Operation[]): Operation {
+    const operation = operations.find((operation) => operation.id === nodeType);
+    if (operation === undefined) {
+      throw new Error(`Couldn't find the operation ${nodeType}`);
+    }
+    return operation;
   }
 
   private getNewNodePosition(nodes: Node[]): XYPosition {

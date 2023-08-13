@@ -13,6 +13,8 @@ import { TITLE_HEIGHT } from "../constants";
 import {
   PRODUCT_DFDY_CODE,
   PRODUCT_F_CODE,
+  SQUARED_ERROR_DFDY_CODE,
+  SQUARED_ERROR_F_CODE,
   SUM_DFDY_CODE,
   SUM_F_CODE,
 } from "../features/BuiltInCode";
@@ -52,6 +54,15 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
       dfdyCode: PRODUCT_DFDY_CODE,
       inputPorts: ["x_i"],
       helpText: "Multiply all inputs $ \\prod_i x_{i} $",
+    },
+    {
+      id: "squared_error",
+      text: "Squared Error",
+      type: "SIMPLE",
+      fCode: SQUARED_ERROR_F_CODE,
+      dfdyCode: SQUARED_ERROR_DFDY_CODE,
+      inputPorts: ["y_estimate", "y_true"],
+      helpText: "Calculates squared error $ (y_t - y_e)^2 $",
     },
   ]);
 

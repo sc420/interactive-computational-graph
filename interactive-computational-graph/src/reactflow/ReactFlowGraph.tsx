@@ -23,7 +23,7 @@ import ReactFlow, {
 import "reactflow/dist/style.css";
 import CustomNode from "./CustomNode";
 
-interface GraphProps {
+interface ReactFlowGraphProps {
   nodes: Node[];
   edges: Edge[];
   onNodesChange: OnNodesChange;
@@ -33,7 +33,7 @@ interface GraphProps {
   onDropNode: (nodeType: string, position: XYPosition) => void;
 }
 
-const Graph: FunctionComponent<GraphProps> = ({
+const ReactFlowGraph: FunctionComponent<ReactFlowGraphProps> = ({
   nodes,
   edges,
   onNodesChange,
@@ -115,4 +115,4 @@ const Graph: FunctionComponent<GraphProps> = ({
   );
 };
 
-export default Graph;
+export default ReactFlowGraph;

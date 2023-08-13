@@ -23,7 +23,7 @@ import {
 import type FeatureOperation from "../features/FeatureOperation";
 import GraphController from "../features/GraphController";
 import type SelectedFeature from "../features/SelectedFeature";
-import Graph from "../reactflow/Graph";
+import ReactFlowGraph from "../reactflow/ReactFlowGraph";
 import FeaturePanel from "./FeaturePanel";
 import GraphToolbar from "./GraphToolbar";
 
@@ -143,7 +143,7 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
             </Grid>
             {/* Graph */}
             <Grid item display="flex" flexGrow={1}>
-              <Graph
+              <ReactFlowGraph
                 nodes={nodes}
                 edges={edges}
                 onNodesChange={handleNodesChange}

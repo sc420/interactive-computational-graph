@@ -9,12 +9,12 @@ import {
   type NodeChange,
   type XYPosition,
 } from "reactflow";
-import ConstantNode from "../graph/ConstantNode";
-import Graph from "../graph/Graph";
-import type GraphNode from "../graph/GraphNode";
-import Operation from "../graph/Operation";
-import OperationNode from "../graph/OperationNode";
-import VariableNode from "../graph/VariableNode";
+import ConstantNode from "../core/ConstantNode";
+import Graph from "../core/Graph";
+import type GraphNode from "../core/GraphNode";
+import Operation from "../core/Operation";
+import OperationNode from "../core/OperationNode";
+import VariableNode from "../core/VariableNode";
 import { TEMPLATE_DFDY_CODE, TEMPLATE_F_CODE } from "./BuiltInCode";
 import type FeatureOperation from "./FeatureOperation";
 import { constantType, variableType } from "./KnownNodeTypes";

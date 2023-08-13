@@ -1,5 +1,5 @@
-import type Operation from "../graph/Operation";
-import type Port from "../graph/Port";
+import type Operation from "../core/Operation";
+import type Port from "../core/Port";
 import type OperationType from "./OperationType";
 
 interface FeatureOperation {

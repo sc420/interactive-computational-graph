@@ -10,6 +10,8 @@ import {
   type XYPosition,
 } from "reactflow";
 import { TITLE_HEIGHT } from "../constants";
+import Operation from "../core/Operation";
+import Port from "../core/Port";
 import {
   PRODUCT_DFDY_CODE,
   PRODUCT_F_CODE,
@@ -21,11 +23,9 @@ import {
 import type FeatureOperation from "../features/FeatureOperation";
 import GraphController from "../features/GraphController";
 import type SelectedFeature from "../features/SelectedFeature";
-import Port from "../graph/Port";
 import Graph from "../reactflow/Graph";
 import FeaturePanel from "./FeaturePanel";
 import GraphToolbar from "./GraphToolbar";
-import Operation from "../graph/Operation";
 
 interface GraphContainerProps {
   selectedFeature: SelectedFeature | null;

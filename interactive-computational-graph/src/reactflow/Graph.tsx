@@ -91,7 +91,7 @@ const Graph: FunctionComponent<GraphProps> = ({
       display="flex"
       flexGrow={1}
       sx={{
-        "> *": { flexGrow: 1 },
+        "> div": { flexGrow: 1 },
       }}
     >
       <div ref={reactFlowWrapper}>

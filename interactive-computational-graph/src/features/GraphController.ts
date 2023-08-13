@@ -16,7 +16,7 @@ import type Operation from "./Operation";
 
 type BodyClickCallback = (id: string) => void;
 
-class GraphStateController {
+class GraphController {
   private nextReactFlowId = 1;
   private nextOperationId = 1;
   private lastSelectedNodeId: string | null = null;
@@ -248,4 +248,4 @@ class GraphStateController {
   }
 }
 
-export default GraphStateController;
+export default GraphController;

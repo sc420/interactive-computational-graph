@@ -16,7 +16,7 @@ import {
   SUM_DFDY_CODE,
   SUM_F_CODE,
 } from "../features/BuiltInCode";
-import GraphStateController from "../features/GraphStateController";
+import GraphController from "../features/GraphController";
 import type Operation from "../features/Operation";
 import type SelectedFeature from "../features/SelectedFeature";
 import Graph from "../reactflow/Graph";
@@ -30,7 +30,7 @@ interface GraphContainerProps {
 const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
   selectedFeature,
 }) => {
-  const [graphStateController] = useState(new GraphStateController());
+  const [graphController] = useState(new GraphController());
 
   const [nodes, setNodes] = useState<Node[]>([]);
   const [edges, setEdges] = useState<Edge[]>([]);
@@ -56,49 +56,45 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
   ]);
 
   const handleNodesChange: OnNodesChange = useCallback((changes) => {
-    setNodes((nodes) => graphStateController.changeNodes(changes, nodes));
+    setNodes((nodes) => graphController.changeNodes(changes, nodes));
   }, []);
 
   const handleEdgesChange: OnEdgesChange = useCallback((changes) => {
-    setEdges((edges) => graphStateController.changeEdges(changes, edges));
+    setEdges((edges) => graphController.changeEdges(changes, edges));
   }, []);
 
   const handleSelectionChange = useCallback(
     (params: OnSelectionChangeParams): void => {
-      graphStateController.updateSelectedNodes(params.nodes);
+      graphController.updateSelectedNodes(params.nodes);
     },
     [],
   );
 
   const handleConnect: OnConnect = useCallback((connection) => {
-    setEdges((edges) => graphStateController.connect(connection, edges));
+    setEdges((edges) => graphController.connect(connection, edges));
   }, []);
 
   const handleDropNode = useCallback(
     (nodeType: string, position: XYPosition) => {
-      setNodes((nodes) =>
-        graphStateController.dropNode(nodeType, position, nodes),
-      );
+      setNodes((nodes) => graphController.dropNode(nodeType, position, nodes));
     },
     [],
   );
 
   const handleAddNode = useCallback((nodeType: string) => {
-    setNodes((nodes) => graphStateController.addNode(nodeType, nodes));
+    setNodes((nodes) => graphController.addNode(nodeType, nodes));
   }, []);
 
   const handleAddOperation = useCallback(() => {
-    setOperations((operations) =>
-      graphStateController.addOperation(operations),
-    );
+    setOperations((operations) => graphController.addOperation(operations));
   }, []);
 
   useEffect(() => {
     const handleBodyClick = (id: string): void => {
-      setNodes((nodes) => graphStateController.handleBodyClick(id, nodes));
+      setNodes((nodes) => graphController.handleBodyClick(id, nodes));
     };
 
-    graphStateController.setOnBodyClick(handleBodyClick);
+    graphController.setOnBodyClick(handleBodyClick);
   }, []);
 
   return (

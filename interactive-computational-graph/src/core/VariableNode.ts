@@ -1,7 +1,7 @@
-import type GraphNode from "./GraphNode";
+import type CoreNode from "./CoreNode";
 import NodeRelationship from "./NodeRelationship";
 
-class VariableNode implements GraphNode {
+class VariableNode implements CoreNode {
   private readonly id: string;
 
   private readonly nodeRelationship: NodeRelationship = new NodeRelationship(
@@ -32,7 +32,7 @@ class VariableNode implements GraphNode {
 
   updateF(): void {}
 
-  calculateDfdy(y: GraphNode): number {
+  calculateDfdy(y: CoreNode): number {
     if (y.isConstant()) {
       return 0;
     }

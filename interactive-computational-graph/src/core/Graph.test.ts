@@ -13,8 +13,8 @@ import {
   SUM_F_CODE,
 } from "../features/BuiltInCode";
 import ConstantNode from "./ConstantNode";
+import type CoreNode from "./CoreNode";
 import Graph from "./Graph";
-import type GraphNode from "./GraphNode";
 import Operation from "./Operation";
 import OperationNode from "./OperationNode";
 import Port from "./Port";
@@ -707,7 +707,7 @@ function buildSmallGraph(): Graph {
   const sumNode1 = buildSumNode("sum1");
 
   // Add the nodes
-  const newNodes: GraphNode[] = [varNode1, varNode2, sumNode1];
+  const newNodes: CoreNode[] = [varNode1, varNode2, sumNode1];
   newNodes.forEach((newNode) => {
     graph.addNode(newNode);
   });
@@ -739,7 +739,7 @@ function buildMediumGraph(): Graph {
   const identityNode1 = buildIdentityNode("identity1");
 
   // Add the nodes
-  const newNodes: GraphNode[] = [
+  const newNodes: CoreNode[] = [
     varNode1,
     varNode2,
     constNode1,
@@ -793,7 +793,7 @@ function buildComplexGraph(): Graph {
   const identityNode1 = buildIdentityNode("identity1");
 
   // Add the nodes
-  const newNodes: GraphNode[] = [
+  const newNodes: CoreNode[] = [
     varNode1,
     varNode2,
     constNode1,
@@ -879,7 +879,7 @@ function buildNeuralNetworkGraph(): Graph {
   const se = buildSquaredErrorNode("se");
 
   // Add the nodes
-  const newNodes: GraphNode[] = [
+  const newNodes: CoreNode[] = [
     i_1,
     i_2,
     w_h1_1_1,
@@ -975,37 +975,37 @@ function buildNeuralNetworkGraph(): Graph {
 }
 /* eslint-enable @typescript-eslint/naming-convention */
 
-function buildSumNode(id: string): GraphNode {
+function buildSumNode(id: string): CoreNode {
   const ports: Port[] = [new Port("x_i", true)];
   const operation = new Operation(SUM_F_CODE, SUM_DFDY_CODE);
   return new OperationNode(id, ports, operation);
 }
 
-function buildProductNode(id: string): GraphNode {
+function buildProductNode(id: string): CoreNode {
   const ports: Port[] = [new Port("x_i", true)];
   const operation = new Operation(PRODUCT_F_CODE, PRODUCT_DFDY_CODE);
   return new OperationNode(id, ports, operation);
 }
 
-function buildIdentityNode(id: string): GraphNode {
+function buildIdentityNode(id: string): CoreNode {
   const ports: Port[] = [new Port("x", false)];
   const operation = new Operation(IDENTITY_F_CODE, IDENTITY_DFDY_CODE);
   return new OperationNode(id, ports, operation);
 }
 
-function buildReluNode(id: string): GraphNode {
+function buildReluNode(id: string): CoreNode {
   const ports: Port[] = [new Port("x", false)];
   const operation = new Operation(RELU_F_CODE, RELU_DFDY_CODE);
   return new OperationNode(id, ports, operation);
 }
 
-function buildSigmoidNode(id: string): GraphNode {
+function buildSigmoidNode(id: string): CoreNode {
   const ports: Port[] = [new Port("x", false)];
   const operation = new Operation(SIGMOID_F_CODE, SIGMOID_DFDY_CODE);
   return new OperationNode(id, ports, operation);
 }
 
-function buildSquaredErrorNode(id: string): GraphNode {
+function buildSquaredErrorNode(id: string): CoreNode {
   const ports: Port[] = [
     new Port("y_estimate", false),
     new Port("y_true", false),

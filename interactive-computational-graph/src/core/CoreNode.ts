@@ -1,6 +1,6 @@
 import type NodeRelationship from "./NodeRelationship";
 
-interface GraphNode {
+interface CoreNode {
   getId: () => string;
 
   isConstant: () => boolean;
@@ -11,9 +11,9 @@ interface GraphNode {
 
   updateF: () => void;
 
-  calculateDfdy: (y: GraphNode) => number;
+  calculateDfdy: (y: CoreNode) => number;
 
   getRelationship: () => NodeRelationship;
 }
 
-export default GraphNode;
+export default CoreNode;

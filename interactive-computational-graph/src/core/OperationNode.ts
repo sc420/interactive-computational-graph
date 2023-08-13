@@ -1,4 +1,4 @@
-import type GraphNode from "./GraphNode";
+import type CoreNode from "./CoreNode";
 import NodeRelationship from "./NodeRelationship";
 import type Operation from "./Operation";
 import type Port from "./Port";
@@ -8,7 +8,7 @@ import {
   type PortToNodesData,
 } from "./PortToNodesData";
 
-class OperationNode implements GraphNode {
+class OperationNode implements CoreNode {
   private readonly id: string;
 
   private readonly inputPorts: Port[];
@@ -47,7 +47,7 @@ class OperationNode implements GraphNode {
     this.value = this.operation.evalF(portToNodeData);
   }
 
-  calculateDfdy(y: GraphNode): number {
+  calculateDfdy(y: CoreNode): number {
     if (y.isConstant()) {
       return 0;
     }
@@ -84,7 +84,7 @@ class OperationNode implements GraphNode {
       this.buildNodeIdToNodeData(outputNodes);
   }
 
-  private buildNodeIdToNodeData(nodes: GraphNode[]): NodeIdToNodeData {
+  private buildNodeIdToNodeData(nodes: CoreNode[]): NodeIdToNodeData {
     const nodeIdToNodeData: NodeIdToNodeData = {};
     nodes.forEach((node) => {
       nodeIdToNodeData[node.getId()] = this.buildNodeData(node);
@@ -92,7 +92,7 @@ class OperationNode implements GraphNode {
     return nodeIdToNodeData;
   }
 
-  private buildNodeData(node: GraphNode): NodeData {
+  private buildNodeData(node: CoreNode): NodeData {
     return { id: node.getId(), value: node.getValue() };
   }
 }

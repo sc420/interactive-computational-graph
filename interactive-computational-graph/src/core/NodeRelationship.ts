@@ -1,9 +1,9 @@
-import type GraphNode from "./GraphNode";
+import type CoreNode from "./CoreNode";
 import Port from "./Port";
 
 interface PortData {
   port: Port;
-  nodeIdToNodes: Map<string, GraphNode>;
+  nodeIdToNodes: Map<string, CoreNode>;
 }
 
 class NodeRelationship {
@@ -31,7 +31,7 @@ class NodeRelationship {
     return outputNodes.length === 0;
   }
 
-  getInputNodesByPort(portId: string): GraphNode[] {
+  getInputNodesByPort(portId: string): CoreNode[] {
     const inputPortData = this.getPortDataByPort(
       this.inputPortIdToPortData,
       portId,
@@ -39,15 +39,15 @@ class NodeRelationship {
     return Array.from(inputPortData.nodeIdToNodes.values());
   }
 
-  getInputNodes(): GraphNode[] {
-    const inputNodes: GraphNode[] = [];
+  getInputNodes(): CoreNode[] {
+    const inputNodes: CoreNode[] = [];
     this.inputPortIdToPortData.forEach((_, inputPort) => {
       inputNodes.push(...this.getInputNodesByPort(inputPort));
     });
     return inputNodes;
   }
 
-  getOutputNodes(): GraphNode[] {
+  getOutputNodes(): CoreNode[] {
     const outputPortData = this.getPortDataByPort(
       this.outputPortIdToPortData,
       this.outputPort.getId(),
@@ -76,7 +76,7 @@ class NodeRelationship {
     return true;
   }
 
-  addInputNodeByPort(portId: string, inputNode: GraphNode): void {
+  addInputNodeByPort(portId: string, inputNode: CoreNode): void {
     const inputPortData = this.getPortDataByPort(
       this.inputPortIdToPortData,
       portId,
@@ -100,7 +100,7 @@ class NodeRelationship {
     inputPortData.nodeIdToNodes.set(inputNode.getId(), inputNode);
   }
 
-  addOutputNode(outputNode: GraphNode): void {
+  addOutputNode(outputNode: CoreNode): void {
     const outputPortData = this.getPortDataByPort(
       this.outputPortIdToPortData,
       this.outputPort.getId(),
@@ -137,7 +137,7 @@ class NodeRelationship {
     this.inputPorts.forEach((inputPort) => {
       const portData: PortData = {
         port: inputPort,
-        nodeIdToNodes: new Map<string, GraphNode>(),
+        nodeIdToNodes: new Map<string, CoreNode>(),
       };
       this.inputPortIdToPortData.set(inputPort.getId(), portData);
     });
@@ -146,7 +146,7 @@ class NodeRelationship {
   private initOutputPortIdToPortData(): void {
     const portData: PortData = {
       port: this.outputPort,
-      nodeIdToNodes: new Map<string, GraphNode>(),
+      nodeIdToNodes: new Map<string, CoreNode>(),
     };
     this.outputPortIdToPortData.set(this.outputPort.getId(), portData);
   }

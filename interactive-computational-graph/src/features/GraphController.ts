@@ -10,8 +10,8 @@ import {
   type XYPosition,
 } from "reactflow";
 import ConstantNode from "../core/ConstantNode";
+import type CoreNode from "../core/CoreNode";
 import Graph from "../core/Graph";
-import type GraphNode from "../core/GraphNode";
 import Operation from "../core/Operation";
 import OperationNode from "../core/OperationNode";
 import VariableNode from "../core/VariableNode";
@@ -148,7 +148,7 @@ class GraphController {
     nodeType: string,
     id: string,
     featureOperations: FeatureOperation[],
-  ): GraphNode {
+  ): CoreNode {
     switch (nodeType) {
       case constantType: {
         return new ConstantNode(id);

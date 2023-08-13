@@ -1,5 +1,5 @@
+import type CoreNode from "./CoreNode";
 import type DifferentiationMode from "./DifferentiationMode";
-import type GraphNode from "./GraphNode";
 
 type TopologicalSortDirection = "TO_OUTPUT" | "TO_INPUT";
 
@@ -9,7 +9,7 @@ interface TopologicalSortCallStackElement {
 }
 
 class Graph {
-  private readonly nodeIdToNodes = new Map<string, GraphNode>();
+  private readonly nodeIdToNodes = new Map<string, CoreNode>();
 
   private differentiationMode: DifferentiationMode = "REVERSE";
 
@@ -22,11 +22,11 @@ class Graph {
    */
   private readonly nodeIdToDerivatives = new Map<string, number>();
 
-  getNodes(): GraphNode[] {
+  getNodes(): CoreNode[] {
     return Array.from(this.nodeIdToNodes.values());
   }
 
-  getOneNode(nodeId: string): GraphNode {
+  getOneNode(nodeId: string): CoreNode {
     const node = this.nodeIdToNodes.get(nodeId);
     if (node === undefined) {
       throw new Error(`Node ${nodeId} doesn't exist`);
@@ -38,7 +38,7 @@ class Graph {
     return this.nodeIdToNodes.has(nodeId);
   }
 
-  addNode(node: GraphNode): void {
+  addNode(node: CoreNode): void {
     const nodeId = node.getId();
     if (this.hasNode(nodeId)) {
       throw new Error(`Node ${nodeId} already exists`);
@@ -264,7 +264,7 @@ class Graph {
    * Removes connections of a node to all its neighboring nodes.
    * @param node The node to remove the input/output connections.
    */
-  private removeNodeConnections(node: GraphNode): void {
+  private removeNodeConnections(node: CoreNode): void {
     this.removeInputNodeConnections(node);
     this.removeOutputNodeConnections(node);
   }
@@ -273,7 +273,7 @@ class Graph {
    * Removes connections of a node to all its input nodes.
    * @param node The node to remove the input connections.
    */
-  private removeInputNodeConnections(node: GraphNode): void {
+  private removeInputNodeConnections(node: CoreNode): void {
     const nodeRelationship = node.getRelationship();
     nodeRelationship.inputPorts.forEach((inputPort) => {
       nodeRelationship
@@ -288,7 +288,7 @@ class Graph {
    * Removes connections of a node to all its output nodes.
    * @param node The node to remove the output connections.
    */
-  private removeOutputNodeConnections(node: GraphNode): void {
+  private removeOutputNodeConnections(node: CoreNode): void {
     node
       .getRelationship()
       .getOutputNodes()
@@ -326,7 +326,7 @@ class Graph {
    * forward differentiation mode and d(targetNode)/d(node) for reverse
    * differentiation mode.
    */
-  private calculateNodeDerivative(node: GraphNode): number {
+  private calculateNodeDerivative(node: CoreNode): number {
     if (node.getId() === this.targetNodeId) {
       // d(node)/d(node) = 1 (non-constant) or 0 (constant)
       return node.calculateDfdy(node);
@@ -516,10 +516,10 @@ class Graph {
    * @returns Neighboring node IDs in the topological sort direction.
    */
   private getTopologicalSortDirectionNodeIds(
-    node: GraphNode,
+    node: CoreNode,
     direction: TopologicalSortDirection,
   ): string[] {
-    let neighborNodes: GraphNode[] = [];
+    let neighborNodes: CoreNode[] = [];
     if (direction === "TO_INPUT") {
       neighborNodes = node.getRelationship().getInputNodes();
     } else {

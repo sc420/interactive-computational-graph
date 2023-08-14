@@ -23,6 +23,8 @@ import type NodeData from "./NodeData";
 type BodyClickCallback = (id: string) => void;
 
 class GraphController {
+  // TODO(sc420): Move states and react logic back to GraphContainer
+  // TODO(sc420): No states allowed here, make all functions static
   private readonly coreGraph = new Graph();
 
   private nextReactFlowId = 1;

@@ -35,7 +35,7 @@ class GraphController {
     changes.forEach((change) => {
       switch (change.type) {
         case "remove": {
-          // TODO(sc420)
+          this.removeCoreNode(change.id);
           break;
         }
       }
@@ -125,6 +125,10 @@ class GraphController {
   ): void {
     const coreNode = this.buildCoreNode(nodeType, id, featureOperations);
     this.coreGraph.addNode(coreNode);
+  }
+
+  private removeCoreNode(id: string): void {
+    this.coreGraph.removeNode(id);
   }
 
   private addReactFlowNode(

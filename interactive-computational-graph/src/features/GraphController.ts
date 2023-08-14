@@ -40,10 +40,27 @@ class GraphController {
         }
       }
     });
+
     return applyNodeChanges(changes, nodes);
   }
 
   changeEdges(changes: EdgeChange[], edges: Edge[]): Edge[] {
+    const removedEdgeIds = new Set<string>();
+    changes.forEach((change) => {
+      switch (change.type) {
+        case "remove": {
+          removedEdgeIds.add(change.id);
+          break;
+        }
+      }
+    });
+
+    edges.forEach((edge) => {
+      if (removedEdgeIds.has(edge.id)) {
+        this.removeCoreEdge(edge.source, edge.target, edge.targetHandle);
+      }
+    });
+
     return applyEdgeChanges(changes, edges);
   }
 
@@ -55,6 +72,8 @@ class GraphController {
   }
 
   connect(connection: Connection, edges: Edge[]): Edge[] {
+    this.connectCoreEdge(connection);
+
     return addEdge(connection, edges);
   }
 
@@ -129,6 +148,34 @@ class GraphController {
 
   private removeCoreNode(id: string): void {
     this.coreGraph.removeNode(id);
+  }
+
+  private connectCoreEdge(connection: Connection): void {
+    if (
+      connection.source === null ||
+      connection.target === null ||
+      connection.targetHandle === null
+    ) {
+      return;
+    }
+
+    this.coreGraph.connect(
+      connection.source,
+      connection.target,
+      connection.targetHandle,
+    );
+  }
+
+  private removeCoreEdge(
+    source: string,
+    target: string,
+    targetHandle?: string | null,
+  ): void {
+    if (targetHandle === undefined || targetHandle === null) {
+      return;
+    }
+
+    this.coreGraph.disconnect(source, target, targetHandle);
   }
 
   private addReactFlowNode(

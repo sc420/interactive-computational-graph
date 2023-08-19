@@ -14,6 +14,7 @@ interface InputItemProps {
   handleSize: number;
   handleColor: string;
   handleHoverColor: string;
+  onInputChange: (inputPortId: string, value: string) => void;
 }
 
 const InputItems: FunctionComponent<InputItemProps> = ({
@@ -25,6 +26,7 @@ const InputItems: FunctionComponent<InputItemProps> = ({
   handleSize,
   handleColor,
   handleHoverColor,
+  onInputChange,
 }) => {
   const getInputId = useCallback(
     (portId: string): string => {
@@ -105,6 +107,9 @@ const InputItems: FunctionComponent<InputItemProps> = ({
                     textAlign: "right",
                     width: inputWidth,
                   },
+                }}
+                onChange={(event) => {
+                  onInputChange(item.id, event.target.value);
                 }}
               ></OutlinedInput>
             )}

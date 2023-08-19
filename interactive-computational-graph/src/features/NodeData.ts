@@ -6,7 +6,8 @@ interface NodeData {
   nodeType: string;
   inputItems: InputItem[];
   outputItems: OutputItem[];
-  onBodyClick: (id: string) => void;
+  onInputChange: (nodeId: string, inputPortId: string, value: string) => void;
+  onBodyClick: (nodeId: string) => void;
 }
 
 export default NodeData;

@@ -4,12 +4,19 @@ import type FeatureOperation from "./FeatureOperation";
 import { constantType, variableType } from "./KnownNodeTypes";
 import type NodeData from "./NodeData";
 
-type BodyClickCallback = (id: string) => void;
+type InputChangeCallback = (
+  nodeId: string,
+  inputPortId: string,
+  value: string,
+) => void;
+
+type BodyClickCallback = (nodeId: string) => void;
 
 const addReactFlowNode = (
   nodeType: string,
   id: string,
   featureOperations: FeatureOperation[],
+  onInputChange: InputChangeCallback,
   onBodyClick: BodyClickCallback,
   position: XYPosition,
   nodes: Node[],
@@ -17,7 +24,13 @@ const addReactFlowNode = (
   const node: Node = {
     id,
     type: "custom", // registered in Graph
-    data: buildReactFlowNodeData(nodeType, id, featureOperations, onBodyClick),
+    data: buildReactFlowNodeData(
+      nodeType,
+      id,
+      featureOperations,
+      onInputChange,
+      onBodyClick,
+    ),
     dragHandle: ".drag-handle", // corresponds to className in NoteTitle
     selected: true,
     position,
@@ -60,9 +73,9 @@ const updateLastSelectedNodeId = (nodes: Node[]): string | null => {
   return firstNode.id;
 };
 
-const selectReactFlowNode = (id: string, nodes: Node[]): Node[] => {
+const selectReactFlowNode = (nodeId: string, nodes: Node[]): Node[] => {
   return nodes.map((node) => {
-    if (node.id !== id) {
+    if (node.id !== nodeId) {
       node.selected = false;
       return node;
     }
@@ -87,12 +100,9 @@ const buildReactFlowNodeData = (
   nodeType: string,
   id: string,
   featureOperations: FeatureOperation[],
+  onInputChange: InputChangeCallback,
   onBodyClick: BodyClickCallback,
 ): NodeData => {
-  const callOnBodyClick = (id: string): void => {
-    onBodyClick(id);
-  };
-
   switch (nodeType) {
     case constantType: {
       return {
@@ -108,7 +118,8 @@ const buildReactFlowNodeData = (
           },
         ],
         outputItems: [],
-        onBodyClick: callOnBodyClick,
+        onBodyClick,
+        onInputChange,
       };
     }
     case variableType: {
@@ -132,7 +143,8 @@ const buildReactFlowNodeData = (
             value: "5",
           },
         ],
-        onBodyClick: callOnBodyClick,
+        onBodyClick,
+        onInputChange,
       };
     }
     default: {
@@ -167,7 +179,8 @@ const buildReactFlowNodeData = (
             value: "0",
           },
         ],
-        onBodyClick: callOnBodyClick,
+        onBodyClick,
+        onInputChange,
       };
     }
   }

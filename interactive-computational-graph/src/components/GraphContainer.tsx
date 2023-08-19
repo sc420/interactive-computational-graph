@@ -91,8 +91,17 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
     null,
   );
 
-  const handleBodyClick = useCallback((id: string): void => {
-    setReactFlowNodes((nodes) => selectReactFlowNode(id, nodes));
+  const handleInputChange = useCallback(
+    (nodeId: string, inputPortId: string, value: string): void => {
+      console.log(
+        `nodeId:${nodeId}, inputPortId:${inputPortId}, value:${value}`,
+      );
+    },
+    [],
+  );
+
+  const handleBodyClick = useCallback((nodeId: string): void => {
+    setReactFlowNodes((nodes) => selectReactFlowNode(nodeId, nodes));
   }, []);
 
   const handleAddNode = useCallback(
@@ -112,6 +121,7 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
           nodeType,
           id,
           featureOperations,
+          handleInputChange,
           handleBodyClick,
           position,
           nodes,
@@ -255,6 +265,7 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
           nodeType,
           id,
           featureOperations,
+          handleInputChange,
           handleBodyClick,
           position,
           nodes,

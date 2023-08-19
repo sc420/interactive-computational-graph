@@ -34,6 +34,13 @@ const CustomNode: FunctionComponent<CustomNodeProps> = ({
     }
   }, [data]);
 
+  const handleInputChange = useCallback(
+    (inputPortId: string, value: string): void => {
+      data.onInputChange(id, inputPortId, value);
+    },
+    [id, data],
+  );
+
   const handleBodyClick = useCallback((): void => {
     data.onBodyClick(id);
   }, [id, data]);
@@ -72,6 +79,7 @@ const CustomNode: FunctionComponent<CustomNodeProps> = ({
                   handleSize={handleSize}
                   handleColor={handleColor}
                   handleHoverColor={handleHoverColor}
+                  onInputChange={handleInputChange}
                 />
               </Box>
             )}

@@ -1,6 +1,9 @@
 import { Grid, Toolbar } from "@mui/material";
 import React, { useCallback, useEffect, useState } from "react";
 import {
+  addEdge,
+  applyEdgeChanges,
+  applyNodeChanges,
   type Edge,
   type Node,
   type OnConnect,
@@ -10,6 +13,7 @@ import {
   type XYPosition,
 } from "reactflow";
 import { TITLE_HEIGHT } from "../constants";
+import Graph from "../core/Graph";
 import Operation from "../core/Operation";
 import Port from "../core/Port";
 import {
@@ -19,9 +23,23 @@ import {
   SQUARED_ERROR_F_CODE,
   SUM_DFDY_CODE,
   SUM_F_CODE,
+  TEMPLATE_DFDY_CODE,
+  TEMPLATE_F_CODE,
 } from "../features/BuiltInCode";
+import {
+  addCoreNode,
+  connectCoreEdge,
+  disconnectCoreEdge,
+  removeCoreNode,
+} from "../features/CoreGraphController";
 import type FeatureOperation from "../features/FeatureOperation";
-import GraphController from "../features/GraphController";
+import {
+  addReactFlowNode,
+  deselectLastSelectedNode,
+  getNewReactFlowNodePosition,
+  selectReactFlowNode,
+  updateLastSelectedNodeId,
+} from "../features/ReactFlowController";
 import type SelectedFeature from "../features/SelectedFeature";
 import ReactFlowGraph from "../reactflow/ReactFlowGraph";
 import FeaturePanel from "./FeaturePanel";
@@ -34,10 +52,8 @@ interface GraphContainerProps {
 const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
   selectedFeature,
 }) => {
-  const [graphController] = useState(new GraphController());
+  const [coreGraph, setCoreGraph] = useState<Graph | null>(null);
 
-  const [nodes, setNodes] = useState<Node[]>([]);
-  const [edges, setEdges] = useState<Edge[]>([]);
   const [featureOperations, setFeatureOperations] = useState<
     FeatureOperation[]
   >([
@@ -66,53 +82,193 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
       helpText: "Calculates squared error $ (y_t - y_e)^2 $",
     },
   ]);
+  const [nextNodeId, setNextNodeId] = useState<number>(1);
+  const [nextOperationId, setNextOperationId] = useState<number>(1);
+
+  const [reactFlowNodes, setReactFlowNodes] = useState<Node[]>([]);
+  const [reactFlowEdges, setReactFlowEdges] = useState<Edge[]>([]);
+  const [lastSelectedNodeId, setLastSelectedNodeId] = useState<string | null>(
+    null,
+  );
+
+  const handleBodyClick = useCallback((id: string): void => {
+    setReactFlowNodes((nodes) => selectReactFlowNode(id, nodes));
+  }, []);
+
+  const handleAddNode = useCallback(
+    (nodeType: string) => {
+      if (coreGraph === null) {
+        return;
+      }
+
+      const id = `${nextNodeId}`;
+
+      addCoreNode(coreGraph, nodeType, id, featureOperations);
+
+      setReactFlowNodes((nodes) => {
+        const position = getNewReactFlowNodePosition(nodes, lastSelectedNodeId);
+        nodes = deselectLastSelectedNode(nodes, lastSelectedNodeId);
+        return addReactFlowNode(
+          nodeType,
+          id,
+          featureOperations,
+          handleBodyClick,
+          position,
+          nodes,
+        );
+      });
+
+      setNextNodeId((nextNodeId) => nextNodeId + 1);
+    },
+    [coreGraph, featureOperations, nextNodeId, lastSelectedNodeId],
+  );
 
   const handleAddOperation = useCallback(() => {
-    setFeatureOperations((operations) =>
-      graphController.addOperation(operations),
+    const id = `${nextOperationId}`;
+
+    const newFeatureOperation: FeatureOperation = {
+      id,
+      text: `Operation ${nextOperationId}`,
+      type: "CUSTOM",
+      operation: new Operation(TEMPLATE_F_CODE, TEMPLATE_DFDY_CODE),
+      inputPorts: [],
+      helpText: "Write some Markdown and LaTeX here",
+    };
+
+    setFeatureOperations((featureOperations) =>
+      featureOperations.concat(newFeatureOperation),
     );
-  }, []);
+    setNextOperationId((nextOperationId) => nextOperationId + 1);
+  }, [nextOperationId]);
 
-  const handleAddNode = useCallback((nodeType: string) => {
-    setNodes((nodes) =>
-      graphController.addNode(nodeType, featureOperations, nodes),
-    );
-  }, []);
+  const handleNodesChange: OnNodesChange = useCallback(
+    (changes) => {
+      if (coreGraph === null) {
+        return;
+      }
 
-  const handleNodesChange: OnNodesChange = useCallback((changes) => {
-    setNodes((nodes) => graphController.changeNodes(changes, nodes));
-  }, []);
+      changes.forEach((change) => {
+        switch (change.type) {
+          case "remove": {
+            removeCoreNode(change.id, coreGraph);
+            break;
+          }
+        }
+      });
 
-  const handleEdgesChange: OnEdgesChange = useCallback((changes) => {
-    setEdges((edges) => graphController.changeEdges(changes, edges));
-  }, []);
+      setReactFlowNodes((nodes) => applyNodeChanges(changes, nodes));
+    },
+    [coreGraph],
+  );
+
+  const handleEdgesChange: OnEdgesChange = useCallback(
+    (changes) => {
+      if (coreGraph === null) {
+        return;
+      }
+
+      const removedEdgeIds = new Set<string>();
+      changes.forEach((change) => {
+        switch (change.type) {
+          case "remove": {
+            removedEdgeIds.add(change.id);
+            break;
+          }
+        }
+      });
+
+      setReactFlowEdges((edges) => {
+        edges.forEach((edge) => {
+          if (removedEdgeIds.has(edge.id)) {
+            if (
+              edge.source === null ||
+              edge.target === null ||
+              edge.targetHandle === null ||
+              edge.targetHandle === undefined
+            ) {
+              throw new Error(
+                `Edge ${edge.id} should have source, target and targetHandle`,
+              );
+            }
+
+            disconnectCoreEdge(
+              coreGraph,
+              edge.source,
+              edge.target,
+              edge.targetHandle,
+            );
+          }
+        });
+
+        return applyEdgeChanges(changes, edges);
+      });
+    },
+    [coreGraph],
+  );
 
   const handleSelectionChange = useCallback(
     (params: OnSelectionChangeParams): void => {
-      graphController.updateSelectedNodes(params.nodes);
+      setLastSelectedNodeId(updateLastSelectedNodeId(params.nodes));
     },
     [],
   );
 
-  const handleConnect: OnConnect = useCallback((connection) => {
-    setEdges((edges) => graphController.connect(connection, edges));
-  }, []);
+  const handleConnect: OnConnect = useCallback(
+    (connection) => {
+      if (coreGraph === null) {
+        return;
+      }
+
+      if (
+        connection.source === null ||
+        connection.target === null ||
+        connection.targetHandle === null
+      ) {
+        return;
+      }
+
+      connectCoreEdge(
+        coreGraph,
+        connection.source,
+        connection.target,
+        connection.targetHandle,
+      );
+
+      setReactFlowEdges((edges) => addEdge(connection, edges));
+    },
+    [coreGraph],
+  );
 
   const handleDropNode = useCallback(
     (nodeType: string, position: XYPosition) => {
-      setNodes((nodes) =>
-        graphController.dropNode(nodeType, position, featureOperations, nodes),
-      );
+      if (coreGraph === null) {
+        return;
+      }
+
+      const id = `${nextNodeId}`;
+
+      addCoreNode(coreGraph, nodeType, id, featureOperations);
+
+      setReactFlowNodes((nodes) => {
+        nodes = deselectLastSelectedNode(nodes, lastSelectedNodeId);
+        return addReactFlowNode(
+          nodeType,
+          id,
+          featureOperations,
+          handleBodyClick,
+          position,
+          nodes,
+        );
+      });
+
+      setNextNodeId(nextNodeId + 1);
     },
-    [],
+    [coreGraph, nextNodeId, featureOperations],
   );
 
   useEffect(() => {
-    const handleBodyClick = (id: string): void => {
-      setNodes((nodes) => graphController.handleBodyClick(id, nodes));
-    };
-
-    graphController.setOnBodyClick(handleBodyClick);
+    const coreGraph = new Graph();
+    setCoreGraph(coreGraph);
   }, []);
 
   return (
@@ -144,8 +300,8 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
             {/* Graph */}
             <Grid item display="flex" flexGrow={1}>
               <ReactFlowGraph
-                nodes={nodes}
-                edges={edges}
+                nodes={reactFlowNodes}
+                edges={reactFlowEdges}
                 onNodesChange={handleNodesChange}
                 onEdgesChange={handleEdgesChange}
                 onSelectionChange={handleSelectionChange}

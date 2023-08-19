@@ -1,4 +1,10 @@
-import { type Node, type XYPosition } from "reactflow";
+import {
+  type Connection,
+  type Edge,
+  type EdgeChange,
+  type Node,
+  type XYPosition,
+} from "reactflow";
 import { findFeatureOperation } from "./ControllerUtilities";
 import type FeatureOperation from "./FeatureOperation";
 import { constantType, variableType } from "./KnownNodeTypes";
@@ -63,6 +69,93 @@ const getNewReactFlowNodePosition = (
       y: randomInteger(0, randomMax),
     };
   }
+};
+
+const hideInputField = (connection: Connection, nodes: Node[]): Node[] => {
+  const targetHandle = connection.targetHandle;
+  if (targetHandle === null) {
+    throw new Error("Should have target handle");
+  }
+
+  return nodes.map((node) => {
+    if (node.id === connection.target) {
+      const data = node.data as NodeData;
+      const inputItem = data.inputItems.find(
+        (inputItem) => inputItem.id === connection.targetHandle,
+      );
+      if (inputItem === undefined) {
+        throw new Error(`Should find input port ${targetHandle}`);
+      }
+      inputItem.showInputField = false;
+      // Set the new data to notify React Flow about the change
+      const newData: NodeData = {
+        ...node.data,
+        inputItems: data.inputItems,
+      };
+      node.data = newData;
+    }
+
+    return node;
+  });
+};
+
+const showInputFields = (removedEdges: Edge[], nodes: Node[]): Node[] => {
+  const targetToTargetHandle = new Map<string, string>();
+  removedEdges.forEach((removedEdge) => {
+    if (
+      removedEdge.targetHandle === null ||
+      removedEdge.targetHandle === undefined
+    ) {
+      return;
+    }
+    targetToTargetHandle.set(removedEdge.target, removedEdge.targetHandle);
+  });
+
+  return nodes.map((node) => {
+    if (targetToTargetHandle.has(node.id)) {
+      const targetHandle = targetToTargetHandle.get(node.id);
+      if (targetHandle === undefined) {
+        throw new Error(`Should find the target handle of node ${node.id}`);
+      }
+
+      const data = node.data as NodeData;
+      const inputItem = data.inputItems.find(
+        (inputItem) => inputItem.id === targetHandle,
+      );
+      if (inputItem === undefined) {
+        throw new Error(`Should find input port ${targetHandle}`);
+      }
+      inputItem.showInputField = true;
+      // Set the new data to notify React Flow about the change
+      const newData: NodeData = {
+        ...node.data,
+        inputItems: data.inputItems,
+      };
+      node.data = newData;
+    }
+
+    return node;
+  });
+};
+
+const findRemovedEdges = (changes: EdgeChange[], edges: Edge[]): Edge[] => {
+  const removedEdgeIds = new Set<string>();
+  changes.forEach((change) => {
+    switch (change.type) {
+      case "remove": {
+        removedEdgeIds.add(change.id);
+        break;
+      }
+    }
+  });
+
+  const removedEdges: Edge[] = [];
+  edges.forEach((edge) => {
+    if (removedEdgeIds.has(edge.id)) {
+      removedEdges.push(edge);
+    }
+  });
+  return removedEdges;
 };
 
 const updateLastSelectedNodeId = (nodes: Node[]): string | null => {
@@ -202,8 +295,11 @@ const randomInteger = (min: number, max: number): number => {
 
 export {
   addReactFlowNode,
-  getNewReactFlowNodePosition,
-  updateLastSelectedNodeId,
-  selectReactFlowNode,
   deselectLastSelectedNode,
+  findRemovedEdges,
+  getNewReactFlowNodePosition,
+  hideInputField,
+  selectReactFlowNode,
+  showInputFields,
+  updateLastSelectedNodeId,
 };

@@ -36,8 +36,11 @@ import type FeatureOperation from "../features/FeatureOperation";
 import {
   addReactFlowNode,
   deselectLastSelectedNode,
+  findRemovedEdges,
   getNewReactFlowNodePosition,
+  hideInputField,
   selectReactFlowNode,
+  showInputFields,
   updateLastSelectedNodeId,
 } from "../features/ReactFlowController";
 import type SelectedFeature from "../features/SelectedFeature";
@@ -93,11 +96,16 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
 
   const handleInputChange = useCallback(
     (nodeId: string, inputPortId: string, value: string): void => {
+      if (coreGraph === null) {
+        return;
+      }
+
+      // TODO(sc420): Update core graph
       console.log(
         `nodeId:${nodeId}, inputPortId:${inputPortId}, value:${value}`,
       );
     },
-    [],
+    [coreGraph],
   );
 
   const handleBodyClick = useCallback((nodeId: string): void => {
@@ -177,43 +185,31 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
         return;
       }
 
-      const removedEdgeIds = new Set<string>();
-      changes.forEach((change) => {
-        switch (change.type) {
-          case "remove": {
-            removedEdgeIds.add(change.id);
-            break;
-          }
+      const removedEdges = findRemovedEdges(changes, reactFlowEdges);
+
+      removedEdges.forEach((edge) => {
+        if (
+          edge.source === null ||
+          edge.target === null ||
+          edge.targetHandle === null ||
+          edge.targetHandle === undefined
+        ) {
+          return;
         }
+
+        disconnectCoreEdge(
+          coreGraph,
+          edge.source,
+          edge.target,
+          edge.targetHandle,
+        );
       });
 
-      setReactFlowEdges((edges) => {
-        edges.forEach((edge) => {
-          if (removedEdgeIds.has(edge.id)) {
-            if (
-              edge.source === null ||
-              edge.target === null ||
-              edge.targetHandle === null ||
-              edge.targetHandle === undefined
-            ) {
-              throw new Error(
-                `Edge ${edge.id} should have source, target and targetHandle`,
-              );
-            }
+      setReactFlowNodes((nodes) => showInputFields(removedEdges, nodes));
 
-            disconnectCoreEdge(
-              coreGraph,
-              edge.source,
-              edge.target,
-              edge.targetHandle,
-            );
-          }
-        });
-
-        return applyEdgeChanges(changes, edges);
-      });
+      setReactFlowEdges((edges) => applyEdgeChanges(changes, edges));
     },
-    [coreGraph],
+    [coreGraph, reactFlowEdges],
   );
 
   const handleSelectionChange = useCallback(
@@ -243,6 +239,8 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
         connection.target,
         connection.targetHandle,
       );
+
+      setReactFlowNodes((nodes) => hideInputField(connection, nodes));
 
       setReactFlowEdges((edges) => addEdge(connection, edges));
     },

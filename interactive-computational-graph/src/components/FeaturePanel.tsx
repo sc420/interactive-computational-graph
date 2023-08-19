@@ -1,20 +1,20 @@
 import { Box } from "@mui/material";
 import { type FunctionComponent, type ReactElement } from "react";
-import type Operation from "../features/FeatureOperation";
+import type FeatureOperation from "../features/FeatureOperation";
 import type SelectedFeature from "../features/SelectedFeature";
 import AddNodesPanel from "./AddNodesPanel";
 import EditNodesPanel from "./EditNodesPanel";
 
 interface FeaturePanelProps {
   feature: SelectedFeature;
-  operations: Operation[];
+  featureOperations: FeatureOperation[];
   onAddNode: (nodeType: string) => void;
   onAddOperation: () => void;
 }
 
 const FeaturePanel: FunctionComponent<FeaturePanelProps> = ({
   feature,
-  operations,
+  featureOperations,
   onAddNode,
   onAddOperation,
 }) => {
@@ -23,7 +23,7 @@ const FeaturePanel: FunctionComponent<FeaturePanelProps> = ({
       case "dashboard":
         return (
           <AddNodesPanel
-            operations={operations}
+            featureOperations={featureOperations}
             onAddNode={onAddNode}
             onAddOperation={onAddOperation}
           />
@@ -33,7 +33,7 @@ const FeaturePanel: FunctionComponent<FeaturePanelProps> = ({
       case "customers":
         return (
           <AddNodesPanel
-            operations={operations}
+            featureOperations={featureOperations}
             onAddNode={onAddNode}
             onAddOperation={onAddOperation}
           />

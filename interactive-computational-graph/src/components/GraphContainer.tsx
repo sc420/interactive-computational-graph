@@ -128,7 +128,7 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
           <Grid item borderRight={1} borderColor="divider">
             <FeaturePanel
               feature={selectedFeature}
-              operations={featureOperations}
+              featureOperations={featureOperations}
               onAddNode={handleAddNode}
               onAddOperation={handleAddOperation}
             />

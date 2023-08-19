@@ -12,25 +12,25 @@ import {
   Typography,
 } from "@mui/material";
 import { type FunctionComponent } from "react";
+import type FeatureOperation from "../features/FeatureOperation";
 import { constantType, variableType } from "../features/KnownNodeTypes";
-import type Operation from "../features/FeatureOperation";
 import DraggableItem from "./DraggableItem";
 
 interface AddNodesPanelProps {
   onAddNode: (nodeType: string) => void;
   onAddOperation: () => void;
-  operations: Operation[];
+  featureOperations: FeatureOperation[];
 }
 
 const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
   onAddNode,
   onAddOperation,
-  operations,
+  featureOperations,
 }) => {
-  const simpleOperations = operations.filter(
+  const simpleOperations = featureOperations.filter(
     (operation) => operation.type === "SIMPLE",
   );
-  const customOperations = operations.filter(
+  const customOperations = featureOperations.filter(
     (operation) => operation.type === "CUSTOM",
   );
 

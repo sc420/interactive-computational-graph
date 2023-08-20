@@ -72,6 +72,31 @@ const getNewReactFlowNodePosition = (
   }
 };
 
+const updateReactFlowNodeInputValue = (
+  nodeId: string,
+  inputPortId: string,
+  value: string,
+  nodes: Node[],
+): Node[] => {
+  return nodes.map((node) => {
+    if (node.id === nodeId) {
+      const data = node.data as NodeData;
+      const inputItem = data.inputItems.find(
+        (inputItem) => inputItem.id === inputPortId,
+      );
+      if (inputItem === undefined) {
+        throw new Error(`Should find input port ${inputPortId}`);
+      }
+      inputItem.value = value;
+      // Set the new data to notify React Flow about the change
+      const newData: NodeData = { ...node.data };
+      node.data = newData;
+    }
+
+    return node;
+  });
+};
+
 const hideInputField = (connection: Connection, nodes: Node[]): Node[] => {
   const targetHandle = connection.targetHandle;
   if (targetHandle === null) {
@@ -343,4 +368,5 @@ export {
   showInputFields,
   updateLastSelectedNodeId,
   updateReactFlowNodeFValues,
+  updateReactFlowNodeInputValue,
 };

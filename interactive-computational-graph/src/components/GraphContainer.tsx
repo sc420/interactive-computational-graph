@@ -51,6 +51,7 @@ import {
   showInputFields,
   updateLastSelectedNodeId,
   updateReactFlowNodeFValues,
+  updateReactFlowNodeInputValue,
 } from "../features/ReactFlowController";
 import type SelectedFeature from "../features/SelectedFeature";
 import ReactFlowGraph from "../reactflow/ReactFlowGraph";
@@ -124,6 +125,10 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
       }
 
       updateNodeValueById(coreGraph, nodeId, inputPortId, value);
+
+      setReactFlowNodes((nodes) =>
+        updateReactFlowNodeInputValue(nodeId, inputPortId, value, nodes),
+      );
 
       updateNodeValuesAndDerivatives();
     },

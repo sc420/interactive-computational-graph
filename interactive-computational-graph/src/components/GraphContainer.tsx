@@ -27,11 +27,14 @@ import {
   TEMPLATE_F_CODE,
 } from "../features/BuiltInCode";
 import {
-  addCoreNode,
+  addCoreNodes,
   connectCoreEdge,
+  connectDummyInputNode,
   disconnectCoreEdge,
+  disconnectDummyInputNode,
+  isDummyInputNodeConnected,
   isNodeInputPortEmpty,
-  removeCoreNode,
+  removeCoreNodes,
   updateNodeFValues,
   updateNodeValueById,
 } from "../features/CoreGraphController";
@@ -42,6 +45,7 @@ import {
   deselectLastSelectedNode,
   findRemovedEdges,
   getNewReactFlowNodePosition,
+  getNonEmptyConnectionsFromEdges,
   hideInputField,
   selectReactFlowNode,
   showInputFields,
@@ -109,6 +113,8 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
     setReactFlowNodes((nodes) =>
       updateReactFlowNodeFValues(updatedNodeIdToValues, nodes),
     );
+
+    // TODO(sc420): Update derivatives
   }, [coreGraph]);
 
   const handleInputChange = useCallback(
@@ -136,7 +142,7 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
 
       const id = `${nextNodeId}`;
 
-      addCoreNode(coreGraph, featureNodeType, id, featureOperations);
+      addCoreNodes(coreGraph, featureNodeType, id, featureOperations);
 
       setReactFlowNodes((nodes) => {
         const position = getNewReactFlowNodePosition(nodes, lastSelectedNodeId);
@@ -191,7 +197,7 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
       changes.forEach((change) => {
         switch (change.type) {
           case "remove": {
-            removeCoreNode(change.id, coreGraph);
+            removeCoreNodes(coreGraph, change.id);
             break;
           }
         }
@@ -210,18 +216,11 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
         return;
       }
 
-      const removedEdges = findRemovedEdges(changes, reactFlowEdges);
+      const removedConnections = getNonEmptyConnectionsFromEdges(
+        findRemovedEdges(changes, reactFlowEdges),
+      );
 
-      removedEdges.forEach((edge) => {
-        if (
-          edge.source === null ||
-          edge.target === null ||
-          edge.targetHandle === null ||
-          edge.targetHandle === undefined
-        ) {
-          return;
-        }
-
+      removedConnections.forEach((edge) => {
         disconnectCoreEdge(
           coreGraph,
           edge.source,
@@ -230,26 +229,27 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
         );
       });
 
-      const removedEdgesWithEmptyTargetInputPort = removedEdges.filter(
-        (edge) => {
-          if (
-            edge.target === null ||
-            edge.targetHandle === null ||
-            edge.targetHandle === undefined
-          ) {
-            return false;
-          }
-
+      const removedConnectionsWithEmptyTargetInputPort =
+        removedConnections.filter((edge) => {
           return isNodeInputPortEmpty(
             coreGraph,
             edge.target,
             edge.targetHandle,
           );
+        });
+
+      removedConnectionsWithEmptyTargetInputPort.forEach(
+        (removedConnection) => {
+          connectDummyInputNode(
+            coreGraph,
+            removedConnection.target,
+            removedConnection.targetHandle,
+          );
         },
       );
 
       setReactFlowNodes((nodes) =>
-        showInputFields(removedEdgesWithEmptyTargetInputPort, nodes),
+        showInputFields(removedConnectionsWithEmptyTargetInputPort, nodes),
       );
 
       updateNodeValuesAndDerivatives();
@@ -287,7 +287,21 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
         connection.targetHandle,
       );
 
-      setReactFlowNodes((nodes) => hideInputField(connection, nodes));
+      if (
+        isDummyInputNodeConnected(
+          coreGraph,
+          connection.target,
+          connection.targetHandle,
+        )
+      ) {
+        disconnectDummyInputNode(
+          coreGraph,
+          connection.target,
+          connection.targetHandle,
+        );
+
+        setReactFlowNodes((nodes) => hideInputField(connection, nodes));
+      }
 
       updateNodeValuesAndDerivatives();
 
@@ -304,7 +318,7 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
 
       const id = `${nextNodeId}`;
 
-      addCoreNode(coreGraph, featureNodeType, id, featureOperations);
+      addCoreNodes(coreGraph, featureNodeType, id, featureOperations);
 
       setReactFlowNodes((nodes) => {
         nodes = deselectLastSelectedNode(nodes, lastSelectedNodeId);

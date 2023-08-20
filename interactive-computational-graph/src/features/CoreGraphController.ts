@@ -7,19 +7,23 @@ import { findFeatureOperation } from "./ControllerUtilities";
 import type FeatureNodeType from "./FeatureNodeType";
 import type FeatureOperation from "./FeatureOperation";
 
-const addCoreNode = (
+const addCoreNodes = (
   graph: Graph,
   featureNodeType: FeatureNodeType,
-  id: string,
+  nodeId: string,
   featureOperations: FeatureOperation[],
 ): void => {
-  const coreNode = buildCoreNode(featureNodeType, id, featureOperations);
+  const coreNode = buildCoreNode(featureNodeType, nodeId, featureOperations);
   graph.addNode(coreNode);
+
+  addDummyInputNodes(graph, coreNode);
 };
 
-const removeCoreNode = (id: string, graph: Graph): Graph => {
-  graph.removeNode(id);
-  return graph;
+const removeCoreNodes = (graph: Graph, nodeId: string): void => {
+  const coreNode = graph.getOneNode(nodeId);
+  removeDummyInputNodes(graph, coreNode);
+
+  graph.removeNode(nodeId);
 };
 
 const connectCoreEdge = (
@@ -38,6 +42,34 @@ const disconnectCoreEdge = (
   node2PortId: string,
 ): void => {
   graph.disconnect(node1Id, node2Id, node2PortId);
+};
+
+const connectDummyInputNode = (
+  graph: Graph,
+  nodeId: string,
+  portId: string,
+): void => {
+  const dummyInputNodeId = getDummyInputNodeId(nodeId, portId);
+  graph.connect(dummyInputNodeId, nodeId, portId);
+};
+
+const disconnectDummyInputNode = (
+  graph: Graph,
+  nodeId: string,
+  portId: string,
+): void => {
+  const dummyInputNodeId = getDummyInputNodeId(nodeId, portId);
+  graph.disconnect(dummyInputNodeId, nodeId, portId);
+};
+
+const isDummyInputNodeConnected = (
+  graph: Graph,
+  nodeId: string,
+  portId: string,
+): boolean => {
+  const node = graph.getOneNode(nodeId);
+  const dummyInputNodeId = getDummyInputNodeId(nodeId, portId);
+  return node.getRelationship().hasInputNodeByPort(portId, dummyInputNodeId);
 };
 
 const isNodeInputPortEmpty = (
@@ -66,7 +98,9 @@ const updateNodeValueById = (
       break;
     }
     case "OPERATION": {
-      // TODO(sc420): Update the dummy constant nodes of the operation node
+      const dummyInputNodeId = getDummyInputNodeId(nodeId, inputPortId);
+      graph.setNodeValue(dummyInputNodeId, Number(value));
+      break;
     }
   }
 };
@@ -83,15 +117,15 @@ const updateNodeFValues = (graph: Graph): Map<string, string> => {
 
 const buildCoreNode = (
   featureNodeType: FeatureNodeType,
-  id: string,
+  nodeId: string,
   featureOperations: FeatureOperation[],
 ): CoreNode => {
   switch (featureNodeType.nodeType) {
     case "CONSTANT": {
-      return new ConstantNode(id);
+      return new ConstantNode(nodeId);
     }
     case "VARIABLE": {
-      return new VariableNode(id);
+      return new VariableNode(nodeId);
     }
     case "OPERATION": {
       const featureOperation = findFeatureOperation(
@@ -99,7 +133,7 @@ const buildCoreNode = (
         featureOperations,
       );
       return new OperationNode(
-        id,
+        nodeId,
         featureOperation.inputPorts,
         featureOperation.operation,
       );
@@ -107,12 +141,37 @@ const buildCoreNode = (
   }
 };
 
+const addDummyInputNodes = (graph: Graph, node: CoreNode): void => {
+  node.getRelationship().inputPorts.forEach((inputPort) => {
+    const portId = inputPort.getId();
+    const dummyInputNodeId = getDummyInputNodeId(node.getId(), portId);
+    const dummyInputNode = new ConstantNode(dummyInputNodeId);
+    graph.addNode(dummyInputNode);
+    graph.connect(dummyInputNodeId, node.getId(), portId);
+  });
+};
+
+const removeDummyInputNodes = (graph: Graph, node: CoreNode): void => {
+  node.getRelationship().inputPorts.forEach((inputPort) => {
+    const portId = inputPort.getId();
+    const dummyNodeId = getDummyInputNodeId(node.getId(), portId);
+    graph.removeNode(dummyNodeId);
+  });
+};
+
+const getDummyInputNodeId = (nodeId: string, portId: string): string => {
+  return `dummy-input-node-${nodeId}-${portId}`;
+};
+
 export {
-  addCoreNode,
+  addCoreNodes,
   connectCoreEdge,
+  connectDummyInputNode,
   disconnectCoreEdge,
+  disconnectDummyInputNode,
+  isDummyInputNodeConnected,
   isNodeInputPortEmpty,
-  removeCoreNode,
+  removeCoreNodes,
   updateNodeFValues,
   updateNodeValueById,
 };

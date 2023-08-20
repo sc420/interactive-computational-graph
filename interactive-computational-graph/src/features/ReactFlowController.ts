@@ -9,6 +9,7 @@ import { findFeatureOperation } from "./ControllerUtilities";
 import type FeatureNodeType from "./FeatureNodeType";
 import type FeatureOperation from "./FeatureOperation";
 import type NodeData from "./NodeData";
+import type NonEmptyConnection from "./NonEmptyConnection";
 
 type InputChangeCallback = (
   nodeId: string,
@@ -96,15 +97,12 @@ const hideInputField = (connection: Connection, nodes: Node[]): Node[] => {
   });
 };
 
-const showInputFields = (removedEdges: Edge[], nodes: Node[]): Node[] => {
+const showInputFields = (
+  removedConnections: NonEmptyConnection[],
+  nodes: Node[],
+): Node[] => {
   const targetToTargetHandle = new Map<string, string>();
-  removedEdges.forEach((removedEdge) => {
-    if (
-      removedEdge.targetHandle === null ||
-      removedEdge.targetHandle === undefined
-    ) {
-      return;
-    }
+  removedConnections.forEach((removedEdge) => {
     targetToTargetHandle.set(removedEdge.target, removedEdge.targetHandle);
   });
 
@@ -208,6 +206,27 @@ const deselectLastSelectedNode = (
     node.selected = false;
   }
   return nodes;
+};
+
+const getNonEmptyConnectionsFromEdges = (
+  edges: Edge[],
+): NonEmptyConnection[] => {
+  return edges
+    .filter(
+      (edge) => edge.targetHandle !== null && edge.targetHandle !== undefined,
+    )
+    .map((edge) => {
+      if (edge.targetHandle === null || edge.targetHandle === undefined) {
+        throw new Error("Should filter out null or undefined targetHandle");
+      }
+
+      const nonEmptyConnection: NonEmptyConnection = {
+        source: edge.source,
+        target: edge.target,
+        targetHandle: edge.targetHandle,
+      };
+      return nonEmptyConnection;
+    });
 };
 
 const buildReactFlowNodeData = (
@@ -318,6 +337,7 @@ export {
   deselectLastSelectedNode,
   findRemovedEdges,
   getNewReactFlowNodePosition,
+  getNonEmptyConnectionsFromEdges,
   hideInputField,
   selectReactFlowNode,
   showInputFields,

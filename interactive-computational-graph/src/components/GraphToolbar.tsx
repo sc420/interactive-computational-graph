@@ -11,17 +11,29 @@ import {
   useCallback,
   type FunctionComponent,
   type SyntheticEvent,
+  type ChangeEvent,
 } from "react";
 
 interface GraphToolbarProps {
+  isReverseMode: boolean;
   nodeIds: string[];
+  onReverseModeChange: (isReversedMode: boolean) => void;
   onDerivativeTargetChange: (nodeId: string | null) => void;
 }
 
 const GraphToolbar: FunctionComponent<GraphToolbarProps> = ({
+  isReverseMode,
   nodeIds,
+  onReverseModeChange,
   onDerivativeTargetChange,
 }) => {
+  const handleReverseModeChange = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      onReverseModeChange(event.target.checked);
+    },
+    [onReverseModeChange],
+  );
+
   const handleDerivativeTargetChange = useCallback(
     (event: SyntheticEvent, newValue: string | null) => {
       onDerivativeTargetChange(newValue);
@@ -42,10 +54,16 @@ const GraphToolbar: FunctionComponent<GraphToolbarProps> = ({
         <Typography fontWeight="500">Graph</Typography>
       </Box>
 
-      <Box display="flex" alignItems="center">
+      <Box display="flex" justifyContent="space-between" alignItems="center">
         <FormGroup>
           <FormControlLabel
-            control={<Switch defaultChecked size="small" />}
+            control={
+              <Switch
+                checked={isReverseMode}
+                onChange={handleReverseModeChange}
+                size="small"
+              />
+            }
             label={
               <Typography variant="body2">
                 Reverse-Mode Differentiation

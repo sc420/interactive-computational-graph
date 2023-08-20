@@ -7,6 +7,10 @@ import { findFeatureOperation } from "./ControllerUtilities";
 import type FeatureNodeType from "./FeatureNodeType";
 import type FeatureOperation from "./FeatureOperation";
 
+const setDifferentiationMode = (graph: Graph, isReverseMode: boolean): void => {
+  graph.setDifferentiationMode(isReverseMode ? "REVERSE" : "FORWARD");
+};
+
 const setDerivativeTargetNode = (
   graph: Graph,
   targetNodeId: string | null,
@@ -202,6 +206,7 @@ export {
   isNodeInputPortEmpty,
   removeCoreNodes,
   setDerivativeTargetNode,
+  setDifferentiationMode,
   updateNodeDerivativeValues,
   updateNodeFValues,
   updateNodeValueById,

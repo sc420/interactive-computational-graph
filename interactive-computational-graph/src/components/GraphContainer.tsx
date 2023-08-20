@@ -37,6 +37,7 @@ import {
   isNodeInputPortEmpty,
   removeCoreNodes,
   setDerivativeTargetNode,
+  setDifferentiationMode,
   updateNodeDerivativeValues,
   updateNodeFValues,
   updateNodeValueById,
@@ -69,8 +70,11 @@ interface GraphContainerProps {
 const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
   selectedFeature,
 }) => {
+  // Core graph
   const [coreGraph, setCoreGraph] = useState<Graph | null>(null);
 
+  // Feature states
+  const [isReverseMode, setReverseMode] = useState<boolean>(true);
   const [featureOperations, setFeatureOperations] = useState<
     FeatureOperation[]
   >([
@@ -102,6 +106,7 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
   const [nextNodeId, setNextNodeId] = useState<number>(1);
   const [nextOperationId, setNextOperationId] = useState<number>(1);
 
+  // React Flow states
   const [reactFlowNodes, setReactFlowNodes] = useState<Node[]>([]);
   const [reactFlowEdges, setReactFlowEdges] = useState<Edge[]>([]);
   const [lastSelectedNodeId, setLastSelectedNodeId] = useState<string | null>(
@@ -199,6 +204,21 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
     );
     setNextOperationId((nextOperationId) => nextOperationId + 1);
   }, [nextOperationId]);
+
+  const handleReverseModeChange = useCallback(
+    (isReverseMode: boolean) => {
+      if (coreGraph === null) {
+        return;
+      }
+
+      setReverseMode(isReverseMode);
+
+      setDifferentiationMode(coreGraph, isReverseMode);
+
+      updateNodeValuesAndDerivatives();
+    },
+    [coreGraph, updateNodeValuesAndDerivatives],
+  );
 
   const handleDerivativeTargetChange = useCallback(
     (nodeId: string | null) => {
@@ -400,7 +420,9 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
             {/* Graph toolbar */}
             <Grid item>
               <GraphToolbar
+                isReverseMode={isReverseMode}
                 nodeIds={coreGraph === null ? [] : getNodeIds(coreGraph)}
+                onReverseModeChange={handleReverseModeChange}
                 onDerivativeTargetChange={handleDerivativeTargetChange}
               />
             </Grid>

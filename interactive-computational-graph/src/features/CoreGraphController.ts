@@ -40,6 +40,15 @@ const disconnectCoreEdge = (
   graph.disconnect(node1Id, node2Id, node2PortId);
 };
 
+const isNodeInputPortEmpty = (
+  graph: Graph,
+  nodeId: string,
+  portId: string,
+): boolean => {
+  const node = graph.getOneNode(nodeId);
+  return node.getRelationship().isInputPortEmpty(portId);
+};
+
 const updateNodeValueById = (
   graph: Graph,
   nodeId: string,
@@ -102,7 +111,8 @@ export {
   addCoreNode,
   connectCoreEdge,
   disconnectCoreEdge,
+  isNodeInputPortEmpty,
   removeCoreNode,
-  updateNodeValueById,
   updateNodeFValues,
+  updateNodeValueById,
 };

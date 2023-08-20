@@ -30,6 +30,7 @@ import {
   addCoreNode,
   connectCoreEdge,
   disconnectCoreEdge,
+  isNodeInputPortEmpty,
   removeCoreNode,
   updateNodeFValues,
   updateNodeValueById,
@@ -229,7 +230,27 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
         );
       });
 
-      setReactFlowNodes((nodes) => showInputFields(removedEdges, nodes));
+      const removedEdgesWithEmptyTargetInputPort = removedEdges.filter(
+        (edge) => {
+          if (
+            edge.target === null ||
+            edge.targetHandle === null ||
+            edge.targetHandle === undefined
+          ) {
+            return false;
+          }
+
+          return isNodeInputPortEmpty(
+            coreGraph,
+            edge.target,
+            edge.targetHandle,
+          );
+        },
+      );
+
+      setReactFlowNodes((nodes) =>
+        showInputFields(removedEdgesWithEmptyTargetInputPort, nodes),
+      );
 
       updateNodeValuesAndDerivatives();
 

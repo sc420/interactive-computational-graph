@@ -36,7 +36,7 @@ import {
   isDummyInputNodeConnected,
   isNodeInputPortEmpty,
   removeCoreNodes,
-  setDerivativeTargetNode,
+  setCoreDerivativeTargetNode,
   setDifferentiationMode,
   updateNodeDerivativeValues,
   updateNodeFValues,
@@ -75,6 +75,7 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
 
   // Feature states
   const [isReverseMode, setReverseMode] = useState<boolean>(true);
+  const [derivativeTarget, setDerivativeTarget] = useState<string | null>(null);
   const [featureOperations, setFeatureOperations] = useState<
     FeatureOperation[]
   >([
@@ -126,9 +127,14 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
     );
 
     setReactFlowNodes((nodes) =>
-      updateReactFlowNodeDerivatives(updatedNodeIdToDerivatives, nodes),
+      updateReactFlowNodeDerivatives(
+        updatedNodeIdToDerivatives,
+        isReverseMode,
+        derivativeTarget,
+        nodes,
+      ),
     );
-  }, [coreGraph]);
+  }, [coreGraph, derivativeTarget, isReverseMode]);
 
   const handleInputChange = useCallback(
     (nodeId: string, inputPortId: string, value: string): void => {
@@ -168,6 +174,8 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
           featureNodeType,
           id,
           featureOperations,
+          isReverseMode,
+          derivativeTarget,
           handleInputChange,
           handleBodyClick,
           position,
@@ -179,9 +187,11 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
     },
     [
       coreGraph,
+      derivativeTarget,
       featureOperations,
       handleBodyClick,
       handleInputChange,
+      isReverseMode,
       lastSelectedNodeId,
       nextNodeId,
     ],
@@ -211,13 +221,11 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
         return;
       }
 
-      setReverseMode(isReverseMode);
+      setReverseMode(() => isReverseMode);
 
       setDifferentiationMode(coreGraph, isReverseMode);
-
-      updateNodeValuesAndDerivatives();
     },
-    [coreGraph, updateNodeValuesAndDerivatives],
+    [coreGraph],
   );
 
   const handleDerivativeTargetChange = useCallback(
@@ -226,11 +234,11 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
         return;
       }
 
-      setDerivativeTargetNode(coreGraph, nodeId);
+      setDerivativeTarget(() => nodeId);
 
-      updateNodeValuesAndDerivatives();
+      setCoreDerivativeTargetNode(coreGraph, nodeId);
     },
-    [coreGraph, updateNodeValuesAndDerivatives],
+    [coreGraph],
   );
 
   const handleNodesChange: OnNodesChange = useCallback(
@@ -371,6 +379,8 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
           featureNodeType,
           id,
           featureOperations,
+          isReverseMode,
+          derivativeTarget,
           handleInputChange,
           handleBodyClick,
           position,
@@ -382,9 +392,11 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
     },
     [
       coreGraph,
+      derivativeTarget,
       featureOperations,
       handleBodyClick,
       handleInputChange,
+      isReverseMode,
       lastSelectedNodeId,
       nextNodeId,
     ],
@@ -394,6 +406,17 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
     const coreGraph = new Graph();
     setCoreGraph(coreGraph);
   }, []);
+
+  // Update node values and derivatives whenever derivative target or reverse
+  // mode changes
+  useEffect(() => {
+    updateNodeValuesAndDerivatives();
+  }, [
+    coreGraph,
+    derivativeTarget,
+    isReverseMode,
+    updateNodeValuesAndDerivatives,
+  ]);
 
   return (
     <React.Fragment>

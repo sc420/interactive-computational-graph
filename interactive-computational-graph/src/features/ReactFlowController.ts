@@ -23,6 +23,8 @@ const addReactFlowNode = (
   featureNodeType: FeatureNodeType,
   nodeId: string,
   featureOperations: FeatureOperation[],
+  isReverseMode: boolean,
+  derivativeTarget: string | null,
   onInputChange: InputChangeCallback,
   onBodyClick: BodyClickCallback,
   position: XYPosition,
@@ -35,6 +37,8 @@ const addReactFlowNode = (
       featureNodeType,
       nodeId,
       featureOperations,
+      isReverseMode,
+      derivativeTarget,
       onInputChange,
       onBodyClick,
     ),
@@ -204,6 +208,8 @@ const updateReactFlowNodeFValues = (
 
 const updateReactFlowNodeDerivatives = (
   updatedNodeIdToDerivatives: Map<string, string>,
+  isReverseMode: boolean,
+  derivativeTarget: string | null,
   nodes: Node[],
 ): Node[] => {
   return nodes.map((node) => {
@@ -218,6 +224,12 @@ const updateReactFlowNodeDerivatives = (
         (outputItem) => outputItem.type === "DERIVATIVE",
       );
       if (outputItem !== undefined) {
+        const derivativeText = buildDerivativeText(
+          node.id,
+          isReverseMode,
+          derivativeTarget,
+        );
+        outputItem.text = `${derivativeText} =`;
         outputItem.value = value;
         // Set the new data to notify React Flow about the change
         const newData: NodeData = { ...node.data };
@@ -285,6 +297,8 @@ const buildReactFlowNodeData = (
   featureNodeType: FeatureNodeType,
   nodeId: string,
   featureOperations: FeatureOperation[],
+  isReverseMode: boolean,
+  derivativeTarget: string | null,
   onInputChange: InputChangeCallback,
   onBodyClick: BodyClickCallback,
 ): NodeData => {
@@ -308,9 +322,13 @@ const buildReactFlowNodeData = (
       };
     }
     case "VARIABLE": {
-      const text = `v${nodeId}`;
+      const derivativeText = buildDerivativeText(
+        nodeId,
+        isReverseMode,
+        derivativeTarget,
+      );
       return {
-        text,
+        text: `v${nodeId}`,
         featureNodeType,
         inputItems: [
           {
@@ -324,7 +342,7 @@ const buildReactFlowNodeData = (
         outputItems: [
           {
             type: "DERIVATIVE",
-            text: `d(y)/d(${text}) =`,
+            text: `${derivativeText} =`,
             value: "0",
           },
         ],
@@ -338,9 +356,13 @@ const buildReactFlowNodeData = (
         featureOperations,
       );
 
-      const text = featureOperation.text;
+      const derivativeText = buildDerivativeText(
+        nodeId,
+        isReverseMode,
+        derivativeTarget,
+      );
       return {
-        text,
+        text: `${featureOperation.id}${nodeId}`,
         featureNodeType,
         inputItems: featureOperation.inputPorts.map((inputPort) => {
           return {
@@ -359,7 +381,7 @@ const buildReactFlowNodeData = (
           },
           {
             type: "DERIVATIVE",
-            text: `d(y)/d(${text}) =`,
+            text: `${derivativeText} =`,
             value: "0",
           },
         ],
@@ -367,6 +389,18 @@ const buildReactFlowNodeData = (
         onInputChange,
       };
     }
+  }
+};
+
+const buildDerivativeText = (
+  nodeId: string,
+  isReverseMode: boolean,
+  derivativeTarget: string | null,
+): string => {
+  if (isReverseMode) {
+    return `d(${derivativeTarget ?? "?"})/d(${nodeId})`;
+  } else {
+    return `d(${nodeId})/d(${derivativeTarget ?? "?"})`;
   }
 };
 

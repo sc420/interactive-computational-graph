@@ -11,7 +11,7 @@ const setDifferentiationMode = (graph: Graph, isReverseMode: boolean): void => {
   graph.setDifferentiationMode(isReverseMode ? "REVERSE" : "FORWARD");
 };
 
-const setDerivativeTargetNode = (
+const setCoreDerivativeTargetNode = (
   graph: Graph,
   targetNodeId: string | null,
 ): void => {
@@ -205,7 +205,7 @@ export {
   isDummyInputNodeConnected,
   isNodeInputPortEmpty,
   removeCoreNodes,
-  setDerivativeTargetNode,
+  setCoreDerivativeTargetNode,
   setDifferentiationMode,
   updateNodeDerivativeValues,
   updateNodeFValues,

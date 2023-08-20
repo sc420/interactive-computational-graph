@@ -98,6 +98,18 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
     null,
   );
 
+  const updateNodeValuesAndDerivatives = useCallback(() => {
+    if (coreGraph === null) {
+      return;
+    }
+
+    const updatedNodeIdToValues = updateNodeFValues(coreGraph);
+
+    setReactFlowNodes((nodes) =>
+      updateReactFlowNodeFValues(updatedNodeIdToValues, nodes),
+    );
+  }, [coreGraph]);
+
   const handleInputChange = useCallback(
     (nodeId: string, inputPortId: string, value: string): void => {
       if (coreGraph === null) {
@@ -106,13 +118,9 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
 
       updateNodeValueById(coreGraph, nodeId, inputPortId, value);
 
-      const updatedNodeIdToValues = updateNodeFValues(coreGraph);
-
-      setReactFlowNodes((nodes) =>
-        updateReactFlowNodeFValues(updatedNodeIdToValues, nodes),
-      );
+      updateNodeValuesAndDerivatives();
     },
-    [coreGraph],
+    [coreGraph, updateNodeValuesAndDerivatives],
   );
 
   const handleBodyClick = useCallback((nodeId: string): void => {
@@ -188,15 +196,11 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
         }
       });
 
-      const updatedNodeIdToValues = updateNodeFValues(coreGraph);
-
-      setReactFlowNodes((nodes) =>
-        updateReactFlowNodeFValues(updatedNodeIdToValues, nodes),
-      );
+      updateNodeValuesAndDerivatives();
 
       setReactFlowNodes((nodes) => applyNodeChanges(changes, nodes));
     },
-    [coreGraph],
+    [coreGraph, updateNodeValuesAndDerivatives],
   );
 
   const handleEdgesChange: OnEdgesChange = useCallback(
@@ -227,15 +231,11 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
 
       setReactFlowNodes((nodes) => showInputFields(removedEdges, nodes));
 
-      const updatedNodeIdToValues = updateNodeFValues(coreGraph);
-
-      setReactFlowNodes((nodes) =>
-        updateReactFlowNodeFValues(updatedNodeIdToValues, nodes),
-      );
+      updateNodeValuesAndDerivatives();
 
       setReactFlowEdges((edges) => applyEdgeChanges(changes, edges));
     },
-    [coreGraph, reactFlowEdges],
+    [coreGraph, reactFlowEdges, updateNodeValuesAndDerivatives],
   );
 
   const handleSelectionChange = useCallback(
@@ -268,15 +268,11 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
 
       setReactFlowNodes((nodes) => hideInputField(connection, nodes));
 
-      const updatedNodeIdToValues = updateNodeFValues(coreGraph);
-
-      setReactFlowNodes((nodes) =>
-        updateReactFlowNodeFValues(updatedNodeIdToValues, nodes),
-      );
+      updateNodeValuesAndDerivatives();
 
       setReactFlowEdges((edges) => addEdge(connection, edges));
     },
-    [coreGraph],
+    [coreGraph, updateNodeValuesAndDerivatives],
   );
 
   const handleDropNode = useCallback(

@@ -32,9 +32,12 @@ import {
   connectDummyInputNode,
   disconnectCoreEdge,
   disconnectDummyInputNode,
+  getNodeIds,
   isDummyInputNodeConnected,
   isNodeInputPortEmpty,
   removeCoreNodes,
+  setDerivativeTargetNode,
+  updateNodeDerivativeValues,
   updateNodeFValues,
   updateNodeValueById,
 } from "../features/CoreGraphController";
@@ -50,6 +53,7 @@ import {
   selectReactFlowNode,
   showInputFields,
   updateLastSelectedNodeId,
+  updateReactFlowNodeDerivatives,
   updateReactFlowNodeFValues,
   updateReactFlowNodeInputValue,
 } from "../features/ReactFlowController";
@@ -110,12 +114,15 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
     }
 
     const updatedNodeIdToValues = updateNodeFValues(coreGraph);
+    const updatedNodeIdToDerivatives = updateNodeDerivativeValues(coreGraph);
 
     setReactFlowNodes((nodes) =>
       updateReactFlowNodeFValues(updatedNodeIdToValues, nodes),
     );
 
-    // TODO(sc420): Update derivatives
+    setReactFlowNodes((nodes) =>
+      updateReactFlowNodeDerivatives(updatedNodeIdToDerivatives, nodes),
+    );
   }, [coreGraph]);
 
   const handleInputChange = useCallback(
@@ -192,6 +199,19 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
     );
     setNextOperationId((nextOperationId) => nextOperationId + 1);
   }, [nextOperationId]);
+
+  const handleDerivativeTargetChange = useCallback(
+    (nodeId: string | null) => {
+      if (coreGraph === null) {
+        return;
+      }
+
+      setDerivativeTargetNode(coreGraph, nodeId);
+
+      updateNodeValuesAndDerivatives();
+    },
+    [coreGraph, updateNodeValuesAndDerivatives],
+  );
 
   const handleNodesChange: OnNodesChange = useCallback(
     (changes) => {
@@ -379,7 +399,10 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
           <Grid container direction="column" flexGrow={1}>
             {/* Graph toolbar */}
             <Grid item>
-              <GraphToolbar />
+              <GraphToolbar
+                nodeIds={coreGraph === null ? [] : getNodeIds(coreGraph)}
+                onDerivativeTargetChange={handleDerivativeTargetChange}
+              />
             </Grid>
             {/* Graph */}
             <Grid item display="flex" flexGrow={1}>

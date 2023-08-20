@@ -12,6 +12,23 @@ const App: React.FunctionComponent = () => {
     useState<SelectedFeature | null>("dashboard");
 
   const theme = createTheme({
+    components: {
+      MuiAutocomplete: {
+        styleOverrides: {
+          root: {
+            "& label": {
+              fontSize: 14,
+            },
+          },
+          input: {
+            fontSize: 14,
+          },
+          listbox: {
+            fontSize: 14,
+          },
+        },
+      },
+    },
     palette: {
       mode: "light", // TODO(sc420): Add button to switch dark/light
     },

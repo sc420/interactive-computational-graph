@@ -7,6 +7,13 @@ import { findFeatureOperation } from "./ControllerUtilities";
 import type FeatureNodeType from "./FeatureNodeType";
 import type FeatureOperation from "./FeatureOperation";
 
+const setDerivativeTargetNode = (
+  graph: Graph,
+  targetNodeId: string | null,
+): void => {
+  graph.setTargetNode(targetNodeId);
+};
+
 const addCoreNodes = (
   graph: Graph,
   featureNodeType: FeatureNodeType,
@@ -115,6 +122,23 @@ const updateNodeFValues = (graph: Graph): Map<string, string> => {
   return updatedNodeIdToValues;
 };
 
+const updateNodeDerivativeValues = (graph: Graph): Map<string, string> => {
+  graph.updateDerivatives();
+  const updatedNodeIdToDerivatives = new Map<string, string>();
+  graph.getNodes().forEach((node) => {
+    const value = graph.getNodeDerivative(node.getId());
+    updatedNodeIdToDerivatives.set(node.getId(), `${value}`);
+  });
+  return updatedNodeIdToDerivatives;
+};
+
+const getNodeIds = (graph: Graph): string[] => {
+  return graph
+    .getNodes()
+    .map((node) => node.getId())
+    .filter((nodeId) => !isDummyInputNodeId(nodeId));
+};
+
 const buildCoreNode = (
   featureNodeType: FeatureNodeType,
   nodeId: string,
@@ -163,15 +187,22 @@ const getDummyInputNodeId = (nodeId: string, portId: string): string => {
   return `dummy-input-node-${nodeId}-${portId}`;
 };
 
+const isDummyInputNodeId = (nodeId: string): boolean => {
+  return nodeId.startsWith("dummy-input-node-");
+};
+
 export {
   addCoreNodes,
   connectCoreEdge,
   connectDummyInputNode,
   disconnectCoreEdge,
   disconnectDummyInputNode,
+  getNodeIds,
   isDummyInputNodeConnected,
   isNodeInputPortEmpty,
   removeCoreNodes,
+  setDerivativeTargetNode,
+  updateNodeDerivativeValues,
   updateNodeFValues,
   updateNodeValueById,
 };

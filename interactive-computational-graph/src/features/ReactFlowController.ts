@@ -202,6 +202,33 @@ const updateReactFlowNodeFValues = (
   });
 };
 
+const updateReactFlowNodeDerivatives = (
+  updatedNodeIdToDerivatives: Map<string, string>,
+  nodes: Node[],
+): Node[] => {
+  return nodes.map((node) => {
+    if (updatedNodeIdToDerivatives.has(node.id)) {
+      const value = updatedNodeIdToDerivatives.get(node.id);
+      if (value === undefined) {
+        throw new Error(`Should find the value of node ${node.id}`);
+      }
+
+      const data = node.data as NodeData;
+      const outputItem = data.outputItems.find(
+        (outputItem) => outputItem.type === "DERIVATIVE",
+      );
+      if (outputItem !== undefined) {
+        outputItem.value = value;
+        // Set the new data to notify React Flow about the change
+        const newData: NodeData = { ...node.data };
+        node.data = newData;
+      }
+    }
+
+    return node;
+  });
+};
+
 const updateLastSelectedNodeId = (nodes: Node[]): string | null => {
   const firstNode = nodes.find((node) => "id" in node) ?? null;
   if (firstNode === null) {
@@ -298,7 +325,7 @@ const buildReactFlowNodeData = (
           {
             type: "DERIVATIVE",
             text: `d(y)/d(${text}) =`,
-            value: "5",
+            value: "0",
           },
         ],
         onBodyClick,
@@ -367,6 +394,7 @@ export {
   selectReactFlowNode,
   showInputFields,
   updateLastSelectedNodeId,
+  updateReactFlowNodeDerivatives,
   updateReactFlowNodeFValues,
   updateReactFlowNodeInputValue,
 };

@@ -4,6 +4,7 @@ import VariableNode from "./VariableNode";
 
 test("should have correct properties", () => {
   const constNode = new ConstantNode("c1");
+  expect(constNode.getType()).toBe("CONSTANT");
   expect(constNode.getId()).toBe("c1");
   expect(constNode.isConstant()).toBe(true);
   expect(constNode.getValue()).toBeCloseTo(0);

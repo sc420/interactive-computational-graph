@@ -1,5 +1,6 @@
 import type CoreNode from "./CoreNode";
 import NodeRelationship from "./NodeRelationship";
+import type NodeType from "./NodeType";
 import type Operation from "./Operation";
 import type Port from "./Port";
 import {
@@ -24,6 +25,10 @@ class OperationNode implements CoreNode {
     this.inputPorts = inputPorts;
     this.nodeRelationship = new NodeRelationship(this.inputPorts);
     this.operation = operation;
+  }
+
+  getType(): NodeType {
+    return "OPERATION";
   }
 
   getId(): string {

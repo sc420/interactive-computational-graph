@@ -1,5 +1,6 @@
 import type CoreNode from "./CoreNode";
 import type DifferentiationMode from "./DifferentiationMode";
+import type NodeType from "./NodeType";
 
 type TopologicalSortDirection = "TO_OUTPUT" | "TO_INPUT";
 
@@ -24,6 +25,11 @@ class Graph {
 
   getNodes(): CoreNode[] {
     return Array.from(this.nodeIdToNodes.values());
+  }
+
+  getNodeType(nodeId: string): NodeType {
+    const node = this.getOneNode(nodeId);
+    return node.getType();
   }
 
   getOneNode(nodeId: string): CoreNode {

@@ -36,6 +36,7 @@ describe("manipulating connections", () => {
     graph.addNode(varNode1);
 
     expect(graph.getNodes()).toEqual([varNode1]);
+    expect(graph.getNodeType("v1")).toEqual("VARIABLE");
     expect(graph.getOneNode("v1")).toEqual(varNode1);
     expect(graph.hasNode("v1")).toBe(true);
   });

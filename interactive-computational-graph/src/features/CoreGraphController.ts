@@ -4,16 +4,16 @@ import type Graph from "../core/Graph";
 import OperationNode from "../core/OperationNode";
 import VariableNode from "../core/VariableNode";
 import { findFeatureOperation } from "./ControllerUtilities";
+import type FeatureNodeType from "./FeatureNodeType";
 import type FeatureOperation from "./FeatureOperation";
-import { constantType, variableType } from "./KnownNodeTypes";
 
 const addCoreNode = (
   graph: Graph,
-  nodeType: string,
+  featureNodeType: FeatureNodeType,
   id: string,
   featureOperations: FeatureOperation[],
 ): void => {
-  const coreNode = buildCoreNode(nodeType, id, featureOperations);
+  const coreNode = buildCoreNode(featureNodeType, id, featureOperations);
   graph.addNode(coreNode);
 };
 
@@ -40,22 +40,52 @@ const disconnectCoreEdge = (
   graph.disconnect(node1Id, node2Id, node2PortId);
 };
 
+const updateOneNodeValue = (
+  graph: Graph,
+  nodeId: string,
+  value: string,
+): void => {
+  const nodeType = graph.getNodeType(nodeId);
+  switch (nodeType) {
+    case "CONSTANT": {
+      graph.setNodeValue(nodeId, Number(value));
+      break;
+    }
+    case "VARIABLE": {
+      graph.setNodeValue(nodeId, Number(value));
+      break;
+    }
+    case "OPERATION": {
+      // TODO(sc420): Update the dummy constant nodes of the operation node
+    }
+  }
+};
+
+const updateNodeValues = (graph: Graph): string[] => {
+  const updatedFValuesNodeIds = graph.updateFValues();
+  const updatedDerivativesNodeIds = graph.updateDerivatives();
+  const updatedNodeIds = new Set([
+    ...updatedFValuesNodeIds,
+    ...updatedDerivativesNodeIds,
+  ]);
+  return Array.from(updatedNodeIds);
+};
+
 const buildCoreNode = (
-  nodeType: string,
+  featureNodeType: FeatureNodeType,
   id: string,
   featureOperations: FeatureOperation[],
 ): CoreNode => {
-  switch (nodeType) {
-    case constantType: {
+  switch (featureNodeType.nodeType) {
+    case "CONSTANT": {
       return new ConstantNode(id);
     }
-    case variableType: {
+    case "VARIABLE": {
       return new VariableNode(id);
     }
-    default: {
-      // Operation
+    case "OPERATION": {
       const featureOperation = findFeatureOperation(
-        nodeType,
+        featureNodeType.operationId,
         featureOperations,
       );
       return new OperationNode(
@@ -67,4 +97,11 @@ const buildCoreNode = (
   }
 };
 
-export { addCoreNode, removeCoreNode, connectCoreEdge, disconnectCoreEdge };
+export {
+  addCoreNode,
+  connectCoreEdge,
+  disconnectCoreEdge,
+  removeCoreNode,
+  updateNodeValues,
+  updateOneNodeValue,
+};

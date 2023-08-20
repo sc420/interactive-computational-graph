@@ -1,6 +1,9 @@
 import type NodeRelationship from "./NodeRelationship";
+import type NodeType from "./NodeType";
 
 interface CoreNode {
+  getType: () => NodeType;
+
   getId: () => string;
 
   isConstant: () => boolean;

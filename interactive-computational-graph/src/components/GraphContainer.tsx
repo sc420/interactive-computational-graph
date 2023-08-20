@@ -31,7 +31,10 @@ import {
   connectCoreEdge,
   disconnectCoreEdge,
   removeCoreNode,
+  updateNodeValues,
+  updateOneNodeValue,
 } from "../features/CoreGraphController";
+import type FeatureNodeType from "../features/FeatureNodeType";
 import type FeatureOperation from "../features/FeatureOperation";
 import {
   addReactFlowNode,
@@ -100,10 +103,9 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
         return;
       }
 
-      // TODO(sc420): Update core graph
-      console.log(
-        `nodeId:${nodeId}, inputPortId:${inputPortId}, value:${value}`,
-      );
+      updateOneNodeValue(coreGraph, nodeId, value);
+
+      updateNodeValues(coreGraph); // TODO(sc420): Update react flow node values
     },
     [coreGraph],
   );
@@ -113,20 +115,20 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
   }, []);
 
   const handleAddNode = useCallback(
-    (nodeType: string) => {
+    (featureNodeType: FeatureNodeType) => {
       if (coreGraph === null) {
         return;
       }
 
       const id = `${nextNodeId}`;
 
-      addCoreNode(coreGraph, nodeType, id, featureOperations);
+      addCoreNode(coreGraph, featureNodeType, id, featureOperations);
 
       setReactFlowNodes((nodes) => {
         const position = getNewReactFlowNodePosition(nodes, lastSelectedNodeId);
         nodes = deselectLastSelectedNode(nodes, lastSelectedNodeId);
         return addReactFlowNode(
-          nodeType,
+          featureNodeType,
           id,
           featureOperations,
           handleInputChange,
@@ -138,7 +140,14 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
 
       setNextNodeId((nextNodeId) => nextNodeId + 1);
     },
-    [coreGraph, featureOperations, nextNodeId, lastSelectedNodeId],
+    [
+      coreGraph,
+      featureOperations,
+      handleBodyClick,
+      handleInputChange,
+      lastSelectedNodeId,
+      nextNodeId,
+    ],
   );
 
   const handleAddOperation = useCallback(() => {
@@ -248,19 +257,19 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
   );
 
   const handleDropNode = useCallback(
-    (nodeType: string, position: XYPosition) => {
+    (featureNodeType: FeatureNodeType, position: XYPosition) => {
       if (coreGraph === null) {
         return;
       }
 
       const id = `${nextNodeId}`;
 
-      addCoreNode(coreGraph, nodeType, id, featureOperations);
+      addCoreNode(coreGraph, featureNodeType, id, featureOperations);
 
       setReactFlowNodes((nodes) => {
         nodes = deselectLastSelectedNode(nodes, lastSelectedNodeId);
         return addReactFlowNode(
-          nodeType,
+          featureNodeType,
           id,
           featureOperations,
           handleInputChange,
@@ -270,9 +279,16 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
         );
       });
 
-      setNextNodeId(nextNodeId + 1);
+      setNextNodeId((nextNodeId) => nextNodeId + 1);
     },
-    [coreGraph, nextNodeId, featureOperations],
+    [
+      coreGraph,
+      featureOperations,
+      handleBodyClick,
+      handleInputChange,
+      lastSelectedNodeId,
+      nextNodeId,
+    ],
   );
 
   useEffect(() => {

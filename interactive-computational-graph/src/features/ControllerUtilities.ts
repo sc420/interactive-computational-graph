@@ -1,12 +1,12 @@
 import type FeatureOperation from "./FeatureOperation";
 
 const findFeatureOperation = (
-  nodeType: string,
+  operationId: string,
   featureOperations: FeatureOperation[],
 ): FeatureOperation => {
-  const operation = featureOperations.find((op) => op.id === nodeType);
+  const operation = featureOperations.find((op) => op.id === operationId);
   if (operation === undefined) {
-    throw new Error(`Couldn't find the feature operation ${nodeType}`);
+    throw new Error(`Couldn't find the feature operation ${operationId}`);
   }
   return operation;
 };

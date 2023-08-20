@@ -7,6 +7,7 @@ import VariableNode from "./VariableNode";
 
 test("should have correct properties", () => {
   const sumNode = buildSumNode();
+  expect(sumNode.getType()).toBe("OPERATION");
   expect(sumNode.getId()).toBe("op1");
   expect(sumNode.isConstant()).toBe(false);
   expect(sumNode.getValue()).toBeCloseTo(0);

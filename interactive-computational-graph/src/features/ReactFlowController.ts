@@ -6,8 +6,8 @@ import {
   type XYPosition,
 } from "reactflow";
 import { findFeatureOperation } from "./ControllerUtilities";
+import type FeatureNodeType from "./FeatureNodeType";
 import type FeatureOperation from "./FeatureOperation";
-import { constantType, variableType } from "./KnownNodeTypes";
 import type NodeData from "./NodeData";
 
 type InputChangeCallback = (
@@ -19,8 +19,8 @@ type InputChangeCallback = (
 type BodyClickCallback = (nodeId: string) => void;
 
 const addReactFlowNode = (
-  nodeType: string,
-  id: string,
+  featureNodeType: FeatureNodeType,
+  nodeId: string,
   featureOperations: FeatureOperation[],
   onInputChange: InputChangeCallback,
   onBodyClick: BodyClickCallback,
@@ -28,11 +28,11 @@ const addReactFlowNode = (
   nodes: Node[],
 ): Node[] => {
   const node: Node = {
-    id,
+    id: nodeId,
     type: "custom", // registered in Graph
     data: buildReactFlowNodeData(
-      nodeType,
-      id,
+      featureNodeType,
+      nodeId,
       featureOperations,
       onInputChange,
       onBodyClick,
@@ -158,6 +158,10 @@ const findRemovedEdges = (changes: EdgeChange[], edges: Edge[]): Edge[] => {
   return removedEdges;
 };
 
+const updateReactFlowNodeValues = (values: string[], nodes: Node[]): Node[] => {
+  return nodes; // TODO(sc420)
+};
+
 const updateLastSelectedNodeId = (nodes: Node[]): string | null => {
   const firstNode = nodes.find((node) => "id" in node) ?? null;
   if (firstNode === null) {
@@ -190,17 +194,17 @@ const deselectLastSelectedNode = (
 };
 
 const buildReactFlowNodeData = (
-  nodeType: string,
-  id: string,
+  featureNodeType: FeatureNodeType,
+  nodeId: string,
   featureOperations: FeatureOperation[],
   onInputChange: InputChangeCallback,
   onBodyClick: BodyClickCallback,
 ): NodeData => {
-  switch (nodeType) {
-    case constantType: {
+  switch (featureNodeType.nodeType) {
+    case "CONSTANT": {
       return {
-        text: `c${id}`,
-        nodeType,
+        text: `c${nodeId}`,
+        featureNodeType,
         inputItems: [
           {
             id: "value",
@@ -215,11 +219,11 @@ const buildReactFlowNodeData = (
         onInputChange,
       };
     }
-    case variableType: {
-      const text = `v${id}`;
+    case "VARIABLE": {
+      const text = `v${nodeId}`;
       return {
         text,
-        nodeType,
+        featureNodeType,
         inputItems: [
           {
             id: "value",
@@ -240,17 +244,16 @@ const buildReactFlowNodeData = (
         onInputChange,
       };
     }
-    default: {
-      // Operation
+    case "OPERATION": {
       const featureOperation = findFeatureOperation(
-        nodeType,
+        featureNodeType.operationId,
         featureOperations,
       );
 
       const text = featureOperation.text;
       return {
         text,
-        nodeType,
+        featureNodeType,
         inputItems: featureOperation.inputPorts.map((inputPort) => {
           return {
             id: inputPort.getId(),
@@ -302,4 +305,5 @@ export {
   selectReactFlowNode,
   showInputFields,
   updateLastSelectedNodeId,
+  updateReactFlowNodeValues,
 };

@@ -2,7 +2,6 @@ import { Box, Stack, useTheme } from "@mui/material";
 import { blue, green, lime } from "@mui/material/colors";
 import { useCallback, type FunctionComponent } from "react";
 import { type NodeProps } from "reactflow";
-import { constantType, variableType } from "../features/KnownNodeTypes";
 import type NodeData from "../features/NodeData";
 import InputItems from "./InputItems";
 import NodeTitle from "./NodeTitle";
@@ -24,12 +23,12 @@ const CustomNode: FunctionComponent<CustomNodeProps> = ({
   const theme = useTheme();
 
   const getColorTheme = useCallback((): Record<string, string> => {
-    switch (data.nodeType) {
-      case constantType:
+    switch (data.featureNodeType.nodeType) {
+      case "CONSTANT":
         return green;
-      case variableType:
+      case "VARIABLE":
         return lime;
-      default:
+      case "OPERATION":
         return blue;
     }
   }, [data]);

@@ -1,5 +1,6 @@
 import { Box } from "@mui/material";
 import { type FunctionComponent, type ReactElement } from "react";
+import type FeatureNodeType from "../features/FeatureNodeType";
 import type FeatureOperation from "../features/FeatureOperation";
 import type SelectedFeature from "../features/SelectedFeature";
 import AddNodesPanel from "./AddNodesPanel";
@@ -8,7 +9,7 @@ import EditNodesPanel from "./EditNodesPanel";
 interface FeaturePanelProps {
   feature: SelectedFeature;
   featureOperations: FeatureOperation[];
-  onAddNode: (nodeType: string) => void;
+  onAddNode: (featureNodeType: FeatureNodeType) => void;
   onAddOperation: () => void;
 }
 

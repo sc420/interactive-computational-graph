@@ -1,5 +1,6 @@
 import type CoreNode from "./CoreNode";
 import NodeRelationship from "./NodeRelationship";
+import type NodeType from "./NodeType";
 
 class ConstantNode implements CoreNode {
   private readonly id: string;
@@ -12,6 +13,10 @@ class ConstantNode implements CoreNode {
 
   constructor(id: string) {
     this.id = id;
+  }
+
+  getType(): NodeType {
+    return "CONSTANT";
   }
 
   getId(): string {

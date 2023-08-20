@@ -3,6 +3,7 @@ import VariableNode from "./VariableNode";
 
 test("should have correct properties", () => {
   const varNode = new VariableNode("v1");
+  expect(varNode.getType()).toBe("VARIABLE");
   expect(varNode.getId()).toBe("v1");
   expect(varNode.isConstant()).toBe(false);
   expect(varNode.getValue()).toBeCloseTo(0);

@@ -12,12 +12,12 @@ import {
   Typography,
 } from "@mui/material";
 import { type FunctionComponent } from "react";
+import type FeatureNodeType from "../features/FeatureNodeType";
 import type FeatureOperation from "../features/FeatureOperation";
-import { constantType, variableType } from "../features/KnownNodeTypes";
 import DraggableItem from "./DraggableItem";
 
 interface AddNodesPanelProps {
-  onAddNode: (nodeType: string) => void;
+  onAddNode: (featureNodeType: FeatureNodeType) => void;
   onAddOperation: () => void;
   featureOperations: FeatureOperation[];
 }
@@ -58,12 +58,12 @@ const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
         <AccordionDetails id="value-content" sx={{ p: 0 }}>
           <List>
             <DraggableItem
-              nodeType={constantType}
+              featureNodeType={{ nodeType: "CONSTANT" }}
               text="Constant"
               onClick={onAddNode}
             />
             <DraggableItem
-              nodeType={variableType}
+              featureNodeType={{ nodeType: "VARIABLE" }}
               text="Variable"
               onClick={onAddNode}
             />
@@ -85,7 +85,10 @@ const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
             {simpleOperations.map((operation) => (
               <DraggableItem
                 key={operation.id}
-                nodeType={operation.id}
+                featureNodeType={{
+                  nodeType: "OPERATION",
+                  operationId: operation.id,
+                }}
                 text={operation.text}
                 onClick={onAddNode}
               />
@@ -108,7 +111,10 @@ const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
             {customOperations.map((operation) => (
               <DraggableItem
                 key={operation.id}
-                nodeType={operation.id}
+                featureNodeType={{
+                  nodeType: "OPERATION",
+                  operationId: operation.id,
+                }}
                 text={operation.text}
                 onClick={onAddNode}
               />

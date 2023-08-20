@@ -21,6 +21,7 @@ import ReactFlow, {
   type XYPosition,
 } from "reactflow";
 import "reactflow/dist/style.css";
+import type FeatureNodeType from "../features/FeatureNodeType";
 import CustomNode from "./CustomNode";
 
 interface ReactFlowGraphProps {
@@ -30,7 +31,7 @@ interface ReactFlowGraphProps {
   onEdgesChange: OnEdgesChange;
   onSelectionChange: (params: OnSelectionChangeParams) => void;
   onConnect: OnConnect;
-  onDropNode: (nodeType: string, position: XYPosition) => void;
+  onDropNode: (featureNodeType: FeatureNodeType, position: XYPosition) => void;
 }
 
 const ReactFlowGraph: FunctionComponent<ReactFlowGraphProps> = ({
@@ -74,16 +75,21 @@ const ReactFlowGraph: FunctionComponent<ReactFlowGraphProps> = ({
       }
 
       const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
-      const nodeType = event.dataTransfer.getData("application/reactflow");
+      const featureNodeTypeJsonData = event.dataTransfer.getData(
+        "application/reactflow",
+      );
+      const featureNodeType = JSON.parse(
+        featureNodeTypeJsonData,
+      ) as FeatureNodeType;
 
       const position = reactFlowInstance.project({
         x: event.clientX - reactFlowBounds.left,
         y: event.clientY - reactFlowBounds.top,
       });
 
-      onDropNode(nodeType, position);
+      onDropNode(featureNodeType, position);
     },
-    [reactFlowInstance],
+    [onDropNode, reactFlowInstance],
   );
 
   return (

@@ -6,24 +6,28 @@ import {
   ListItemText,
 } from "@mui/material";
 import { useCallback, type DragEvent, type FunctionComponent } from "react";
+import type FeatureNodeType from "../features/FeatureNodeType";
 
 interface DraggableItemProps {
-  nodeType: string;
+  featureNodeType: FeatureNodeType;
   text: string;
-  onClick: (nodeType: string) => void;
+  onClick: (featureNodeType: FeatureNodeType) => void;
 }
 
 const DraggableItem: FunctionComponent<DraggableItemProps> = ({
-  nodeType,
+  featureNodeType,
   text,
   onClick,
 }) => {
   const handleDragStart = useCallback(
     (event: DragEvent): void => {
-      event.dataTransfer.setData("application/reactflow", nodeType);
+      event.dataTransfer.setData(
+        "application/reactflow",
+        JSON.stringify(featureNodeType),
+      );
       event.dataTransfer.effectAllowed = "move";
     },
-    [nodeType],
+    [featureNodeType],
   );
 
   return (
@@ -42,7 +46,7 @@ const DraggableItem: FunctionComponent<DraggableItemProps> = ({
           handleDragStart(event);
         }}
         onClick={() => {
-          onClick(nodeType);
+          onClick(featureNodeType);
         }}
       >
         <ListItemText primary={text} />

@@ -88,10 +88,7 @@ const hideInputField = (connection: Connection, nodes: Node[]): Node[] => {
       }
       inputItem.showInputField = false;
       // Set the new data to notify React Flow about the change
-      const newData: NodeData = {
-        ...node.data,
-        inputItems: data.inputItems,
-      };
+      const newData: NodeData = { ...node.data };
       node.data = newData;
     }
 
@@ -127,10 +124,7 @@ const showInputFields = (removedEdges: Edge[], nodes: Node[]): Node[] => {
       }
       inputItem.showInputField = true;
       // Set the new data to notify React Flow about the change
-      const newData: NodeData = {
-        ...node.data,
-        inputItems: data.inputItems,
-      };
+      const newData: NodeData = { ...node.data };
       node.data = newData;
     }
 
@@ -158,8 +152,31 @@ const findRemovedEdges = (changes: EdgeChange[], edges: Edge[]): Edge[] => {
   return removedEdges;
 };
 
-const updateReactFlowNodeValues = (values: string[], nodes: Node[]): Node[] => {
-  return nodes; // TODO(sc420)
+const updateReactFlowNodeFValues = (
+  updatedNodeIdToValues: Map<string, string>,
+  nodes: Node[],
+): Node[] => {
+  return nodes.map((node) => {
+    if (updatedNodeIdToValues.has(node.id)) {
+      const value = updatedNodeIdToValues.get(node.id);
+      if (value === undefined) {
+        throw new Error(`Should find the value of node ${node.id}`);
+      }
+
+      const data = node.data as NodeData;
+      const outputItem = data.outputItems.find(
+        (outputItem) => outputItem.type === "VALUE",
+      );
+      if (outputItem !== undefined) {
+        outputItem.value = value;
+        // Set the new data to notify React Flow about the change
+        const newData: NodeData = { ...node.data };
+        node.data = newData;
+      }
+    }
+
+    return node;
+  });
 };
 
 const updateLastSelectedNodeId = (nodes: Node[]): string | null => {
@@ -235,7 +252,7 @@ const buildReactFlowNodeData = (
         ],
         outputItems: [
           {
-            id: "derivative",
+            type: "DERIVATIVE",
             text: `d(y)/d(${text}) =`,
             value: "5",
           },
@@ -265,12 +282,12 @@ const buildReactFlowNodeData = (
         }),
         outputItems: [
           {
-            id: "value",
+            type: "VALUE",
             text: "=",
             value: "0",
           },
           {
-            id: "derivative",
+            type: "DERIVATIVE",
             text: `d(y)/d(${text}) =`,
             value: "0",
           },
@@ -305,5 +322,5 @@ export {
   selectReactFlowNode,
   showInputFields,
   updateLastSelectedNodeId,
-  updateReactFlowNodeValues,
+  updateReactFlowNodeFValues,
 };

@@ -40,9 +40,10 @@ const disconnectCoreEdge = (
   graph.disconnect(node1Id, node2Id, node2PortId);
 };
 
-const updateOneNodeValue = (
+const updateNodeValueById = (
   graph: Graph,
   nodeId: string,
+  inputPortId: string,
   value: string,
 ): void => {
   const nodeType = graph.getNodeType(nodeId);
@@ -61,14 +62,14 @@ const updateOneNodeValue = (
   }
 };
 
-const updateNodeValues = (graph: Graph): string[] => {
-  const updatedFValuesNodeIds = graph.updateFValues();
-  const updatedDerivativesNodeIds = graph.updateDerivatives();
-  const updatedNodeIds = new Set([
-    ...updatedFValuesNodeIds,
-    ...updatedDerivativesNodeIds,
-  ]);
-  return Array.from(updatedNodeIds);
+const updateNodeFValues = (graph: Graph): Map<string, string> => {
+  const updatedNodeIds = graph.updateFValues();
+  const updatedNodeIdToValues = new Map<string, string>();
+  updatedNodeIds.forEach((updatedNodeId) => {
+    const value = graph.getNodeValue(updatedNodeId);
+    updatedNodeIdToValues.set(updatedNodeId, `${value}`);
+  });
+  return updatedNodeIdToValues;
 };
 
 const buildCoreNode = (
@@ -102,6 +103,6 @@ export {
   connectCoreEdge,
   disconnectCoreEdge,
   removeCoreNode,
-  updateNodeValues,
-  updateOneNodeValue,
+  updateNodeValueById,
+  updateNodeFValues,
 };

@@ -1,6 +1,7 @@
 import { Box, Grid, InputLabel, OutlinedInput } from "@mui/material";
 import { useCallback, type FunctionComponent } from "react";
 import type NodeData from "../features/NodeData";
+import type OutputItemType from "../features/OutputItemType";
 
 interface InputItemProps {
   id: string;
@@ -16,8 +17,8 @@ const InputItems: FunctionComponent<InputItemProps> = ({
   inputWidth,
 }) => {
   const getOutputId = useCallback(
-    (portId: string): string => {
-      return `output-item-${id}-${portId}`;
+    (type: OutputItemType): string => {
+      return `output-item-${id}-${type}`;
     },
     [id],
   );
@@ -28,14 +29,16 @@ const InputItems: FunctionComponent<InputItemProps> = ({
       <Grid item xs>
         {data.outputItems.map((item) => (
           <Box
-            key={item.id}
+            key={item.type}
             display="flex"
             justifyContent="left"
             alignItems="center"
             height={itemHeight}
           >
             {/* Label */}
-            <InputLabel htmlFor={getOutputId(item.id)}>{item.text}</InputLabel>
+            <InputLabel htmlFor={getOutputId(item.type)}>
+              {item.text}
+            </InputLabel>
           </Box>
         ))}
       </Grid>
@@ -44,7 +47,7 @@ const InputItems: FunctionComponent<InputItemProps> = ({
       <Grid item xs>
         {data.outputItems.map((item) => (
           <Box
-            key={item.id}
+            key={item.type}
             display="flex"
             justifyContent="right"
             alignItems="center"
@@ -52,9 +55,9 @@ const InputItems: FunctionComponent<InputItemProps> = ({
           >
             {/* Output */}
             <OutlinedInput
-              id={getOutputId(item.id)}
+              id={getOutputId(item.type)}
               readOnly={true}
-              defaultValue={item.value}
+              value={item.value}
               size="small"
               inputProps={{
                 style: {

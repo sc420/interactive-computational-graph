@@ -31,8 +31,8 @@ import {
   connectCoreEdge,
   disconnectCoreEdge,
   removeCoreNode,
-  updateNodeValues,
-  updateOneNodeValue,
+  updateNodeFValues,
+  updateNodeValueById,
 } from "../features/CoreGraphController";
 import type FeatureNodeType from "../features/FeatureNodeType";
 import type FeatureOperation from "../features/FeatureOperation";
@@ -45,6 +45,7 @@ import {
   selectReactFlowNode,
   showInputFields,
   updateLastSelectedNodeId,
+  updateReactFlowNodeFValues,
 } from "../features/ReactFlowController";
 import type SelectedFeature from "../features/SelectedFeature";
 import ReactFlowGraph from "../reactflow/ReactFlowGraph";
@@ -103,9 +104,13 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
         return;
       }
 
-      updateOneNodeValue(coreGraph, nodeId, value);
+      updateNodeValueById(coreGraph, nodeId, inputPortId, value);
 
-      updateNodeValues(coreGraph); // TODO(sc420): Update react flow node values
+      const updatedNodeIdToValues = updateNodeFValues(coreGraph);
+
+      setReactFlowNodes((nodes) =>
+        updateReactFlowNodeFValues(updatedNodeIdToValues, nodes),
+      );
     },
     [coreGraph],
   );
@@ -183,6 +188,12 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
         }
       });
 
+      const updatedNodeIdToValues = updateNodeFValues(coreGraph);
+
+      setReactFlowNodes((nodes) =>
+        updateReactFlowNodeFValues(updatedNodeIdToValues, nodes),
+      );
+
       setReactFlowNodes((nodes) => applyNodeChanges(changes, nodes));
     },
     [coreGraph],
@@ -215,6 +226,12 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
       });
 
       setReactFlowNodes((nodes) => showInputFields(removedEdges, nodes));
+
+      const updatedNodeIdToValues = updateNodeFValues(coreGraph);
+
+      setReactFlowNodes((nodes) =>
+        updateReactFlowNodeFValues(updatedNodeIdToValues, nodes),
+      );
 
       setReactFlowEdges((edges) => applyEdgeChanges(changes, edges));
     },
@@ -250,6 +267,12 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
       );
 
       setReactFlowNodes((nodes) => hideInputField(connection, nodes));
+
+      const updatedNodeIdToValues = updateNodeFValues(coreGraph);
+
+      setReactFlowNodes((nodes) =>
+        updateReactFlowNodeFValues(updatedNodeIdToValues, nodes),
+      );
 
       setReactFlowEdges((edges) => addEdge(connection, edges));
     },

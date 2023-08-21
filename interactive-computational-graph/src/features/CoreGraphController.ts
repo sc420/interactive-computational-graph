@@ -18,6 +18,20 @@ const setCoreDerivativeTargetNode = (
   graph.setTargetNode(targetNodeId);
 };
 
+const updateCoreDerivativeTargetNode = (
+  graph: Graph,
+  targetNodeId: string | null,
+): string | null => {
+  if (targetNodeId === null) {
+    return null;
+  }
+  if (graph.hasNode(targetNodeId)) {
+    return targetNodeId;
+  }
+  graph.setTargetNode(null);
+  return null;
+};
+
 const addCoreNodes = (
   graph: Graph,
   featureNodeType: FeatureNodeType,
@@ -207,6 +221,7 @@ export {
   removeCoreNodes,
   setCoreDerivativeTargetNode,
   setDifferentiationMode,
+  updateCoreDerivativeTargetNode,
   updateNodeDerivativeValues,
   updateNodeFValues,
   updateNodeValueById,

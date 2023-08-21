@@ -16,6 +16,7 @@ import {
 
 interface GraphToolbarProps {
   isReverseMode: boolean;
+  derivativeTarget: string | null;
   nodeIds: string[];
   onReverseModeChange: (isReversedMode: boolean) => void;
   onDerivativeTargetChange: (nodeId: string | null) => void;
@@ -23,6 +24,7 @@ interface GraphToolbarProps {
 
 const GraphToolbar: FunctionComponent<GraphToolbarProps> = ({
   isReverseMode,
+  derivativeTarget,
   nodeIds,
   onReverseModeChange,
   onDerivativeTargetChange,
@@ -75,6 +77,7 @@ const GraphToolbar: FunctionComponent<GraphToolbarProps> = ({
         <FormGroup>
           <Autocomplete
             options={nodeIds}
+            value={derivativeTarget}
             sx={{ width: 200 }}
             size="small"
             onChange={handleDerivativeTargetChange}

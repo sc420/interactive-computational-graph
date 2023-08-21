@@ -38,6 +38,7 @@ import {
   removeCoreNodes,
   setCoreDerivativeTargetNode,
   setDifferentiationMode,
+  updateCoreDerivativeTargetNode,
   updateNodeDerivativeValues,
   updateNodeFValues,
   updateNodeValueById,
@@ -256,11 +257,16 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
         }
       });
 
-      updateNodeValuesAndDerivatives();
+      const updatedTargetNode = updateCoreDerivativeTargetNode(
+        coreGraph,
+        derivativeTarget,
+      );
+
+      setDerivativeTarget(() => updatedTargetNode);
 
       setReactFlowNodes((nodes) => applyNodeChanges(changes, nodes));
     },
-    [coreGraph, updateNodeValuesAndDerivatives],
+    [coreGraph, derivativeTarget],
   );
 
   const handleEdgesChange: OnEdgesChange = useCallback(
@@ -402,6 +408,7 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
     ],
   );
 
+  // Initialize the core graph
   useEffect(() => {
     const coreGraph = new Graph();
     setCoreGraph(coreGraph);
@@ -444,6 +451,7 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
             <Grid item>
               <GraphToolbar
                 isReverseMode={isReverseMode}
+                derivativeTarget={derivativeTarget}
                 nodeIds={coreGraph === null ? [] : getNodeIds(coreGraph)}
                 onReverseModeChange={handleReverseModeChange}
                 onDerivativeTargetChange={handleDerivativeTargetChange}

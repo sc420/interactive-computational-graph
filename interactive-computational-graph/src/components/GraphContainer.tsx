@@ -1,5 +1,10 @@
 import { Grid, Toolbar } from "@mui/material";
-import React, { useCallback, useEffect, useState } from "react";
+import {
+  type FunctionComponent,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import {
   addEdge,
   applyEdgeChanges,
@@ -63,12 +68,15 @@ import type SelectedFeature from "../features/SelectedFeature";
 import ReactFlowGraph from "../reactflow/ReactFlowGraph";
 import FeaturePanel from "./FeaturePanel";
 import GraphToolbar from "./GraphToolbar";
+import ReactFlowGraphMock from "./ReactFlowGraphMock";
+
+const isTest = process.env.NODE_ENV === "test";
 
 interface GraphContainerProps {
   selectedFeature: SelectedFeature | null;
 }
 
-const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
+const GraphContainer: FunctionComponent<GraphContainerProps> = ({
   selectedFeature,
 }) => {
   // Core graph
@@ -426,7 +434,7 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
   ]);
 
   return (
-    <React.Fragment>
+    <>
       <Toolbar />
       <Grid
         container
@@ -457,6 +465,8 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
                 onDerivativeTargetChange={handleDerivativeTargetChange}
               />
             </Grid>
+            {/* Graph mock */}
+            {isTest && <ReactFlowGraphMock onConnect={handleConnect} />}
             {/* Graph */}
             <Grid item display="flex" flexGrow={1}>
               <ReactFlowGraph
@@ -472,7 +482,7 @@ const GraphContainer: React.FunctionComponent<GraphContainerProps> = ({
           </Grid>
         </Grid>
       </Grid>
-    </React.Fragment>
+    </>
   );
 };
 

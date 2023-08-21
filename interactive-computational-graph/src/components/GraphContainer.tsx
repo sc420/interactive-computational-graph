@@ -1,9 +1,9 @@
 import { Grid, Toolbar } from "@mui/material";
 import {
-  type FunctionComponent,
   useCallback,
   useEffect,
   useState,
+  type FunctionComponent,
 } from "react";
 import {
   addEdge,
@@ -66,9 +66,9 @@ import {
 } from "../features/ReactFlowController";
 import type SelectedFeature from "../features/SelectedFeature";
 import ReactFlowGraph from "../reactflow/ReactFlowGraph";
+import ReactFlowGraphMock from "../reactflow/ReactFlowGraphMock";
 import FeaturePanel from "./FeaturePanel";
 import GraphToolbar from "./GraphToolbar";
-import ReactFlowGraphMock from "./ReactFlowGraphMock";
 
 const isTest = process.env.NODE_ENV === "test";
 

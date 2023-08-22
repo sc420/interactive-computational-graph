@@ -296,6 +296,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
         );
       });
 
+      // TODO(sc420): Should use a set of targets/targetHandles
       const removedConnectionsWithEmptyTargetInputPort =
         removedConnections.filter((edge) => {
           return isNodeInputPortEmpty(
@@ -466,7 +467,13 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
               />
             </Grid>
             {/* Graph mock */}
-            {isTest && <ReactFlowGraphMock onConnect={handleConnect} />}
+            {isTest && (
+              <ReactFlowGraphMock
+                onNodesChange={handleNodesChange}
+                onEdgesChange={handleEdgesChange}
+                onConnect={handleConnect}
+              />
+            )}
             {/* Graph */}
             <Grid item display="flex" flexGrow={1}>
               <ReactFlowGraph

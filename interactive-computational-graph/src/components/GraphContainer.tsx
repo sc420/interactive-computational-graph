@@ -50,6 +50,7 @@ import {
 } from "../features/CoreGraphController";
 import type FeatureNodeType from "../features/FeatureNodeType";
 import type FeatureOperation from "../features/FeatureOperation";
+import type NonEmptyConnection from "../features/NonEmptyConnection";
 import {
   addReactFlowNode,
   deselectLastSelectedNode,
@@ -121,6 +122,33 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
   const [reactFlowEdges, setReactFlowEdges] = useState<Edge[]>([]);
   const [lastSelectedNodeId, setLastSelectedNodeId] = useState<string | null>(
     null,
+  );
+
+  const findNodeIdToEmptyInputPortIds = useCallback(
+    (removedConnections: NonEmptyConnection[]): Map<string, string> => {
+      const nodeIdToEmptyInputPortIds = new Map<string, string>();
+      if (coreGraph === null) {
+        return nodeIdToEmptyInputPortIds;
+      }
+
+      removedConnections.forEach((removedConnection) => {
+        if (
+          isNodeInputPortEmpty(
+            coreGraph,
+            removedConnection.target,
+            removedConnection.targetHandle,
+          )
+        ) {
+          nodeIdToEmptyInputPortIds.set(
+            removedConnection.target,
+            removedConnection.targetHandle,
+          );
+        }
+      });
+
+      return nodeIdToEmptyInputPortIds;
+    },
+    [coreGraph],
   );
 
   const updateNodeValuesAndDerivatives = useCallback(() => {
@@ -296,35 +324,27 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
         );
       });
 
-      // TODO(sc420): Should use a set of targets/targetHandles
-      const removedConnectionsWithEmptyTargetInputPort =
-        removedConnections.filter((edge) => {
-          return isNodeInputPortEmpty(
-            coreGraph,
-            edge.target,
-            edge.targetHandle,
-          );
-        });
+      const nodeIdToEmptyInputPortIds =
+        findNodeIdToEmptyInputPortIds(removedConnections);
 
-      removedConnectionsWithEmptyTargetInputPort.forEach(
-        (removedConnection) => {
-          connectDummyInputNode(
-            coreGraph,
-            removedConnection.target,
-            removedConnection.targetHandle,
-          );
-        },
-      );
+      nodeIdToEmptyInputPortIds.forEach((portId, nodeId) => {
+        connectDummyInputNode(coreGraph, nodeId, portId);
+      });
 
       setReactFlowNodes((nodes) =>
-        showInputFields(removedConnectionsWithEmptyTargetInputPort, nodes),
+        showInputFields(nodeIdToEmptyInputPortIds, nodes),
       );
 
       updateNodeValuesAndDerivatives();
 
       setReactFlowEdges((edges) => applyEdgeChanges(changes, edges));
     },
-    [coreGraph, reactFlowEdges, updateNodeValuesAndDerivatives],
+    [
+      coreGraph,
+      findNodeIdToEmptyInputPortIds,
+      reactFlowEdges,
+      updateNodeValuesAndDerivatives,
+    ],
   );
 
   const handleSelectionChange = useCallback(

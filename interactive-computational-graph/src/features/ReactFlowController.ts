@@ -127,17 +127,12 @@ const hideInputField = (connection: Connection, nodes: Node[]): Node[] => {
 };
 
 const showInputFields = (
-  removedConnections: NonEmptyConnection[],
+  nodeIdToEmptyInputPortIds: Map<string, string>,
   nodes: Node[],
 ): Node[] => {
-  const targetToTargetHandle = new Map<string, string>();
-  removedConnections.forEach((removedEdge) => {
-    targetToTargetHandle.set(removedEdge.target, removedEdge.targetHandle);
-  });
-
   return nodes.map((node) => {
-    if (targetToTargetHandle.has(node.id)) {
-      const targetHandle = targetToTargetHandle.get(node.id);
+    if (nodeIdToEmptyInputPortIds.has(node.id)) {
+      const targetHandle = nodeIdToEmptyInputPortIds.get(node.id);
       if (targetHandle === undefined) {
         throw new Error(`Should find the target handle of node ${node.id}`);
       }

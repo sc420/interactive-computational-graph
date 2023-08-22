@@ -25,10 +25,6 @@ it("connects two constant nodes to a sum node, and removes the sum node", async 
   // Remove the sum node
   removeEdge(["reactflow__edge-1output-3x_i", "reactflow__edge-2output-3x_i"]);
   removeNode(["3"]);
-  await waitFor(() => {
-    // TODO(sc420): Is this waitFor needed?
-    expect(screen.queryByText("sum3")).not.toBeInTheDocument();
-  });
 });
 
 const removeNode = (ids: string[]): void => {

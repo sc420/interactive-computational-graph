@@ -1,31 +1,38 @@
 import { Box, Button, FormGroup, TextField, Typography } from "@mui/material";
 import { useCallback, useState, type FunctionComponent } from "react";
 import {
-  type OnNodesChange,
+  type XYPosition,
   type OnConnect,
   type OnEdgesChange,
+  type OnNodesChange,
 } from "reactflow";
+import type FeatureNodeType from "../features/FeatureNodeType";
 
 interface ReactFlowGraphMockProps {
   onNodesChange: OnNodesChange;
   onEdgesChange: OnEdgesChange;
   onConnect: OnConnect;
+  onDropNode: (featureNodeType: FeatureNodeType, position: XYPosition) => void;
 }
 
 const ReactFlowGraphMock: FunctionComponent<ReactFlowGraphMockProps> = ({
   onNodesChange,
   onEdgesChange,
   onConnect,
+  onDropNode,
 }) => {
   // onNodesChange: remove
   const [jsonRemoveNodeIds, setJsonRemoveNodeIds] = useState<string>("");
   // onEdgesChange: remove
   const [jsonRemoveEdgeIds, setJsonRemoveEdgeIds] = useState<string>("");
   // onConnect
+  // TODO(sc420): Can we use json to reduce to 1 field?
   const [source, setSource] = useState<string>("");
   const [sourceHandle, setSourceHandle] = useState<string>("");
   const [target, setTarget] = useState<string>("");
   const [targetHandle, setTargetHandle] = useState<string>("");
+  // onDropNode
+  const [jsonFeatureNodeType, setJsonFeatureNodeType] = useState<string>("");
 
   const idsJsonToRemoveList = useCallback((jsonIds: string) => {
     const ids = JSON.parse(jsonIds);
@@ -51,6 +58,14 @@ const ReactFlowGraphMock: FunctionComponent<ReactFlowGraphMockProps> = ({
     });
   }, [onConnect, source, sourceHandle, target, targetHandle]);
 
+  const handleOnDropNode = useCallback((): void => {
+    const featureNodeType = JSON.parse(jsonFeatureNodeType) as FeatureNodeType;
+    onDropNode(featureNodeType, {
+      x: 100,
+      y: 100,
+    });
+  }, [onDropNode, jsonFeatureNodeType]);
+
   return (
     <Box
       border={1}
@@ -64,7 +79,7 @@ const ReactFlowGraphMock: FunctionComponent<ReactFlowGraphMockProps> = ({
         <Typography fontWeight="500">Graph Mock</Typography>
       </Box>
 
-      {/* onNodesChange: remove */}
+      {/* onNodesChange: remove IDs */}
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <FormGroup>
           <TextField
@@ -86,7 +101,7 @@ const ReactFlowGraphMock: FunctionComponent<ReactFlowGraphMockProps> = ({
         </FormGroup>
       </Box>
 
-      {/* onEdgesChange: remove */}
+      {/* onEdgesChange: remove IDs */}
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <FormGroup>
           <TextField
@@ -150,6 +165,28 @@ const ReactFlowGraphMock: FunctionComponent<ReactFlowGraphMockProps> = ({
             onClick={handleOnConnect}
           >
             Trigger onConnect
+          </Button>
+        </FormGroup>
+      </Box>
+
+      {/* onDropNode: featureNodeType */}
+      <Box display="flex" justifyContent="space-between" alignItems="center">
+        <FormGroup>
+          <TextField
+            label="onDropNode.jsonFeatureNodeType"
+            size="small"
+            value={jsonFeatureNodeType}
+            onChange={(e) => {
+              setJsonFeatureNodeType(() => e.target.value);
+            }}
+          />
+          <Button
+            variant="outlined"
+            size="small"
+            sx={{ textTransform: "none" }}
+            onClick={handleOnDropNode}
+          >
+            Trigger onDropNode
           </Button>
         </FormGroup>
       </Box>

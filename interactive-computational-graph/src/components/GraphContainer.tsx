@@ -492,6 +492,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
                 onNodesChange={handleNodesChange}
                 onEdgesChange={handleEdgesChange}
                 onConnect={handleConnect}
+                onDropNode={handleDropNode}
               />
             )}
             {/* Graph */}

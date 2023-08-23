@@ -1,5 +1,6 @@
 import { Box } from "@mui/material";
 import { type FunctionComponent, type ReactElement } from "react";
+import { TITLE_HEIGHT } from "../constants";
 import type FeatureNodeType from "../features/FeatureNodeType";
 import type FeatureOperation from "../features/FeatureOperation";
 import type SelectedFeature from "../features/SelectedFeature";
@@ -45,7 +46,11 @@ const FeaturePanel: FunctionComponent<FeaturePanelProps> = ({
         return <EditNodesPanel />;
     }
   };
-  return <Box sx={{ width: 250 }}>{renderSelectedPanel()}</Box>;
+  return (
+    <Box width={250} height={`calc(100vh - ${TITLE_HEIGHT}px)`} overflow="auto">
+      {renderSelectedPanel()}
+    </Box>
+  );
 };
 
 export default FeaturePanel;

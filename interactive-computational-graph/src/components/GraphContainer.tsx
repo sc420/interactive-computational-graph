@@ -460,7 +460,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       <Grid
         container
         direction="row"
-        sx={{ height: `calc(100% - ${TITLE_HEIGHT}px)` }}
+        sx={{ height: `calc(100vh - ${TITLE_HEIGHT}px)` }}
       >
         {/* Feature panel */}
         {selectedFeature !== null && (

@@ -9,6 +9,7 @@ import {
   Grid,
   List,
   ListItem,
+  ListSubheader,
   Typography,
 } from "@mui/material";
 import { type FunctionComponent } from "react";
@@ -35,16 +36,23 @@ const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
   );
 
   return (
-    <>
+    <List disablePadding>
       {/* Header and toolbar */}
-      <Grid alignItems="center" container justifyContent="space-between" px={2}>
-        <Grid item>
-          <Typography fontWeight="500">Add nodes</Typography>
+      <ListSubheader disableGutters>
+        <Grid
+          alignItems="center"
+          container
+          justifyContent="space-between"
+          px={2}
+        >
+          <Grid item>
+            <Typography fontWeight="500">Add nodes</Typography>
+          </Grid>
+          <Grid item>
+            <Button startIcon={<EditIcon />}>Edit</Button>
+          </Grid>
         </Grid>
-        <Grid item>
-          <Button startIcon={<EditIcon />}>Edit</Button>
-        </Grid>
-      </Grid>
+      </ListSubheader>
 
       {/* Value nodes */}
       <Accordion defaultExpanded disableGutters>
@@ -126,7 +134,7 @@ const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
           </List>
         </AccordionDetails>
       </Accordion>
-    </>
+    </List>
   );
 };
 

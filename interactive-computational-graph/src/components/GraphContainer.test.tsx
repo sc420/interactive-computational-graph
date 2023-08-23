@@ -1,5 +1,10 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import { type Connection } from "reactflow";
+import {
+  type Connection,
+  type Edge,
+  type Node,
+  type OnSelectionChangeParams,
+} from "reactflow";
 import { mockReactFlow } from "../ReactFlowMock";
 import type FeatureNodeType from "../features/FeatureNodeType";
 import { randomInteger } from "../features/RandomUtilities";
@@ -15,7 +20,7 @@ beforeEach(() => {
   (randomInteger as jest.Mock).mockReturnValue(100);
 });
 
-it("drops different node types on the graph", () => {
+it("should have different node types on the graph after dropping nodes", () => {
   render(<GraphContainer selectedFeature="dashboard" />);
 
   dropNode({ nodeType: "CONSTANT" });
@@ -33,7 +38,32 @@ it("drops different node types on the graph", () => {
   expect(reactFlowData).toMatchSnapshot();
 });
 
-it("connects two constant nodes to a sum node, and removes the sum node", () => {
+it("should select the last dropped node", () => {
+  render(<GraphContainer selectedFeature="dashboard" />);
+
+  changeSelection([], []);
+
+  // Add a constant node
+  dropNode({ nodeType: "CONSTANT" });
+
+  const nodes1 = getNodes();
+  changeSelection(nodes1, []);
+
+  // Add another constant node
+  dropNode({ nodeType: "CONSTANT" });
+
+  // Get only the second added node
+  const nodes2 = getNodes().filter((node) => node.id === "2");
+  changeSelection(nodes2, []);
+
+  const reactFlowData = {
+    nodes: getNodes(),
+    edges: getEdges(),
+  };
+  expect(reactFlowData).toMatchSnapshot();
+});
+
+it("edges connecting to sum node and sum node itself should be removed", () => {
   render(<GraphContainer selectedFeature="dashboard" />);
 
   // Add two constant nodes
@@ -100,6 +130,21 @@ const removeEdge = (ids: string[]): void => {
     name: "Trigger onEdgesChange: remove",
   });
   fireEvent.click(triggerOnEdgesChangeRemoveButton);
+};
+
+const changeSelection = (nodes: Node[], edges: Edge[]): void => {
+  const onSelectionChangeJsonParams = screen.getByRole("textbox", {
+    name: "onSelectionChange.jsonParams",
+  });
+  const params: OnSelectionChangeParams = { nodes, edges };
+  const jsonParams = JSON.stringify(params);
+  fireEvent.change(onSelectionChangeJsonParams, {
+    target: { value: jsonParams },
+  });
+  const triggerOnSelectionChangeButton = screen.getByRole("button", {
+    name: "Trigger onSelectionChange",
+  });
+  fireEvent.click(triggerOnSelectionChangeButton);
 };
 
 const connectEdge = (

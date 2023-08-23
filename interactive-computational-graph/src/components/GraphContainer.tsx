@@ -493,6 +493,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
                 edges={reactFlowEdges}
                 onNodesChange={handleNodesChange}
                 onEdgesChange={handleEdgesChange}
+                onSelectionChange={handleSelectionChange}
                 onConnect={handleConnect}
                 onDropNode={handleDropNode}
               />

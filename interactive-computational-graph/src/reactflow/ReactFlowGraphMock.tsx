@@ -7,6 +7,7 @@ import {
   type OnConnect,
   type OnEdgesChange,
   type OnNodesChange,
+  type OnSelectionChangeParams,
   type XYPosition,
 } from "reactflow";
 import type FeatureNodeType from "../features/FeatureNodeType";
@@ -16,6 +17,7 @@ interface ReactFlowGraphMockProps {
   edges: Edge[];
   onNodesChange: OnNodesChange;
   onEdgesChange: OnEdgesChange;
+  onSelectionChange: (params: OnSelectionChangeParams) => void;
   onConnect: OnConnect;
   onDropNode: (featureNodeType: FeatureNodeType, position: XYPosition) => void;
 }
@@ -25,6 +27,7 @@ const ReactFlowGraphMock: FunctionComponent<ReactFlowGraphMockProps> = ({
   edges,
   onNodesChange,
   onEdgesChange,
+  onSelectionChange,
   onConnect,
   onDropNode,
 }) => {
@@ -32,6 +35,9 @@ const ReactFlowGraphMock: FunctionComponent<ReactFlowGraphMockProps> = ({
   const [jsonRemoveNodeIds, setJsonRemoveNodeIds] = useState<string>("");
   // onEdgesChange: remove
   const [jsonRemoveEdgeIds, setJsonRemoveEdgeIds] = useState<string>("");
+  // onSelectionChange
+  const [jsonSelectionChangeParams, setJsonSelectionChangeParams] =
+    useState<string>("");
   // onConnect
   const [jsonConnection, setJsonConnection] = useState<string>("");
   // onDropNode
@@ -51,6 +57,13 @@ const ReactFlowGraphMock: FunctionComponent<ReactFlowGraphMockProps> = ({
   const handleOnEdgesChangeRemove = useCallback((): void => {
     onEdgesChange(idsJsonToRemoveList(jsonRemoveEdgeIds));
   }, [idsJsonToRemoveList, onEdgesChange, jsonRemoveEdgeIds]);
+
+  const handleOnSelectionChange = useCallback((): void => {
+    const params = JSON.parse(
+      jsonSelectionChangeParams,
+    ) as OnSelectionChangeParams;
+    onSelectionChange(params);
+  }, [jsonSelectionChangeParams, onSelectionChange]);
 
   const handleOnConnect = useCallback((): void => {
     const connection = JSON.parse(jsonConnection) as Connection;
@@ -143,6 +156,28 @@ const ReactFlowGraphMock: FunctionComponent<ReactFlowGraphMockProps> = ({
             onClick={handleOnEdgesChangeRemove}
           >
             Trigger onEdgesChange: remove
+          </Button>
+        </FormGroup>
+      </Box>
+
+      {/* onSelectionChange */}
+      <Box display="flex" justifyContent="space-between" alignItems="center">
+        <FormGroup>
+          <TextField
+            label="onSelectionChange.jsonParams"
+            size="small"
+            value={jsonSelectionChangeParams}
+            onChange={(e) => {
+              setJsonSelectionChangeParams(() => e.target.value);
+            }}
+          />
+          <Button
+            variant="outlined"
+            size="small"
+            sx={{ textTransform: "none" }}
+            onClick={handleOnSelectionChange}
+          >
+            Trigger onSelectionChange
           </Button>
         </FormGroup>
       </Box>

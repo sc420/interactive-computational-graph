@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react";
+import { type Connection } from "reactflow";
 import { mockReactFlow } from "../ReactFlowMock";
 import type FeatureNodeType from "../features/FeatureNodeType";
 import GraphContainer from "./GraphContainer";
@@ -76,22 +77,19 @@ const connectEdge = (
   target: string,
   targetHandle: string,
 ): void => {
-  const onConnectSource = screen.getByRole("textbox", {
-    name: "onConnect.source",
+  const connection: Connection = {
+    source,
+    sourceHandle,
+    target,
+    targetHandle,
+  };
+  const jsonConnection = JSON.stringify(connection);
+  const onConnectJsonConnection = screen.getByRole("textbox", {
+    name: "onConnect.jsonConnection",
   });
-  fireEvent.change(onConnectSource, { target: { value: source } });
-  const onConnectSourceHandle = screen.getByRole("textbox", {
-    name: "onConnect.sourceHandle",
+  fireEvent.change(onConnectJsonConnection, {
+    target: { value: jsonConnection },
   });
-  fireEvent.change(onConnectSourceHandle, { target: { value: sourceHandle } });
-  const onConnectTarget = screen.getByRole("textbox", {
-    name: "onConnect.target",
-  });
-  fireEvent.change(onConnectTarget, { target: { value: target } });
-  const onConnectTargetHandle = screen.getByRole("textbox", {
-    name: "onConnect.targetHandle",
-  });
-  fireEvent.change(onConnectTargetHandle, { target: { value: targetHandle } });
   const triggerOnConnectButton = screen.getByRole("button", {
     name: "Trigger onConnect",
   });

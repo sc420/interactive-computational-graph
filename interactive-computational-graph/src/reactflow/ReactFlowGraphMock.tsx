@@ -1,10 +1,11 @@
 import { Box, Button, FormGroup, TextField, Typography } from "@mui/material";
 import { useCallback, useState, type FunctionComponent } from "react";
 import {
-  type XYPosition,
+  type Connection,
   type OnConnect,
   type OnEdgesChange,
   type OnNodesChange,
+  type XYPosition,
 } from "reactflow";
 import type FeatureNodeType from "../features/FeatureNodeType";
 
@@ -26,11 +27,7 @@ const ReactFlowGraphMock: FunctionComponent<ReactFlowGraphMockProps> = ({
   // onEdgesChange: remove
   const [jsonRemoveEdgeIds, setJsonRemoveEdgeIds] = useState<string>("");
   // onConnect
-  // TODO(sc420): Can we use json to reduce to 1 field?
-  const [source, setSource] = useState<string>("");
-  const [sourceHandle, setSourceHandle] = useState<string>("");
-  const [target, setTarget] = useState<string>("");
-  const [targetHandle, setTargetHandle] = useState<string>("");
+  const [jsonConnection, setJsonConnection] = useState<string>("");
   // onDropNode
   const [jsonFeatureNodeType, setJsonFeatureNodeType] = useState<string>("");
 
@@ -50,13 +47,9 @@ const ReactFlowGraphMock: FunctionComponent<ReactFlowGraphMockProps> = ({
   }, [idsJsonToRemoveList, onEdgesChange, jsonRemoveEdgeIds]);
 
   const handleOnConnect = useCallback((): void => {
-    onConnect({
-      source,
-      sourceHandle,
-      target,
-      targetHandle,
-    });
-  }, [onConnect, source, sourceHandle, target, targetHandle]);
+    const connection = JSON.parse(jsonConnection) as Connection;
+    onConnect(connection);
+  }, [jsonConnection, onConnect]);
 
   const handleOnDropNode = useCallback((): void => {
     const featureNodeType = JSON.parse(jsonFeatureNodeType) as FeatureNodeType;
@@ -127,35 +120,11 @@ const ReactFlowGraphMock: FunctionComponent<ReactFlowGraphMockProps> = ({
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <FormGroup>
           <TextField
-            label="onConnect.source"
+            label="onConnect.jsonConnection"
             size="small"
-            value={source}
+            value={jsonConnection}
             onChange={(e) => {
-              setSource(() => e.target.value);
-            }}
-          />
-          <TextField
-            label="onConnect.sourceHandle"
-            size="small"
-            value={sourceHandle}
-            onChange={(e) => {
-              setSourceHandle(() => e.target.value);
-            }}
-          />
-          <TextField
-            label="onConnect.target"
-            size="small"
-            value={target}
-            onChange={(e) => {
-              setTarget(() => e.target.value);
-            }}
-          />
-          <TextField
-            label="onConnect.targetHandle"
-            size="small"
-            value={targetHandle}
-            onChange={(e) => {
-              setTargetHandle(() => e.target.value);
+              setJsonConnection(() => e.target.value);
             }}
           />
           <Button

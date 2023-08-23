@@ -489,6 +489,8 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
             {/* Graph mock */}
             {isTest && (
               <ReactFlowGraphMock
+                nodes={reactFlowNodes}
+                edges={reactFlowEdges}
                 onNodesChange={handleNodesChange}
                 onEdgesChange={handleEdgesChange}
                 onConnect={handleConnect}

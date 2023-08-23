@@ -10,6 +10,7 @@ import type FeatureNodeType from "./FeatureNodeType";
 import type FeatureOperation from "./FeatureOperation";
 import type NodeData from "./NodeData";
 import type NonEmptyConnection from "./NonEmptyConnection";
+import { randomInteger } from "./RandomUtilities";
 
 type InputChangeCallback = (
   nodeId: string,
@@ -407,10 +408,6 @@ const findLastSelectedNode = (
     return null;
   }
   return nodes.find((node) => node.id === lastSelectedNodeId) ?? null;
-};
-
-const randomInteger = (min: number, max: number): number => {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
 export {

@@ -2,10 +2,17 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { type Connection } from "reactflow";
 import { mockReactFlow } from "../ReactFlowMock";
 import type FeatureNodeType from "../features/FeatureNodeType";
+import { randomInteger } from "../features/RandomUtilities";
 import GraphContainer from "./GraphContainer";
+
+jest.mock("../features/RandomUtilities");
 
 beforeAll(() => {
   mockReactFlow();
+});
+
+beforeEach(() => {
+  (randomInteger as jest.Mock).mockReturnValue(100);
 });
 
 it("drops different node types on the graph", () => {
@@ -15,10 +22,15 @@ it("drops different node types on the graph", () => {
   dropNode({ nodeType: "VARIABLE" });
   dropNode({ nodeType: "OPERATION", operationId: "sum" });
 
-  // TODO(sc420): Dump the graph by json and check if 3 nodes are there
   expect(screen.getByText("c1")).toBeInTheDocument();
   expect(screen.getByText("v2")).toBeInTheDocument();
   expect(screen.getByText("sum3")).toBeInTheDocument();
+
+  const reactFlowData = {
+    nodes: getNodes(),
+    edges: getEdges(),
+  };
+  expect(reactFlowData).toMatchSnapshot();
 });
 
 it("connects two constant nodes to a sum node, and removes the sum node", () => {
@@ -41,11 +53,30 @@ it("connects two constant nodes to a sum node, and removes the sum node", () => 
   removeEdge(["reactflow__edge-1output-3x_i", "reactflow__edge-2output-3x_i"]);
   removeNode(["3"]);
 
-  // TODO(sc420): Dump the graph by json and check if there're only 2 nodes left
   expect(screen.getByText("c1")).toBeInTheDocument();
   expect(screen.getByText("c2")).toBeInTheDocument();
   expect(screen.queryByText("sum3")).toBeNull();
+
+  const reactFlowData = {
+    nodes: getNodes(),
+    edges: getEdges(),
+  };
+  expect(reactFlowData).toMatchSnapshot();
 });
+
+const getNodes = (): Node[] => {
+  const jsonNodes = screen.getByRole("textbox", {
+    name: "jsonNodes",
+  });
+  return JSON.parse((jsonNodes as HTMLInputElement).value);
+};
+
+const getEdges = (): Node[] => {
+  const jsonEdges = screen.getByRole("textbox", {
+    name: "jsonEdges",
+  });
+  return JSON.parse((jsonEdges as HTMLInputElement).value);
+};
 
 const removeNode = (ids: string[]): void => {
   const onNodesChangeRemoveJsonIds = screen.getByRole("textbox", {

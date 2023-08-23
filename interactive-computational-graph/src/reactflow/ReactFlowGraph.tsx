@@ -102,8 +102,8 @@ const ReactFlowGraph: FunctionComponent<ReactFlowGraphProps> = ({
     >
       <div ref={reactFlowWrapper}>
         <ReactFlow
-          edges={edges}
           nodes={nodes}
+          edges={edges}
           nodeTypes={nodeTypes}
           onInit={handleInit}
           onNodesChange={onNodesChange}

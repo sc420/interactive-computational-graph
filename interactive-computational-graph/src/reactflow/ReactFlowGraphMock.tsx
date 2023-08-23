@@ -2,6 +2,8 @@ import { Box, Button, FormGroup, TextField, Typography } from "@mui/material";
 import { useCallback, useState, type FunctionComponent } from "react";
 import {
   type Connection,
+  type Edge,
+  type Node,
   type OnConnect,
   type OnEdgesChange,
   type OnNodesChange,
@@ -10,6 +12,8 @@ import {
 import type FeatureNodeType from "../features/FeatureNodeType";
 
 interface ReactFlowGraphMockProps {
+  nodes: Node[];
+  edges: Edge[];
   onNodesChange: OnNodesChange;
   onEdgesChange: OnEdgesChange;
   onConnect: OnConnect;
@@ -17,6 +21,8 @@ interface ReactFlowGraphMockProps {
 }
 
 const ReactFlowGraphMock: FunctionComponent<ReactFlowGraphMockProps> = ({
+  nodes,
+  edges,
   onNodesChange,
   onEdgesChange,
   onConnect,
@@ -70,6 +76,31 @@ const ReactFlowGraphMock: FunctionComponent<ReactFlowGraphMockProps> = ({
     >
       <Box>
         <Typography fontWeight="500">Graph Mock</Typography>
+      </Box>
+
+      {/* nodes and edges */}
+      <Box display="flex" justifyContent="space-between" alignItems="center">
+        <FormGroup>
+          {/* nodes */}
+          <TextField
+            label="jsonNodes"
+            size="small"
+            value={JSON.stringify(nodes)}
+            InputProps={{
+              readOnly: true,
+            }}
+          />
+
+          {/* edges */}
+          <TextField
+            label="jsonEdges"
+            size="small"
+            value={JSON.stringify(edges)}
+            InputProps={{
+              readOnly: true,
+            }}
+          />
+        </FormGroup>
       </Box>
 
       {/* onNodesChange: remove IDs */}

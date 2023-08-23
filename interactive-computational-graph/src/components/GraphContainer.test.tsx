@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import {
   type Connection,
   type Edge,
@@ -122,6 +122,34 @@ it("input text fields should hide/show properly", () => {
   removeEdge(["reactflow__edge-1output-3x_i", "reactflow__edge-2output-3x_i"]);
 
   expect(screen.getByTestId("input-item-3-x_i")).toBeInTheDocument();
+});
+
+it("derivative target should reset when the target node is removed", () => {
+  render(<GraphContainer selectedFeature="dashboard" />);
+
+  // Add two constant nodes
+  const constantItem = screen.getByText("Constant");
+  fireEvent.click(constantItem);
+  fireEvent.click(constantItem);
+
+  // Add a sum node
+  const sumItem = screen.getByText("Sum");
+  fireEvent.click(sumItem);
+
+  // Connect from the constant nodes to the sum node
+  connectEdge("1", "output", "3", "x_i");
+  connectEdge("2", "output", "3", "x_i");
+
+  // Select the sum node as the derivative target
+  const derivativeTargetAutocomplete = screen.getByTestId("derivative-target");
+  const input = within(derivativeTargetAutocomplete).getByRole("combobox");
+  fireEvent.change(input, { target: { value: "3" } });
+
+  // Remove the sum node
+  removeEdge(["reactflow__edge-1output-3x_i", "reactflow__edge-2output-3x_i"]);
+  removeNode(["3"]);
+
+  expect(input).toHaveValue("");
 });
 
 const getNodes = (): Node[] => {

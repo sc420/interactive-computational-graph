@@ -76,6 +76,7 @@ const GraphToolbar: FunctionComponent<GraphToolbarProps> = ({
 
         <FormGroup>
           <Autocomplete
+            data-testid="derivative-target"
             options={nodeIds}
             value={derivativeTarget}
             sx={{ width: 200 }}

@@ -63,7 +63,7 @@ it("should select the last dropped node", () => {
   expect(reactFlowData).toMatchSnapshot();
 });
 
-it("edges connecting to sum node and sum node itself should be removed", () => {
+it("edges and sum node itself should be removed after removing sum node", () => {
   render(<GraphContainer selectedFeature="dashboard" />);
 
   // Add two constant nodes
@@ -92,6 +92,36 @@ it("edges connecting to sum node and sum node itself should be removed", () => {
     edges: getEdges(),
   };
   expect(reactFlowData).toMatchSnapshot();
+});
+
+it("input text fields should hide/show properly", () => {
+  render(<GraphContainer selectedFeature="dashboard" />);
+
+  // Add two constant nodes
+  const constantItem = screen.getByText("Constant");
+  fireEvent.click(constantItem);
+  fireEvent.click(constantItem);
+
+  // Add a sum node
+  const sumItem = screen.getByText("Sum");
+  fireEvent.click(sumItem);
+
+  expect(screen.getByTestId("input-item-3-x_i")).toBeInTheDocument();
+
+  // Connect from the 1st constant node to the sum node
+  connectEdge("1", "output", "3", "x_i");
+
+  expect(screen.queryByTestId("input-item-3-x_i")).toBeNull();
+
+  // Connect from the 2nd constant node to the sum node
+  connectEdge("2", "output", "3", "x_i");
+
+  expect(screen.queryByTestId("input-item-3-x_i")).toBeNull();
+
+  // Disconnect from the constant nodes to the sum node
+  removeEdge(["reactflow__edge-1output-3x_i", "reactflow__edge-2output-3x_i"]);
+
+  expect(screen.getByTestId("input-item-3-x_i")).toBeInTheDocument();
 });
 
 const getNodes = (): Node[] => {

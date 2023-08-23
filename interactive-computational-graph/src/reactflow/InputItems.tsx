@@ -99,6 +99,7 @@ const InputItems: FunctionComponent<InputItemProps> = ({
             {item.showInputField && (
               <OutlinedInput
                 id={getInputId(item.id)}
+                data-testid={getInputId(item.id)}
                 defaultValue={item.value}
                 size="small"
                 inputProps={{

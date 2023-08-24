@@ -21,7 +21,7 @@ class Graph {
    * the current target node. For forward mode, it propagates from left to
    * right. For reverse mode, it propagates from right to left.
    */
-  private readonly nodeIdToDerivatives = new Map<string, number>();
+  private readonly nodeIdToDerivatives = new Map<string, string>();
 
   getNodes(): CoreNode[] {
     return Array.from(this.nodeIdToNodes.values());
@@ -95,20 +95,20 @@ class Graph {
     this.differentiationMode = mode;
   }
 
-  getNodeValue(nodeId: string): number {
+  getNodeValue(nodeId: string): string {
     const node = this.getOneNode(nodeId);
     return node.getValue();
   }
 
-  getNodeDerivative(nodeId: string): number {
+  getNodeDerivative(nodeId: string): string {
     const derivative = this.nodeIdToDerivatives.get(nodeId);
     if (derivative === undefined) {
-      return 0;
+      return "0";
     }
     return derivative;
   }
 
-  setNodeValue(nodeId: string, value: number): void {
+  setNodeValue(nodeId: string, value: string): void {
     const node = this.getOneNode(nodeId);
     node.setValue(value);
   }
@@ -332,10 +332,10 @@ class Graph {
    * forward differentiation mode and d(targetNode)/d(node) for reverse
    * differentiation mode.
    */
-  private calculateNodeDerivative(node: CoreNode): number {
+  private calculateNodeDerivative(node: CoreNode): string {
     if (node.getId() === this.targetNodeId) {
       // d(node)/d(node) = 1 (non-constant) or 0 (constant)
-      return node.calculateDfdy(node);
+      return node.calculateDfdx(node);
     }
 
     let totalDerivative = 0;
@@ -348,10 +348,11 @@ class Graph {
           // d(inputNode)/d(targetNode)
           const derivative1 = this.getNodeDerivative(inputNode.getId());
           // d(node)/d(inputNode)
-          const derivative2 = node.calculateDfdy(inputNode);
+          const derivative2 = node.calculateDfdx(inputNode);
           // d(node)/d(targetNode) = d(inputNode)/d(targetNode) *
           // d(node)/d(inputNode) (chain rule)
-          totalDerivative += derivative1 * derivative2;
+          // TODO(sc420): Allow customization of product
+          totalDerivative += parseFloat(derivative1) * parseFloat(derivative2);
         });
     } else {
       // Update d(targetNode)/d(node) for reverse mode
@@ -360,15 +361,16 @@ class Graph {
         .getOutputNodes()
         .forEach((outputNode) => {
           // d(outputNode)/d(node)
-          const derivative1 = outputNode.calculateDfdy(node);
+          const derivative1 = outputNode.calculateDfdx(node);
           // d(targetNode)/d(outputNode)
           const derivative2 = this.getNodeDerivative(outputNode.getId());
           // d(targetNode)/d(node) = d(outputNode)/d(node) *
           // d(targetNode)/d(outputNode)
-          totalDerivative += derivative1 * derivative2;
+          // TODO(sc420): Allow customization of product
+          totalDerivative += parseFloat(derivative1) * parseFloat(derivative2);
         });
     }
-    return totalDerivative;
+    return `${totalDerivative}`;
   }
 
   /**

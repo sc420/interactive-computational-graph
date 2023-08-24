@@ -3,11 +3,6 @@ import NodeRelationship from "./NodeRelationship";
 import type NodeType from "./NodeType";
 import type Operation from "./Operation";
 import type Port from "./Port";
-import {
-  type NodeData,
-  type NodeIdToNodeData,
-  type PortToNodesData,
-} from "./PortToNodesData";
 
 class OperationNode implements CoreNode {
   private readonly id: string;
@@ -18,7 +13,7 @@ class OperationNode implements CoreNode {
 
   private readonly operation: Operation;
 
-  private value: number = 0;
+  private value: string = "0";
 
   constructor(id: string, inputPorts: Port[], operation: Operation) {
     this.id = id;
@@ -39,66 +34,61 @@ class OperationNode implements CoreNode {
     return false;
   }
 
-  getValue(): number {
+  getValue(): string {
     return this.value;
   }
 
-  setValue(value: number): void {
+  setValue(value: string): void {
     throw new Error("Operation node should only update f, not set a value");
   }
 
   updateF(): void {
-    const portToNodeData = this.buildPortToNodesData();
-    this.value = this.operation.evalF(portToNodeData);
+    const fInputPortToNodes = this.buildFInputPortToNodes();
+    const fInputNodeToValues = this.buildFInputNodeToValues();
+    this.value = this.operation.evalF(fInputPortToNodes, fInputNodeToValues);
   }
 
-  calculateDfdy(y: CoreNode): number {
-    if (y.isConstant()) {
-      return 0;
+  calculateDfdx(x: CoreNode): string {
+    if (x.isConstant()) {
+      return "0";
     }
-    if (y.getId() === this.getId()) {
-      return 1;
+    if (x.getId() === this.getId()) {
+      return "1";
     }
-    const portToNodeData = this.buildPortToNodesData();
-    const yNodeData = this.buildNodeData(y);
-    return this.operation.evalDfdy(portToNodeData, yNodeData);
+    const fInputPortToNodes = this.buildFInputPortToNodes();
+    const fInputNodeToValues = this.buildFInputNodeToValues();
+    return this.operation.evalDfdx(
+      fInputPortToNodes,
+      fInputNodeToValues,
+      x.getId(),
+    );
   }
 
   getRelationship(): NodeRelationship {
     return this.nodeRelationship;
   }
 
-  private buildPortToNodesData(): PortToNodesData {
-    const portToNodesData: PortToNodesData = {};
-    this.addInputPortToNodesData(portToNodesData);
-    this.addOutputPortToNodesData(portToNodesData);
-    return portToNodesData;
-  }
-
-  private addInputPortToNodesData(portToNodesData: PortToNodesData): void {
+  private buildFInputPortToNodes(): Record<string, string[]> {
+    const fInputPortToNodes: Record<string, string[]> = {};
     this.inputPorts.forEach((inputPort) => {
-      const portId = inputPort.getId();
-      const inputNodes = this.nodeRelationship.getInputNodesByPort(portId);
-      portToNodesData[portId] = this.buildNodeIdToNodeData(inputNodes);
+      const inputPortId = inputPort.getId();
+      const inputNodes = this.nodeRelationship.getInputNodesByPort(inputPortId);
+      const inputNodeIds = inputNodes.map((node) => node.getId());
+      fInputPortToNodes[inputPortId] = inputNodeIds;
     });
+    return fInputPortToNodes;
   }
 
-  private addOutputPortToNodesData(portToNodesData: PortToNodesData): void {
-    const outputNodes = this.nodeRelationship.getOutputNodes();
-    portToNodesData[this.nodeRelationship.outputPort.getId()] =
-      this.buildNodeIdToNodeData(outputNodes);
-  }
-
-  private buildNodeIdToNodeData(nodes: CoreNode[]): NodeIdToNodeData {
-    const nodeIdToNodeData: NodeIdToNodeData = {};
-    nodes.forEach((node) => {
-      nodeIdToNodeData[node.getId()] = this.buildNodeData(node);
+  private buildFInputNodeToValues(): Record<string, string> {
+    const fInputNodeToValues: Record<string, string> = {};
+    this.inputPorts.forEach((inputPort) => {
+      const inputPortId = inputPort.getId();
+      const inputNodes = this.nodeRelationship.getInputNodesByPort(inputPortId);
+      inputNodes.forEach((inputNode) => {
+        fInputNodeToValues[inputNode.getId()] = inputNode.getValue();
+      });
     });
-    return nodeIdToNodeData;
-  }
-
-  private buildNodeData(node: CoreNode): NodeData {
-    return { id: node.getId(), value: node.getValue() };
+    return fInputNodeToValues;
   }
 }
 

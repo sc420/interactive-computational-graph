@@ -22,15 +22,15 @@ import Graph from "../core/Graph";
 import Operation from "../core/Operation";
 import Port from "../core/Port";
 import {
-  ADD_DFDY_CODE,
+  ADD_DFDX_CODE,
   ADD_F_CODE,
-  PRODUCT_DFDY_CODE,
+  PRODUCT_DFDX_CODE,
   PRODUCT_F_CODE,
-  SQUARED_ERROR_DFDY_CODE,
+  SQUARED_ERROR_DFDX_CODE,
   SQUARED_ERROR_F_CODE,
-  SUM_DFDY_CODE,
+  SUM_DFDX_CODE,
   SUM_F_CODE,
-  TEMPLATE_DFDY_CODE,
+  TEMPLATE_DFDX_CODE,
   TEMPLATE_F_CODE,
 } from "../features/BuiltInCode";
 import {
@@ -95,7 +95,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       id: "add",
       text: "Add",
       type: "SIMPLE",
-      operation: new Operation(ADD_F_CODE, ADD_DFDY_CODE),
+      operation: new Operation(ADD_F_CODE, ADD_DFDX_CODE),
       inputPorts: [new Port("a", false), new Port("b", false)],
       helpText: "Add two numbers $ a + b $",
     },
@@ -103,7 +103,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       id: "sum",
       text: "Sum",
       type: "SIMPLE",
-      operation: new Operation(SUM_F_CODE, SUM_DFDY_CODE),
+      operation: new Operation(SUM_F_CODE, SUM_DFDX_CODE),
       inputPorts: [new Port("x_i", true)],
       helpText: "Add all inputs $ \\sum_i x_{i} $",
     },
@@ -111,7 +111,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       id: "product",
       text: "Product",
       type: "SIMPLE",
-      operation: new Operation(PRODUCT_F_CODE, PRODUCT_DFDY_CODE),
+      operation: new Operation(PRODUCT_F_CODE, PRODUCT_DFDX_CODE),
       inputPorts: [new Port("x_i", true)],
       helpText: "Multiply all inputs $ \\prod_i x_{i} $",
     },
@@ -119,8 +119,8 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       id: "squared_error",
       text: "Squared Error",
       type: "SIMPLE",
-      operation: new Operation(SQUARED_ERROR_F_CODE, SQUARED_ERROR_DFDY_CODE),
-      inputPorts: [new Port("y_estimate", false), new Port("y_true", false)],
+      operation: new Operation(SQUARED_ERROR_F_CODE, SQUARED_ERROR_DFDX_CODE),
+      inputPorts: [new Port("y_true", false), new Port("y_estimate", false)],
       helpText: "Calculates squared error $ (y_t - y_e)^2 $",
     },
   ]);
@@ -251,7 +251,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       id,
       text: `Operation ${nextOperationId}`,
       type: "CUSTOM",
-      operation: new Operation(TEMPLATE_F_CODE, TEMPLATE_DFDY_CODE),
+      operation: new Operation(TEMPLATE_F_CODE, TEMPLATE_DFDX_CODE),
       inputPorts: [],
       helpText: "Write some Markdown and LaTeX here",
     };

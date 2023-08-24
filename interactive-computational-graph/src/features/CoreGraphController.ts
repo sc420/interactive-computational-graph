@@ -115,16 +115,16 @@ const updateNodeValueById = (
   const nodeType = graph.getNodeType(nodeId);
   switch (nodeType) {
     case "CONSTANT": {
-      graph.setNodeValue(nodeId, Number(value));
+      graph.setNodeValue(nodeId, value);
       break;
     }
     case "VARIABLE": {
-      graph.setNodeValue(nodeId, Number(value));
+      graph.setNodeValue(nodeId, value);
       break;
     }
     case "OPERATION": {
       const dummyInputNodeId = getDummyInputNodeId(nodeId, inputPortId);
-      graph.setNodeValue(dummyInputNodeId, Number(value));
+      graph.setNodeValue(dummyInputNodeId, value);
       break;
     }
   }

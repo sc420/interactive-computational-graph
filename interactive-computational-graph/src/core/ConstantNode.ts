@@ -9,7 +9,7 @@ class ConstantNode implements CoreNode {
     [],
   );
 
-  private value: number = 0;
+  private value: string = "0";
 
   constructor(id: string) {
     this.id = id;
@@ -27,18 +27,18 @@ class ConstantNode implements CoreNode {
     return true;
   }
 
-  getValue(): number {
+  getValue(): string {
     return this.value;
   }
 
-  setValue(value: number): void {
+  setValue(value: string): void {
     this.value = value;
   }
 
   updateF(): void {}
 
-  calculateDfdy(y: CoreNode): number {
-    return 0;
+  calculateDfdx(x: CoreNode): string {
+    return "0";
   }
 
   getRelationship(): NodeRelationship {

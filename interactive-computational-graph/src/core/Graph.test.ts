@@ -1,15 +1,15 @@
 import {
-  IDENTITY_DFDY_CODE,
+  IDENTITY_DFDX_CODE,
   IDENTITY_F_CODE,
-  PRODUCT_DFDY_CODE,
+  PRODUCT_DFDX_CODE,
   PRODUCT_F_CODE,
-  RELU_DFDY_CODE,
+  RELU_DFDX_CODE,
   RELU_F_CODE,
-  SIGMOID_DFDY_CODE,
+  SIGMOID_DFDX_CODE,
   SIGMOID_F_CODE,
-  SQUARED_ERROR_DFDY_CODE,
+  SQUARED_ERROR_DFDX_CODE,
   SQUARED_ERROR_F_CODE,
-  SUM_DFDY_CODE,
+  SUM_DFDX_CODE,
   SUM_F_CODE,
 } from "../features/BuiltInCode";
 import ConstantNode from "./ConstantNode";
@@ -58,7 +58,7 @@ describe("manipulating connections", () => {
     }).toThrow(nodeNotExistError);
 
     expect(() => {
-      emptyGraph.setNodeValue("v1", 1);
+      emptyGraph.setNodeValue("v1", "1");
     }).toThrow(nodeNotExistError);
 
     expect(() => {
@@ -157,11 +157,11 @@ describe("setting node values", () => {
   test("updating non-operation node values should success", () => {
     const graph = buildSmallGraph();
 
-    graph.setNodeValue("v1", 10);
-    graph.setNodeValue("v2", 20);
+    graph.setNodeValue("v1", "10");
+    graph.setNodeValue("v2", "20");
 
-    expect(graph.getNodeValue("v1")).toBeCloseTo(10);
-    expect(graph.getNodeValue("v2")).toBeCloseTo(20);
+    expect(graph.getNodeValue("v1")).toBe("10");
+    expect(graph.getNodeValue("v2")).toBe("20");
   });
 
   test("updating operation node values should fail", () => {
@@ -170,7 +170,7 @@ describe("setting node values", () => {
     graph.addNode(sumNode1);
 
     expect(() => {
-      graph.setNodeValue("sum1", 5);
+      graph.setNodeValue("sum1", "5");
     }).toThrow("Operation node should only update f, not set a value");
   });
 });
@@ -182,7 +182,7 @@ describe("updating f values", () => {
     const updatedNodes = graph.updateFValues();
     const expectedUpdatedNodes: string[] = ["v1", "v2", "sum1"];
     expect(updatedNodes.sort()).toEqual(expectedUpdatedNodes.sort());
-    expect(graph.getNodeValue("sum1")).toBeCloseTo(3);
+    expect(parseFloat(graph.getNodeValue("sum1"))).toBeCloseTo(3);
   });
 
   test("should update f values for medium graph", () => {
@@ -200,10 +200,10 @@ describe("updating f values", () => {
       "identity1",
     ];
     expect(updatedNodes.sort()).toEqual(expectedUpdatedNodes.sort());
-    expect(graph.getNodeValue("sum1")).toBeCloseTo(3);
-    expect(graph.getNodeValue("sum2")).toBeCloseTo(2);
-    expect(graph.getNodeValue("product1")).toBeCloseTo(30);
-    expect(graph.getNodeValue("identity1")).toBeCloseTo(30);
+    expect(parseFloat(graph.getNodeValue("sum1"))).toBeCloseTo(3);
+    expect(parseFloat(graph.getNodeValue("sum2"))).toBeCloseTo(2);
+    expect(parseFloat(graph.getNodeValue("product1"))).toBeCloseTo(30);
+    expect(parseFloat(graph.getNodeValue("identity1"))).toBeCloseTo(30);
   });
 
   test("should update f values for complex graph", () => {
@@ -222,11 +222,11 @@ describe("updating f values", () => {
       "identity1",
     ];
     expect(updatedNodes.sort()).toEqual(expectedUpdatedNodes.sort());
-    expect(graph.getNodeValue("sum1")).toBeCloseTo(3);
-    expect(graph.getNodeValue("sum2")).toBeCloseTo(2);
-    expect(graph.getNodeValue("product1")).toBeCloseTo(60);
-    expect(graph.getNodeValue("product2")).toBeCloseTo(10);
-    expect(graph.getNodeValue("identity1")).toBeCloseTo(10);
+    expect(parseFloat(graph.getNodeValue("sum1"))).toBeCloseTo(3);
+    expect(parseFloat(graph.getNodeValue("sum2"))).toBeCloseTo(2);
+    expect(parseFloat(graph.getNodeValue("product1"))).toBeCloseTo(60);
+    expect(parseFloat(graph.getNodeValue("product2"))).toBeCloseTo(10);
+    expect(parseFloat(graph.getNodeValue("identity1"))).toBeCloseTo(10);
   });
 
   test("should update f values for neural network graph", () => {
@@ -262,20 +262,20 @@ describe("updating f values", () => {
       "se",
     ];
     expect(updatedNodes.sort()).toEqual(expectedUpdatedNodes.sort());
-    expect(graph.getNodeValue("mul_h1_1_1")).toBeCloseTo(0);
-    expect(graph.getNodeValue("mul_h1_1_2")).toBeCloseTo(-0.2);
-    expect(graph.getNodeValue("mul_h1_2_1")).toBeCloseTo(0);
-    expect(graph.getNodeValue("mul_h1_2_2")).toBeCloseTo(0.2);
-    expect(graph.getNodeValue("sum_h1_1")).toBeCloseTo(-0.5);
-    expect(graph.getNodeValue("sum_h1_2")).toBeCloseTo(0.5);
-    expect(graph.getNodeValue("relu_h1_1")).toBeCloseTo(0);
-    expect(graph.getNodeValue("relu_h1_2")).toBeCloseTo(0.5);
-    expect(graph.getNodeValue("mul_o_1_1")).toBeCloseTo(0);
-    expect(graph.getNodeValue("mul_o_1_2")).toBeCloseTo(0.25);
-    expect(graph.getNodeValue("sum_o_1")).toBeCloseTo(0);
-    expect(graph.getNodeValue("sigmoid_o_1")).toBeCloseTo(0.5);
-    expect(graph.getNodeValue("y_estimate")).toBeCloseTo(0.5);
-    expect(graph.getNodeValue("se")).toBeCloseTo(0.25);
+    expect(parseFloat(graph.getNodeValue("mul_h1_1_1"))).toBeCloseTo(0);
+    expect(parseFloat(graph.getNodeValue("mul_h1_1_2"))).toBeCloseTo(-0.2);
+    expect(parseFloat(graph.getNodeValue("mul_h1_2_1"))).toBeCloseTo(0);
+    expect(parseFloat(graph.getNodeValue("mul_h1_2_2"))).toBeCloseTo(0.2);
+    expect(parseFloat(graph.getNodeValue("sum_h1_1"))).toBeCloseTo(-0.5);
+    expect(parseFloat(graph.getNodeValue("sum_h1_2"))).toBeCloseTo(0.5);
+    expect(parseFloat(graph.getNodeValue("relu_h1_1"))).toBeCloseTo(0);
+    expect(parseFloat(graph.getNodeValue("relu_h1_2"))).toBeCloseTo(0.5);
+    expect(parseFloat(graph.getNodeValue("mul_o_1_1"))).toBeCloseTo(0);
+    expect(parseFloat(graph.getNodeValue("mul_o_1_2"))).toBeCloseTo(0.25);
+    expect(parseFloat(graph.getNodeValue("sum_o_1"))).toBeCloseTo(0);
+    expect(parseFloat(graph.getNodeValue("sigmoid_o_1"))).toBeCloseTo(0.5);
+    expect(parseFloat(graph.getNodeValue("y_estimate"))).toBeCloseTo(0.5);
+    expect(parseFloat(graph.getNodeValue("se"))).toBeCloseTo(0.25);
   });
 });
 
@@ -288,9 +288,9 @@ describe("updating derivative values", () => {
     graph.updateDerivatives();
 
     graph.setDifferentiationMode("FORWARD");
-    expect(graph.getNodeDerivative("v1")).toBeCloseTo(0);
-    expect(graph.getNodeDerivative("v2")).toBeCloseTo(0);
-    expect(graph.getNodeDerivative("sum1")).toBeCloseTo(0);
+    expect(parseFloat(graph.getNodeDerivative("v1"))).toBeCloseTo(0);
+    expect(parseFloat(graph.getNodeDerivative("v2"))).toBeCloseTo(0);
+    expect(parseFloat(graph.getNodeDerivative("sum1"))).toBeCloseTo(0);
   });
 
   test("should clear derivatives when changing target", () => {
@@ -301,9 +301,9 @@ describe("updating derivative values", () => {
     graph.updateDerivatives();
 
     graph.setTargetNode("v1");
-    expect(graph.getNodeDerivative("v1")).toBeCloseTo(0);
-    expect(graph.getNodeDerivative("v2")).toBeCloseTo(0);
-    expect(graph.getNodeDerivative("sum1")).toBeCloseTo(0);
+    expect(parseFloat(graph.getNodeDerivative("v1"))).toBeCloseTo(0);
+    expect(parseFloat(graph.getNodeDerivative("v2"))).toBeCloseTo(0);
+    expect(parseFloat(graph.getNodeDerivative("sum1"))).toBeCloseTo(0);
   });
 
   test("should update derivatives in reverse mode for small graph", () => {
@@ -317,22 +317,22 @@ describe("updating derivative values", () => {
     let expectedUpdatedNodes: string[] = ["v1"];
     expect(updatedNodes.sort()).toEqual(expectedUpdatedNodes.sort());
     // d(v1)/d(v1) = 1
-    expect(graph.getNodeDerivative("v1")).toBeCloseTo(1);
+    expect(parseFloat(graph.getNodeDerivative("v1"))).toBeCloseTo(1);
     // d(v1)/d(v2) = 0 (not in the reverse path)
-    expect(graph.getNodeDerivative("v2")).toBeCloseTo(0);
+    expect(parseFloat(graph.getNodeDerivative("v2"))).toBeCloseTo(0);
     // d(v1)/d(sum1) = 0 (not in the reverse path)
-    expect(graph.getNodeDerivative("sum1")).toBeCloseTo(0);
+    expect(parseFloat(graph.getNodeDerivative("sum1"))).toBeCloseTo(0);
 
     graph.setTargetNode("sum1");
     updatedNodes = graph.updateDerivatives();
     expectedUpdatedNodes = ["v1", "v2", "sum1"];
     expect(updatedNodes.sort()).toEqual(expectedUpdatedNodes.sort());
     // d(sum1)/d(v1) = 1
-    expect(graph.getNodeDerivative("v1")).toBeCloseTo(1);
+    expect(parseFloat(graph.getNodeDerivative("v1"))).toBeCloseTo(1);
     // d(sum1)/d(v2) = 1
-    expect(graph.getNodeDerivative("v2")).toBeCloseTo(1);
+    expect(parseFloat(graph.getNodeDerivative("v2"))).toBeCloseTo(1);
     // d(sum1)/d(sum1) = 1
-    expect(graph.getNodeDerivative("sum1")).toBeCloseTo(1);
+    expect(parseFloat(graph.getNodeDerivative("sum1"))).toBeCloseTo(1);
   });
 
   test("should update derivatives in forward mode for small graph", () => {
@@ -346,22 +346,22 @@ describe("updating derivative values", () => {
     let expectedUpdatedNodes: string[] = ["v1", "sum1"];
     expect(updatedNodes.sort()).toEqual(expectedUpdatedNodes.sort());
     // d(v1)/d(v1) = 1
-    expect(graph.getNodeDerivative("v1")).toBeCloseTo(1);
+    expect(parseFloat(graph.getNodeDerivative("v1"))).toBeCloseTo(1);
     // d(v2)/d(v1) = 0 (not in the forward path)
-    expect(graph.getNodeDerivative("v2")).toBeCloseTo(0);
+    expect(parseFloat(graph.getNodeDerivative("v2"))).toBeCloseTo(0);
     // d(sum1)/d(v1) = 1
-    expect(graph.getNodeDerivative("sum1")).toBeCloseTo(1);
+    expect(parseFloat(graph.getNodeDerivative("sum1"))).toBeCloseTo(1);
 
     graph.setTargetNode("sum1");
     updatedNodes = graph.updateDerivatives();
     expectedUpdatedNodes = ["sum1"];
     expect(updatedNodes.sort()).toEqual(expectedUpdatedNodes.sort());
     // d(v1)/d(sum1) = 0 (not in the forward path)
-    expect(graph.getNodeDerivative("v1")).toBeCloseTo(0);
+    expect(parseFloat(graph.getNodeDerivative("v1"))).toBeCloseTo(0);
     // d(v2)/d(sum1) = 0 (not in the forward path)
-    expect(graph.getNodeDerivative("v2")).toBeCloseTo(0);
+    expect(parseFloat(graph.getNodeDerivative("v2"))).toBeCloseTo(0);
     // d(sum1)/d(sum1) = 1
-    expect(graph.getNodeDerivative("sum1")).toBeCloseTo(1);
+    expect(parseFloat(graph.getNodeDerivative("sum1"))).toBeCloseTo(1);
   });
 
   test("should update derivatives in reverse mode for medium graph", () => {
@@ -385,34 +385,34 @@ describe("updating derivative values", () => {
     expect(updatedNodes.sort()).toEqual(expectedUpdatedNodes.sort());
 
     // d(identity1)/d(identity1) = 1
-    expect(graph.getNodeDerivative("identity1")).toBeCloseTo(1);
+    expect(parseFloat(graph.getNodeDerivative("identity1"))).toBeCloseTo(1);
     // d(identity1)/d(product1) =
     // d(identity1)/d(product1) * d(identity1)/d(identity1) =
     // 1 * 1 = 1
-    expect(graph.getNodeDerivative("product1")).toBeCloseTo(1);
+    expect(parseFloat(graph.getNodeDerivative("product1"))).toBeCloseTo(1);
     // d(identity1)/d(sum1) =
     // d(product1)/d(sum1) * d(identity1)/d(product1) =
     // (sum2 * v3) * (1) = 10 * 1 = 10
-    expect(graph.getNodeDerivative("sum1")).toBeCloseTo(10);
+    expect(parseFloat(graph.getNodeDerivative("sum1"))).toBeCloseTo(10);
     // d(identity1)/d(sum2) =
     // d(product1)/d(sum2) * d(identity1)/d(product1) =
     // (sum1 * v3) * (1) = 15 * 1 = 15
-    expect(graph.getNodeDerivative("sum2")).toBeCloseTo(15);
+    expect(parseFloat(graph.getNodeDerivative("sum2"))).toBeCloseTo(15);
     // d(identity1)/d(v3) =
     // d(product1)/d(v3) * d(identity1)/d(product1) =
     // (sum1 * sum2) * (1) = 6 * 1 = 6
-    expect(graph.getNodeDerivative("v3")).toBeCloseTo(6);
+    expect(parseFloat(graph.getNodeDerivative("v3"))).toBeCloseTo(6);
     // d(identity1)/d(v1) =
     // d(sum1)/d(v1) * d(identity1)/d(sum1) =
     // 1 * 10 = 10
-    expect(graph.getNodeDerivative("v1")).toBeCloseTo(10);
+    expect(parseFloat(graph.getNodeDerivative("v1"))).toBeCloseTo(10);
     // d(identity1)/d(v2) =
     // d(sum1)/d(v2) * d(identity1)/d(sum1) +
     // d(sum2)/d(v2) * d(identity1)/d(sum2) =
     // 1 * 10 + 1 * 15 = 25
-    expect(graph.getNodeDerivative("v2")).toBeCloseTo(25);
+    expect(parseFloat(graph.getNodeDerivative("v2"))).toBeCloseTo(25);
     // d(identity1)/d(c1) = 0 (constant)
-    expect(graph.getNodeDerivative("c1")).toBeCloseTo(0);
+    expect(parseFloat(graph.getNodeDerivative("c1"))).toBeCloseTo(0);
   });
 
   test("should update derivatives in forward mode for medium graph", () => {
@@ -433,31 +433,31 @@ describe("updating derivative values", () => {
     expect(updatedNodes.sort()).toEqual(expectedUpdatedNodes.sort());
 
     // d(v1)/d(v2) = 0 (not in the forward path)
-    expect(graph.getNodeDerivative("v1")).toBeCloseTo(0);
+    expect(parseFloat(graph.getNodeDerivative("v1"))).toBeCloseTo(0);
     // d(v2)/d(v2) = 1
-    expect(graph.getNodeDerivative("v2")).toBeCloseTo(1);
+    expect(parseFloat(graph.getNodeDerivative("v2"))).toBeCloseTo(1);
     // d(c1)/d(v2) = 0 (constant)
-    expect(graph.getNodeDerivative("c1")).toBeCloseTo(0);
+    expect(parseFloat(graph.getNodeDerivative("c1"))).toBeCloseTo(0);
     // d(sum1)/d(v2) =
     // d(v1)/d(v2) * d(sum1)/d(v1) + d(v2)/d(v2) * d(sum1)/d(v2) =
     // 0 * 1 + 1 * 1 = 1
-    expect(graph.getNodeDerivative("sum1")).toBeCloseTo(1);
+    expect(parseFloat(graph.getNodeDerivative("sum1"))).toBeCloseTo(1);
     // d(sum2)/d(v2) =
     // d(v2)/d(v2) * d(sum2)/d(v2) + d(c1)/d(v2) * d(sum2)/d(c1) =
     // 1 * 1 + 0 * 0 = 1
-    expect(graph.getNodeDerivative("sum2")).toBeCloseTo(1);
+    expect(parseFloat(graph.getNodeDerivative("sum2"))).toBeCloseTo(1);
     // d(v3)/d(v2) = 0 (not in the forward path)
-    expect(graph.getNodeDerivative("v3")).toBeCloseTo(0);
+    expect(parseFloat(graph.getNodeDerivative("v3"))).toBeCloseTo(0);
     // d(product1)/d(v2) =
     // d(sum1)/d(v2) * d(product1)/d(sum1) +
     // d(sum2)/d(v2) * d(product1)/d(sum2) +
     // d(v3)/d(v2) * d(product1)/d(v3) =
     // (1) * (sum2 * v3) + (1) * (sum1 * v3) + (0) * (sum1 * sum2) = 25
-    expect(graph.getNodeDerivative("product1")).toBeCloseTo(25);
+    expect(parseFloat(graph.getNodeDerivative("product1"))).toBeCloseTo(25);
     // d(identity1)/d(v2) =
     // d(product1)/d(v2) * d(identity1)/d(product1) =
     // 25 * 1 = 25
-    expect(graph.getNodeDerivative("identity1")).toBeCloseTo(25);
+    expect(parseFloat(graph.getNodeDerivative("identity1"))).toBeCloseTo(25);
   });
 
   test("should update derivatives in reverse mode for complex graph", () => {
@@ -479,34 +479,34 @@ describe("updating derivative values", () => {
     expect(updatedNodes.sort()).toEqual(expectedUpdatedNodes.sort());
 
     // d(identity1)/d(identity1) = 1
-    expect(graph.getNodeDerivative("identity1")).toBeCloseTo(1);
+    expect(parseFloat(graph.getNodeDerivative("identity1"))).toBeCloseTo(1);
     // d(identity1)/d(product1) = 0 (not in the reverse path)
-    expect(graph.getNodeDerivative("product1")).toBeCloseTo(0);
+    expect(parseFloat(graph.getNodeDerivative("product1"))).toBeCloseTo(0);
     // d(identity1)/d(product2) =
     // d(identity1)/d(product2) * d(identity1)/d(identity1) =
     // 1 * 1 = 1
-    expect(graph.getNodeDerivative("product2")).toBeCloseTo(1);
+    expect(parseFloat(graph.getNodeDerivative("product2"))).toBeCloseTo(1);
     // d(identity1)/d(sum1) = 0 (not in the reverse path)
-    expect(graph.getNodeDerivative("sum1")).toBeCloseTo(0);
+    expect(parseFloat(graph.getNodeDerivative("sum1"))).toBeCloseTo(0);
     // d(identity1)/d(sum2) =
     // d(product1)/d(sum2) * d(identity1)/d(product1) +
     // d(product2)/d(sum2) * d(identity1)/d(product2) =
     // (sum1 * v3) * (0) + (v3) * (1) = 0 + 5 = 5
-    expect(graph.getNodeDerivative("sum2")).toBeCloseTo(5);
+    expect(parseFloat(graph.getNodeDerivative("sum2"))).toBeCloseTo(5);
     // d(identity1)/d(v3) =
     // d(product1)/d(v3) * d(identity1)/d(product1) +
     // d(product2)/d(v3) * d(identity1)/d(product2) =
     // (sum1 * sum2) * (0) + (sum2) * (1) = 0 + 2 = 2
-    expect(graph.getNodeDerivative("v3")).toBeCloseTo(2);
+    expect(parseFloat(graph.getNodeDerivative("v3"))).toBeCloseTo(2);
     // d(identity1)/d(v1) = 0 (not in the reverse path)
-    expect(graph.getNodeDerivative("v1")).toBeCloseTo(0);
+    expect(parseFloat(graph.getNodeDerivative("v1"))).toBeCloseTo(0);
     // d(identity1)/d(v2) =
     // d(sum1)/d(v2) * d(identity1)/d(sum1) +
     // d(sum2)/d(v2) * d(identity1)/d(sum2) =
     // 1 * 0 + 1 * 5 = 5
-    expect(graph.getNodeDerivative("v2")).toBeCloseTo(5);
+    expect(parseFloat(graph.getNodeDerivative("v2"))).toBeCloseTo(5);
     //  d(identity1)/d(c1) = 0 (constant)
-    expect(graph.getNodeDerivative("c1")).toBeCloseTo(0);
+    expect(parseFloat(graph.getNodeDerivative("c1"))).toBeCloseTo(0);
 
     graph.setTargetNode("product1");
 
@@ -515,37 +515,37 @@ describe("updating derivative values", () => {
     expect(updatedNodes.sort()).toEqual(expectedUpdatedNodes.sort());
 
     // d(product1)/d(identity1) = 0 (not in the reverse path)
-    expect(graph.getNodeDerivative("identity1")).toBeCloseTo(0);
+    expect(parseFloat(graph.getNodeDerivative("identity1"))).toBeCloseTo(0);
     // d(product1)/d(product1) = 1
-    expect(graph.getNodeDerivative("product1")).toBeCloseTo(1);
+    expect(parseFloat(graph.getNodeDerivative("product1"))).toBeCloseTo(1);
     // d(product1)/d(product2) = 0 (not in the reverse path)
-    expect(graph.getNodeDerivative("product2")).toBeCloseTo(0);
+    expect(parseFloat(graph.getNodeDerivative("product2"))).toBeCloseTo(0);
     // d(product1)/d(sum1) =
     // d(product1)/d(sum1) * d(product1)/d(product1) =
     // (v1 * sum2 * v3) * (1) = 20
-    expect(graph.getNodeDerivative("sum1")).toBeCloseTo(20);
+    expect(parseFloat(graph.getNodeDerivative("sum1"))).toBeCloseTo(20);
     // d(product1)/d(sum2) =
     // d(product1)/d(sum2) * d(product1)/d(product1) +
     // d(product2)/d(sum2) * d(product1)/d(product2) =
     // (v1 * sum1 * v3) * (1) + (v3) * (0) = 30 + 0 = 30
-    expect(graph.getNodeDerivative("sum2")).toBeCloseTo(30);
+    expect(parseFloat(graph.getNodeDerivative("sum2"))).toBeCloseTo(30);
     // d(product1)/d(v3) =
     // d(product1)/d(v3) * d(product1)/d(product1) +
     // d(product2)/d(v3) * d(product1)/d(product2) =
     // (v1 * sum1 * sum2) * (1) + (sum2) * (0) = 12 + 0 = 12
-    expect(graph.getNodeDerivative("v3")).toBeCloseTo(12);
+    expect(parseFloat(graph.getNodeDerivative("v3"))).toBeCloseTo(12);
     // d(product1)/d(v1) =
     // d(product1)/d(v1) * d(product1)/d(product1) +
     // d(sum1)/d(v1) * d(product1)/d(sum1) =
     // (sum1 * sum2 * v3) * (1) + (1) * (20) = 30 + 20 = 50
-    expect(graph.getNodeDerivative("v1")).toBeCloseTo(50);
+    expect(parseFloat(graph.getNodeDerivative("v1"))).toBeCloseTo(50);
     // d(product1)/d(v2) =
     // d(sum1)/d(v2) * d(product1)/d(sum1) +
     // d(sum2)/d(v2) * d(product1)/d(sum2) =
     // 1 * 20 + 1 * 30 = 50
-    expect(graph.getNodeDerivative("v2")).toBeCloseTo(50);
+    expect(parseFloat(graph.getNodeDerivative("v2"))).toBeCloseTo(50);
     // d(product1)/d(c1) = 0 (constant)
-    expect(graph.getNodeDerivative("c1")).toBeCloseTo(0);
+    expect(parseFloat(graph.getNodeDerivative("c1"))).toBeCloseTo(0);
   });
 
   test("should update derivatives in forward mode for complex graph", () => {
@@ -560,19 +560,19 @@ describe("updating derivative values", () => {
     expect(updatedNodes.sort()).toEqual(expectedUpdatedNodes.sort());
 
     // d(v1)/d(v1) = 1
-    expect(graph.getNodeDerivative("v1")).toBeCloseTo(1);
+    expect(parseFloat(graph.getNodeDerivative("v1"))).toBeCloseTo(1);
     // d(v2)/d(v1) = 0 (not in the forward path)
-    expect(graph.getNodeDerivative("v2")).toBeCloseTo(0);
+    expect(parseFloat(graph.getNodeDerivative("v2"))).toBeCloseTo(0);
     // d(c1)/d(v1) = 0 (constant)
-    expect(graph.getNodeDerivative("c1")).toBeCloseTo(0);
+    expect(parseFloat(graph.getNodeDerivative("c1"))).toBeCloseTo(0);
     // d(sum1)/d(v1) =
     // d(v1)/d(v1) * d(sum1)/d(v1) + d(v2)/d(v1) * d(sum1)/d(v2) =
     // 1 * 1 + 0 * 1 = 1
-    expect(graph.getNodeDerivative("sum1")).toBeCloseTo(1);
+    expect(parseFloat(graph.getNodeDerivative("sum1"))).toBeCloseTo(1);
     // d(sum2)/d(v1) = 0 (not in the forward path)
-    expect(graph.getNodeDerivative("sum2")).toBeCloseTo(0);
+    expect(parseFloat(graph.getNodeDerivative("sum2"))).toBeCloseTo(0);
     // d(v3)/d(v1) = 0 (not in the forward path)
-    expect(graph.getNodeDerivative("v3")).toBeCloseTo(0);
+    expect(parseFloat(graph.getNodeDerivative("v3"))).toBeCloseTo(0);
     // d(product1)/d(v1) =
     // d(v1)/d(v1) * d(product1)/d(v1) +
     // d(sum1)/d(v1) * d(product1)/d(sum1) +
@@ -583,11 +583,11 @@ describe("updating derivative values", () => {
     // (0) * (v1 * sum1 * v3) +
     // (0) * (v1 * sum1 * sum2) =
     // 30 + 20 + 0 + 0 = 50
-    expect(graph.getNodeDerivative("product1")).toBeCloseTo(50);
+    expect(parseFloat(graph.getNodeDerivative("product1"))).toBeCloseTo(50);
     // d(product2)/d(v1) = 0 (not in the forward path)
-    expect(graph.getNodeDerivative("product2")).toBeCloseTo(0);
+    expect(parseFloat(graph.getNodeDerivative("product2"))).toBeCloseTo(0);
     // d(identity1)/d(v1) = 0 (not in the forward path)
-    expect(graph.getNodeDerivative("identity1")).toBeCloseTo(0);
+    expect(parseFloat(graph.getNodeDerivative("identity1"))).toBeCloseTo(0);
 
     graph.setTargetNode("sum2");
 
@@ -596,17 +596,17 @@ describe("updating derivative values", () => {
     expect(updatedNodes.sort()).toEqual(expectedUpdatedNodes.sort());
 
     // d(v1)/d(sum2) = 0 (not in the forward path)
-    expect(graph.getNodeDerivative("v1")).toBeCloseTo(0);
+    expect(parseFloat(graph.getNodeDerivative("v1"))).toBeCloseTo(0);
     // d(v2)/d(sum2) = 0 (not in the forward path)
-    expect(graph.getNodeDerivative("v2")).toBeCloseTo(0);
+    expect(parseFloat(graph.getNodeDerivative("v2"))).toBeCloseTo(0);
     // d(c1)/d(sum2) = 0 (not in the forward path)
-    expect(graph.getNodeDerivative("c1")).toBeCloseTo(0);
+    expect(parseFloat(graph.getNodeDerivative("c1"))).toBeCloseTo(0);
     // d(sum1)/d(sum2) = 0 (not in the forward path)
-    expect(graph.getNodeDerivative("sum1")).toBeCloseTo(0);
+    expect(parseFloat(graph.getNodeDerivative("sum1"))).toBeCloseTo(0);
     // d(sum2)/d(sum2) = 1
-    expect(graph.getNodeDerivative("sum2")).toBeCloseTo(1);
+    expect(parseFloat(graph.getNodeDerivative("sum2"))).toBeCloseTo(1);
     // d(v3)/d(sum2) = 0 (not in the forward path)
-    expect(graph.getNodeDerivative("v3")).toBeCloseTo(0);
+    expect(parseFloat(graph.getNodeDerivative("v3"))).toBeCloseTo(0);
     // d(product1)/d(sum2) =
     // d(v1)/d(sum2) * d(product1)/d(v1) +
     // d(sum1)/d(sum2) * d(product1)/d(sum1) +
@@ -617,18 +617,18 @@ describe("updating derivative values", () => {
     // (1) * (v1 * sum1 * v3) +
     // (0) * (v1 * sum1 * sum2) =
     // 0 + 0 + 30 + 0 = 30
-    expect(graph.getNodeDerivative("product1")).toBeCloseTo(30);
+    expect(parseFloat(graph.getNodeDerivative("product1"))).toBeCloseTo(30);
     // d(product2)/d(sum2) =
     // d(sum2)/d(sum2) * d(product2)/d(sum2) +
     // d(v3)/d(sum2) * d(product2)/d(v3) =
     // (1) * (v3) +
     // (0) * (sum2) =
     // 5 + 0 = 5
-    expect(graph.getNodeDerivative("product2")).toBeCloseTo(5);
+    expect(parseFloat(graph.getNodeDerivative("product2"))).toBeCloseTo(5);
     // d(identity1)/d(sum2) =
     // d(product2)/d(sum2) * d(identity1)/d(product2) =
     // 5 * 1 = 5
-    expect(graph.getNodeDerivative("identity1")).toBeCloseTo(5);
+    expect(parseFloat(graph.getNodeDerivative("identity1"))).toBeCloseTo(5);
   });
 
   test("should update derivatives in reverse mode for neural network graph", () => {
@@ -642,59 +642,61 @@ describe("updating derivative values", () => {
     expect(updatedNodes).toHaveLength(graph.getNodes().length);
 
     // d(se)/d(se) = 1
-    expect(graph.getNodeDerivative("se")).toBeCloseTo(1);
+    expect(parseFloat(graph.getNodeDerivative("se"))).toBeCloseTo(1);
     // d(se)/d(y_estimate) =
     // d(se)/d(y_estimate) * d(se)/d(se) =
     // (2 * (y_estimate - y)) * (1) = 1
-    expect(graph.getNodeDerivative("y_estimate")).toBeCloseTo(1);
+    expect(parseFloat(graph.getNodeDerivative("y_estimate"))).toBeCloseTo(1);
     // d(se)/d(y) =
     // d(se)/d(y) * d(se)/d(se) =
-    // 0 * 1 = 0
-    expect(graph.getNodeDerivative("y")).toBeCloseTo(0);
+    // (2 * (y - y_estimate)) * 1 = -1
+    expect(parseFloat(graph.getNodeDerivative("y"))).toBeCloseTo(-1);
     // d(se)/d(sigmoid_o_1) =
     // d(y_estimate)/d(sigmoid_o_1) * d(se)/d(y_estimate) =
     // 1 * 1 = 1
-    expect(graph.getNodeDerivative("sigmoid_o_1")).toBeCloseTo(1);
+    expect(parseFloat(graph.getNodeDerivative("sigmoid_o_1"))).toBeCloseTo(1);
     // d(se)/d(sum_o_1) =
     // d(sigmoid_o_1)/d(sum_o_1) * d(se)/d(sigmoid_o_1) =
     // (sigmoid_o_1 * (1 - sigmoid_o_1)) * (1) = 0.25
-    expect(graph.getNodeDerivative("sum_o_1")).toBeCloseTo(0.25);
+    expect(parseFloat(graph.getNodeDerivative("sum_o_1"))).toBeCloseTo(0.25);
     // d(se)/d(mul_o_1_1) =
     // d(sum_o_1)/d(mul_o_1_1) * d(se)/d(sum_o_1) =
     // 1 * 0.25 = 0.25
-    expect(graph.getNodeDerivative("mul_o_1_1")).toBeCloseTo(0.25);
+    expect(parseFloat(graph.getNodeDerivative("mul_o_1_1"))).toBeCloseTo(0.25);
     // d(se)/d(mul_o_1_2) =
     // d(sum_o_1)/d(mul_o_1_2) * d(se)/d(sum_o_1) =
     // 1 * 0.25 = 0.25
-    expect(graph.getNodeDerivative("mul_o_1_2")).toBeCloseTo(0.25);
+    expect(parseFloat(graph.getNodeDerivative("mul_o_1_2"))).toBeCloseTo(0.25);
     // d(se)/d(b_o_1) =
     // d(sum_o_1)/d(b_o_1) * d(se)/d(sum_o_1) =
     // 1 * 0.25 = 0.25
-    expect(graph.getNodeDerivative("b_o_1")).toBeCloseTo(0.25);
+    expect(parseFloat(graph.getNodeDerivative("b_o_1"))).toBeCloseTo(0.25);
     // d(se)/d(relu_h1_1) =
     // d(mul_o_1_1)/d(relu_h1_1) * d(se)/d(mul_o_1_1) =
     // w_o_1_1 * 0.25 = -0.125
-    expect(graph.getNodeDerivative("relu_h1_1")).toBeCloseTo(-0.125);
+    expect(parseFloat(graph.getNodeDerivative("relu_h1_1"))).toBeCloseTo(
+      -0.125,
+    );
     // d(se)/d(w_o_1_1) =
     // d(mul_o_1_1)/d(w_o_1_1) * d(se)/d(mul_o_1_1) =
     // relu_h1_1 * 0.25 = 0
-    expect(graph.getNodeDerivative("w_o_1_1")).toBeCloseTo(0);
+    expect(parseFloat(graph.getNodeDerivative("w_o_1_1"))).toBeCloseTo(0);
     // d(se)/d(relu_h1_2) =
     // d(mul_o_1_1)/d(relu_h1_2) * d(se)/d(mul_o_1_1) =
     // w_o_1_2 * 0.25 = 0.125
-    expect(graph.getNodeDerivative("relu_h1_2")).toBeCloseTo(0.125);
+    expect(parseFloat(graph.getNodeDerivative("relu_h1_2"))).toBeCloseTo(0.125);
     // d(se)/d(w_o_1_2) =
     // d(mul_o_1_1)/d(w_o_1_2) * d(se)/d(mul_o_1_1) =
     // relu_h1_2 * 0.25 = 0.125
-    expect(graph.getNodeDerivative("w_o_1_2")).toBeCloseTo(0.125);
+    expect(parseFloat(graph.getNodeDerivative("w_o_1_2"))).toBeCloseTo(0.125);
     // d(se)/d(sum_h1_1) =
     // d(relu_h1_1)/d(sum_h1_1) * d(se)/d(relu_h1_1) =
     // 0 * -0.125 = 0
-    expect(graph.getNodeDerivative("sum_h1_1")).toBeCloseTo(0);
+    expect(parseFloat(graph.getNodeDerivative("sum_h1_1"))).toBeCloseTo(0);
     // d(se)/d(sum_h1_2) =
     // d(relu_h1_2)/d(sum_h1_2) * d(se)/d(relu_h1_2) =
     // 1 * 0.125 = 0.125
-    expect(graph.getNodeDerivative("sum_h1_2")).toBeCloseTo(0.125);
+    expect(parseFloat(graph.getNodeDerivative("sum_h1_2"))).toBeCloseTo(0.125);
   });
 });
 
@@ -717,8 +719,8 @@ function buildSmallGraph(): Graph {
   graph.connect(varNode1.getId(), sumNode1.getId(), "x_i");
   graph.connect(varNode2.getId(), sumNode1.getId(), "x_i");
   // Layer 1 initial values
-  graph.setNodeValue(varNode1.getId(), 2);
-  graph.setNodeValue(varNode2.getId(), 1);
+  graph.setNodeValue(varNode1.getId(), "2");
+  graph.setNodeValue(varNode2.getId(), "1");
 
   return graph;
 }
@@ -767,11 +769,11 @@ function buildMediumGraph(): Graph {
   graph.connect(productNode1.getId(), identityNode1.getId(), "x");
 
   // Layer 1 initial values
-  graph.setNodeValue(varNode1.getId(), 2);
-  graph.setNodeValue(varNode2.getId(), 1);
-  graph.setNodeValue(constNode1.getId(), 1);
+  graph.setNodeValue(varNode1.getId(), "2");
+  graph.setNodeValue(varNode2.getId(), "1");
+  graph.setNodeValue(constNode1.getId(), "1");
   // Layer 2 initial values
-  graph.setNodeValue(varNode3.getId(), 5);
+  graph.setNodeValue(varNode3.getId(), "5");
 
   return graph;
 }
@@ -825,11 +827,11 @@ function buildComplexGraph(): Graph {
   graph.connect(productNode2.getId(), identityNode1.getId(), "x");
 
   // Layer 1 initial values
-  graph.setNodeValue(varNode1.getId(), 2);
-  graph.setNodeValue(varNode2.getId(), 1);
-  graph.setNodeValue(constNode1.getId(), 1);
+  graph.setNodeValue(varNode1.getId(), "2");
+  graph.setNodeValue(varNode2.getId(), "1");
+  graph.setNodeValue(constNode1.getId(), "1");
   // Layer 2 initial values
-  graph.setNodeValue(varNode3.getId(), 5);
+  graph.setNodeValue(varNode3.getId(), "5");
 
   return graph;
 }
@@ -954,23 +956,23 @@ function buildNeuralNetworkGraph(): Graph {
   graph.connect(y.getId(), se.getId(), "y_true");
 
   // Input layer values
-  graph.setNodeValue(i_1.getId(), 0.0);
-  graph.setNodeValue(i_2.getId(), 1.0);
+  graph.setNodeValue(i_1.getId(), "0.0");
+  graph.setNodeValue(i_2.getId(), "1.0");
   // Hidden layer 1: Weights random values
-  graph.setNodeValue(w_h1_1_1.getId(), -0.1);
-  graph.setNodeValue(w_h1_1_2.getId(), -0.2);
-  graph.setNodeValue(w_h1_2_1.getId(), 0.1);
-  graph.setNodeValue(w_h1_2_2.getId(), 0.2);
+  graph.setNodeValue(w_h1_1_1.getId(), "-0.1");
+  graph.setNodeValue(w_h1_1_2.getId(), "-0.2");
+  graph.setNodeValue(w_h1_2_1.getId(), "0.1");
+  graph.setNodeValue(w_h1_2_2.getId(), "0.2");
   // Hidden layer 1: Biases random values
-  graph.setNodeValue(b_h1_1.getId(), -0.3);
-  graph.setNodeValue(b_h1_2.getId(), 0.3);
+  graph.setNodeValue(b_h1_1.getId(), "-0.3");
+  graph.setNodeValue(b_h1_2.getId(), "0.3");
   // Output layer: Weights random values
-  graph.setNodeValue(w_o_1_1.getId(), -0.5);
-  graph.setNodeValue(w_o_1_2.getId(), 0.5);
+  graph.setNodeValue(w_o_1_1.getId(), "-0.5");
+  graph.setNodeValue(w_o_1_2.getId(), "0.5");
   // Output layer: Biases random values
-  graph.setNodeValue(b_o_1.getId(), -0.25);
+  graph.setNodeValue(b_o_1.getId(), "-0.25");
   // Loss function input: True y value
-  graph.setNodeValue(y.getId(), 0.0);
+  graph.setNodeValue(y.getId(), "0.0");
 
   return graph;
 }
@@ -978,31 +980,31 @@ function buildNeuralNetworkGraph(): Graph {
 
 function buildSumNode(id: string): CoreNode {
   const ports: Port[] = [new Port("x_i", true)];
-  const operation = new Operation(SUM_F_CODE, SUM_DFDY_CODE);
+  const operation = new Operation(SUM_F_CODE, SUM_DFDX_CODE);
   return new OperationNode(id, ports, operation);
 }
 
 function buildProductNode(id: string): CoreNode {
   const ports: Port[] = [new Port("x_i", true)];
-  const operation = new Operation(PRODUCT_F_CODE, PRODUCT_DFDY_CODE);
+  const operation = new Operation(PRODUCT_F_CODE, PRODUCT_DFDX_CODE);
   return new OperationNode(id, ports, operation);
 }
 
 function buildIdentityNode(id: string): CoreNode {
   const ports: Port[] = [new Port("x", false)];
-  const operation = new Operation(IDENTITY_F_CODE, IDENTITY_DFDY_CODE);
+  const operation = new Operation(IDENTITY_F_CODE, IDENTITY_DFDX_CODE);
   return new OperationNode(id, ports, operation);
 }
 
 function buildReluNode(id: string): CoreNode {
   const ports: Port[] = [new Port("x", false)];
-  const operation = new Operation(RELU_F_CODE, RELU_DFDY_CODE);
+  const operation = new Operation(RELU_F_CODE, RELU_DFDX_CODE);
   return new OperationNode(id, ports, operation);
 }
 
 function buildSigmoidNode(id: string): CoreNode {
   const ports: Port[] = [new Port("x", false)];
-  const operation = new Operation(SIGMOID_F_CODE, SIGMOID_DFDY_CODE);
+  const operation = new Operation(SIGMOID_F_CODE, SIGMOID_DFDX_CODE);
   return new OperationNode(id, ports, operation);
 }
 
@@ -1013,7 +1015,7 @@ function buildSquaredErrorNode(id: string): CoreNode {
   ];
   const operation = new Operation(
     SQUARED_ERROR_F_CODE,
-    SQUARED_ERROR_DFDY_CODE,
+    SQUARED_ERROR_DFDX_CODE,
   );
   return new OperationNode(id, ports, operation);
 }

@@ -1,37 +1,44 @@
-import { type NodeData, type PortToNodesData } from "./PortToNodesData";
-
 class Operation {
-  static readonly F_FN_NAME = "f";
+  static readonly fFnName = "f";
 
-  static readonly DFDY_FN_NAME = "dfdy";
+  static readonly dfdxFnName = "dfdx";
 
   private readonly fCode: string;
 
-  private readonly dfdyCode: string;
+  private readonly dfdxCode: string;
 
-  constructor(fCode: string, dfdyCode: string) {
+  constructor(fCode: string, dfdxCode: string) {
     this.fCode = fCode;
-    this.dfdyCode = dfdyCode;
+    this.dfdxCode = dfdxCode;
   }
 
-  evalF(portToNodesData: PortToNodesData): number {
-    const arg1 = JSON.stringify(portToNodesData);
-    const args: string[] = [arg1];
-    return Operation.evalCode(this.fCode, Operation.F_FN_NAME, args);
-  }
-
-  evalDfdy(portToNodesData: PortToNodesData, yNodeData: NodeData): number {
-    const arg1 = JSON.stringify(portToNodesData);
-    const arg2 = JSON.stringify(yNodeData);
+  evalF(
+    fInputPortToNodes: Record<string, string[]>,
+    fInputNodeToValues: Record<string, string>,
+  ): string {
+    const arg1 = JSON.stringify(fInputPortToNodes);
+    const arg2 = JSON.stringify(fInputNodeToValues);
     const args: string[] = [arg1, arg2];
-    return Operation.evalCode(this.dfdyCode, Operation.DFDY_FN_NAME, args);
+    return Operation.evalCode(this.fCode, Operation.fFnName, args);
+  }
+
+  evalDfdx(
+    fInputPortToNodes: Record<string, string[]>,
+    fInputNodeToValues: Record<string, string>,
+    xId: string,
+  ): string {
+    const arg1 = JSON.stringify(fInputPortToNodes);
+    const arg2 = JSON.stringify(fInputNodeToValues);
+    const arg3 = JSON.stringify(xId);
+    const args: string[] = [arg1, arg2, arg3];
+    return Operation.evalCode(this.dfdxCode, Operation.dfdxFnName, args);
   }
 
   private static evalCode(
     code: string,
     fnName: string,
     args: string[],
-  ): number {
+  ): string {
     const argsSeparatedByComma = args.join(", ");
     const fullCode = `\
 ${code}
@@ -40,9 +47,9 @@ ${fnName}(${argsSeparatedByComma})
     try {
       // eslint-disable-next-line no-eval
       const result = eval(fullCode);
-      if (typeof result !== "number") {
+      if (typeof result !== "string") {
         throw new Error(
-          `The eval result should be number, but got type ${typeof result}`,
+          `The eval result should be string, but got type ${typeof result}`,
         );
       }
       return result;

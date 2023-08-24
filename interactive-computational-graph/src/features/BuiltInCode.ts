@@ -1,471 +1,638 @@
+// copied from `./TemplateCode`
 const TEMPLATE_F_CODE = `\
 /**
- * Calculates f(...).
- * @param {PortToNodesData} portToNodes Object with port ID as the keys and
- * node data as the values. Example data for sum:
+ * Calculates f().
+ * @param {Record<string, string[]>} fInputPortToNodes An object where the keys
+ * are port IDs and the values are node IDs of the connected input nodes.
+ * Example data for product:
+ * \`javascript
  * {
- *   "x_i": {
- *     "v1": { "id": "v1", "value": 1 },
- *     "v3": { "id": "v3", "value": 3 },
- *     "v2": { "id": "v2", "value": 2 },
- *   }
+ *   x_i: ["v1", "v3", "v2"]
  * }
- * @returns {number} Evaluated f value. For example: 6 given the above example
- * data because f({v1, v3, v2}) = v1.value + v3.value + v2.value.
+ * \`
+ * @param {Record<string, string>} fInputNodeToValues An object where the keys
+ * are node IDs and the values are node values of the connected input nodes.
+ * Example data for product:
+ * \`javascript
+ * {
+ *   v1: "1",
+ *   v3: "3",
+ *   v2: "2",
+ * }
+ * \`
+ * @returns {string} Evaluated f value. For example: if we consider
+ * the above example data, then the value is "6" because
+ * \`f({v1, v3, v2}) = v1 * v3 * v2 = 1 * 3 * 2 = 6\`.
  */
-function f(portToNodes) {
-  // Example product code, please write your logic below
-  let product = 1;
-  Object.values(portToNodes.x_i).forEach((nodeData) => {
-    product *= nodeData.value;
-  });
-  return product;
+function f(fInputPortToNodes, fInputNodeToValues) {
+  // Write the logic here
+  return "0"; // returns string instead of number
 }
 `;
 
-const TEMPLATE_DFDY_CODE = `\
+// copied from `./TemplateCode`
+const TEMPLATE_DFDX_CODE = `\
 /**
- * Calculates df/dy.
- * @param portToNodes Object with port ID as the keys and node
- * data as the values. Example data for product:
+ * Calculates df/dx.
+ * @param {Record<string, string[]>} fInputPortToNodes An object where the keys
+ * are port IDs and the values are node IDs of the connected input nodes.
+ * Example data for product:
+ * \`javascript
  * {
- *   "x_i": {
- *     "v1": { "id": "v1", "value": 0.5 },
- *     "v3": { "id": "v3", "value": 2 },
- *     "v2": { "id": "v2", "value": 3 },
- *   }
+ *   x_i: ["v1", "v3", "v2"]
  * }
- * @param y Node data of y. y will not be a constant node. y will not be the
- * current node. Example data for product: { "id": "v2", "value": 3 }
- * @returns Evaluated derivative df/dy. For example, 1.0 given the above
- * example data because df/dy = v1.value * v3.value.
+ * \`
+ * @param {Record<string, string>} fInputNodeToValues An object where the keys
+ * are node IDs and the values are node values of the connected input nodes.
+ * Example data for product:
+ * \`javascript
+ * {
+ *   v1: "1",
+ *   v3: "3",
+ *   v2: "2",
+ * }
+ * \`
+ * @param {string} xId Node ID of x. Note that the framework will not call this
+ * function for the following cases:
+ * - x is a constant node (i.e., x will always be a variable)
+ * - x is the node of f (i.e., the derivative is always 1)
+ * @returns {string} Evaluated derivative df/dy. For example, if we consider
+ * the above example data and assume \`xId\` is "v2", then the value is "3"
+ * since \`f = v1 * v3 * v2\` and \`df/dx = v1 * v3 = 3\`.
  */
-function dfdy(portToNodes, y) {
-  // Example product code, please write your logic below
-  if (!(y.id in portToNodes.x_i)) {
-    return 0;
-  }
-
-  let df = 1;
-  Object.values(portToNodes.x_i).forEach((nodeData) => {
-    if (nodeData.id !== y.id) {
-      df *= nodeData.value;
-    }
-  });
-  return df;
+function dfdx(fInputPortToNodes, fInputNodeToValues, xId) {
+  // Write the logic here
+  return "0"; // returns string instead of number
 }
 `;
 
 const ADD_F_CODE = `\
 /**
- * Calculates f(...).
- * @param {PortToNodesData} portToNodes Object with port ID as the keys and
- * node data as the values. Example data for sum:
+ * Calculates f().
+ * @param {Record<string, string[]>} fInputPortToNodes An object where the keys
+ * are port IDs and the values are node IDs of the connected input nodes.
+ * Example data for product:
+ * \`javascript
  * {
- *   "x_i": {
- *     "v1": { "id": "v1", "value": 1 },
- *     "v3": { "id": "v3", "value": 3 },
- *     "v2": { "id": "v2", "value": 2 },
- *   }
+ *   x_i: ["v1", "v3", "v2"]
  * }
- * @returns {number} Evaluated f value. For example: 6 given the above example
- * data because f({v1, v3, v2}) = v1.value + v3.value + v2.value.
+ * \`
+ * @param {Record<string, string>} fInputNodeToValues An object where the keys
+ * are node IDs and the values are node values of the connected input nodes.
+ * Example data for product:
+ * \`javascript
+ * {
+ *   v1: "1",
+ *   v3: "3",
+ *   v2: "2",
+ * }
+ * \`
+ * @returns {string} Evaluated f value. For example: if we consider
+ * the above example data, then the value is "6" because
+ * \`f({v1, v3, v2}) = v1 * v3 * v2 = 1 * 3 * 2 = 6\`.
  */
-function f(portToNodes) {
-  const nodeDataA = Object.values(portToNodes.a);
-  if (nodeDataA.length !== 1) {
-    throw new Error("Should have exactly 1 node data for port a");
+function f(fInputPortToNodes, fInputNodeToValues) {
+  if (fInputPortToNodes.a.length !== 1) {
+    throw new Error("Should have exactly 1 input node for port a");
   }
-  const nodeDataB = Object.values(portToNodes.b);
-  if (nodeDataB.length !== 1) {
-    throw new Error("Should have exactly 1 node data for port b");
+  if (fInputPortToNodes.b.length !== 1) {
+    throw new Error("Should have exactly 1 input node for port b");
   }
-  const a = nodeDataA[0].value;
-  const b = nodeDataB[0].value;
-  return a + b;
+  const aInputNodeId = fInputPortToNodes.a[0];
+  const bInputNodeId = fInputPortToNodes.b[0];
+  const a = parseFloat(fInputNodeToValues[aInputNodeId]);
+  const b = parseFloat(fInputNodeToValues[bInputNodeId]);
+  const y = a + b;
+  return \`\${y}\`;
 }
 `;
 
-const ADD_DFDY_CODE = `\
+const ADD_DFDX_CODE = `\
 /**
- * Calculates df/dy.
- * @param portToNodes Object with port ID as the keys and node
- * data as the values. Example data for product:
+ * Calculates df/dx.
+ * @param {Record<string, string[]>} fInputPortToNodes An object where the
+ * keys are port IDs and the values are node IDs of the connected input nodes.
+ * Example data for product:
+ * \`\`\`javascript
  * {
- *   "x_i": {
- *     "v1": { "id": "v1", "value": 0.5 },
- *     "v3": { "id": "v3", "value": 2 },
- *     "v2": { "id": "v2", "value": 3 },
- *   }
+ *   x_i: ["v1", "v3", "v2"]
  * }
- * @param y Node data of y. y will not be a constant node. y will not be the
- * current node. Example data for product: { "id": "v2", "value": 3 }
- * @returns Evaluated derivative df/dy. For example, 1.0 given the above
- * example data because df/dy = v1.value * v3.value.
+ * \`\`\`
+ * @param {Record<string, string>} fInputNodeToValues An object where the
+ * keys are node IDs and the values are node values of the connected input
+ * nodes. Example data for product:
+ * \`\`\`javascript
+ * {
+ *   v1: "1",
+ *   v3: "3",
+ *   v2: "2",
+ * }
+ * \`\`\`
+ * @param {string} xId Node ID of x. Note that the framework will not call this
+ * function for the following cases:
+ * - x is a constant node (i.e., x will always be a variable)
+ * - x is the node of f (i.e., the derivative is always 1)
+ * @returns {string} Evaluated derivative df/dy. For example, if we consider
+ * the above example data and assume \`xId\` is "v2", then the value is "3"
+ * since \`f = v1 * v3 * v2\` and \`df/dx = v1 * v3 = 3\`.
  */
-function dfdy(portToNodes, y) {
-  if (!(y.id in portToNodes.a) && !(y.id in portToNodes.b)) {
-    return 0;
+function dfdx(fInputPortToNodes, fInputNodeToValues, xId) {
+  const hasXInA = fInputPortToNodes.a.includes(xId);
+  const hasXInB = fInputPortToNodes.b.includes(xId);
+  if (!hasXInA && !hasXInB) {
+    return "0";
   }
-
-  return 1;
+  return "1";
 }
 `;
 
 const SUM_F_CODE = `\
 /**
- * Calculates f(...).
- * @param {PortToNodesData} portToNodes Object with port ID as the keys and
- * node data as the values. Example data for sum:
+ * Calculates f().
+ * @param {Record<string, string[]>} fInputPortToNodes An object where the keys
+ * are port IDs and the values are node IDs of the connected input nodes.
+ * Example data for product:
+ * \`javascript
  * {
- *   "x_i": {
- *     "v1": { "id": "v1", "value": 1 },
- *     "v3": { "id": "v3", "value": 3 },
- *     "v2": { "id": "v2", "value": 2 },
- *   }
+ *   x_i: ["v1", "v3", "v2"]
  * }
- * @returns {number} Evaluated f value. For example: 6 given the above example
- * data because f({v1, v3, v2}) = v1.value + v3.value + v2.value.
+ * \`
+ * @param {Record<string, string>} fInputNodeToValues An object where the keys
+ * are node IDs and the values are node values of the connected input nodes.
+ * Example data for product:
+ * \`javascript
+ * {
+ *   v1: "1",
+ *   v3: "3",
+ *   v2: "2",
+ * }
+ * \`
+ * @returns {string} Evaluated f value. For example: if we consider
+ * the above example data, then the value is "6" because
+ * \`f({v1, v3, v2}) = v1 * v3 * v2 = 1 * 3 * 2 = 6\`.
  */
-function f(portToNodes) {
+function f(fInputPortToNodes, fInputNodeToValues) {
   let sum = 0;
-  Object.values(portToNodes.x_i).forEach((nodeData) => {
-    sum += nodeData.value;
+  fInputPortToNodes.x_i.forEach((inputNodeId) => {
+    const inputNodeValue = parseFloat(fInputNodeToValues[inputNodeId]);
+    sum += inputNodeValue;
   });
-  return sum;
+  return \`\${sum}\`;
 }
 `;
 
-const SUM_DFDY_CODE = `\
+const SUM_DFDX_CODE = `\
 /**
- * Calculates df/dy.
- * @param portToNodes Object with port ID as the keys and node
- * data as the values. Example data for product:
+ * Calculates df/dx.
+ * @param {Record<string, string[]>} fInputPortToNodes An object where the
+ * keys are port IDs and the values are node IDs of the connected input nodes.
+ * Example data for product:
+ * \`\`\`javascript
  * {
- *   "x_i": {
- *     "v1": { "id": "v1", "value": 0.5 },
- *     "v3": { "id": "v3", "value": 2 },
- *     "v2": { "id": "v2", "value": 3 },
- *   }
+ *   x_i: ["v1", "v3", "v2"]
  * }
- * @param y Node data of y. y will not be a constant node. y will not be the
- * current node. Example data for product: { "id": "v2", "value": 3 }
- * @returns Evaluated derivative df/dy. For example, 1.0 given the above
- * example data because df/dy = v1.value * v3.value.
+ * \`\`\`
+ * @param {Record<string, string>} fInputNodeToValues An object where the
+ * keys are node IDs and the values are node values of the connected input
+ * nodes. Example data for product:
+ * \`\`\`javascript
+ * {
+ *   v1: "1",
+ *   v3: "3",
+ *   v2: "2",
+ * }
+ * \`\`\`
+ * @param {string} xId Node ID of x. Note that the framework will not call this
+ * function for the following cases:
+ * - x is a constant node (i.e., x will always be a variable)
+ * - x is the node of f (i.e., the derivative is always 1)
+ * @returns {string} Evaluated derivative df/dy. For example, if we consider
+ * the above example data and assume \`xId\` is "v2", then the value is "3"
+ * since \`f = v1 * v3 * v2\` and \`df/dx = v1 * v3 = 3\`.
  */
-function dfdy(portToNodes, y) {
-  if (!(y.id in portToNodes.x_i)) {
-    return 0;
+function dfdx(fInputPortToNodes, fInputNodeToValues, xId) {
+  if (!fInputPortToNodes.x_i.includes(xId)) {
+    return "0";
   }
-
-  return 1;
+  return "1";
 }
 `;
 
 const PRODUCT_F_CODE = `\
 /**
- * Calculates f(...).
- * @param {PortToNodesData} portToNodes Object with port ID as the keys and
- * node data as the values. Example data for sum: 
+ * Calculates f().
+ * @param {Record<string, string[]>} fInputPortToNodes An object where the keys
+ * are port IDs and the values are node IDs of the connected input nodes.
+ * Example data for product:
+ * \`javascript
  * {
- *   "x_i": {
- *     "v1": { "id": "v1", "value": 1 },
- *     "v3": { "id": "v3", "value": 3 },
- *     "v2": { "id": "v2", "value": 2 },
- *   }
+ *   x_i: ["v1", "v3", "v2"]
  * }
- * @returns {number} Evaluated f value. For example: 6 given the above example
- * data because f({v1, v3, v2}) = v1.value + v3.value + v2.value.
+ * \`
+ * @param {Record<string, string>} fInputNodeToValues An object where the keys
+ * are node IDs and the values are node values of the connected input nodes.
+ * Example data for product:
+ * \`javascript
+ * {
+ *   v1: "1",
+ *   v3: "3",
+ *   v2: "2",
+ * }
+ * \`
+ * @returns {string} Evaluated f value. For example: if we consider
+ * the above example data, then the value is "6" because
+ * \`f({v1, v3, v2}) = v1 * v3 * v2 = 1 * 3 * 2 = 6\`.
  */
-function f(portToNodes) {
+function f(fInputPortToNodes, fInputNodeToValues) {
   let product = 1;
-  Object.values(portToNodes.x_i).forEach((nodeData) => {
-    product *= nodeData.value;
+  fInputPortToNodes.x_i.forEach((inputNodeId) => {
+    const inputNodeValue = parseFloat(fInputNodeToValues[inputNodeId]);
+    product *= inputNodeValue;
   });
-  return product;
+  return \`\${product}\`;
 }
 `;
 
-const PRODUCT_DFDY_CODE = `\
+const PRODUCT_DFDX_CODE = `\
 /**
- * Calculates df/dy.
- * @param portToNodes Object with port ID as the keys and node
- * data as the values. Example data for product:
+ * Calculates df/dx.
+ * @param {Record<string, string[]>} fInputPortToNodes An object where the
+ * keys are port IDs and the values are node IDs of the connected input nodes.
+ * Example data for product:
+ * \`\`\`javascript
  * {
- *   "x_i": {
- *     "v1": { "id": "v1", "value": 0.5 },
- *     "v3": { "id": "v3", "value": 2 },
- *     "v2": { "id": "v2", "value": 3 },
- *   }
+ *   x_i: ["v1", "v3", "v2"]
  * }
- * @param y Node data of y. y will not be a constant node. y will not be the
- * current node. Example data for product: { "id": "v2", "value": 3 }
- * @returns Evaluated derivative df/dy. For example, 1.0 given the above
- * example data because df/dy = v1.value * v3.value.
+ * \`\`\`
+ * @param {Record<string, string>} fInputNodeToValues An object where the
+ * keys are node IDs and the values are node values of the connected input
+ * nodes. Example data for product:
+ * \`\`\`javascript
+ * {
+ *   v1: "1",
+ *   v3: "3",
+ *   v2: "2",
+ * }
+ * \`\`\`
+ * @param {string} xId Node ID of x. Note that the framework will not call this
+ * function for the following cases:
+ * - x is a constant node (i.e., x will always be a variable)
+ * - x is the node of f (i.e., the derivative is always 1)
+ * @returns {string} Evaluated derivative df/dy. For example, if we consider
+ * the above example data and assume \`xId\` is "v2", then the value is "3"
+ * since \`f = v1 * v3 * v2\` and \`df/dx = v1 * v3 = 3\`.
  */
-function dfdy(portToNodes, y) {
-  if (!(y.id in portToNodes.x_i)) {
-    return 0;
+function dfdx(fInputPortToNodes, fInputNodeToValues, xId) {
+  if (!fInputPortToNodes.x_i.includes(xId)) {
+    return "0";
   }
-
   let df = 1;
-  Object.values(portToNodes.x_i).forEach((nodeData) => {
-    if (nodeData.id !== y.id) {
-      df *= nodeData.value;
+  fInputPortToNodes.x_i.forEach((inputNodeId) => {
+    if (inputNodeId !== xId) {
+      const inputNodeValue = parseFloat(fInputNodeToValues[inputNodeId]);
+      df *= inputNodeValue;
     }
   });
-  return df;
+  return \`\${df}\`;
 }
 `;
 
 const IDENTITY_F_CODE = `\
 /**
- * Calculates f(...).
- * @param {PortToNodesData} portToNodes Object with port ID as the keys and
- * node data as the values. Example data for sum:
+ * Calculates f().
+ * @param {Record<string, string[]>} fInputPortToNodes An object where the keys
+ * are port IDs and the values are node IDs of the connected input nodes.
+ * Example data for product:
+ * \`javascript
  * {
- *   "x_i": {
- *     "v1": { "id": "v1", "value": 1 },
- *     "v3": { "id": "v3", "value": 3 },
- *     "v2": { "id": "v2", "value": 2 },
- *   }
+ *   x_i: ["v1", "v3", "v2"]
  * }
- * @returns {number} Evaluated f value. For example: 6 given the above example
- * data because f({v1, v3, v2}) = v1.value + v3.value + v2.value.
+ * \`
+ * @param {Record<string, string>} fInputNodeToValues An object where the keys
+ * are node IDs and the values are node values of the connected input nodes.
+ * Example data for product:
+ * \`javascript
+ * {
+ *   v1: "1",
+ *   v3: "3",
+ *   v2: "2",
+ * }
+ * \`
+ * @returns {string} Evaluated f value. For example: if we consider
+ * the above example data, then the value is "6" because
+ * \`f({v1, v3, v2}) = v1 * v3 * v2 = 1 * 3 * 2 = 6\`.
  */
-function f(portToNodes) {
-  const nodeData = Object.values(portToNodes.x);
-  if (nodeData.length !== 1) {
-    throw new Error("Should have exactly 1 node data for port x");
+function f(fInputPortToNodes, fInputNodeToValues) {
+  if (fInputPortToNodes.x.length !== 1) {
+    throw new Error("Should have exactly 1 input node for port x");
   }
-  const x = nodeData[0].value;
-  return x;
+  const xInputNodeId = fInputPortToNodes.x[0];
+  const x = parseFloat(fInputNodeToValues[xInputNodeId]);
+  return \`\${x}\`;
 }
 `;
 
-const IDENTITY_DFDY_CODE = `\
+const IDENTITY_DFDX_CODE = `\
 /**
- * Calculates df/dy.
- * @param portToNodes Object with port ID as the keys and node
- * data as the values. Example data for product:
+ * Calculates df/dx.
+ * @param {Record<string, string[]>} fInputPortToNodes An object where the
+ * keys are port IDs and the values are node IDs of the connected input nodes.
+ * Example data for product:
+ * \`\`\`javascript
  * {
- *   "x_i": {
- *     "v1": { "id": "v1", "value": 0.5 },
- *     "v3": { "id": "v3", "value": 2 },
- *     "v2": { "id": "v2", "value": 3 },
- *   }
+ *   x_i: ["v1", "v3", "v2"]
  * }
- * @param y Node data of y. y will not be a constant node. y will not be the
- * current node. Example data for product: { "id": "v2", "value": 3 }
- * @returns Evaluated derivative df/dy. For example, 1.0 given the above
- * example data because df/dy = v1.value * v3.value.
+ * \`\`\`
+ * @param {Record<string, string>} fInputNodeToValues An object where the
+ * keys are node IDs and the values are node values of the connected input
+ * nodes. Example data for product:
+ * \`\`\`javascript
+ * {
+ *   v1: "1",
+ *   v3: "3",
+ *   v2: "2",
+ * }
+ * \`\`\`
+ * @param {string} xId Node ID of x. Note that the framework will not call this
+ * function for the following cases:
+ * - x is a constant node (i.e., x will always be a variable)
+ * - x is the node of f (i.e., the derivative is always 1)
+ * @returns {string} Evaluated derivative df/dy. For example, if we consider
+ * the above example data and assume \`xId\` is "v2", then the value is "3"
+ * since \`f = v1 * v3 * v2\` and \`df/dx = v1 * v3 = 3\`.
  */
-function dfdy(portToNodes, y) {
-  if (!(y.id in portToNodes.x)) {
-    return 0;
+function dfdx(fInputPortToNodes, fInputNodeToValues, xId) {
+  if (!fInputPortToNodes.x.includes(xId)) {
+    return "0";
   }
-
-  return 1;
+  return "1";
 }
 `;
 
 const RELU_F_CODE = `\
 /**
- * Calculates f(...).
- * @param {PortToNodesData} portToNodes Object with port ID as the keys and
- * node data as the values. Example data for sum:
+ * Calculates f().
+ * @param {Record<string, string[]>} fInputPortToNodes An object where the keys
+ * are port IDs and the values are node IDs of the connected input nodes.
+ * Example data for product:
+ * \`javascript
  * {
- *   "x_i": {
- *     "v1": { "id": "v1", "value": 1 },
- *     "v3": { "id": "v3", "value": 3 },
- *     "v2": { "id": "v2", "value": 2 },
- *   }
+ *   x_i: ["v1", "v3", "v2"]
  * }
- * @returns {number} Evaluated f value. For example: 6 given the above example
- * data because f({v1, v3, v2}) = v1.value + v3.value + v2.value.
+ * \`
+ * @param {Record<string, string>} fInputNodeToValues An object where the keys
+ * are node IDs and the values are node values of the connected input nodes.
+ * Example data for product:
+ * \`javascript
+ * {
+ *   v1: "1",
+ *   v3: "3",
+ *   v2: "2",
+ * }
+ * \`
+ * @returns {string} Evaluated f value. For example: if we consider
+ * the above example data, then the value is "6" because
+ * \`f({v1, v3, v2}) = v1 * v3 * v2 = 1 * 3 * 2 = 6\`.
  */
-function f(portToNodes) {
-  const nodeData = Object.values(portToNodes.x);
-  if (nodeData.length !== 1) {
-    throw new Error("Should have exactly 1 node data for port x");
+function f(fInputPortToNodes, fInputNodeToValues) {
+  if (fInputPortToNodes.x.length !== 1) {
+    throw new Error("Should have exactly 1 input node for port x");
   }
-  return Math.max(0, nodeData[0].value);
+  const xInputNodeId = fInputPortToNodes.x[0];
+  const x = parseFloat(fInputNodeToValues[xInputNodeId]);
+  const y = Math.max(0, x);
+  return \`\${y}\`;
 }
 `;
 
-const RELU_DFDY_CODE = `\
+const RELU_DFDX_CODE = `\
 /**
- * Calculates df/dy.
- * @param portToNodes Object with port ID as the keys and node
- * data as the values. Example data for product:
+ * Calculates df/dx.
+ * @param {Record<string, string[]>} fInputPortToNodes An object where the
+ * keys are port IDs and the values are node IDs of the connected input nodes.
+ * Example data for product:
+ * \`\`\`javascript
  * {
- *   "x_i": {
- *     "v1": { "id": "v1", "value": 0.5 },
- *     "v3": { "id": "v3", "value": 2 },
- *     "v2": { "id": "v2", "value": 3 },
- *   }
+ *   x_i: ["v1", "v3", "v2"]
  * }
- * @param y Node data of y. y will not be a constant node. y will not be the
- * current node. Example data for product: { "id": "v2", "value": 3 }
- * @returns Evaluated derivative df/dy. For example, 1.0 given the above
- * example data because df/dy = v1.value * v3.value.
+ * \`\`\`
+ * @param {Record<string, string>} fInputNodeToValues An object where the
+ * keys are node IDs and the values are node values of the connected input
+ * nodes. Example data for product:
+ * \`\`\`javascript
+ * {
+ *   v1: "1",
+ *   v3: "3",
+ *   v2: "2",
+ * }
+ * \`\`\`
+ * @param {string} xId Node ID of x. Note that the framework will not call this
+ * function for the following cases:
+ * - x is a constant node (i.e., x will always be a variable)
+ * - x is the node of f (i.e., the derivative is always 1)
+ * @returns {string} Evaluated derivative df/dy. For example, if we consider
+ * the above example data and assume \`xId\` is "v2", then the value is "3"
+ * since \`f = v1 * v3 * v2\` and \`df/dx = v1 * v3 = 3\`.
  */
-function dfdy(portToNodes, y) {
-  if (!(y.id in portToNodes.x)) {
-    return 0;
+function dfdx(fInputPortToNodes, fInputNodeToValues, xId) {
+  if (!fInputPortToNodes.x.includes(xId)) {
+    return "0";
   }
-
-  const nodeData = Object.values(portToNodes.x);
-  if (nodeData.length !== 1) {
-    throw new Error("Should have exactly 1 node data for port x");
+  if (fInputPortToNodes.x.length !== 1) {
+    throw new Error("Should have exactly 1 input node for port x");
   }
-  const x = nodeData[0].value;
-  return x > 0 ? 1 : 0;
+  const xInputNodeId = fInputPortToNodes.x[0];
+  const x = parseFloat(fInputNodeToValues[xInputNodeId]);
+  const df = x > 0 ? 1 : 0;
+  return \`\${df}\`;
 }
 `;
 
 const SIGMOID_F_CODE = `\
 /**
- * Calculates f(...).
- * @param {PortToNodesData} portToNodes Object with port ID as the keys and
- * node data as the values. Example data for sum:
+ * Calculates f().
+ * @param {Record<string, string[]>} fInputPortToNodes An object where the keys
+ * are port IDs and the values are node IDs of the connected input nodes.
+ * Example data for product:
+ * \`javascript
  * {
- *   "x_i": {
- *     "v1": { "id": "v1", "value": 1 },
- *     "v3": { "id": "v3", "value": 3 },
- *     "v2": { "id": "v2", "value": 2 },
- *   }
+ *   x_i: ["v1", "v3", "v2"]
  * }
- * @returns {number} Evaluated f value. For example: 6 given the above example
- * data because f({v1, v3, v2}) = v1.value + v3.value + v2.value.
+ * \`
+ * @param {Record<string, string>} fInputNodeToValues An object where the keys
+ * are node IDs and the values are node values of the connected input nodes.
+ * Example data for product:
+ * \`javascript
+ * {
+ *   v1: "1",
+ *   v3: "3",
+ *   v2: "2",
+ * }
+ * \`
+ * @returns {string} Evaluated f value. For example: if we consider
+ * the above example data, then the value is "6" because
+ * \`f({v1, v3, v2}) = v1 * v3 * v2 = 1 * 3 * 2 = 6\`.
  */
-function f(portToNodes) {
-  const nodeData = Object.values(portToNodes.x);
-  if (nodeData.length !== 1) {
-    throw new Error("Should have exactly 1 node data for port x");
+function f(fInputPortToNodes, fInputNodeToValues) {
+  if (fInputPortToNodes.x.length !== 1) {
+    throw new Error("Should have exactly 1 input node for port x");
   }
-  const x = nodeData[0].value;
-  return 1 / (1 + Math.exp(-x));
+  const xInputNodeId = fInputPortToNodes.x[0];
+  const x = parseFloat(fInputNodeToValues[xInputNodeId]);
+  const y = 1 / (1 + Math.exp(-x));
+  return \`\${y}\`;
 }
 `;
 
-const SIGMOID_DFDY_CODE = `\
+const SIGMOID_DFDX_CODE = `\
 /**
- * Calculates df/dy.
- * @param portToNodes Object with port ID as the keys and node
- * data as the values. Example data for product:
+ * Calculates df/dx.
+ * @param {Record<string, string[]>} fInputPortToNodes An object where the
+ * keys are port IDs and the values are node IDs of the connected input nodes.
+ * Example data for product:
+ * \`\`\`javascript
  * {
- *   "x_i": {
- *     "v1": { "id": "v1", "value": 0.5 },
- *     "v3": { "id": "v3", "value": 2 },
- *     "v2": { "id": "v2", "value": 3 },
- *   }
+ *   x_i: ["v1", "v3", "v2"]
  * }
- * @param y Node data of y. y will not be a constant node. y will not be the
- * current node. Example data for product: { "id": "v2", "value": 3 }
- * @returns Evaluated derivative df/dy. For example, 1.0 given the above
- * example data because df/dy = v1.value * v3.value.
+ * \`\`\`
+ * @param {Record<string, string>} fInputNodeToValues An object where the
+ * keys are node IDs and the values are node values of the connected input
+ * nodes. Example data for product:
+ * \`\`\`javascript
+ * {
+ *   v1: "1",
+ *   v3: "3",
+ *   v2: "2",
+ * }
+ * \`\`\`
+ * @param {string} xId Node ID of x. Note that the framework will not call this
+ * function for the following cases:
+ * - x is a constant node (i.e., x will always be a variable)
+ * - x is the node of f (i.e., the derivative is always 1)
+ * @returns {string} Evaluated derivative df/dy. For example, if we consider
+ * the above example data and assume \`xId\` is "v2", then the value is "3"
+ * since \`f = v1 * v3 * v2\` and \`df/dx = v1 * v3 = 3\`.
  */
-function dfdy(portToNodes, y) {
-  if (!(y.id in portToNodes.x)) {
-    return 0;
+function dfdx(fInputPortToNodes, fInputNodeToValues, xId) {
+  if (!fInputPortToNodes.x.includes(xId)) {
+    return "0";
   }
-
-  const nodeData = Object.values(portToNodes.x);
-  if (nodeData.length !== 1) {
-    throw new Error("Should have exactly 1 node data for port x");
+  if (fInputPortToNodes.x.length !== 1) {
+    throw new Error("Should have exactly 1 input node for port x");
   }
-  const x = nodeData[0].value;
+  const xInputNodeId = fInputPortToNodes.x[0];
+  const x = parseFloat(fInputNodeToValues[xInputNodeId]);
   const sigmoid = 1 / (1 + Math.exp(-x));
-  return sigmoid * (1 - sigmoid);
+  const df = sigmoid * (1 - sigmoid);
+  return \`\${df}\`;
 }
 `;
 
 const SQUARED_ERROR_F_CODE = `\
 /**
- * Calculates f(...).
- * @param {PortToNodesData} portToNodes Object with port ID as the keys and
- * node data as the values. Example data for sum:
+ * Calculates f().
+ * @param {Record<string, string[]>} fInputPortToNodes An object where the keys
+ * are port IDs and the values are node IDs of the connected input nodes.
+ * Example data for product:
+ * \`javascript
  * {
- *   "x_i": {
- *     "v1": { "id": "v1", "value": 1 },
- *     "v3": { "id": "v3", "value": 3 },
- *     "v2": { "id": "v2", "value": 2 },
- *   }
+ *   x_i: ["v1", "v3", "v2"]
  * }
- * @returns {number} Evaluated f value. For example: 6 given the above example
- * data because f({v1, v3, v2}) = v1.value + v3.value + v2.value.
+ * \`
+ * @param {Record<string, string>} fInputNodeToValues An object where the keys
+ * are node IDs and the values are node values of the connected input nodes.
+ * Example data for product:
+ * \`javascript
+ * {
+ *   v1: "1",
+ *   v3: "3",
+ *   v2: "2",
+ * }
+ * \`
+ * @returns {string} Evaluated f value. For example: if we consider
+ * the above example data, then the value is "6" because
+ * \`f({v1, v3, v2}) = v1 * v3 * v2 = 1 * 3 * 2 = 6\`.
  */
-function f(portToNodes) {
-  const nodeDataTrue = Object.values(portToNodes.y_true);
-  if (nodeDataTrue.length !== 1) {
-    throw new Error("Should have exactly 1 node data for port y_true");
+function f(fInputPortToNodes, fInputNodeToValues) {
+  if (fInputPortToNodes.y_true.length !== 1) {
+    throw new Error("Should have exactly 1 input node for port y_true");
   }
-  const nodeDataEstimate = Object.values(portToNodes.y_estimate);
-  if (nodeDataEstimate.length !== 1) {
-    throw new Error("Should have exactly 1 node data for port y_estimate");
+  if (fInputPortToNodes.y_estimate.length !== 1) {
+    throw new Error("Should have exactly 1 input node for port y_estimate");
   }
-  const yTrue = nodeDataTrue[0].value;
-  const yEstimate = nodeDataEstimate[0].value;
-  return Math.pow(yTrue - yEstimate, 2);
+  const yTrueInputNodeId = fInputPortToNodes.y_true[0];
+  const yEstimateInputNodeId = fInputPortToNodes.y_estimate[0];
+  const yTrue = parseFloat(fInputNodeToValues[yTrueInputNodeId]);
+  const yEstimate = parseFloat(fInputNodeToValues[yEstimateInputNodeId]);
+  const y = Math.pow(yTrue - yEstimate, 2);
+  return \`\${y}\`;
 }
 `;
 
-const SQUARED_ERROR_DFDY_CODE = `\
+const SQUARED_ERROR_DFDX_CODE = `\
 /**
- * Calculates df/dy.
- * @param portToNodes Object with port ID as the keys and node
- * data as the values. Example data for product:
+ * Calculates df/dx.
+ * @param {Record<string, string[]>} fInputPortToNodes An object where the
+ * keys are port IDs and the values are node IDs of the connected input nodes.
+ * Example data for product:
+ * \`\`\`javascript
  * {
- *   "x_i": {
- *     "v1": { "id": "v1", "value": 0.5 },
- *     "v3": { "id": "v3", "value": 2 },
- *     "v2": { "id": "v2", "value": 3 },
- *   }
+ *   x_i: ["v1", "v3", "v2"]
  * }
- * @param y Node data of y. y will not be a constant node. y will not be the
- * current node. Example data for product: { "id": "v2", "value": 3 }
- * @returns Evaluated derivative df/dy. For example, 1.0 given the above
- * example data because df/dy = v1.value * v3.value.
+ * \`\`\`
+ * @param {Record<string, string>} fInputNodeToValues An object where the
+ * keys are node IDs and the values are node values of the connected input
+ * nodes. Example data for product:
+ * \`\`\`javascript
+ * {
+ *   v1: "1",
+ *   v3: "3",
+ *   v2: "2",
+ * }
+ * \`\`\`
+ * @param {string} xId Node ID of x. Note that the framework will not call this
+ * function for the following cases:
+ * - x is a constant node (i.e., x will always be a variable)
+ * - x is the node of f (i.e., the derivative is always 1)
+ * @returns {string} Evaluated derivative df/dy. For example, if we consider
+ * the above example data and assume \`xId\` is "v2", then the value is "3"
+ * since \`f = v1 * v3 * v2\` and \`df/dx = v1 * v3 = 3\`.
  */
-function dfdy(portToNodes, y) {
-  if (!(y.id in portToNodes.y_true) && !(y.id in portToNodes.y_estimate)) {
-    return 0;
+function dfdx(fInputPortToNodes, fInputNodeToValues, xId) {
+  const hasXInYTrue = fInputPortToNodes.y_true.includes(xId);
+  const hasXInYEstimate = fInputPortToNodes.y_estimate.includes(xId);
+  if (!hasXInYTrue && !hasXInYEstimate) {
+    return "0";
   }
-
-  const nodeDataTrue = Object.values(portToNodes.y_true);
-  if (nodeDataTrue.length !== 1) {
-    throw new Error("Should have exactly 1 node data for port y_true");
-  }
-  const nodeDataEstimate = Object.values(portToNodes.y_estimate);
-  if (nodeDataEstimate.length !== 1) {
-    throw new Error("Should have exactly 1 node data for port y_estimate");
-  }
-  const yTrue = nodeDataTrue[0].value;
-  const yEstimate = nodeDataEstimate[0].value;
-  if (y.id in portToNodes.y_true) {
-    return 2 * (yEstimate - yTrue);
+  const yTrueInputNodeId = fInputPortToNodes.y_true[0];
+  const yEstimateInputNodeId = fInputPortToNodes.y_estimate[0];
+  const yTrue = parseFloat(fInputNodeToValues[yTrueInputNodeId]);
+  const yEstimate = parseFloat(fInputNodeToValues[yEstimateInputNodeId]);
+  let df = 0;
+  if (hasXInYTrue) {
+    df = 2 * (yTrue - yEstimate);
   } else {
-    return 2 * (yTrue - yEstimate);
+    df = 2 * (yEstimate - yTrue);
   }
+  return \`\${df}\`;
 }
 `;
 
 export {
-  ADD_DFDY_CODE,
+  ADD_DFDX_CODE,
   ADD_F_CODE,
-  IDENTITY_DFDY_CODE,
+  IDENTITY_DFDX_CODE,
   IDENTITY_F_CODE,
-  PRODUCT_DFDY_CODE,
+  PRODUCT_DFDX_CODE,
   PRODUCT_F_CODE,
-  RELU_DFDY_CODE,
+  RELU_DFDX_CODE,
   RELU_F_CODE,
-  SIGMOID_DFDY_CODE,
+  SIGMOID_DFDX_CODE,
   SIGMOID_F_CODE,
-  SQUARED_ERROR_DFDY_CODE,
+  SQUARED_ERROR_DFDX_CODE,
   SQUARED_ERROR_F_CODE,
-  SUM_DFDY_CODE,
+  SUM_DFDX_CODE,
   SUM_F_CODE,
-  TEMPLATE_DFDY_CODE,
+  TEMPLATE_DFDX_CODE,
   TEMPLATE_F_CODE,
 };

@@ -6,22 +6,22 @@ test("should have correct properties", () => {
   expect(varNode.getType()).toBe("VARIABLE");
   expect(varNode.getId()).toBe("v1");
   expect(varNode.isConstant()).toBe(false);
-  expect(varNode.getValue()).toBeCloseTo(0);
+  expect(varNode.getValue()).toBe("0");
 });
 
 test("should have correct value after setting", () => {
   const varNode = new VariableNode("v1");
-  varNode.setValue(1);
-  expect(varNode.getValue()).toBeCloseTo(1);
+  varNode.setValue("1");
+  expect(varNode.getValue()).toBe("1");
 });
 
-test("should have correct dfdy", () => {
+test("should have correct dfdx", () => {
   const varNode = new VariableNode("v1");
   // d(v1)/d(v1) = 1
-  expect(varNode.calculateDfdy(varNode)).toBeCloseTo(1);
+  expect(varNode.calculateDfdx(varNode)).toBe("1");
   // d(v1)/d(v2) = 0
   const varNode2 = new VariableNode("v2");
-  expect(varNode.calculateDfdy(varNode2)).toBeCloseTo(0);
+  expect(varNode.calculateDfdx(varNode2)).toBe("0");
 });
 
 test("can get relationship", () => {

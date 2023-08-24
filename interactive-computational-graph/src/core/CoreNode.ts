@@ -8,13 +8,13 @@ interface CoreNode {
 
   isConstant: () => boolean;
 
-  getValue: () => number;
+  getValue: () => string;
 
-  setValue: (value: number) => void;
+  setValue: (value: string) => void;
 
   updateF: () => void;
 
-  calculateDfdy: (y: CoreNode) => number;
+  calculateDfdx: (x: CoreNode) => string;
 
   getRelationship: () => NodeRelationship;
 }

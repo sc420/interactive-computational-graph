@@ -9,7 +9,7 @@ class VariableNode implements CoreNode {
     [],
   );
 
-  private value: number = 0;
+  private value: string = "0";
 
   constructor(id: string) {
     this.id = id;
@@ -27,24 +27,24 @@ class VariableNode implements CoreNode {
     return false;
   }
 
-  getValue(): number {
+  getValue(): string {
     return this.value;
   }
 
-  setValue(value: number): void {
+  setValue(value: string): void {
     this.value = value;
   }
 
   updateF(): void {}
 
-  calculateDfdy(y: CoreNode): number {
-    if (y.isConstant()) {
-      return 0;
+  calculateDfdx(x: CoreNode): string {
+    if (x.isConstant()) {
+      return "0";
     }
-    if (y.getId() === this.getId()) {
-      return 1;
+    if (x.getId() === this.getId()) {
+      return "1";
     }
-    return 0;
+    return "0";
   }
 
   getRelationship(): NodeRelationship {

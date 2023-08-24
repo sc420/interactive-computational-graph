@@ -385,6 +385,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
         connection.targetHandle,
       );
 
+      // TODO(sc420): Should disconnect dummy input nodes before connecting edges
       if (
         isDummyInputNodeConnected(
           coreGraph,

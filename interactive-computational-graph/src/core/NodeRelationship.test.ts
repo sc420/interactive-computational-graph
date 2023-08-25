@@ -193,10 +193,23 @@ describe("output behavior", () => {
     expect(nodeRelationship.getOutputNodes()).toEqual([opNode1]);
   });
 
-  test("should have no output nodes after removal", () => {
+  test("should have no output nodes after removing output node", () => {
     const nodeRelationship = buildTwoPortsNodeRelationship();
     const opNode1 = getDummyOperationNode("op1");
     nodeRelationship.addOutputNode(opNode1);
+    nodeRelationship.removeOutputNode("op1");
+
+    expect(nodeRelationship.isOutputPortEmpty()).toBe(true);
+
+    expect(nodeRelationship.getOutputNodes()).toEqual([]);
+  });
+
+  test("should have no output nodes after removing same output node twice", () => {
+    const nodeRelationship = buildTwoPortsNodeRelationship();
+    const opNode1 = getDummyOperationNode("op1");
+    nodeRelationship.addOutputNode(opNode1);
+    nodeRelationship.addOutputNode(opNode1);
+    nodeRelationship.removeOutputNode("op1");
     nodeRelationship.removeOutputNode("op1");
 
     expect(nodeRelationship.isOutputPortEmpty()).toBe(true);

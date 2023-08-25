@@ -175,9 +175,13 @@ class NodeRelationship {
     connectedNodes: CoreNode[],
     nodeId: string,
   ): CoreNode[] {
-    return connectedNodes.filter(
-      (connectedNode) => connectedNode.getId() !== nodeId,
+    // Only remove one node even if there're multiple matches
+    const indexToRemove = connectedNodes.findIndex(
+      (connectedNode) => connectedNode.getId() === nodeId,
     );
+    return connectedNodes.filter(function (connectedNode, index) {
+      return index !== indexToRemove;
+    });
   }
 }
 

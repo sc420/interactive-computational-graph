@@ -3,7 +3,7 @@ import Port from "./Port";
 
 interface PortData {
   port: Port;
-  nodeIdToNodes: Map<string, CoreNode>;
+  connectedNodes: CoreNode[];
 }
 
 class NodeRelationship {
@@ -36,7 +36,7 @@ class NodeRelationship {
       this.inputPortIdToPortData,
       portId,
     );
-    return Array.from(inputPortData.nodeIdToNodes.values());
+    return inputPortData.connectedNodes;
   }
 
   getInputNodes(): CoreNode[] {
@@ -52,7 +52,7 @@ class NodeRelationship {
       this.outputPortIdToPortData,
       this.outputPort.getId(),
     );
-    return Array.from(outputPortData.nodeIdToNodes.values());
+    return outputPortData.connectedNodes;
   }
 
   hasInputNodeByPort(portId: string, nodeId: string): boolean {
@@ -68,7 +68,7 @@ class NodeRelationship {
 
     if (
       !inputPortData.port.isAllowMultiEdges() &&
-      inputPortData.nodeIdToNodes.size > 0
+      inputPortData.connectedNodes.length > 0
     ) {
       return false;
     }
@@ -82,14 +82,14 @@ class NodeRelationship {
       portId,
     );
 
-    if (inputPortData.nodeIdToNodes.has(inputNode.getId())) {
+    if (this.isNodeConnected(inputPortData.connectedNodes, inputNode.getId())) {
       throw new Error(
         `Input node ${inputNode.getId()} already exists by port ${portId}`,
       );
     }
 
     if (
-      inputPortData.nodeIdToNodes.size >= 1 &&
+      inputPortData.connectedNodes.length >= 1 &&
       !inputPortData.port.isAllowMultiEdges()
     ) {
       throw new Error(
@@ -97,7 +97,7 @@ class NodeRelationship {
       );
     }
 
-    inputPortData.nodeIdToNodes.set(inputNode.getId(), inputNode);
+    inputPortData.connectedNodes.push(inputNode);
   }
 
   addOutputNode(outputNode: CoreNode): void {
@@ -105,10 +105,7 @@ class NodeRelationship {
       this.outputPortIdToPortData,
       this.outputPort.getId(),
     );
-    if (outputPortData.nodeIdToNodes.has(outputNode.getId())) {
-      throw new Error(`Output node ${outputNode.getId()} already exists`);
-    }
-    outputPortData.nodeIdToNodes.set(outputNode.getId(), outputNode);
+    outputPortData.connectedNodes.push(outputNode);
   }
 
   removeInputNodeByPort(portId: string, nodeId: string): void {
@@ -116,10 +113,13 @@ class NodeRelationship {
       this.inputPortIdToPortData,
       portId,
     );
-    const success = inputPortData.nodeIdToNodes.delete(nodeId);
-    if (!success) {
+    if (!this.isNodeConnected(inputPortData.connectedNodes, nodeId)) {
       throw new Error(`Input node ${nodeId} doesn't exist by port ${portId}`);
     }
+    inputPortData.connectedNodes = this.removeConnectedNode(
+      inputPortData.connectedNodes,
+      nodeId,
+    );
   }
 
   removeOutputNode(nodeId: string): void {
@@ -127,17 +127,20 @@ class NodeRelationship {
       this.outputPortIdToPortData,
       this.outputPort.getId(),
     );
-    const success = outputPortData.nodeIdToNodes.delete(nodeId);
-    if (!success) {
+    if (!this.isNodeConnected(outputPortData.connectedNodes, nodeId)) {
       throw new Error(`Output node ${nodeId} doesn't exist`);
     }
+    outputPortData.connectedNodes = this.removeConnectedNode(
+      outputPortData.connectedNodes,
+      nodeId,
+    );
   }
 
   private initInputPortIdToPortData(): void {
     this.inputPorts.forEach((inputPort) => {
       const portData: PortData = {
         port: inputPort,
-        nodeIdToNodes: new Map<string, CoreNode>(),
+        connectedNodes: [],
       };
       this.inputPortIdToPortData.set(inputPort.getId(), portData);
     });
@@ -146,7 +149,7 @@ class NodeRelationship {
   private initOutputPortIdToPortData(): void {
     const portData: PortData = {
       port: this.outputPort,
-      nodeIdToNodes: new Map<string, CoreNode>(),
+      connectedNodes: [],
     };
     this.outputPortIdToPortData.set(this.outputPort.getId(), portData);
   }
@@ -160,6 +163,21 @@ class NodeRelationship {
       throw new Error(`Input port ${portId} doesn't exist`);
     }
     return portData;
+  }
+
+  private isNodeConnected(connectedNodes: CoreNode[], nodeId: string): boolean {
+    return connectedNodes.some(
+      (connectedNode) => connectedNode.getId() === nodeId,
+    );
+  }
+
+  private removeConnectedNode(
+    connectedNodes: CoreNode[],
+    nodeId: string,
+  ): CoreNode[] {
+    return connectedNodes.filter(
+      (connectedNode) => connectedNode.getId() !== nodeId,
+    );
   }
 }
 

@@ -378,14 +378,6 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
         return;
       }
 
-      connectCoreEdge(
-        coreGraph,
-        connection.source,
-        connection.target,
-        connection.targetHandle,
-      );
-
-      // TODO(sc420): Should disconnect dummy input nodes before connecting edges
       if (
         isDummyInputNodeConnected(
           coreGraph,
@@ -401,6 +393,13 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
 
         setReactFlowNodes((nodes) => hideInputField(connection, nodes));
       }
+
+      connectCoreEdge(
+        coreGraph,
+        connection.source,
+        connection.target,
+        connection.targetHandle,
+      );
 
       updateNodeValuesAndDerivatives();
 

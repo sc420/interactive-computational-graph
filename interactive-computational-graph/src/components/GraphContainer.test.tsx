@@ -94,7 +94,7 @@ it("edges and sum node itself should be removed after removing sum node", () => 
   expect(reactFlowData).toMatchSnapshot();
 });
 
-it("can connect same node to multiple ports", () => {
+it("can connect same node to multiple ports, then remove the connections", () => {
   render(<GraphContainer selectedFeature="dashboard" />);
 
   // Add a variable node
@@ -108,6 +108,10 @@ it("can connect same node to multiple ports", () => {
   // Connect from the variable node to the add node
   connectEdge("1", "output", "2", "a");
   connectEdge("1", "output", "2", "b");
+
+  // Disconnect from the variable node to the add node
+  removeEdge(["reactflow__edge-1output-2a"]);
+  removeEdge(["reactflow__edge-1output-2b"]);
 });
 
 it("input text fields should hide/show properly", () => {

@@ -109,7 +109,7 @@ describe("manipulating connections", () => {
 
     expect(() => {
       graph.connect("v1", "sum1", "x_i");
-    }).toThrow("Output node sum1 already exists");
+    }).toThrow("Input node v1 already exists by port x_i");
   });
 
   test("should throw error when connecting to non-existent port", () => {

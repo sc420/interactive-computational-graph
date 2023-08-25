@@ -149,7 +149,7 @@ describe("output behavior", () => {
     expect(nodeRelationship.getOutputNodes()).toEqual([opNode1]);
   });
 
-  test("should have multiple output nodes after adding", () => {
+  test("should have multiple different output nodes after adding", () => {
     const nodeRelationship = buildTwoPortsNodeRelationship();
     const opNode1 = getDummyOperationNode("op1");
     const opNode2 = getDummyOperationNode("op2");
@@ -162,6 +162,21 @@ describe("output behavior", () => {
       .getOutputNodes()
       .map((node) => node.getId());
     const expectedOutputNodeIds = ["op1", "op2"];
+    expect(outputNodeIds.sort()).toEqual(expectedOutputNodeIds.sort());
+  });
+
+  test("should have multiple same output nodes after adding", () => {
+    const nodeRelationship = buildTwoPortsNodeRelationship();
+    const opNode1 = getDummyOperationNode("op1");
+    nodeRelationship.addOutputNode(opNode1);
+    nodeRelationship.addOutputNode(opNode1);
+
+    expect(nodeRelationship.isOutputPortEmpty()).toBe(false);
+
+    const outputNodeIds = nodeRelationship
+      .getOutputNodes()
+      .map((node) => node.getId());
+    const expectedOutputNodeIds = ["op1", "op1"];
     expect(outputNodeIds.sort()).toEqual(expectedOutputNodeIds.sort());
   });
 

@@ -9,7 +9,6 @@ import { findFeatureOperation } from "./ControllerUtilities";
 import type FeatureNodeType from "./FeatureNodeType";
 import type FeatureOperation from "./FeatureOperation";
 import type NodeData from "./NodeData";
-import type NonEmptyConnection from "./NonEmptyConnection";
 import { randomInteger } from "./RandomUtilities";
 
 type InputChangeCallback = (
@@ -127,29 +126,28 @@ const hideInputField = (connection: Connection, nodes: Node[]): Node[] => {
   });
 };
 
-const showInputFields = (
-  nodeIdToEmptyInputPortIds: Map<string, string>,
-  nodes: Node[],
-): Node[] => {
+const showInputFields = (edges: Edge[], nodes: Node[]): Node[] => {
   return nodes.map((node) => {
-    if (nodeIdToEmptyInputPortIds.has(node.id)) {
-      const targetHandle = nodeIdToEmptyInputPortIds.get(node.id);
-      if (targetHandle === undefined) {
-        throw new Error(`Should find the target handle of node ${node.id}`);
+    edges.forEach((edge) => {
+      if (typeof edge.targetHandle !== "string") {
+        return;
+      }
+      if (edge.target !== node.id) {
+        return;
       }
 
       const data = node.data as NodeData;
       const inputItem = data.inputItems.find(
-        (inputItem) => inputItem.id === targetHandle,
+        (inputItem) => inputItem.id === edge.targetHandle,
       );
       if (inputItem === undefined) {
-        throw new Error(`Should find input port ${targetHandle}`);
+        throw new Error(`Should find input port ${edge.targetHandle}`);
       }
       inputItem.showInputField = true;
       // Set the new data to notify React Flow about the change
       const newData: NodeData = { ...node.data };
       node.data = newData;
-    }
+    });
 
     return node;
   });
@@ -266,27 +264,6 @@ const deselectLastSelectedNode = (
     node.selected = false;
   }
   return nodes;
-};
-
-const getNonEmptyConnectionsFromEdges = (
-  edges: Edge[],
-): NonEmptyConnection[] => {
-  return edges
-    .filter(
-      (edge) => edge.targetHandle !== null && edge.targetHandle !== undefined,
-    )
-    .map((edge) => {
-      if (edge.targetHandle === null || edge.targetHandle === undefined) {
-        throw new Error("Should filter out null or undefined targetHandle");
-      }
-
-      const nonEmptyConnection: NonEmptyConnection = {
-        source: edge.source,
-        target: edge.target,
-        targetHandle: edge.targetHandle,
-      };
-      return nonEmptyConnection;
-    });
 };
 
 const buildReactFlowNodeData = (
@@ -415,7 +392,6 @@ export {
   deselectLastSelectedNode,
   findRemovedEdges,
   getNewReactFlowNodePosition,
-  getNonEmptyConnectionsFromEdges,
   hideInputField,
   selectReactFlowNode,
   showInputFields,

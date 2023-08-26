@@ -56,6 +56,7 @@ const InputItems: FunctionComponent<InputItemProps> = ({
             {/* Output */}
             <OutlinedInput
               id={getOutputId(item.type)}
+              data-testid={getOutputId(item.type)}
               readOnly={true}
               value={item.value}
               size="small"

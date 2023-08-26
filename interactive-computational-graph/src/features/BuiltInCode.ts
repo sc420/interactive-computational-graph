@@ -146,6 +146,90 @@ function dfdx(fInputPortToNodes, fInputNodeToValues, xId) {
 }
 `;
 
+const MULTIPLY_F_CODE = `\
+/**
+ * Calculates f().
+ * @param {Record<string, string[]>} fInputPortToNodes An object where the keys
+ * are port IDs and the values are node IDs of the connected input nodes.
+ * Example data for product:
+ * \`javascript
+ * {
+ *   x_i: ["v1", "v3", "v2"]
+ * }
+ * \`
+ * @param {Record<string, string>} fInputNodeToValues An object where the keys
+ * are node IDs and the values are node values of the connected input nodes.
+ * Example data for product:
+ * \`javascript
+ * {
+ *   v1: "1",
+ *   v3: "3",
+ *   v2: "2",
+ * }
+ * \`
+ * @returns {string} Evaluated f value. For example: if we consider
+ * the above example data, then the value is "6" because
+ * \`f({v1, v3, v2}) = v1 * v3 * v2 = 1 * 3 * 2 = 6\`.
+ */
+function f(fInputPortToNodes, fInputNodeToValues) {
+  if (fInputPortToNodes.a.length !== 1) {
+    throw new Error("Should have exactly 1 input node for port a");
+  }
+  if (fInputPortToNodes.b.length !== 1) {
+    throw new Error("Should have exactly 1 input node for port b");
+  }
+  const aInputNodeId = fInputPortToNodes.a[0];
+  const bInputNodeId = fInputPortToNodes.b[0];
+  const a = parseFloat(fInputNodeToValues[aInputNodeId]);
+  const b = parseFloat(fInputNodeToValues[bInputNodeId]);
+  const y = a * b;
+  return \`\${y}\`;
+}
+`;
+
+const MULTIPLY_DFDX_CODE = `\
+/**
+ * Calculates df/dx.
+ * @param {Record<string, string[]>} fInputPortToNodes An object where the
+ * keys are port IDs and the values are node IDs of the connected input nodes.
+ * Example data for product:
+ * \`\`\`javascript
+ * {
+ *   x_i: ["v1", "v3", "v2"]
+ * }
+ * \`\`\`
+ * @param {Record<string, string>} fInputNodeToValues An object where the
+ * keys are node IDs and the values are node values of the connected input
+ * nodes. Example data for product:
+ * \`\`\`javascript
+ * {
+ *   v1: "1",
+ *   v3: "3",
+ *   v2: "2",
+ * }
+ * \`\`\`
+ * @param {string} xId Node ID of x. Note that the framework will not call this
+ * function for the following cases:
+ * - x is a constant node (i.e., x will always be a variable)
+ * - x is the node of f (i.e., the derivative is always 1)
+ * @returns {string} Evaluated derivative df/dy. For example, if we consider
+ * the above example data and assume \`xId\` is "v2", then the value is "3"
+ * since \`f = v1 * v3 * v2\` and \`df/dx = v1 * v3 = 3\`.
+ */
+function dfdx(fInputPortToNodes, fInputNodeToValues, xId) {
+  const hasXInA = fInputPortToNodes.a.includes(xId);
+  const hasXInB = fInputPortToNodes.b.includes(xId);
+  if (!hasXInA && !hasXInB) {
+    return "0";
+  }
+  const aInputNodeId = fInputPortToNodes.a[0];
+  const bInputNodeId = fInputPortToNodes.b[0];
+  const a = parseFloat(fInputNodeToValues[aInputNodeId]);
+  const b = parseFloat(fInputNodeToValues[bInputNodeId]);
+  return hasXInA ? \`\${b}\` : \`\${a}\`;
+}
+`;
+
 const SUM_F_CODE = `\
 /**
  * Calculates f().
@@ -623,6 +707,8 @@ export {
   ADD_F_CODE,
   IDENTITY_DFDX_CODE,
   IDENTITY_F_CODE,
+  MULTIPLY_DFDX_CODE,
+  MULTIPLY_F_CODE,
   PRODUCT_DFDX_CODE,
   PRODUCT_F_CODE,
   RELU_DFDX_CODE,

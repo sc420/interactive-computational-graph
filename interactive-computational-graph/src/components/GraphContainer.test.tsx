@@ -63,6 +63,37 @@ it("should select the last dropped node", () => {
   expect(reactFlowData).toMatchSnapshot();
 });
 
+it("edges and add node itself should be removed after removing add node", () => {
+  render(<GraphContainer selectedFeature="dashboard" />);
+
+  // Add two constant nodes
+  const constantItem = screen.getByText("Constant");
+  fireEvent.click(constantItem);
+  fireEvent.click(constantItem);
+
+  // Add an add node
+  const sumItem = screen.getByText("Add");
+  fireEvent.click(sumItem);
+
+  // Connect from the constant nodes to the add node
+  connectEdge("1", "output", "3", "a");
+  connectEdge("2", "output", "3", "b");
+
+  // Remove the add node
+  removeEdge(["reactflow__edge-1output-3a", "reactflow__edge-2output-3b"]);
+  removeNode(["3"]);
+
+  expect(screen.getByText("c1")).toBeInTheDocument();
+  expect(screen.getByText("c2")).toBeInTheDocument();
+  expect(screen.queryByText("add3")).toBeNull();
+
+  const reactFlowData = {
+    nodes: getNodes(),
+    edges: getEdges(),
+  };
+  expect(reactFlowData).toMatchSnapshot();
+});
+
 it("edges and sum node itself should be removed after removing sum node", () => {
   render(<GraphContainer selectedFeature="dashboard" />);
 
@@ -161,16 +192,113 @@ it("derivative target should reset when the target node is removed", () => {
   connectEdge("2", "output", "3", "x_i");
 
   // Select the sum node as the derivative target
-  const derivativeTargetAutocomplete = screen.getByTestId("derivative-target");
-  const input = within(derivativeTargetAutocomplete).getByRole("combobox");
-  fireEvent.change(input, { target: { value: "3" } });
+  setDerivativeTarget("3");
 
   // Remove the sum node
   removeEdge(["reactflow__edge-1output-3x_i", "reactflow__edge-2output-3x_i"]);
   removeNode(["3"]);
 
-  expect(input).toHaveValue("");
+  expect(getDerivativeTarget()).toBe("");
 });
+
+// It uses example from https://colah.github.io/posts/2015-08-Backprop/
+it("derivative values should change when derivative mode/target is changed", () => {
+  render(<GraphContainer selectedFeature="dashboard" />);
+
+  // Add the nodes
+  const variableItem = screen.getByText("Variable");
+  const addItem = screen.getByText("Add");
+  const multiplyItem = screen.getByText("Multiply");
+  fireEvent.click(variableItem); // id=1
+  fireEvent.click(variableItem); // id=2
+  fireEvent.click(addItem); // id=3
+  fireEvent.click(addItem); // id=4
+  fireEvent.click(multiplyItem); // id=5
+
+  // Connect from the variable nodes to add nodes
+  connectEdge("1", "output", "3", "a");
+  connectEdge("2", "output", "3", "b");
+  connectEdge("2", "output", "4", "a");
+
+  // Set add node input values
+  setInputItemValue("1", "value", "2");
+  setInputItemValue("2", "value", "1");
+  setInputItemValue("4", "b", "1");
+
+  // Connect from the add nodes to multiply node
+  connectEdge("3", "output", "5", "a");
+  connectEdge("4", "output", "5", "b");
+
+  // Select the multiply node as the derivative target
+  setDerivativeTarget("5");
+
+  // Check the output values
+  expect(getOutputItemValue("3", "VALUE")).toBe("3");
+  expect(getOutputItemValue("4", "VALUE")).toBe("2");
+  expect(getOutputItemValue("5", "VALUE")).toBe("6");
+
+  // Check the derivative values
+  expect(getOutputItemValue("1", "DERIVATIVE")).toBe("2");
+  expect(getOutputItemValue("2", "DERIVATIVE")).toBe("5");
+  expect(getOutputItemValue("3", "DERIVATIVE")).toBe("2");
+  expect(getOutputItemValue("4", "DERIVATIVE")).toBe("3");
+  expect(getOutputItemValue("5", "DERIVATIVE")).toBe("1");
+
+  // Change the differentiation mode to forward mode
+  toggleDifferentiationMode();
+
+  // Check the output values
+  expect(getOutputItemValue("3", "VALUE")).toBe("3");
+  expect(getOutputItemValue("4", "VALUE")).toBe("2");
+  expect(getOutputItemValue("5", "VALUE")).toBe("6");
+
+  // Check the derivative values
+  expect(getOutputItemValue("1", "DERIVATIVE")).toBe("0");
+  expect(getOutputItemValue("2", "DERIVATIVE")).toBe("0");
+  expect(getOutputItemValue("3", "DERIVATIVE")).toBe("0");
+  expect(getOutputItemValue("4", "DERIVATIVE")).toBe("0");
+  expect(getOutputItemValue("5", "DERIVATIVE")).toBe("1");
+
+  // Select the second variable node as the derivative target
+  setDerivativeTarget("2");
+
+  // Check the output values
+  expect(getOutputItemValue("3", "VALUE")).toBe("3");
+  expect(getOutputItemValue("4", "VALUE")).toBe("2");
+  expect(getOutputItemValue("5", "VALUE")).toBe("6");
+
+  // Check the derivative values
+  expect(getOutputItemValue("1", "DERIVATIVE")).toBe("0");
+  expect(getOutputItemValue("2", "DERIVATIVE")).toBe("1");
+  expect(getOutputItemValue("3", "DERIVATIVE")).toBe("1");
+  expect(getOutputItemValue("4", "DERIVATIVE")).toBe("1");
+  expect(getOutputItemValue("5", "DERIVATIVE")).toBe("5");
+});
+
+const toggleDifferentiationMode = (): void => {
+  const switchLabel = screen.getByLabelText("Reverse-Mode Differentiation");
+  fireEvent.click(switchLabel);
+};
+
+const getDerivativeTarget = (): string => {
+  const derivativeTargetAutocomplete = screen.getByTestId("derivative-target");
+  const input = within(derivativeTargetAutocomplete).getByRole("combobox");
+  return (input as HTMLInputElement).value;
+};
+
+const setDerivativeTarget = (targetNodeId: string): void => {
+  const derivativeTargetAutocomplete = screen.getByTestId("derivative-target");
+  const input = within(derivativeTargetAutocomplete).getByRole("combobox");
+
+  derivativeTargetAutocomplete.focus();
+  fireEvent.click(derivativeTargetAutocomplete);
+  fireEvent.change(input, { target: { value: targetNodeId } });
+  fireEvent.keyDown(derivativeTargetAutocomplete, { key: "ArrowDown" });
+  fireEvent.keyDown(derivativeTargetAutocomplete, { key: "Enter" });
+
+  // Check if the input has been updated successfully
+  expect(input).toHaveValue(targetNodeId);
+};
 
 const getNodes = (): Node[] => {
   const jsonNodes = screen.getByRole("textbox", {
@@ -262,4 +390,22 @@ const dropNode = (featureNodeType: FeatureNodeType): void => {
     name: "Trigger onDropNode",
   });
   fireEvent.click(triggerOnEdgesChangeRemoveButton);
+};
+
+const setInputItemValue = (
+  nodeId: string,
+  portId: string,
+  value: string,
+): void => {
+  const inputItem = screen.getByTestId(`input-item-${nodeId}-${portId}`);
+  const input = within(inputItem).getByRole("textbox");
+  fireEvent.change(input, {
+    target: { value },
+  });
+};
+
+const getOutputItemValue = (nodeId: string, portId: string): string => {
+  const inputItem = screen.getByTestId(`output-item-${nodeId}-${portId}`);
+  const input = within(inputItem).getByRole("textbox");
+  return (input as HTMLInputElement).value;
 };

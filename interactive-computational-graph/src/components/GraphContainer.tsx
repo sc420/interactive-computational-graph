@@ -24,6 +24,8 @@ import Port from "../core/Port";
 import {
   ADD_DFDX_CODE,
   ADD_F_CODE,
+  MULTIPLY_DFDX_CODE,
+  MULTIPLY_F_CODE,
   PRODUCT_DFDX_CODE,
   PRODUCT_F_CODE,
   SQUARED_ERROR_DFDX_CODE,
@@ -52,13 +54,11 @@ import {
 } from "../features/CoreGraphController";
 import type FeatureNodeType from "../features/FeatureNodeType";
 import type FeatureOperation from "../features/FeatureOperation";
-import type NonEmptyConnection from "../features/NonEmptyConnection";
 import {
   addReactFlowNode,
   deselectLastSelectedNode,
   findRemovedEdges,
   getNewReactFlowNodePosition,
-  getNonEmptyConnectionsFromEdges,
   hideInputField,
   selectReactFlowNode,
   showInputFields,
@@ -100,6 +100,14 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       helpText: "Add two numbers $ a + b $",
     },
     {
+      id: "multiply",
+      text: "Multiply",
+      type: "SIMPLE",
+      operation: new Operation(MULTIPLY_F_CODE, MULTIPLY_DFDX_CODE),
+      inputPorts: [new Port("a", false), new Port("b", false)],
+      helpText: "Multiply two numbers $ a * b $",
+    },
+    {
       id: "sum",
       text: "Sum",
       type: "SIMPLE",
@@ -134,29 +142,21 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     null,
   );
 
-  const findNodeIdToEmptyInputPortIds = useCallback(
-    (removedConnections: NonEmptyConnection[]): Map<string, string> => {
-      const nodeIdToEmptyInputPortIds = new Map<string, string>();
+  const findEmptyPortEdges = useCallback(
+    (removedEdges: Edge[]): Edge[] => {
       if (coreGraph === null) {
-        return nodeIdToEmptyInputPortIds;
+        return [];
       }
 
-      removedConnections.forEach((removedConnection) => {
-        if (
+      return removedEdges.filter(
+        (removedEdge) =>
+          typeof removedEdge.targetHandle === "string" &&
           isNodeInputPortEmpty(
             coreGraph,
-            removedConnection.target,
-            removedConnection.targetHandle,
-          )
-        ) {
-          nodeIdToEmptyInputPortIds.set(
-            removedConnection.target,
-            removedConnection.targetHandle,
-          );
-        }
-      });
-
-      return nodeIdToEmptyInputPortIds;
+            removedEdge.target,
+            removedEdge.targetHandle,
+          ),
+      );
     },
     [coreGraph],
   );
@@ -321,29 +321,43 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
         return;
       }
 
-      const removedConnections = getNonEmptyConnectionsFromEdges(
-        findRemovedEdges(changes, reactFlowEdges),
-      );
+      const removedEdges = findRemovedEdges(changes, reactFlowEdges);
 
-      removedConnections.forEach((edge) => {
+      removedEdges.forEach((removedEdge) => {
+        if (typeof removedEdge.targetHandle !== "string") {
+          return;
+        }
         disconnectCoreEdge(
           coreGraph,
-          edge.source,
-          edge.target,
-          edge.targetHandle,
+          removedEdge.source,
+          removedEdge.target,
+          removedEdge.targetHandle,
         );
       });
 
-      const nodeIdToEmptyInputPortIds =
-        findNodeIdToEmptyInputPortIds(removedConnections);
+      const emptyPortEdges = findEmptyPortEdges(removedEdges);
 
-      nodeIdToEmptyInputPortIds.forEach((portId, nodeId) => {
-        connectDummyInputNode(coreGraph, nodeId, portId);
+      emptyPortEdges.forEach((emptyPortEdge) => {
+        if (typeof emptyPortEdge.targetHandle !== "string") {
+          return;
+        }
+        if (
+          isDummyInputNodeConnected(
+            coreGraph,
+            emptyPortEdge.target,
+            emptyPortEdge.targetHandle,
+          )
+        ) {
+          return;
+        }
+        connectDummyInputNode(
+          coreGraph,
+          emptyPortEdge.target,
+          emptyPortEdge.targetHandle,
+        );
       });
 
-      setReactFlowNodes((nodes) =>
-        showInputFields(nodeIdToEmptyInputPortIds, nodes),
-      );
+      setReactFlowNodes((nodes) => showInputFields(emptyPortEdges, nodes));
 
       updateNodeValuesAndDerivatives();
 
@@ -351,7 +365,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     },
     [
       coreGraph,
-      findNodeIdToEmptyInputPortIds,
+      findEmptyPortEdges,
       reactFlowEdges,
       updateNodeValuesAndDerivatives,
     ],

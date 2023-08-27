@@ -13,6 +13,7 @@ import {
   SUM_F_CODE,
 } from "../features/BuiltInCode";
 import ConstantNode from "./ConstantNode";
+import { CycleError, InputPortFullError } from "./CoreErrors";
 import type CoreNode from "./CoreNode";
 import Graph from "./Graph";
 import Operation from "./Operation";
@@ -122,15 +123,43 @@ describe("manipulating connections", () => {
     }).toThrow("Input port x doesn't exist");
   });
 
-  test("should throw error when connecting to single-connection port", () => {
+  test("should indicate if the port is full", () => {
     const graph = buildMediumGraph();
     const varNode4 = new VariableNode("v4");
     graph.addNode(varNode4);
 
     expect(() => {
+      graph.validateConnect("v4", "identity1", "x");
+    }).toThrow(InputPortFullError);
+  });
+
+  test("should indicate if the connection would cause cycle", () => {
+    const graph = buildMediumGraph();
+
+    expect(() => {
+      graph.validateConnect("identity1", "sum1", "x_i");
+    }).toThrow(CycleError);
+    expect(() => {
+      graph.validateConnect("sum1", "sum1", "x_i");
+    }).toThrow(CycleError);
+
+    const varNode3 = new VariableNode("v4");
+    graph.addNode(varNode3);
+    graph.validateConnect("v4", "sum1", "x_i");
+  });
+
+  test("should throw error when connecting to single-connection port", () => {
+    const graph = buildMediumGraph();
+    const varNode4 = new VariableNode("v4");
+    graph.addNode(varNode4);
+
+    const connectVariableToIdentity = (): void => {
       graph.connect("v4", "identity1", "x");
-    }).toThrow(`Couldn't add to input port x of node identity1,
- please check if the port allows multiple edges`);
+    };
+    expect(connectVariableToIdentity).toThrow(InputPortFullError);
+    expect(connectVariableToIdentity).toThrow(
+      "Input port x of node identity1 doesn't allow multiple edges",
+    );
 
     // Should not be half-connected
     const identityNode1 = graph.getOneNode("identity1");
@@ -143,13 +172,23 @@ describe("manipulating connections", () => {
   test("should throw error when the graph will not be DAG", () => {
     const graph = buildMediumGraph();
 
-    expect(() => {
+    const connectIdentityToSum = (): void => {
       graph.connect("identity1", "sum1", "x_i");
-    }).toThrow("Connecting node identity1 to node sum1 would cause a cycle");
+    };
 
-    expect(() => {
+    expect(connectIdentityToSum).toThrow(CycleError);
+    expect(connectIdentityToSum).toThrow(
+      "Connecting node identity1 to node sum1 would cause a cycle",
+    );
+
+    const connectSumToSum = (): void => {
       graph.connect("sum1", "sum1", "x_i");
-    }).toThrow("Connecting node sum1 to node sum1 would cause a cycle");
+    };
+
+    expect(connectSumToSum).toThrow(CycleError);
+    expect(connectSumToSum).toThrow(
+      "Connecting node sum1 to node sum1 would cause a cycle",
+    );
   });
 });
 

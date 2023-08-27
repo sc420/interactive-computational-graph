@@ -1,3 +1,7 @@
+import {
+  InputNodeAlreadyConnectedError,
+  InputPortFullError,
+} from "./CoreErrors";
 import type CoreNode from "./CoreNode";
 import Port from "./Port";
 
@@ -60,43 +64,35 @@ class NodeRelationship {
     return inputNodes.some((node) => node.getId() === nodeId);
   }
 
-  canAddInputNodeByPort(portId: string): boolean {
+  validateAddInputNodeByPort(portId: string, inputNodeId: string): void {
     const inputPortData = this.getPortDataByPort(
       this.inputPortIdToPortData,
       portId,
     );
+
+    if (this.isNodeConnected(inputPortData.connectedNodes, inputNodeId)) {
+      throw new InputNodeAlreadyConnectedError(
+        `Input node ${inputNodeId} already exists by port ${portId}`,
+      );
+    }
 
     if (
       !inputPortData.port.isAllowMultiEdges() &&
       inputPortData.connectedNodes.length > 0
     ) {
-      return false;
+      throw new InputPortFullError(
+        `Input port ${inputPortData.port.getId()} doesn't allow multiple edges`,
+      );
     }
-
-    return true;
   }
 
   addInputNodeByPort(portId: string, inputNode: CoreNode): void {
+    this.validateAddInputNodeByPort(portId, inputNode.getId());
+
     const inputPortData = this.getPortDataByPort(
       this.inputPortIdToPortData,
       portId,
     );
-
-    if (this.isNodeConnected(inputPortData.connectedNodes, inputNode.getId())) {
-      throw new Error(
-        `Input node ${inputNode.getId()} already exists by port ${portId}`,
-      );
-    }
-
-    if (
-      inputPortData.connectedNodes.length >= 1 &&
-      !inputPortData.port.isAllowMultiEdges()
-    ) {
-      throw new Error(
-        `Input port ${inputPortData.port.getId()} doesn't allow multiple edges`,
-      );
-    }
-
     inputPortData.connectedNodes.push(inputNode);
   }
 

@@ -1,4 +1,8 @@
 import ConstantNode from "./ConstantNode";
+import {
+  InputNodeAlreadyConnectedError,
+  InputPortFullError,
+} from "./CoreErrors";
 import NodeRelationship from "./NodeRelationship";
 import Operation from "./Operation";
 import OperationNode from "./OperationNode";
@@ -20,22 +24,35 @@ describe("input behavior", () => {
     expect(nodeRelationship.hasInputNodeByPort("a", "v1")).toBe(false);
   });
 
-  test("should indicate if we can add input node by port", () => {
+  test("should indicate if the input node is already connected", () => {
     const nodeRelationship = buildTwoPortsNodeRelationship();
 
-    // Should be true when the port is empty
-    expect(nodeRelationship.canAddInputNodeByPort("a")).toBe(true);
-    expect(nodeRelationship.canAddInputNodeByPort("b")).toBe(true);
-
-    // Should be false when the port is connected and multiple connections isn't
-    // allowed
     const varNode1 = new VariableNode("v1");
     nodeRelationship.addInputNodeByPort("a", varNode1);
-    expect(nodeRelationship.canAddInputNodeByPort("a")).toBe(false);
+    expect(() => {
+      nodeRelationship.validateAddInputNodeByPort("a", varNode1.getId());
+    }).toThrow(InputNodeAlreadyConnectedError);
+  });
 
-    // Should be true when multiple connections is allowed
+  test("should indicate if the input port is full", () => {
+    const nodeRelationship = buildTwoPortsNodeRelationship();
+
+    // Should not throw error when the port is empty
+    const varNode1 = new VariableNode("v1");
+    nodeRelationship.validateAddInputNodeByPort("a", varNode1.getId());
+    nodeRelationship.validateAddInputNodeByPort("b", varNode1.getId());
+
+    // Should throw error when the port is connected and multiple connections
+    // isn't allowed
+    nodeRelationship.addInputNodeByPort("a", varNode1);
+    const varNode2 = new VariableNode("v2");
+    expect(() => {
+      nodeRelationship.validateAddInputNodeByPort("a", varNode2.getId());
+    }).toThrow(InputPortFullError);
+
+    // Should not throw error when multiple connections is allowed
     nodeRelationship.addInputNodeByPort("b", varNode1);
-    expect(nodeRelationship.canAddInputNodeByPort("b")).toBe(true);
+    nodeRelationship.validateAddInputNodeByPort("b", varNode2.getId());
   });
 
   test("Port a and b should have one input node after adding 1 node", () => {
@@ -62,18 +79,22 @@ describe("input behavior", () => {
     nodeRelationship.addInputNodeByPort("a", varNode1);
 
     const varNode2 = new VariableNode("v2");
-    expect(() => {
+    const addNodeToPortA = (): void => {
       nodeRelationship.addInputNodeByPort("a", varNode2);
-    }).toThrow("Input port a doesn't allow multiple edges");
+    };
+    expect(addNodeToPortA).toThrow(InputPortFullError);
+    expect(addNodeToPortA).toThrow("Input port a doesn't allow multiple edges");
   });
 
-  test("should throw error when adding existing node", () => {
+  test("should throw error when the input node is already connected", () => {
     const nodeRelationship = buildTwoPortsNodeRelationship();
     const varNode1 = new VariableNode("v1");
     nodeRelationship.addInputNodeByPort("a", varNode1);
-    expect(() => {
+    const addNodeToPortA = (): void => {
       nodeRelationship.addInputNodeByPort("a", varNode1);
-    }).toThrow("Input node v1 already exists by port a");
+    };
+    expect(addNodeToPortA).toThrow(InputNodeAlreadyConnectedError);
+    expect(addNodeToPortA).toThrow("Input node v1 already exists by port a");
   });
 
   test("Port b should have multiple input nodes after adding", () => {

@@ -1,5 +1,6 @@
 import type CoreNode from "./CoreNode";
 import type DifferentiationMode from "./DifferentiationMode";
+import { CycleError, InputPortFullError } from "./CoreErrors";
 import type NodeType from "./NodeType";
 
 type TopologicalSortDirection = "TO_OUTPUT" | "TO_INPUT";
@@ -62,25 +63,39 @@ class Graph {
     }
   }
 
+  validateConnect(node1Id: string, node2Id: string, node2PortId: string): void {
+    const node2 = this.getOneNode(node2Id);
+
+    try {
+      node2.getRelationship().validateAddInputNodeByPort(node2PortId, node1Id);
+    } catch (error) {
+      if (error instanceof InputPortFullError) {
+        throw new InputPortFullError(
+          `Input port ${node2PortId} of node ${node2Id} doesn't allow \
+multiple edges`,
+        );
+      } else {
+        throw error;
+      }
+    }
+
+    if (this.canVisit(node2Id, node1Id)) {
+      throw new CycleError(
+        `Connecting node ${node1Id} to node ${node2Id} would cause a cycle`,
+      );
+    }
+  }
+
   connect(node1Id: string, node2Id: string, node2PortId: string): void {
     const node1 = this.getOneNode(node1Id);
     const node2 = this.getOneNode(node2Id);
 
-    if (!node2.getRelationship().canAddInputNodeByPort(node2PortId)) {
-      throw new Error(
-        `Couldn't add to input port ${node2PortId} of node ${node2Id},
- please check if the port allows multiple edges`,
-      );
-    }
+    this.validateConnect(node1Id, node2Id, node2PortId);
 
-    if (this.canVisit(node2Id, node1Id)) {
-      throw new Error(
-        `Connecting node ${node1Id} to node ${node2Id} would cause a cycle`,
-      );
-    }
+    // Could throw error, do it first
+    node2.getRelationship().addInputNodeByPort(node2PortId, node1);
 
     node1.getRelationship().addOutputNode(node2);
-    node2.getRelationship().addInputNodeByPort(node2PortId, node1);
   }
 
   disconnect(node1Id: string, node2Id: string, node2PortId: string): void {

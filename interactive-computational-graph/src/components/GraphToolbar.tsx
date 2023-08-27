@@ -48,6 +48,7 @@ const GraphToolbar: FunctionComponent<GraphToolbarProps> = ({
       display="flex"
       justifyContent="space-between"
       alignItems="center"
+      columnGap={3}
       px={3}
       py={1.5}
       sx={{ bgcolor: "primary.light" }}

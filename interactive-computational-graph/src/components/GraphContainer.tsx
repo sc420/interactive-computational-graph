@@ -570,6 +570,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       <Grid
         container
         direction="row"
+        wrap="nowrap"
         sx={{ height: `calc(100vh - ${TITLE_HEIGHT}px)` }}
       >
         {/* Feature panel */}

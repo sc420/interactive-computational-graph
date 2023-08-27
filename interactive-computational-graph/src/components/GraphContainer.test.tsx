@@ -290,7 +290,6 @@ const setDerivativeTarget = (targetNodeId: string): void => {
   const derivativeTargetAutocomplete = screen.getByTestId("derivative-target");
   const input = within(derivativeTargetAutocomplete).getByRole("combobox");
 
-  derivativeTargetAutocomplete.focus();
   fireEvent.click(derivativeTargetAutocomplete);
   fireEvent.change(input, { target: { value: targetNodeId } });
   fireEvent.keyDown(derivativeTargetAutocomplete, { key: "ArrowDown" });

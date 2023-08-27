@@ -443,8 +443,172 @@ exports[`renders the app 1`] = `
               Add Node
             </button>
             <div
-              className="MuiBox-root css-1npatzm"
-            />
+              className="MuiBox-root css-ibd6ly"
+            >
+              <div
+                className="react-flow"
+                data-testid="rf__wrapper"
+                style={
+                  Object {
+                    "height": "100%",
+                    "overflow": "hidden",
+                    "position": "relative",
+                    "width": "100%",
+                    "zIndex": 0,
+                  }
+                }
+              >
+                <div
+                  className="react-flow__renderer"
+                  style={
+                    Object {
+                      "height": "100%",
+                      "left": 0,
+                      "position": "absolute",
+                      "top": 0,
+                      "width": "100%",
+                    }
+                  }
+                >
+                  <div
+                    className="react-flow__pane"
+                    onClick={[Function]}
+                    onContextMenu={[Function]}
+                    onWheel={[Function]}
+                    style={
+                      Object {
+                        "height": "100%",
+                        "left": 0,
+                        "position": "absolute",
+                        "top": 0,
+                        "width": "100%",
+                      }
+                    }
+                  >
+                    <div
+                      className="react-flow__viewport react-flow__container"
+                      style={
+                        Object {
+                          "transform": "translate(0px,0px) scale(1)",
+                        }
+                      }
+                    >
+                      <div
+                        className="react-flow__edgelabel-renderer"
+                      />
+                      <div
+                        className="react-flow__nodes"
+                        style={
+                          Object {
+                            "height": "100%",
+                            "left": 0,
+                            "position": "absolute",
+                            "top": 0,
+                            "width": "100%",
+                          }
+                        }
+                      />
+                    </div>
+                  </div>
+                </div>
+                <svg
+                  className="react-flow__background"
+                  data-testid="rf__background"
+                  style={
+                    Object {
+                      "height": "100%",
+                      "left": 0,
+                      "position": "absolute",
+                      "top": 0,
+                      "width": "100%",
+                    }
+                  }
+                >
+                  <pattern
+                    height={20}
+                    id="pattern-1undefined"
+                    patternTransform="translate(-0.5,-0.5)"
+                    patternUnits="userSpaceOnUse"
+                    width={20}
+                    x={0}
+                    y={0}
+                  >
+                    <circle
+                      cx={0.5}
+                      cy={0.5}
+                      fill="#91919a"
+                      r={0.5}
+                    />
+                  </pattern>
+                  <rect
+                    fill="url(#pattern-1undefined)"
+                    height="100%"
+                    width="100%"
+                    x="0"
+                    y="0"
+                  />
+                </svg>
+                <div
+                  className="react-flow__panel react-flow__attribution bottom right"
+                  data-message="Please only hide this attribution when you are subscribed to React Flow Pro: https://pro.reactflow.dev"
+                  style={
+                    Object {
+                      "pointerEvents": "all",
+                    }
+                  }
+                >
+                  <a
+                    aria-label="React Flow attribution"
+                    href="https://reactflow.dev"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    React Flow
+                  </a>
+                </div>
+                <div
+                  id="react-flow__node-desc-1"
+                  style={
+                    Object {
+                      "display": "none",
+                    }
+                  }
+                >
+                  Press enter or space to select a node.
+                  You can then use the arrow keys to move the node around.
+                   Press delete to remove it and escape to cancel.
+                   
+                </div>
+                <div
+                  id="react-flow__edge-desc-1"
+                  style={
+                    Object {
+                      "display": "none",
+                    }
+                  }
+                >
+                  Press enter or space to select an edge. You can then press delete to remove it or escape to cancel.
+                </div>
+                <div
+                  aria-atomic="true"
+                  aria-live="assertive"
+                  id="react-flow__aria-live-1"
+                  style={
+                    Object {
+                      "border": 0,
+                      "clip": "rect(0px, 0px, 0px, 0px)",
+                      "clipPath": "inset(100%)",
+                      "height": 1,
+                      "margin": -1,
+                      "overflow": "hidden",
+                      "padding": 0,
+                      "position": "absolute",
+                      "width": 1,
+                    }
+                  }
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>

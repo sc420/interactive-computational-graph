@@ -10,14 +10,15 @@ import {
   ListItemText,
 } from "@mui/material";
 import type React from "react";
+import type SelectedFeature from "../features/SelectedFeature";
 
 interface FeatureNavigatorProps {
   selectedItem: string | null;
-  onItemClick: (item: string | null) => void;
+  onItemClick: (item: SelectedFeature | null) => void;
 }
 
 interface FeatureItem {
-  id: string;
+  id: SelectedFeature;
   text: string;
   icon: JSX.Element;
 }
@@ -34,7 +35,7 @@ const FeatureNavigator: React.FunctionComponent<FeatureNavigatorProps> = ({
     { id: "integrations", text: "Integrations", icon: <LayersIcon /> },
   ];
 
-  const handleItemClick = (id: string): void => {
+  const handleItemClick = (id: SelectedFeature): void => {
     const newSelectedItem = id !== selectedItem ? id : null;
     onItemClick(newSelectedItem);
   };

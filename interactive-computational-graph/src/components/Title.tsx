@@ -41,7 +41,7 @@ const Title: React.FunctionComponent<TitleProps> = ({
   onToggleSidebar,
 }) => {
   return (
-    <AppBar position="absolute" open={isSidebarOpen}>
+    <AppBar elevation={0} open={isSidebarOpen} position="absolute">
       <Toolbar
         sx={{
           pr: "24px", // keep right padding when drawer closed

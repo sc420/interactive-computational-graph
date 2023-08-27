@@ -10,6 +10,9 @@ module.exports = {
   extends: [
     "standard-with-typescript",
     "plugin:react/recommended",
+    // Checks react hook problems
+    // Reference: https://react.dev/learn/editor-setup#linting
+    "plugin:react-hooks/recommended",
     // Added to disable the error "react/react-in-jsx-scope"
     // Reference: https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/react-in-jsx-scope.md
     "plugin:react/jsx-runtime",

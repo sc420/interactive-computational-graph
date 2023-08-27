@@ -175,6 +175,69 @@ it("input text fields should hide/show properly", () => {
   expect(screen.getByTestId("input-item-3-x_i")).toBeInTheDocument();
 });
 
+it("should show error message when connecting the same edge twice", () => {
+  render(<GraphContainer selectedFeature="dashboard" />);
+
+  // Add a constant node
+  const constantItem = screen.getByText("Constant");
+  fireEvent.click(constantItem);
+
+  // Add a sum node
+  const sumItem = screen.getByText("Sum");
+  fireEvent.click(sumItem);
+
+  // Connect from the 1st constant node to the add node port a twice
+  connectEdge("1", "output", "2", "x_i");
+  expect(screen.queryByRole("alert")).toBeNull();
+  connectEdge("1", "output", "2", "x_i");
+
+  const snackbar = screen.getByRole("alert");
+  expect(snackbar).toBeInTheDocument();
+  expect(snackbar).toHaveTextContent(
+    "Input node 1 already exists by port x_i of node 2",
+  );
+});
+
+it("should show error message when connecting to the single-connection port", () => {
+  render(<GraphContainer selectedFeature="dashboard" />);
+
+  // Add two constant nodes
+  const constantItem = screen.getByText("Constant");
+  fireEvent.click(constantItem);
+  fireEvent.click(constantItem);
+
+  // Add an add node
+  const sumItem = screen.getByText("Add");
+  fireEvent.click(sumItem);
+
+  // Connect from the 2nd constant node to the add node port a
+  connectEdge("1", "output", "3", "a");
+  connectEdge("2", "output", "3", "a");
+
+  const snackbar = screen.getByRole("alert");
+  expect(snackbar).toBeInTheDocument();
+  expect(snackbar).toHaveTextContent(
+    "Input port a of node 3 doesn't allow multiple edges",
+  );
+});
+
+it("should show error message when causing a cycle", () => {
+  render(<GraphContainer selectedFeature="dashboard" />);
+
+  // Add a sum node
+  const sumItem = screen.getByText("Sum");
+  fireEvent.click(sumItem);
+
+  // Connect from the output of sum node to the input of sum node
+  connectEdge("1", "output", "1", "x_i");
+
+  const snackbar = screen.getByRole("alert");
+  expect(snackbar).toBeInTheDocument();
+  expect(snackbar).toHaveTextContent(
+    "Connecting node 1 to node 1 would cause a cycle",
+  );
+});
+
 it("derivative target should reset when the target node is removed", () => {
   render(<GraphContainer selectedFeature="dashboard" />);
 

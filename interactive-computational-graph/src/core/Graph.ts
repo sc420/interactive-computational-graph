@@ -1,6 +1,10 @@
+import {
+  CycleError,
+  InputNodeAlreadyConnectedError,
+  InputPortFullError,
+} from "./CoreErrors";
 import type CoreNode from "./CoreNode";
 import type DifferentiationMode from "./DifferentiationMode";
-import { CycleError, InputPortFullError } from "./CoreErrors";
 import type NodeType from "./NodeType";
 
 type TopologicalSortDirection = "TO_OUTPUT" | "TO_INPUT";
@@ -69,7 +73,12 @@ class Graph {
     try {
       node2.getRelationship().validateAddInputNodeByPort(node2PortId, node1Id);
     } catch (error) {
-      if (error instanceof InputPortFullError) {
+      if (error instanceof InputNodeAlreadyConnectedError) {
+        throw new InputNodeAlreadyConnectedError(
+          `Input node ${node1Id} already exists by port ${node2PortId} of \
+node ${node2Id}`,
+        );
+      } else if (error instanceof InputPortFullError) {
         throw new InputPortFullError(
           `Input port ${node2PortId} of node ${node2Id} doesn't allow \
 multiple edges`,

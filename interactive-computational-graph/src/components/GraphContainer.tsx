@@ -1,14 +1,16 @@
-import { Grid, Toolbar } from "@mui/material";
+import { Alert, Grid, Snackbar, Toolbar } from "@mui/material";
 import {
   useCallback,
   useEffect,
   useState,
   type FunctionComponent,
+  type SyntheticEvent,
 } from "react";
 import {
   addEdge,
   applyEdgeChanges,
   applyNodeChanges,
+  type Connection,
   type Edge,
   type Node,
   type OnConnect,
@@ -18,6 +20,11 @@ import {
   type XYPosition,
 } from "reactflow";
 import { TITLE_HEIGHT } from "../constants";
+import {
+  CycleError,
+  InputNodeAlreadyConnectedError,
+  InputPortFullError,
+} from "../core/CoreErrors";
 import Graph from "../core/Graph";
 import Operation from "../core/Operation";
 import Port from "../core/Port";
@@ -51,6 +58,7 @@ import {
   updateNodeDerivativeValues,
   updateNodeFValues,
   updateNodeValueById,
+  validateConnectCoreEdge,
 } from "../features/CoreGraphController";
 import type FeatureNodeType from "../features/FeatureNodeType";
 import type FeatureOperation from "../features/FeatureOperation";
@@ -142,6 +150,10 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     null,
   );
 
+  // Error messages
+  const [isSnackbarOpen, setSnackbarOpen] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
+
   const findEmptyPortEdges = useCallback(
     (removedEdges: Edge[]): Edge[] => {
       if (coreGraph === null) {
@@ -159,6 +171,83 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       );
     },
     [coreGraph],
+  );
+
+  const showErrorMessage = useCallback((message: string) => {
+    setErrorMessage(message);
+    setSnackbarOpen(true);
+  }, []);
+
+  const tryConnectCoreEdges = useCallback(
+    (connection: Connection): boolean => {
+      if (coreGraph === null) {
+        return false;
+      }
+
+      if (
+        connection.source === null ||
+        connection.target === null ||
+        connection.targetHandle === null
+      ) {
+        return false;
+      }
+
+      let hasDisconnectedDummyInputNode = false;
+      if (
+        isDummyInputNodeConnected(
+          coreGraph,
+          connection.target,
+          connection.targetHandle,
+        )
+      ) {
+        disconnectDummyInputNode(
+          coreGraph,
+          connection.target,
+          connection.targetHandle,
+        );
+        hasDisconnectedDummyInputNode = true;
+      }
+
+      try {
+        validateConnectCoreEdge(
+          coreGraph,
+          connection.source,
+          connection.target,
+          connection.targetHandle,
+        );
+      } catch (error) {
+        if (
+          error instanceof InputNodeAlreadyConnectedError ||
+          error instanceof InputPortFullError ||
+          error instanceof CycleError
+        ) {
+          showErrorMessage(error.message);
+
+          // Revert dummy input node disconnection
+          if (hasDisconnectedDummyInputNode) {
+            connectDummyInputNode(
+              coreGraph,
+              connection.target,
+              connection.targetHandle,
+            );
+          }
+
+          return false;
+        } else {
+          throw error;
+        }
+      }
+
+      connectCoreEdge(
+        coreGraph,
+        connection.source,
+        connection.target,
+        connection.targetHandle,
+      );
+
+      return true;
+    },
+    [coreGraph, showErrorMessage],
   );
 
   const updateNodeValuesAndDerivatives = useCallback(() => {
@@ -379,7 +468,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
   );
 
   const handleConnect: OnConnect = useCallback(
-    (connection) => {
+    (connection: Connection) => {
       if (coreGraph === null) {
         return;
       }
@@ -392,34 +481,17 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
         return;
       }
 
-      if (
-        isDummyInputNodeConnected(
-          coreGraph,
-          connection.target,
-          connection.targetHandle,
-        )
-      ) {
-        disconnectDummyInputNode(
-          coreGraph,
-          connection.target,
-          connection.targetHandle,
-        );
-
-        setReactFlowNodes((nodes) => hideInputField(connection, nodes));
+      if (!tryConnectCoreEdges(connection)) {
+        return;
       }
 
-      connectCoreEdge(
-        coreGraph,
-        connection.source,
-        connection.target,
-        connection.targetHandle,
-      );
+      setReactFlowNodes((nodes) => hideInputField(connection, nodes));
 
       updateNodeValuesAndDerivatives();
 
       setReactFlowEdges((edges) => addEdge(connection, edges));
     },
-    [coreGraph, updateNodeValuesAndDerivatives],
+    [coreGraph, tryConnectCoreEdges, updateNodeValuesAndDerivatives],
   );
 
   const handleDropNode = useCallback(
@@ -461,6 +533,17 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     ],
   );
 
+  const handleSnackbarClose = useCallback(
+    (event?: SyntheticEvent | Event, reason?: string) => {
+      if (reason === "clickaway") {
+        return;
+      }
+
+      setSnackbarOpen(false);
+    },
+    [],
+  );
+
   // Initialize the core graph
   useEffect(() => {
     const coreGraph = new Graph();
@@ -480,7 +563,10 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
 
   return (
     <>
+      {/* Toolbar padding */}
       <Toolbar />
+
+      {/* Graph content */}
       <Grid
         container
         direction="row"
@@ -537,6 +623,22 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
           </Grid>
         </Grid>
       </Grid>
+
+      {/* Error message */}
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        open={isSnackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+      >
+        <Alert
+          onClose={handleSnackbarClose}
+          severity="error"
+          sx={{ width: "100%" }}
+        >
+          {errorMessage}
+        </Alert>
+      </Snackbar>
     </>
   );
 };

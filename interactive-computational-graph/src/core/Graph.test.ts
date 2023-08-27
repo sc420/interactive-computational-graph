@@ -13,7 +13,11 @@ import {
   SUM_F_CODE,
 } from "../features/BuiltInCode";
 import ConstantNode from "./ConstantNode";
-import { CycleError, InputPortFullError } from "./CoreErrors";
+import {
+  CycleError,
+  InputNodeAlreadyConnectedError,
+  InputPortFullError,
+} from "./CoreErrors";
 import type CoreNode from "./CoreNode";
 import Graph from "./Graph";
 import Operation from "./Operation";
@@ -133,19 +137,16 @@ describe("manipulating connections", () => {
     }).toThrow(InputPortFullError);
   });
 
-  test("should indicate if the connection would cause cycle", () => {
+  test("should throw error when connecting the same node to same port again", () => {
     const graph = buildMediumGraph();
 
-    expect(() => {
-      graph.validateConnect("identity1", "sum1", "x_i");
-    }).toThrow(CycleError);
-    expect(() => {
-      graph.validateConnect("sum1", "sum1", "x_i");
-    }).toThrow(CycleError);
-
-    const varNode3 = new VariableNode("v4");
-    graph.addNode(varNode3);
-    graph.validateConnect("v4", "sum1", "x_i");
+    const connectVariableToSum = (): void => {
+      graph.connect("v1", "sum1", "x_i");
+    };
+    expect(connectVariableToSum).toThrow(InputNodeAlreadyConnectedError);
+    expect(connectVariableToSum).toThrow(
+      "Input node v1 already exists by port x_i of node sum1",
+    );
   });
 
   test("should throw error when connecting to single-connection port", () => {
@@ -167,6 +168,21 @@ describe("manipulating connections", () => {
     expect(
       identityNode1.getRelationship().getInputNodesByPort("x"),
     ).toHaveLength(1);
+  });
+
+  test("should indicate if the connection would cause cycle", () => {
+    const graph = buildMediumGraph();
+
+    expect(() => {
+      graph.validateConnect("identity1", "sum1", "x_i");
+    }).toThrow(CycleError);
+    expect(() => {
+      graph.validateConnect("sum1", "sum1", "x_i");
+    }).toThrow(CycleError);
+
+    const varNode3 = new VariableNode("v4");
+    graph.addNode(varNode3);
+    graph.validateConnect("v4", "sum1", "x_i");
   });
 
   test("should throw error when the graph will not be DAG", () => {

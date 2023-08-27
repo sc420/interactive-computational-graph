@@ -8,7 +8,7 @@ class CycleError extends Error {
 class InputNodeAlreadyConnectedError extends Error {
   constructor(message: string) {
     super(message);
-    this.name = "InputPortAlreadyConnectedError";
+    this.name = "InputNodeAlreadyConnectedError";
   }
 }
 

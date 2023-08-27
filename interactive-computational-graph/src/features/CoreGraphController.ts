@@ -51,6 +51,15 @@ const removeCoreNodes = (graph: Graph, nodeId: string): void => {
   graph.removeNode(nodeId);
 };
 
+const validateConnectCoreEdge = (
+  graph: Graph,
+  node1Id: string,
+  node2Id: string,
+  node2PortId: string,
+): void => {
+  graph.validateConnect(node1Id, node2Id, node2PortId);
+};
+
 const connectCoreEdge = (
   graph: Graph,
   node1Id: string,
@@ -225,4 +234,5 @@ export {
   updateNodeDerivativeValues,
   updateNodeFValues,
   updateNodeValueById,
+  validateConnectCoreEdge,
 };

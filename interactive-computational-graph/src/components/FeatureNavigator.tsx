@@ -1,8 +1,8 @@
-import BarChartIcon from "@mui/icons-material/BarChart";
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import LayersIcon from "@mui/icons-material/Layers";
-import PeopleIcon from "@mui/icons-material/People";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import AddIcon from "@mui/icons-material/Add";
+import EmojiObjectsIcon from "@mui/icons-material/EmojiObjects";
+import ImportExportIcon from "@mui/icons-material/ImportExport";
+import ListIcon from "@mui/icons-material/List";
+import TimelineIcon from "@mui/icons-material/Timeline";
 import {
   List,
   ListItemButton,
@@ -28,11 +28,31 @@ const FeatureNavigator: React.FunctionComponent<FeatureNavigatorProps> = ({
   onItemClick,
 }) => {
   const featureItems: FeatureItem[] = [
-    { id: "dashboard", text: "Dashboard", icon: <DashboardIcon /> },
-    { id: "orders", text: "Orders", icon: <ShoppingCartIcon /> },
-    { id: "customers", text: "Customers", icon: <PeopleIcon /> },
-    { id: "reports", text: "Reports", icon: <BarChartIcon /> },
-    { id: "integrations", text: "Integrations", icon: <LayersIcon /> },
+    {
+      id: "add-nodes",
+      text: "Add Nodes",
+      icon: <AddIcon />,
+    },
+    {
+      id: "view-nodes",
+      text: "View Nodes",
+      icon: <ListIcon />,
+    },
+    {
+      id: "network-builder",
+      text: "Network Builder",
+      icon: <TimelineIcon />,
+    },
+    {
+      id: "examples",
+      text: "Examples",
+      icon: <EmojiObjectsIcon />,
+    },
+    {
+      id: "load-save",
+      text: "Load/Save",
+      icon: <ImportExportIcon />,
+    },
   ];
 
   const handleItemClick = (id: SelectedFeature): void => {
@@ -51,7 +71,7 @@ const FeatureNavigator: React.FunctionComponent<FeatureNavigatorProps> = ({
           }}
         >
           <ListItemIcon>{item.icon}</ListItemIcon>
-          <ListItemText primary={item.id} />
+          <ListItemText primary={item.text} />
         </ListItemButton>
       ))}
     </List>

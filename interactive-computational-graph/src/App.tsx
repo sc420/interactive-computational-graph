@@ -9,7 +9,7 @@ import type SelectedFeature from "./features/SelectedFeature";
 const App: React.FunctionComponent = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(true);
   const [selectedFeature, setSelectedFeature] =
-    useState<SelectedFeature | null>("dashboard");
+    useState<SelectedFeature | null>("add-nodes");
 
   const theme = createTheme({
     components: {

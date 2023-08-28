@@ -1,5 +1,6 @@
+import GitHubIcon from "@mui/icons-material/GitHub";
 import MenuIcon from "@mui/icons-material/Menu";
-import { IconButton, Toolbar, Typography } from "@mui/material";
+import { IconButton, Link, Toolbar, Typography } from "@mui/material";
 import MuiAppBar, {
   type AppBarProps as MuiAppBarProps,
 } from "@mui/material/AppBar";
@@ -46,8 +47,10 @@ const Title: React.FunctionComponent<TitleProps> = ({
         sx={{
           pr: "24px", // keep right padding when drawer closed
           minHeight: `${TITLE_HEIGHT}px !important`, // keep the typography at the center vertically
+          columnGap: 3,
         }}
       >
+        {/* Menu icon */}
         <IconButton
           edge="start"
           color="inherit"
@@ -60,6 +63,8 @@ const Title: React.FunctionComponent<TitleProps> = ({
         >
           <MenuIcon />
         </IconButton>
+
+        {/* Title */}
         <Typography
           component="h1"
           variant="h6"
@@ -69,7 +74,14 @@ const Title: React.FunctionComponent<TitleProps> = ({
         >
           Interactive Computational Graph
         </Typography>
-        <IconButton color="inherit">GitHub</IconButton>
+
+        {/* GitHub icon */}
+        <Link
+          href="https://github.com/sc420/interactive-computational-graph"
+          target="_blank"
+        >
+          <GitHubIcon sx={{ color: "white" }} />
+        </Link>
       </Toolbar>
     </AppBar>
   );

@@ -79,6 +79,8 @@ const Title: React.FunctionComponent<TitleProps> = ({
         <Link
           href="https://github.com/sc420/interactive-computational-graph"
           target="_blank"
+          display="flex"
+          alignItems="center"
         >
           <GitHubIcon sx={{ color: "white" }} />
         </Link>

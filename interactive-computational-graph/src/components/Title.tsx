@@ -65,13 +65,7 @@ const Title: React.FunctionComponent<TitleProps> = ({
         </IconButton>
 
         {/* Title */}
-        <Typography
-          component="h1"
-          variant="h6"
-          color="inherit"
-          noWrap
-          sx={{ flexGrow: 1 }}
-        >
+        <Typography component="h1" variant="h6" noWrap sx={{ flexGrow: 1 }}>
           Interactive Computational Graph
         </Typography>
 

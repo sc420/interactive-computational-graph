@@ -2,7 +2,6 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { Divider, IconButton, Toolbar } from "@mui/material";
 import MuiDrawer from "@mui/material/Drawer";
 import { styled } from "@mui/material/styles";
-import PropTypes from "prop-types";
 import { type FunctionComponent, type ReactNode } from "react";
 import { SIDEBAR_EXPANDED_WIDTH } from "../constants";
 
@@ -62,12 +61,6 @@ const Sidebar: FunctionComponent<SidebarProps> = ({
       {children}
     </Drawer>
   );
-};
-
-Sidebar.propTypes = {
-  isSidebarOpen: PropTypes.bool.isRequired,
-  onToggleSidebar: PropTypes.func.isRequired,
-  children: PropTypes.node.isRequired,
 };
 
 export default Sidebar;

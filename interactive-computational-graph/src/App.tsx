@@ -1,9 +1,8 @@
 import { Box, CssBaseline, ThemeProvider, createTheme } from "@mui/material";
-import { useState, type FunctionComponent } from "react";
+import { useCallback, useState, type FunctionComponent } from "react";
 import FeatureNavigator from "./components/FeatureNavigator";
 import GraphContainer from "./components/GraphContainer";
 import Sidebar from "./components/Sidebar";
-import Title from "./components/Title";
 import type SelectedFeature from "./features/SelectedFeature";
 
 const App: FunctionComponent = () => {
@@ -34,20 +33,19 @@ const App: FunctionComponent = () => {
     },
   });
 
-  const toggleSidebar = (): void => {
+  const toggleSidebar = useCallback((): void => {
     setSidebarOpen(!isSidebarOpen);
-  };
+  }, [isSidebarOpen]);
 
-  const toggleFeature = (feature: SelectedFeature | null): void => {
+  const toggleFeature = useCallback((feature: SelectedFeature | null): void => {
     setSelectedFeature(feature);
-  };
+  }, []);
 
   return (
     <ThemeProvider theme={theme}>
       <Box display="flex" height="100vh" width="100vw">
         <CssBaseline />
-        {/* Title */}
-        <Title isSidebarOpen={isSidebarOpen} onToggleSidebar={toggleSidebar} />
+
         {/* Sidebar */}
         <Sidebar isSidebarOpen={isSidebarOpen} onToggleSidebar={toggleSidebar}>
           <FeatureNavigator
@@ -55,9 +53,14 @@ const App: FunctionComponent = () => {
             onItemClick={toggleFeature}
           />
         </Sidebar>
-        {/* Graph */}
+
+        {/* Graph container */}
         <Box component="main" flexGrow={1}>
-          <GraphContainer selectedFeature={selectedFeature} />
+          <GraphContainer
+            isSidebarOpen={isSidebarOpen}
+            onToggleSidebar={toggleSidebar}
+            selectedFeature={selectedFeature}
+          />
         </Box>
       </Box>
     </ThemeProvider>

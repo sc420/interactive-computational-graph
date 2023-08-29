@@ -79,15 +79,19 @@ import type SelectedFeature from "../features/SelectedFeature";
 import ReactFlowGraph from "../reactflow/ReactFlowGraph";
 import ReactFlowGraphMock from "../reactflow/ReactFlowGraphMock";
 import FeaturePanel from "./FeaturePanel";
-import GraphToolbar from "./GraphToolbar";
+import Title from "./Title";
 
 const isTest = process.env.NODE_ENV === "test";
 
 interface GraphContainerProps {
+  isSidebarOpen: boolean;
+  onToggleSidebar: () => void;
   selectedFeature: SelectedFeature | null;
 }
 
 const GraphContainer: FunctionComponent<GraphContainerProps> = ({
+  isSidebarOpen,
+  onToggleSidebar,
   selectedFeature,
 }) => {
   // Core graph
@@ -566,6 +570,17 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       {/* Toolbar padding */}
       <Toolbar />
 
+      {/* Title */}
+      <Title
+        isSidebarOpen={isSidebarOpen}
+        onToggleSidebar={onToggleSidebar}
+        isReverseMode={isReverseMode}
+        derivativeTarget={derivativeTarget}
+        nodeIds={coreGraph === null ? [] : getNodeIds(coreGraph)}
+        onReverseModeChange={handleReverseModeChange}
+        onDerivativeTargetChange={handleDerivativeTargetChange}
+      />
+
       {/* Graph content */}
       <Grid
         container
@@ -587,16 +602,6 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
 
         <Grid item display="flex" flexGrow={1}>
           <Grid container direction="column" flexGrow={1}>
-            {/* Graph toolbar */}
-            <Grid item>
-              <GraphToolbar
-                isReverseMode={isReverseMode}
-                derivativeTarget={derivativeTarget}
-                nodeIds={coreGraph === null ? [] : getNodeIds(coreGraph)}
-                onReverseModeChange={handleReverseModeChange}
-                onDerivativeTargetChange={handleDerivativeTargetChange}
-              />
-            </Grid>
             {/* Graph mock */}
             {isTest && (
               <ReactFlowGraphMock
@@ -609,6 +614,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
                 onDropNode={handleDropNode}
               />
             )}
+
             {/* Graph */}
             <Grid item display="flex" flexGrow={1}>
               <ReactFlowGraph

@@ -21,7 +21,7 @@ beforeEach(() => {
 });
 
 it("should have different node types on the graph after dropping nodes", () => {
-  render(<GraphContainer selectedFeature="add-nodes" />);
+  renderGraphContainer();
 
   dropNode({ nodeType: "CONSTANT" });
   dropNode({ nodeType: "VARIABLE" });
@@ -39,7 +39,7 @@ it("should have different node types on the graph after dropping nodes", () => {
 });
 
 it("should select the last dropped node", () => {
-  render(<GraphContainer selectedFeature="add-nodes" />);
+  renderGraphContainer();
 
   changeSelection([], []);
 
@@ -64,7 +64,7 @@ it("should select the last dropped node", () => {
 });
 
 it("edges and add node itself should be removed after removing add node", () => {
-  render(<GraphContainer selectedFeature="add-nodes" />);
+  renderGraphContainer();
 
   // Add two constant nodes
   const constantItem = screen.getByText("Constant");
@@ -95,7 +95,7 @@ it("edges and add node itself should be removed after removing add node", () => 
 });
 
 it("edges and sum node itself should be removed after removing sum node", () => {
-  render(<GraphContainer selectedFeature="add-nodes" />);
+  renderGraphContainer();
 
   // Add two constant nodes
   const constantItem = screen.getByText("Constant");
@@ -126,7 +126,7 @@ it("edges and sum node itself should be removed after removing sum node", () => 
 });
 
 it("can connect same node to multiple ports, then remove the connections", () => {
-  render(<GraphContainer selectedFeature="add-nodes" />);
+  renderGraphContainer();
 
   // Add a variable node
   const variableItem = screen.getByText("Variable");
@@ -146,7 +146,7 @@ it("can connect same node to multiple ports, then remove the connections", () =>
 });
 
 it("input text fields should hide/show properly", () => {
-  render(<GraphContainer selectedFeature="add-nodes" />);
+  renderGraphContainer();
 
   // Add two constant nodes
   const constantItem = screen.getByText("Constant");
@@ -176,7 +176,7 @@ it("input text fields should hide/show properly", () => {
 });
 
 it("should show error message when connecting the same edge twice", () => {
-  render(<GraphContainer selectedFeature="add-nodes" />);
+  renderGraphContainer();
 
   // Add a constant node
   const constantItem = screen.getByText("Constant");
@@ -199,7 +199,7 @@ it("should show error message when connecting the same edge twice", () => {
 });
 
 it("should show error message when connecting to the single-connection port", () => {
-  render(<GraphContainer selectedFeature="add-nodes" />);
+  renderGraphContainer();
 
   // Add two constant nodes
   const constantItem = screen.getByText("Constant");
@@ -222,7 +222,7 @@ it("should show error message when connecting to the single-connection port", ()
 });
 
 it("should show error message when causing a cycle", () => {
-  render(<GraphContainer selectedFeature="add-nodes" />);
+  renderGraphContainer();
 
   // Add a sum node
   const sumItem = screen.getByText("Sum");
@@ -239,7 +239,7 @@ it("should show error message when causing a cycle", () => {
 });
 
 it("derivative target should reset when the target node is removed", () => {
-  render(<GraphContainer selectedFeature="add-nodes" />);
+  renderGraphContainer();
 
   // Add two constant nodes
   const constantItem = screen.getByText("Constant");
@@ -266,7 +266,7 @@ it("derivative target should reset when the target node is removed", () => {
 
 // It uses example from https://colah.github.io/posts/2015-08-Backprop/
 it("derivative values should change when derivative mode/target is changed", () => {
-  render(<GraphContainer selectedFeature="add-nodes" />);
+  renderGraphContainer();
 
   // Add the nodes
   const variableItem = screen.getByText("Variable");
@@ -337,6 +337,16 @@ it("derivative values should change when derivative mode/target is changed", () 
   expect(getOutputItemValue("4", "DERIVATIVE")).toBe("1");
   expect(getOutputItemValue("5", "DERIVATIVE")).toBe("5");
 });
+
+const renderGraphContainer = (): void => {
+  render(
+    <GraphContainer
+      isSidebarOpen={false}
+      onToggleSidebar={() => {}}
+      selectedFeature="add-nodes"
+    />,
+  );
+};
 
 const toggleDifferentiationMode = (): void => {
   const switchLabel = screen.getByLabelText("Reverse-Mode Differentiation");

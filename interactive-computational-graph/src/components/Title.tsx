@@ -1,10 +1,13 @@
 import GitHubIcon from "@mui/icons-material/GitHub";
 import MenuIcon from "@mui/icons-material/Menu";
 import {
+  Autocomplete,
+  Box,
   FormControlLabel,
+  FormGroup,
   IconButton,
-  Stack,
   Switch,
+  TextField,
   Toolbar,
   Typography,
 } from "@mui/material";
@@ -12,12 +15,24 @@ import MuiAppBar, {
   type AppBarProps as MuiAppBarProps,
 } from "@mui/material/AppBar";
 import { styled } from "@mui/material/styles";
-import { type FunctionComponent } from "react";
+import {
+  useCallback,
+  type ChangeEvent,
+  type FunctionComponent,
+  type SyntheticEvent,
+} from "react";
 import { SIDEBAR_EXPANDED_WIDTH, TITLE_HEIGHT } from "../constants";
 
 interface TitleProps {
+  // Sidebar
   isSidebarOpen: boolean;
   onToggleSidebar: () => void;
+  // Graph toolbar
+  isReverseMode: boolean;
+  derivativeTarget: string | null;
+  nodeIds: string[];
+  onReverseModeChange: (isReversedMode: boolean) => void;
+  onDerivativeTargetChange: (nodeId: string | null) => void;
 }
 
 interface AppBarProps extends MuiAppBarProps {
@@ -47,7 +62,26 @@ const AppBar = styled(MuiAppBar, {
 const Title: FunctionComponent<TitleProps> = ({
   isSidebarOpen,
   onToggleSidebar,
+  isReverseMode,
+  derivativeTarget,
+  nodeIds,
+  onReverseModeChange,
+  onDerivativeTargetChange,
 }) => {
+  const handleReverseModeChange = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      onReverseModeChange(event.target.checked);
+    },
+    [onReverseModeChange],
+  );
+
+  const handleDerivativeTargetChange = useCallback(
+    (event: SyntheticEvent, newValue: string | null) => {
+      onDerivativeTargetChange(newValue);
+    },
+    [onDerivativeTargetChange],
+  );
+
   return (
     <AppBar elevation={0} open={isSidebarOpen} position="absolute">
       <Toolbar
@@ -76,23 +110,50 @@ const Title: FunctionComponent<TitleProps> = ({
           Interactive Computational Graph
         </Typography>
 
-        {/* Icons */}
-        <Stack direction="row" spacing={0}>
-          {/* Settings icon */}
-          <FormControlLabel
-            control={<Switch defaultChecked />}
-            label={<Typography variant="body2">Dark Mode</Typography>}
-          />
+        {/* Graph toolbar */}
+        <Box display="flex" justifyContent="space-between" alignItems="center">
+          {/* Reverse-mode differentiation */}
+          <FormGroup>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={isReverseMode}
+                  onChange={handleReverseModeChange}
+                  size="small"
+                />
+              }
+              label={
+                <Typography variant="body2">
+                  Reverse-Mode Differentiation
+                </Typography>
+              }
+            />
+          </FormGroup>
 
-          {/* GitHub icon */}
-          <IconButton
-            aria-label="github"
-            href="https://github.com/sc420/interactive-computational-graph"
-            target="_blank"
-          >
-            <GitHubIcon sx={{ color: "white" }} />
-          </IconButton>
-        </Stack>
+          {/* Derivative target */}
+          <FormGroup>
+            <Autocomplete
+              data-testid="derivative-target"
+              options={nodeIds}
+              value={derivativeTarget}
+              sx={{ width: 200 }}
+              size="small"
+              onChange={handleDerivativeTargetChange}
+              renderInput={(params) => (
+                <TextField {...params} label="Derivative Target" />
+              )}
+            />
+          </FormGroup>
+        </Box>
+
+        {/* GitHub icon */}
+        <IconButton
+          aria-label="github"
+          href="https://github.com/sc420/interactive-computational-graph"
+          target="_blank"
+        >
+          <GitHubIcon sx={{ color: "white" }} />
+        </IconButton>
       </Toolbar>
     </AppBar>
   );

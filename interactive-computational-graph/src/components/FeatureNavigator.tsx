@@ -9,7 +9,7 @@ import {
   ListItemIcon,
   ListItemText,
 } from "@mui/material";
-import type React from "react";
+import { type FunctionComponent } from "react";
 import type SelectedFeature from "../features/SelectedFeature";
 
 interface FeatureNavigatorProps {
@@ -23,7 +23,7 @@ interface FeatureItem {
   icon: JSX.Element;
 }
 
-const FeatureNavigator: React.FunctionComponent<FeatureNavigatorProps> = ({
+const FeatureNavigator: FunctionComponent<FeatureNavigatorProps> = ({
   selectedItem,
   onItemClick,
 }) => {

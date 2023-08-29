@@ -5,7 +5,7 @@ import MuiAppBar, {
   type AppBarProps as MuiAppBarProps,
 } from "@mui/material/AppBar";
 import { styled } from "@mui/material/styles";
-import type React from "react";
+import { type FunctionComponent } from "react";
 import { SIDEBAR_EXPANDED_WIDTH, TITLE_HEIGHT } from "../constants";
 
 interface TitleProps {
@@ -37,7 +37,7 @@ const AppBar = styled(MuiAppBar, {
   }),
 }));
 
-const Title: React.FunctionComponent<TitleProps> = ({
+const Title: FunctionComponent<TitleProps> = ({
   isSidebarOpen,
   onToggleSidebar,
 }) => {

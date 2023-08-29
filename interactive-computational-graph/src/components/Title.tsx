@@ -1,6 +1,7 @@
 import GitHubIcon from "@mui/icons-material/GitHub";
 import MenuIcon from "@mui/icons-material/Menu";
-import { IconButton, Toolbar, Typography } from "@mui/material";
+import SettingsIcon from "@mui/icons-material/Settings";
+import { IconButton, Stack, Toolbar, Typography } from "@mui/material";
 import MuiAppBar, {
   type AppBarProps as MuiAppBarProps,
 } from "@mui/material/AppBar";
@@ -69,14 +70,22 @@ const Title: FunctionComponent<TitleProps> = ({
           Interactive Computational Graph
         </Typography>
 
-        {/* GitHub icon */}
-        <IconButton
-          aria-label="github"
-          href="https://github.com/sc420/interactive-computational-graph"
-          target="_blank"
-        >
-          <GitHubIcon sx={{ color: "white" }} />
-        </IconButton>
+        {/* Icons */}
+        <Stack direction="row" spacing={1}>
+          {/* GitHub icon */}
+          <IconButton
+            aria-label="github"
+            href="https://github.com/sc420/interactive-computational-graph"
+            target="_blank"
+          >
+            <GitHubIcon sx={{ color: "white" }} />
+          </IconButton>
+
+          {/* Settings icon */}
+          <IconButton aria-label="settings">
+            <SettingsIcon sx={{ color: "white" }} />
+          </IconButton>
+        </Stack>
       </Toolbar>
     </AppBar>
   );

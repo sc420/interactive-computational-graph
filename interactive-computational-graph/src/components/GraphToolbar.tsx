@@ -54,7 +54,7 @@ const GraphToolbar: FunctionComponent<GraphToolbarProps> = ({
       sx={{ bgcolor: "primary.light" }}
     >
       <Box>
-        <Typography fontWeight="500">Graph</Typography>
+        <Typography variant="subtitle1">Graph</Typography>
       </Box>
 
       <Box display="flex" justifyContent="space-between" alignItems="center">

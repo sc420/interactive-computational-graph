@@ -46,7 +46,7 @@ const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
           px={2}
         >
           <Grid item>
-            <Typography fontWeight="500">Add nodes</Typography>
+            <Typography variant="subtitle1">Add nodes</Typography>
           </Grid>
           <Grid item>
             <Button startIcon={<EditIcon />}>Edit</Button>

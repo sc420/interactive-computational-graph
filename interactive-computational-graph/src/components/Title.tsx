@@ -1,6 +1,6 @@
 import GitHubIcon from "@mui/icons-material/GitHub";
 import MenuIcon from "@mui/icons-material/Menu";
-import { IconButton, Link, Toolbar, Typography } from "@mui/material";
+import { IconButton, Toolbar, Typography } from "@mui/material";
 import MuiAppBar, {
   type AppBarProps as MuiAppBarProps,
 } from "@mui/material/AppBar";
@@ -70,14 +70,13 @@ const Title: FunctionComponent<TitleProps> = ({
         </Typography>
 
         {/* GitHub icon */}
-        <Link
+        <IconButton
+          aria-label="github"
           href="https://github.com/sc420/interactive-computational-graph"
           target="_blank"
-          display="flex"
-          alignItems="center"
         >
           <GitHubIcon sx={{ color: "white" }} />
-        </Link>
+        </IconButton>
       </Toolbar>
     </AppBar>
   );

@@ -1,7 +1,13 @@
 import GitHubIcon from "@mui/icons-material/GitHub";
 import MenuIcon from "@mui/icons-material/Menu";
-import SettingsIcon from "@mui/icons-material/Settings";
-import { IconButton, Stack, Toolbar, Typography } from "@mui/material";
+import {
+  FormControlLabel,
+  IconButton,
+  Stack,
+  Switch,
+  Toolbar,
+  Typography,
+} from "@mui/material";
 import MuiAppBar, {
   type AppBarProps as MuiAppBarProps,
 } from "@mui/material/AppBar";
@@ -71,7 +77,13 @@ const Title: FunctionComponent<TitleProps> = ({
         </Typography>
 
         {/* Icons */}
-        <Stack direction="row" spacing={1}>
+        <Stack direction="row" spacing={0}>
+          {/* Settings icon */}
+          <FormControlLabel
+            control={<Switch defaultChecked />}
+            label={<Typography variant="body2">Dark Mode</Typography>}
+          />
+
           {/* GitHub icon */}
           <IconButton
             aria-label="github"
@@ -79,11 +91,6 @@ const Title: FunctionComponent<TitleProps> = ({
             target="_blank"
           >
             <GitHubIcon sx={{ color: "white" }} />
-          </IconButton>
-
-          {/* Settings icon */}
-          <IconButton aria-label="settings">
-            <SettingsIcon sx={{ color: "white" }} />
           </IconButton>
         </Stack>
       </Toolbar>

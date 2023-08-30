@@ -1,6 +1,6 @@
-import Brightness4Icon from "@mui/icons-material/Brightness4";
-import Brightness7Icon from "@mui/icons-material/Brightness7";
+import DarkModeIcon from "@mui/icons-material/DarkMode";
 import GitHubIcon from "@mui/icons-material/GitHub";
+import LightModeIcon from "@mui/icons-material/LightMode";
 import MenuIcon from "@mui/icons-material/Menu";
 import {
   Autocomplete,
@@ -158,7 +158,7 @@ const Title: FunctionComponent<TitleProps> = ({
         <Stack direction="row" spacing={1}>
           {/* Theme icon */}
           <IconButton onClick={onToggleDarkMode} color="inherit">
-            {isDarkMode ? <Brightness7Icon /> : <Brightness4Icon />}
+            {isDarkMode ? <DarkModeIcon /> : <LightModeIcon />}
           </IconButton>
 
           {/* GitHub icon */}

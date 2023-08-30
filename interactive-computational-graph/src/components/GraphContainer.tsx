@@ -84,15 +84,22 @@ import Title from "./Title";
 const isTest = process.env.NODE_ENV === "test";
 
 interface GraphContainerProps {
+  // Sidebar
   isSidebarOpen: boolean;
   onToggleSidebar: () => void;
+  // Feature
   selectedFeature: SelectedFeature | null;
+  // Theme
+  isDarkMode: boolean;
+  onToggleDarkMode: () => void;
 }
 
 const GraphContainer: FunctionComponent<GraphContainerProps> = ({
   isSidebarOpen,
   onToggleSidebar,
   selectedFeature,
+  isDarkMode,
+  onToggleDarkMode,
 }) => {
   // Core graph
   const [coreGraph, setCoreGraph] = useState<Graph | null>(null);
@@ -574,6 +581,8 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       <Title
         isSidebarOpen={isSidebarOpen}
         onToggleSidebar={onToggleSidebar}
+        isDarkMode={isDarkMode}
+        onToggleDarkMode={onToggleDarkMode}
         isReverseMode={isReverseMode}
         derivativeTarget={derivativeTarget}
         nodeIds={coreGraph === null ? [] : getNodeIds(coreGraph)}

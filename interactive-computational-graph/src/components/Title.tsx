@@ -1,3 +1,5 @@
+import Brightness4Icon from "@mui/icons-material/Brightness4";
+import Brightness7Icon from "@mui/icons-material/Brightness7";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import MenuIcon from "@mui/icons-material/Menu";
 import {
@@ -6,6 +8,7 @@ import {
   FormControlLabel,
   FormGroup,
   IconButton,
+  Stack,
   Switch,
   TextField,
   Toolbar,
@@ -27,6 +30,9 @@ interface TitleProps {
   // Sidebar
   isSidebarOpen: boolean;
   onToggleSidebar: () => void;
+  // Theme
+  isDarkMode: boolean;
+  onToggleDarkMode: () => void;
   // Graph toolbar
   isReverseMode: boolean;
   derivativeTarget: string | null;
@@ -62,6 +68,8 @@ const AppBar = styled(MuiAppBar, {
 const Title: FunctionComponent<TitleProps> = ({
   isSidebarOpen,
   onToggleSidebar,
+  isDarkMode,
+  onToggleDarkMode,
   isReverseMode,
   derivativeTarget,
   nodeIds,
@@ -146,14 +154,22 @@ const Title: FunctionComponent<TitleProps> = ({
           </FormGroup>
         </Box>
 
-        {/* GitHub icon */}
-        <IconButton
-          aria-label="github"
-          href="https://github.com/sc420/interactive-computational-graph"
-          target="_blank"
-        >
-          <GitHubIcon sx={{ color: "white" }} />
-        </IconButton>
+        {/* Icons */}
+        <Stack direction="row" spacing={1}>
+          {/* Theme icon */}
+          <IconButton onClick={onToggleDarkMode} color="inherit">
+            {isDarkMode ? <Brightness7Icon /> : <Brightness4Icon />}
+          </IconButton>
+
+          {/* GitHub icon */}
+          <IconButton
+            aria-label="github"
+            href="https://github.com/sc420/interactive-computational-graph"
+            target="_blank"
+          >
+            <GitHubIcon sx={{ color: "white" }} />
+          </IconButton>
+        </Stack>
       </Toolbar>
     </AppBar>
   );

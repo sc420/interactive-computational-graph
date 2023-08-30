@@ -6,9 +6,10 @@ import Sidebar from "./components/Sidebar";
 import type SelectedFeature from "./features/SelectedFeature";
 
 const App: FunctionComponent = () => {
-  const [isSidebarOpen, setSidebarOpen] = useState(true);
+  const [isSidebarOpen, setSidebarOpen] = useState<boolean>(true);
   const [selectedFeature, setSelectedFeature] =
     useState<SelectedFeature | null>("add-nodes");
+  const [isDarkMode, setDarkMode] = useState<boolean>(false);
 
   const theme = createTheme({
     components: {
@@ -29,7 +30,7 @@ const App: FunctionComponent = () => {
       },
     },
     palette: {
-      mode: "light", // TODO(sc420): Add button to switch dark/light
+      mode: isDarkMode ? "dark" : "light",
     },
   });
 
@@ -40,6 +41,10 @@ const App: FunctionComponent = () => {
   const toggleFeature = useCallback((feature: SelectedFeature | null): void => {
     setSelectedFeature(feature);
   }, []);
+
+  const toggleDarkMode = useCallback((): void => {
+    setDarkMode(!isDarkMode);
+  }, [isDarkMode]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -60,6 +65,8 @@ const App: FunctionComponent = () => {
             isSidebarOpen={isSidebarOpen}
             onToggleSidebar={toggleSidebar}
             selectedFeature={selectedFeature}
+            isDarkMode={isDarkMode}
+            onToggleDarkMode={toggleDarkMode}
           />
         </Box>
       </Box>

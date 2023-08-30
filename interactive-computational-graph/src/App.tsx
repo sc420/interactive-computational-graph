@@ -37,6 +37,14 @@ const App: FunctionComponent = () => {
     () =>
       createTheme({
         components: {
+          // Set background color in dark mode
+          MuiAppBar: {
+            styleOverrides: {
+              root: {
+                backgroundColor: isDarkMode ? teal[800] : "primary",
+              },
+            },
+          },
           // Make the fonts smaller
           MuiAutocomplete: {
             styleOverrides: {
@@ -73,7 +81,7 @@ const App: FunctionComponent = () => {
           // - https://m2.material.io/inline-tools/color/
           mode: isDarkMode ? "dark" : "light",
           primary: {
-            main: green[600],
+            main: isDarkMode ? teal[600] : green[600],
           },
           secondary: {
             main: teal[100],

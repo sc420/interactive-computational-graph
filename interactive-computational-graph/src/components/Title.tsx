@@ -2,7 +2,7 @@ import DarkModeIcon from "@mui/icons-material/DarkMode";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import MenuIcon from "@mui/icons-material/Menu";
-import { IconButton, Stack, Toolbar, Typography } from "@mui/material";
+import { IconButton, Stack, Toolbar, Tooltip, Typography } from "@mui/material";
 import MuiAppBar, {
   type AppBarProps as MuiAppBarProps,
 } from "@mui/material/AppBar";
@@ -83,18 +83,22 @@ const Title: FunctionComponent<TitleProps> = ({
         {/* Function icons */}
         <Stack direction="row" spacing={1}>
           {/* Theme icon */}
-          <IconButton onClick={onToggleDarkMode} color="inherit">
-            {isDarkMode ? <DarkModeIcon /> : <LightModeIcon />}
-          </IconButton>
+          <Tooltip title="Switch light/dark mode">
+            <IconButton onClick={onToggleDarkMode} color="inherit">
+              {isDarkMode ? <DarkModeIcon /> : <LightModeIcon />}
+            </IconButton>
+          </Tooltip>
 
           {/* GitHub icon */}
-          <IconButton
-            aria-label="github"
-            href="https://github.com/sc420/interactive-computational-graph"
-            target="_blank"
-          >
-            <GitHubIcon sx={{ color: "white" }} />
-          </IconButton>
+          <Tooltip title="See GitHub repo">
+            <IconButton
+              aria-label="github"
+              href="https://github.com/sc420/interactive-computational-graph"
+              target="_blank"
+            >
+              <GitHubIcon sx={{ color: "white" }} />
+            </IconButton>
+          </Tooltip>
         </Stack>
       </Toolbar>
     </AppBar>

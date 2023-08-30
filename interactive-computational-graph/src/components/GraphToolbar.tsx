@@ -73,12 +73,24 @@ const GraphToolbar: FunctionComponent<GraphToolbarProps> = ({
           value={derivativeTarget}
           sx={{
             width: 200,
-            // Need to override the color, otherwise it would be black
+            // Need to override the color because it will be put on AppBar
             "& label": {
               color: "primary.contrastText",
             },
+            "& label.Mui-focused": {
+              color: "grey.300",
+            },
             "& .MuiInputBase-input": {
               color: "primary.contrastText",
+            },
+            "& .MuiOutlinedInput-root fieldset": {
+              borderColor: "grey.300",
+            },
+            "& .MuiOutlinedInput-root:hover fieldset": {
+              borderColor: "grey.50",
+            },
+            "& .MuiOutlinedInput-root.Mui-focused fieldset": {
+              borderColor: "grey.100",
             },
           }}
           size="small"

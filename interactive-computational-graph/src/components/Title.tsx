@@ -2,43 +2,20 @@ import DarkModeIcon from "@mui/icons-material/DarkMode";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import MenuIcon from "@mui/icons-material/Menu";
-import {
-  Autocomplete,
-  Box,
-  FormControlLabel,
-  FormGroup,
-  IconButton,
-  Stack,
-  Switch,
-  TextField,
-  Toolbar,
-  Typography,
-} from "@mui/material";
+import { IconButton, Stack, Toolbar, Typography } from "@mui/material";
 import MuiAppBar, {
   type AppBarProps as MuiAppBarProps,
 } from "@mui/material/AppBar";
 import { styled } from "@mui/material/styles";
-import {
-  useCallback,
-  type ChangeEvent,
-  type FunctionComponent,
-  type SyntheticEvent,
-} from "react";
+import { type ReactNode, type FunctionComponent } from "react";
 import { SIDEBAR_EXPANDED_WIDTH, TITLE_HEIGHT } from "../constants";
 
 interface TitleProps {
-  // Sidebar
   isSidebarOpen: boolean;
   onToggleSidebar: () => void;
-  // Theme
   isDarkMode: boolean;
   onToggleDarkMode: () => void;
-  // Graph toolbar
-  isReverseMode: boolean;
-  derivativeTarget: string | null;
-  nodeIds: string[];
-  onReverseModeChange: (isReversedMode: boolean) => void;
-  onDerivativeTargetChange: (nodeId: string | null) => void;
+  children: ReactNode;
 }
 
 interface AppBarProps extends MuiAppBarProps {
@@ -70,26 +47,8 @@ const Title: FunctionComponent<TitleProps> = ({
   onToggleSidebar,
   isDarkMode,
   onToggleDarkMode,
-  isReverseMode,
-  derivativeTarget,
-  nodeIds,
-  onReverseModeChange,
-  onDerivativeTargetChange,
+  children,
 }) => {
-  const handleReverseModeChange = useCallback(
-    (event: ChangeEvent<HTMLInputElement>) => {
-      onReverseModeChange(event.target.checked);
-    },
-    [onReverseModeChange],
-  );
-
-  const handleDerivativeTargetChange = useCallback(
-    (event: SyntheticEvent, newValue: string | null) => {
-      onDerivativeTargetChange(newValue);
-    },
-    [onDerivativeTargetChange],
-  );
-
   return (
     <AppBar elevation={0} open={isSidebarOpen} position="absolute">
       <Toolbar
@@ -118,43 +77,10 @@ const Title: FunctionComponent<TitleProps> = ({
           Interactive Computational Graph
         </Typography>
 
-        {/* Graph toolbar */}
-        <Box display="flex" justifyContent="space-between" alignItems="center">
-          {/* Reverse-mode differentiation */}
-          <FormGroup>
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={isReverseMode}
-                  onChange={handleReverseModeChange}
-                  size="small"
-                />
-              }
-              label={
-                <Typography variant="body2">
-                  Reverse-Mode Differentiation
-                </Typography>
-              }
-            />
-          </FormGroup>
+        {/* Children */}
+        {children}
 
-          {/* Derivative target */}
-          <FormGroup>
-            <Autocomplete
-              data-testid="derivative-target"
-              options={nodeIds}
-              value={derivativeTarget}
-              sx={{ width: 200 }}
-              size="small"
-              onChange={handleDerivativeTargetChange}
-              renderInput={(params) => (
-                <TextField {...params} label="Derivative Target" />
-              )}
-            />
-          </FormGroup>
-        </Box>
-
-        {/* Icons */}
+        {/* Function icons */}
         <Stack direction="row" spacing={1}>
           {/* Theme icon */}
           <IconButton onClick={onToggleDarkMode} color="inherit">

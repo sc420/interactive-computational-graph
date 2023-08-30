@@ -79,6 +79,7 @@ import type SelectedFeature from "../features/SelectedFeature";
 import ReactFlowGraph from "../reactflow/ReactFlowGraph";
 import ReactFlowGraphMock from "../reactflow/ReactFlowGraphMock";
 import FeaturePanel from "./FeaturePanel";
+import GraphToolbar from "./GraphToolbar";
 import Title from "./Title";
 
 const isTest = process.env.NODE_ENV === "test";
@@ -583,12 +584,15 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
         onToggleSidebar={onToggleSidebar}
         isDarkMode={isDarkMode}
         onToggleDarkMode={onToggleDarkMode}
-        isReverseMode={isReverseMode}
-        derivativeTarget={derivativeTarget}
-        nodeIds={coreGraph === null ? [] : getNodeIds(coreGraph)}
-        onReverseModeChange={handleReverseModeChange}
-        onDerivativeTargetChange={handleDerivativeTargetChange}
-      />
+      >
+        <GraphToolbar
+          isReverseMode={isReverseMode}
+          derivativeTarget={derivativeTarget}
+          nodeIds={coreGraph === null ? [] : getNodeIds(coreGraph)}
+          onReverseModeChange={handleReverseModeChange}
+          onDerivativeTargetChange={handleDerivativeTargetChange}
+        />
+      </Title>
 
       {/* Graph content */}
       <Grid

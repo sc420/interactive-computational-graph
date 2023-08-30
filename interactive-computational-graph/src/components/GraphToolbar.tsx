@@ -53,6 +53,7 @@ const GraphToolbar: FunctionComponent<GraphToolbarProps> = ({
               checked={isReverseMode}
               onChange={handleReverseModeChange}
               size="small"
+              // Need to override the color, otherwise it would be primary
               color="secondary"
             />
           }
@@ -72,6 +73,7 @@ const GraphToolbar: FunctionComponent<GraphToolbarProps> = ({
           value={derivativeTarget}
           sx={{
             width: 200,
+            // Need to override the color, otherwise it would be black
             "& label": {
               color: "primary.contrastText",
             },

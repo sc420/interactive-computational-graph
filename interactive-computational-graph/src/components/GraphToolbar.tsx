@@ -53,6 +53,7 @@ const GraphToolbar: FunctionComponent<GraphToolbarProps> = ({
               checked={isReverseMode}
               onChange={handleReverseModeChange}
               size="small"
+              color="secondary"
             />
           }
           label={
@@ -69,7 +70,15 @@ const GraphToolbar: FunctionComponent<GraphToolbarProps> = ({
           data-testid="derivative-target"
           options={nodeIds}
           value={derivativeTarget}
-          sx={{ width: 200 }}
+          sx={{
+            width: 200,
+            "& label": {
+              color: "primary.contrastText",
+            },
+            "& .MuiInputBase-input": {
+              color: "primary.contrastText",
+            },
+          }}
           size="small"
           onChange={handleDerivativeTargetChange}
           renderInput={(params) => (

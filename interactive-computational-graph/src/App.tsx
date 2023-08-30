@@ -5,7 +5,8 @@ import {
   createTheme,
   useMediaQuery,
 } from "@mui/material";
-import { useCallback, useState, type FunctionComponent, useMemo } from "react";
+import { green, teal } from "@mui/material/colors";
+import { useCallback, useMemo, useState, type FunctionComponent } from "react";
 import FeatureNavigator from "./components/FeatureNavigator";
 import GraphContainer from "./components/GraphContainer";
 import Sidebar from "./components/Sidebar";
@@ -53,7 +54,19 @@ const App: FunctionComponent = () => {
           },
         },
         palette: {
+          // Color tools:
+          // - https://bareynol.github.io/mui-theme-creator/
+          // - https://m2.material.io/inline-tools/color/
           mode: isDarkMode ? "dark" : "light",
+          primary: {
+            main: green[600],
+          },
+          secondary: {
+            main: teal[100],
+          },
+        },
+        typography: {
+          fontSize: 14,
         },
       }),
     [isDarkMode],

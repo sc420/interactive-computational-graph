@@ -53,8 +53,13 @@ const GraphToolbar: FunctionComponent<GraphToolbarProps> = ({
               checked={isReverseMode}
               onChange={handleReverseModeChange}
               size="small"
-              // Need to override the color, otherwise it would be primary
+              // Need to override the color because it will be put on AppBar
               color="secondary"
+              sx={{
+                "& .MuiSwitch-track": {
+                  backgroundColor: "black",
+                },
+              }}
             />
           }
           label={

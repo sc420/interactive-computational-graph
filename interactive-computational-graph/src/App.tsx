@@ -1,4 +1,10 @@
-import { Box, CssBaseline, ThemeProvider, createTheme } from "@mui/material";
+import {
+  Box,
+  CssBaseline,
+  ThemeProvider,
+  createTheme,
+  useMediaQuery,
+} from "@mui/material";
 import { useCallback, useState, type FunctionComponent } from "react";
 import FeatureNavigator from "./components/FeatureNavigator";
 import GraphContainer from "./components/GraphContainer";
@@ -6,10 +12,25 @@ import Sidebar from "./components/Sidebar";
 import type SelectedFeature from "./features/SelectedFeature";
 
 const App: FunctionComponent = () => {
+  // Check if user prefers dark mode
+  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
+
   const [isSidebarOpen, setSidebarOpen] = useState<boolean>(true);
   const [selectedFeature, setSelectedFeature] =
     useState<SelectedFeature | null>("add-nodes");
-  const [isDarkMode, setDarkMode] = useState<boolean>(false);
+  const [isDarkMode, setDarkMode] = useState<boolean>(prefersDarkMode);
+
+  const toggleSidebar = useCallback((): void => {
+    setSidebarOpen(!isSidebarOpen);
+  }, [isSidebarOpen]);
+
+  const toggleFeature = useCallback((feature: SelectedFeature | null): void => {
+    setSelectedFeature(feature);
+  }, []);
+
+  const toggleDarkMode = useCallback((): void => {
+    setDarkMode(!isDarkMode);
+  }, [isDarkMode]);
 
   const theme = createTheme({
     components: {
@@ -33,18 +54,6 @@ const App: FunctionComponent = () => {
       mode: isDarkMode ? "dark" : "light",
     },
   });
-
-  const toggleSidebar = useCallback((): void => {
-    setSidebarOpen(!isSidebarOpen);
-  }, [isSidebarOpen]);
-
-  const toggleFeature = useCallback((feature: SelectedFeature | null): void => {
-    setSelectedFeature(feature);
-  }, []);
-
-  const toggleDarkMode = useCallback((): void => {
-    setDarkMode(!isDarkMode);
-  }, [isDarkMode]);
 
   return (
     <ThemeProvider theme={theme}>

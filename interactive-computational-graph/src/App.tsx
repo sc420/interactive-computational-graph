@@ -5,7 +5,7 @@ import {
   createTheme,
   useMediaQuery,
 } from "@mui/material";
-import { useCallback, useState, type FunctionComponent } from "react";
+import { useCallback, useState, type FunctionComponent, useMemo } from "react";
 import FeatureNavigator from "./components/FeatureNavigator";
 import GraphContainer from "./components/GraphContainer";
 import Sidebar from "./components/Sidebar";
@@ -32,28 +32,32 @@ const App: FunctionComponent = () => {
     setDarkMode(!isDarkMode);
   }, [isDarkMode]);
 
-  const theme = createTheme({
-    components: {
-      MuiAutocomplete: {
-        styleOverrides: {
-          root: {
-            "& label": {
-              fontSize: 14,
+  const theme = useMemo(
+    () =>
+      createTheme({
+        components: {
+          MuiAutocomplete: {
+            styleOverrides: {
+              root: {
+                "& label": {
+                  fontSize: 14,
+                },
+              },
+              input: {
+                fontSize: 14,
+              },
+              listbox: {
+                fontSize: 14,
+              },
             },
           },
-          input: {
-            fontSize: 14,
-          },
-          listbox: {
-            fontSize: 14,
-          },
         },
-      },
-    },
-    palette: {
-      mode: isDarkMode ? "dark" : "light",
-    },
-  });
+        palette: {
+          mode: isDarkMode ? "dark" : "light",
+        },
+      }),
+    [isDarkMode],
+  );
 
   return (
     <ThemeProvider theme={theme}>

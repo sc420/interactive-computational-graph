@@ -37,6 +37,7 @@ const App: FunctionComponent = () => {
     () =>
       createTheme({
         components: {
+          // Make the fonts smaller
           MuiAutocomplete: {
             styleOverrides: {
               root: {
@@ -49,6 +50,19 @@ const App: FunctionComponent = () => {
               },
               listbox: {
                 fontSize: 14,
+              },
+            },
+          },
+          // Make the background color of selected items more vibrant
+          MuiListItemButton: {
+            styleOverrides: {
+              root: {
+                "&.Mui-selected": {
+                  backgroundColor: isDarkMode ? teal[900] : green[100],
+                },
+                "&.Mui-selected:hover": {
+                  backgroundColor: isDarkMode ? teal[800] : green[200],
+                },
               },
             },
           },

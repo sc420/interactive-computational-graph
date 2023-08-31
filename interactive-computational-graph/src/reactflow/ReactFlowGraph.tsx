@@ -86,9 +86,14 @@ const ReactFlowGraph: FunctionComponent<ReactFlowGraphProps> = ({
       const featureNodeTypeJsonData = event.dataTransfer.getData(
         "application/reactflow",
       );
-      const featureNodeType = JSON.parse(
-        featureNodeTypeJsonData,
-      ) as FeatureNodeType;
+      let featureNodeType: FeatureNodeType;
+      try {
+        featureNodeType = JSON.parse(featureNodeTypeJsonData);
+      } catch (error) {
+        // Ignore dropping unknown data, e.g., the data would be empty when
+        // dragging any selected input text in custom node to the canvas
+        return;
+      }
 
       const position = reactFlowInstance.project({
         x: event.clientX - reactFlowBounds.left,

@@ -24,6 +24,7 @@ import ReactFlow, {
 import "reactflow/dist/style.css";
 import type FeatureNodeType from "../features/FeatureNodeType";
 import CustomNode from "./CustomNode";
+import "./ReactFlowGraph.css";
 
 interface ReactFlowGraphProps {
   nodes: Node[];
@@ -109,6 +110,7 @@ const ReactFlowGraph: FunctionComponent<ReactFlowGraphProps> = ({
     >
       <div ref={reactFlowWrapper}>
         <ReactFlow
+          className={isDarkMode ? "dark-mode" : ""}
           nodes={nodes}
           edges={edges}
           nodeTypes={nodeTypes}

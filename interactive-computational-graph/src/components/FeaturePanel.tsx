@@ -22,7 +22,7 @@ const FeaturePanel: FunctionComponent<FeaturePanelProps> = ({
 }) => {
   const renderSelectedPanel = (): ReactElement => {
     switch (feature) {
-      case "dashboard":
+      case "add-nodes":
         return (
           <AddNodesPanel
             featureOperations={featureOperations}
@@ -30,9 +30,9 @@ const FeaturePanel: FunctionComponent<FeaturePanelProps> = ({
             onAddOperation={onAddOperation}
           />
         );
-      case "orders":
+      case "view-nodes":
         return <EditNodesPanel />;
-      case "customers":
+      case "network-builder":
         return (
           <AddNodesPanel
             featureOperations={featureOperations}
@@ -40,9 +40,9 @@ const FeaturePanel: FunctionComponent<FeaturePanelProps> = ({
             onAddOperation={onAddOperation}
           />
         );
-      case "reports":
+      case "examples":
         return <EditNodesPanel />;
-      case "integrations":
+      case "load-save":
         return <EditNodesPanel />;
     }
   };

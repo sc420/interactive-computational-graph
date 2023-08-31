@@ -1,4 +1,5 @@
 import { Box } from "@mui/material";
+import { grey } from "@mui/material/colors";
 import {
   useCallback,
   useMemo,
@@ -23,6 +24,7 @@ import ReactFlow, {
 import "reactflow/dist/style.css";
 import type FeatureNodeType from "../features/FeatureNodeType";
 import CustomNode from "./CustomNode";
+import "./ReactFlowGraph.css";
 
 interface ReactFlowGraphProps {
   nodes: Node[];
@@ -32,6 +34,7 @@ interface ReactFlowGraphProps {
   onSelectionChange: (params: OnSelectionChangeParams) => void;
   onConnect: OnConnect;
   onDropNode: (featureNodeType: FeatureNodeType, position: XYPosition) => void;
+  isDarkMode: boolean;
 }
 
 const ReactFlowGraph: FunctionComponent<ReactFlowGraphProps> = ({
@@ -42,11 +45,16 @@ const ReactFlowGraph: FunctionComponent<ReactFlowGraphProps> = ({
   onSelectionChange,
   onConnect,
   onDropNode,
+  isDarkMode,
 }) => {
   const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
   const [reactFlowInstance, setReactFlowInstance] =
     useState<ReactFlowInstance | null>(null);
 
+  const style = useMemo(
+    () => ({ background: isDarkMode ? grey[900] : "inherit" }),
+    [isDarkMode],
+  );
   const nodeTypes = useMemo(() => ({ custom: CustomNode }), []);
 
   const handleInit: OnInit = useCallback(
@@ -78,9 +86,14 @@ const ReactFlowGraph: FunctionComponent<ReactFlowGraphProps> = ({
       const featureNodeTypeJsonData = event.dataTransfer.getData(
         "application/reactflow",
       );
-      const featureNodeType = JSON.parse(
-        featureNodeTypeJsonData,
-      ) as FeatureNodeType;
+      let featureNodeType: FeatureNodeType;
+      try {
+        featureNodeType = JSON.parse(featureNodeTypeJsonData);
+      } catch (error) {
+        // Ignore dropping unknown data, e.g., the data would be empty when
+        // dragging any selected input text in custom node to the canvas
+        return;
+      }
 
       const position = reactFlowInstance.project({
         x: event.clientX - reactFlowBounds.left,
@@ -102,6 +115,7 @@ const ReactFlowGraph: FunctionComponent<ReactFlowGraphProps> = ({
     >
       <div ref={reactFlowWrapper}>
         <ReactFlow
+          className={isDarkMode ? "dark-mode" : ""}
           nodes={nodes}
           edges={edges}
           nodeTypes={nodeTypes}
@@ -112,6 +126,7 @@ const ReactFlowGraph: FunctionComponent<ReactFlowGraphProps> = ({
           onConnect={onConnect}
           onDragOver={handleDragOver}
           onDrop={handleDrop}
+          style={style}
         >
           <Background />
           <Controls />

@@ -88,7 +88,7 @@ const ReactFlowGraphMock: FunctionComponent<ReactFlowGraphMockProps> = ({
       py={1.5}
     >
       <Box>
-        <Typography fontWeight="500">Graph Mock</Typography>
+        <Typography variant="subtitle1">Graph Mock</Typography>
       </Box>
 
       {/* nodes and edges */}

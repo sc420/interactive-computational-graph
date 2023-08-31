@@ -1,8 +1,8 @@
 type SelectedFeature =
-  | "dashboard"
-  | "orders"
-  | "customers"
-  | "reports"
-  | "integrations";
+  | "add-nodes"
+  | "view-nodes"
+  | "network-builder"
+  | "examples"
+  | "load-save";
 
 export default SelectedFeature;

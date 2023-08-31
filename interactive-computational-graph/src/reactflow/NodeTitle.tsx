@@ -25,7 +25,7 @@ const NodeTitle: FunctionComponent<NodeTitleProps> = ({
             {/* Drag indicator */}
             <DragIndicatorIcon fontSize="small" />
             {/* Graph ID */}
-            <Typography fontWeight={500}>{text}</Typography>
+            <Typography variant="body1">{text}</Typography>
           </Box>
         </Grid>
         <Grid item>

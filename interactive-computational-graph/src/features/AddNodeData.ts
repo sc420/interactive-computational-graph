@@ -1,19 +1,19 @@
 import type FeatureNodeType from "./FeatureNodeType";
-import type InputItem from "./InputItem";
-import type OutputItem from "./OutputItem";
+import type FeatureOperation from "./FeatureOperation";
 import {
   type BodyClickCallback,
   type InputChangeCallback,
 } from "./ReactNodeCallbacks";
 
-interface NodeData {
-  text: string;
+interface AddNodeData {
   featureNodeType: FeatureNodeType;
-  inputItems: InputItem[];
-  outputItems: OutputItem[];
+  nodeId: string;
+  featureOperations: FeatureOperation[];
+  isReverseMode: boolean;
+  derivativeTarget: string | null;
   onInputChange: InputChangeCallback;
   onBodyClick: BodyClickCallback;
   isDarkMode: boolean;
 }
 
-export default NodeData;
+export default AddNodeData;

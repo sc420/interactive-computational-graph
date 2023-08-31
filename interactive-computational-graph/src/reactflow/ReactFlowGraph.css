@@ -1,0 +1,19 @@
+/* stylelint-disable selector-class-pattern */
+
+/* Make the attribution background look like semi-transparent */
+.dark-mode .react-flow__attribution {
+    /* MUI grey[900] with 50% alpha */
+    background: rgba(33 33 33 / 50%);
+}
+
+/* Make the attribution text more visible */
+.dark-mode .react-flow__attribution a {
+    color: lightgrey;
+}
+
+/* Make the edge show in lighter color when selected */
+.dark-mode .react-flow__edge.selected .react-flow__edge-path,
+.dark-mode .react-flow__edge:focus .react-flow__edge-path,
+.dark-mode .react-flow__edge:focus-visible .react-flow__edge-path {
+    stroke: white;
+}

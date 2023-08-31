@@ -1,15 +1,21 @@
+import DarkModeIcon from "@mui/icons-material/DarkMode";
+import GitHubIcon from "@mui/icons-material/GitHub";
+import LightModeIcon from "@mui/icons-material/LightMode";
 import MenuIcon from "@mui/icons-material/Menu";
-import { IconButton, Toolbar, Typography } from "@mui/material";
+import { IconButton, Stack, Toolbar, Tooltip, Typography } from "@mui/material";
 import MuiAppBar, {
   type AppBarProps as MuiAppBarProps,
 } from "@mui/material/AppBar";
 import { styled } from "@mui/material/styles";
-import type React from "react";
+import { type ReactNode, type FunctionComponent } from "react";
 import { SIDEBAR_EXPANDED_WIDTH, TITLE_HEIGHT } from "../constants";
 
 interface TitleProps {
   isSidebarOpen: boolean;
   onToggleSidebar: () => void;
+  isDarkMode: boolean;
+  onToggleDarkMode: () => void;
+  children: ReactNode;
 }
 
 interface AppBarProps extends MuiAppBarProps {
@@ -36,9 +42,12 @@ const AppBar = styled(MuiAppBar, {
   }),
 }));
 
-const Title: React.FunctionComponent<TitleProps> = ({
+const Title: FunctionComponent<TitleProps> = ({
   isSidebarOpen,
   onToggleSidebar,
+  isDarkMode,
+  onToggleDarkMode,
+  children,
 }) => {
   return (
     <AppBar elevation={0} open={isSidebarOpen} position="absolute">
@@ -46,8 +55,10 @@ const Title: React.FunctionComponent<TitleProps> = ({
         sx={{
           pr: "24px", // keep right padding when drawer closed
           minHeight: `${TITLE_HEIGHT}px !important`, // keep the typography at the center vertically
+          columnGap: 3,
         }}
       >
+        {/* Menu icon */}
         <IconButton
           edge="start"
           color="inherit"
@@ -60,16 +71,36 @@ const Title: React.FunctionComponent<TitleProps> = ({
         >
           <MenuIcon />
         </IconButton>
-        <Typography
-          component="h1"
-          variant="h6"
-          color="inherit"
-          noWrap
-          sx={{ flexGrow: 1 }}
-        >
+
+        {/* Title */}
+        <Typography component="h1" variant="h6" noWrap sx={{ flexGrow: 1 }}>
           Interactive Computational Graph
         </Typography>
-        <IconButton color="inherit">GitHub</IconButton>
+
+        {/* Children */}
+        {children}
+
+        {/* Function icons */}
+        <Stack direction="row" spacing={1}>
+          {/* Theme icon */}
+          <Tooltip title="Switch light/dark mode">
+            <IconButton onClick={onToggleDarkMode} color="inherit">
+              {isDarkMode ? <DarkModeIcon /> : <LightModeIcon />}
+            </IconButton>
+          </Tooltip>
+
+          {/* GitHub icon */}
+          <Tooltip title="See GitHub repo">
+            <IconButton
+              aria-label="github"
+              href="https://github.com/sc420/interactive-computational-graph"
+              target="_blank"
+              color="inherit"
+            >
+              <GitHubIcon />
+            </IconButton>
+          </Tooltip>
+        </Stack>
       </Toolbar>
     </AppBar>
   );

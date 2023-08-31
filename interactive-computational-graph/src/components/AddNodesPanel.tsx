@@ -9,7 +9,6 @@ import {
   Grid,
   List,
   ListItem,
-  ListSubheader,
   Typography,
 } from "@mui/material";
 import { type FunctionComponent } from "react";
@@ -36,32 +35,31 @@ const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
   );
 
   return (
-    <List disablePadding>
+    <>
       {/* Header and toolbar */}
-      <ListSubheader disableGutters>
-        <Grid
-          alignItems="center"
-          container
-          justifyContent="space-between"
-          px={2}
-        >
-          <Grid item>
-            <Typography fontWeight="500">Add nodes</Typography>
-          </Grid>
-          <Grid item>
-            <Button startIcon={<EditIcon />}>Edit</Button>
-          </Grid>
+      <Grid
+        alignItems="center"
+        container
+        justifyContent="space-between"
+        px={2}
+        py={0.5}
+      >
+        <Grid item>
+          <Typography variant="subtitle1">Add nodes</Typography>
         </Grid>
-      </ListSubheader>
+        <Grid item>
+          <Button startIcon={<EditIcon />}>Edit</Button>
+        </Grid>
+      </Grid>
 
       {/* Value nodes */}
-      <Accordion defaultExpanded disableGutters>
+      <Accordion defaultExpanded disableGutters square sx={{ width: "100%" }}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="value-content"
           id="value-header"
         >
-          <Typography>Value</Typography>
+          <Typography variant="subtitle2">Value</Typography>
         </AccordionSummary>
         <AccordionDetails id="value-content" sx={{ p: 0 }}>
           <List>
@@ -80,13 +78,13 @@ const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
       </Accordion>
 
       {/* Simple operations */}
-      <Accordion defaultExpanded disableGutters>
+      <Accordion defaultExpanded disableGutters square sx={{ width: "100%" }}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="simple-content"
           id="simple-header"
         >
-          <Typography>Simple</Typography>
+          <Typography variant="subtitle2">Simple</Typography>
         </AccordionSummary>
         <AccordionDetails id="simple-content" sx={{ p: 0 }}>
           <List>
@@ -106,13 +104,13 @@ const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
       </Accordion>
 
       {/* Custom operations */}
-      <Accordion defaultExpanded disableGutters>
+      <Accordion defaultExpanded disableGutters square sx={{ width: "100%" }}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="custom-content"
           id="custom-header"
         >
-          <Typography>Custom</Typography>
+          <Typography variant="subtitle2">Custom</Typography>
         </AccordionSummary>
         <AccordionDetails id="custom-content" sx={{ p: 0 }}>
           <List>
@@ -134,7 +132,7 @@ const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
           </List>
         </AccordionDetails>
       </Accordion>
-    </List>
+    </>
   );
 };
 

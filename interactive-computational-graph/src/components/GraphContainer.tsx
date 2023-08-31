@@ -28,6 +28,7 @@ import {
 import Graph from "../core/Graph";
 import Operation from "../core/Operation";
 import Port from "../core/Port";
+import type AddNodeData from "../features/AddNodeData";
 import {
   ADD_DFDX_CODE,
   ADD_F_CODE,
@@ -71,6 +72,7 @@ import {
   selectReactFlowNode,
   showInputFields,
   updateLastSelectedNodeId,
+  updateReactFlowNodeDarkMode,
   updateReactFlowNodeDerivatives,
   updateReactFlowNodeFValues,
   updateReactFlowNodeInputValue,
@@ -80,15 +82,27 @@ import ReactFlowGraph from "../reactflow/ReactFlowGraph";
 import ReactFlowGraphMock from "../reactflow/ReactFlowGraphMock";
 import FeaturePanel from "./FeaturePanel";
 import GraphToolbar from "./GraphToolbar";
+import Title from "./Title";
 
 const isTest = process.env.NODE_ENV === "test";
 
 interface GraphContainerProps {
+  // Sidebar
+  isSidebarOpen: boolean;
+  onToggleSidebar: () => void;
+  // Feature
   selectedFeature: SelectedFeature | null;
+  // Theme
+  isDarkMode: boolean;
+  onToggleDarkMode: () => void;
 }
 
 const GraphContainer: FunctionComponent<GraphContainerProps> = ({
+  isSidebarOpen,
+  onToggleSidebar,
   selectedFeature,
+  isDarkMode,
+  onToggleDarkMode,
 }) => {
   // Core graph
   const [coreGraph, setCoreGraph] = useState<Graph | null>(null);
@@ -272,6 +286,12 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     );
   }, [coreGraph, derivativeTarget, isReverseMode]);
 
+  const updateNodeDarkMode = useCallback(() => {
+    setReactFlowNodes((nodes) =>
+      updateReactFlowNodeDarkMode(isDarkMode, nodes),
+    );
+  }, [isDarkMode]);
+
   const handleInputChange = useCallback(
     (nodeId: string, inputPortId: string, value: string): void => {
       if (coreGraph === null) {
@@ -299,24 +319,24 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
         return;
       }
 
-      const id = `${nextNodeId}`;
+      const nodeId = `${nextNodeId}`;
 
-      addCoreNodes(coreGraph, featureNodeType, id, featureOperations);
+      addCoreNodes(coreGraph, featureNodeType, nodeId, featureOperations);
 
+      const addNodeData: AddNodeData = {
+        featureNodeType,
+        nodeId,
+        featureOperations,
+        isReverseMode,
+        derivativeTarget,
+        onInputChange: handleInputChange,
+        onBodyClick: handleBodyClick,
+        isDarkMode,
+      };
       setReactFlowNodes((nodes) => {
         const position = getNewReactFlowNodePosition(nodes, lastSelectedNodeId);
         nodes = deselectLastSelectedNode(nodes, lastSelectedNodeId);
-        return addReactFlowNode(
-          featureNodeType,
-          id,
-          featureOperations,
-          isReverseMode,
-          derivativeTarget,
-          handleInputChange,
-          handleBodyClick,
-          position,
-          nodes,
-        );
+        return addReactFlowNode(addNodeData, position, nodes);
       });
 
       setNextNodeId((nextNodeId) => nextNodeId + 1);
@@ -327,6 +347,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       featureOperations,
       handleBodyClick,
       handleInputChange,
+      isDarkMode,
       isReverseMode,
       lastSelectedNodeId,
       nextNodeId,
@@ -500,23 +521,23 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
         return;
       }
 
-      const id = `${nextNodeId}`;
+      const nodeId = `${nextNodeId}`;
 
-      addCoreNodes(coreGraph, featureNodeType, id, featureOperations);
+      addCoreNodes(coreGraph, featureNodeType, nodeId, featureOperations);
 
+      const addNodeData: AddNodeData = {
+        featureNodeType,
+        nodeId,
+        featureOperations,
+        isReverseMode,
+        derivativeTarget,
+        onInputChange: handleInputChange,
+        onBodyClick: handleBodyClick,
+        isDarkMode,
+      };
       setReactFlowNodes((nodes) => {
         nodes = deselectLastSelectedNode(nodes, lastSelectedNodeId);
-        return addReactFlowNode(
-          featureNodeType,
-          id,
-          featureOperations,
-          isReverseMode,
-          derivativeTarget,
-          handleInputChange,
-          handleBodyClick,
-          position,
-          nodes,
-        );
+        return addReactFlowNode(addNodeData, position, nodes);
       });
 
       setNextNodeId((nextNodeId) => nextNodeId + 1);
@@ -527,6 +548,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       featureOperations,
       handleBodyClick,
       handleInputChange,
+      isDarkMode,
       isReverseMode,
       lastSelectedNodeId,
       nextNodeId,
@@ -561,10 +583,31 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     updateNodeValuesAndDerivatives,
   ]);
 
+  // Update node data whenever dark mode changes
+  useEffect(() => {
+    updateNodeDarkMode();
+  }, [isDarkMode, updateNodeDarkMode]);
+
   return (
     <>
       {/* Toolbar padding */}
       <Toolbar />
+
+      {/* Title */}
+      <Title
+        isSidebarOpen={isSidebarOpen}
+        onToggleSidebar={onToggleSidebar}
+        isDarkMode={isDarkMode}
+        onToggleDarkMode={onToggleDarkMode}
+      >
+        <GraphToolbar
+          isReverseMode={isReverseMode}
+          derivativeTarget={derivativeTarget}
+          nodeIds={coreGraph === null ? [] : getNodeIds(coreGraph)}
+          onReverseModeChange={handleReverseModeChange}
+          onDerivativeTargetChange={handleDerivativeTargetChange}
+        />
+      </Title>
 
       {/* Graph content */}
       <Grid
@@ -587,16 +630,6 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
 
         <Grid item display="flex" flexGrow={1}>
           <Grid container direction="column" flexGrow={1}>
-            {/* Graph toolbar */}
-            <Grid item>
-              <GraphToolbar
-                isReverseMode={isReverseMode}
-                derivativeTarget={derivativeTarget}
-                nodeIds={coreGraph === null ? [] : getNodeIds(coreGraph)}
-                onReverseModeChange={handleReverseModeChange}
-                onDerivativeTargetChange={handleDerivativeTargetChange}
-              />
-            </Grid>
             {/* Graph mock */}
             {isTest && (
               <ReactFlowGraphMock
@@ -609,6 +642,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
                 onDropNode={handleDropNode}
               />
             )}
+
             {/* Graph */}
             <Grid item display="flex" flexGrow={1}>
               <ReactFlowGraph
@@ -619,6 +653,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
                 onSelectionChange={handleSelectionChange}
                 onConnect={handleConnect}
                 onDropNode={handleDropNode}
+                isDarkMode={isDarkMode}
               />
             </Grid>
           </Grid>

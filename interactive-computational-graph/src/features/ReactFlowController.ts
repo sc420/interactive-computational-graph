@@ -5,43 +5,20 @@ import {
   type Node,
   type XYPosition,
 } from "reactflow";
+import type AddNodeData from "./AddNodeData";
 import { findFeatureOperation } from "./ControllerUtilities";
-import type FeatureNodeType from "./FeatureNodeType";
-import type FeatureOperation from "./FeatureOperation";
 import type NodeData from "./NodeData";
 import { randomInteger } from "./RandomUtilities";
 
-type InputChangeCallback = (
-  nodeId: string,
-  inputPortId: string,
-  value: string,
-) => void;
-
-type BodyClickCallback = (nodeId: string) => void;
-
 const addReactFlowNode = (
-  featureNodeType: FeatureNodeType,
-  nodeId: string,
-  featureOperations: FeatureOperation[],
-  isReverseMode: boolean,
-  derivativeTarget: string | null,
-  onInputChange: InputChangeCallback,
-  onBodyClick: BodyClickCallback,
+  addNodeData: AddNodeData,
   position: XYPosition,
   nodes: Node[],
 ): Node[] => {
   const node: Node = {
-    id: nodeId,
+    id: addNodeData.nodeId,
     type: "custom", // registered in Graph
-    data: buildReactFlowNodeData(
-      featureNodeType,
-      nodeId,
-      featureOperations,
-      isReverseMode,
-      derivativeTarget,
-      onInputChange,
-      onBodyClick,
-    ),
+    data: buildReactFlowNodeData(addNodeData),
     dragHandle: ".drag-handle", // corresponds to className in NoteTitle
     selected: true,
     position,
@@ -235,6 +212,20 @@ const updateReactFlowNodeDerivatives = (
   });
 };
 
+const updateReactFlowNodeDarkMode = (
+  isDarkMode: boolean,
+  nodes: Node[],
+): Node[] => {
+  return nodes.map((node) => {
+    const data = node.data as NodeData;
+    data.isDarkMode = isDarkMode;
+    // Set the new data to notify React Flow about the change
+    const newData: NodeData = { ...node.data };
+    node.data = newData;
+    return node;
+  });
+};
+
 const updateLastSelectedNodeId = (nodes: Node[]): string | null => {
   const firstNode = nodes.find((node) => "id" in node) ?? null;
   if (firstNode === null) {
@@ -266,15 +257,18 @@ const deselectLastSelectedNode = (
   return nodes;
 };
 
-const buildReactFlowNodeData = (
-  featureNodeType: FeatureNodeType,
-  nodeId: string,
-  featureOperations: FeatureOperation[],
-  isReverseMode: boolean,
-  derivativeTarget: string | null,
-  onInputChange: InputChangeCallback,
-  onBodyClick: BodyClickCallback,
-): NodeData => {
+const buildReactFlowNodeData = (addNodeData: AddNodeData): NodeData => {
+  const {
+    featureNodeType,
+    nodeId,
+    featureOperations,
+    isReverseMode,
+    derivativeTarget,
+    onInputChange,
+    onBodyClick,
+    isDarkMode,
+  } = addNodeData;
+
   switch (featureNodeType.nodeType) {
     case "CONSTANT": {
       return {
@@ -292,6 +286,7 @@ const buildReactFlowNodeData = (
         outputItems: [],
         onBodyClick,
         onInputChange,
+        isDarkMode,
       };
     }
     case "VARIABLE": {
@@ -321,6 +316,7 @@ const buildReactFlowNodeData = (
         ],
         onBodyClick,
         onInputChange,
+        isDarkMode,
       };
     }
     case "OPERATION": {
@@ -360,6 +356,7 @@ const buildReactFlowNodeData = (
         ],
         onBodyClick,
         onInputChange,
+        isDarkMode,
       };
     }
   }
@@ -396,6 +393,7 @@ export {
   selectReactFlowNode,
   showInputFields,
   updateLastSelectedNodeId,
+  updateReactFlowNodeDarkMode,
   updateReactFlowNodeDerivatives,
   updateReactFlowNodeFValues,
   updateReactFlowNodeInputValue,

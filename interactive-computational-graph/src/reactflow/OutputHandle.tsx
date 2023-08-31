@@ -26,6 +26,7 @@ const OutputHandle: FunctionComponent<OutputHandleProps> = ({
         position={Position.Right}
         style={{
           background: handleColor,
+          borderColor: "transparent",
           borderRadius: "0px 10px 10px 0px",
           top: "50%", // centers the handle
           // adds 1 to hide the tiny gap between the node body and the handle

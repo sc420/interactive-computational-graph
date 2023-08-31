@@ -1,5 +1,5 @@
-import { Box, Stack, useTheme } from "@mui/material";
-import { blue, green, lime } from "@mui/material/colors";
+import { Box, Stack, darken, useTheme } from "@mui/material";
+import { blue, green, grey, indigo, lime, teal } from "@mui/material/colors";
 import { useCallback, type FunctionComponent } from "react";
 import { type NodeProps } from "reactflow";
 import type NodeData from "../features/NodeData";
@@ -25,37 +25,80 @@ const CustomNode: FunctionComponent<CustomNodeProps> = ({
   const getColorTheme = useCallback((): Record<string, string> => {
     switch (data.featureNodeType.nodeType) {
       case "CONSTANT":
-        return green;
+        return data.isDarkMode ? teal : green;
       case "VARIABLE":
         return lime;
       case "OPERATION":
-        return blue;
+        return data.isDarkMode ? indigo : blue;
     }
-  }, [data]);
+  }, [data.featureNodeType.nodeType, data.isDarkMode]);
+
+  const getDarkenCoefficient = useCallback(() => {
+    switch (data.featureNodeType.nodeType) {
+      case "CONSTANT":
+        return 0;
+      case "VARIABLE":
+        return data.isDarkMode ? 0.25 : 0;
+      case "OPERATION":
+        return data.isDarkMode ? 0.1 : 0;
+    }
+  }, [data.featureNodeType.nodeType, data.isDarkMode]);
+
+  const getBackgroundColor = useCallback((): string => {
+    return data.isDarkMode ? grey[800] : theme.palette.background.default;
+  }, [data.isDarkMode, theme.palette.background.default]);
+
+  const getBorderColor = useCallback((): string => {
+    const colorTheme = getColorTheme();
+    if (data.isDarkMode) {
+      return selected ? colorTheme[200] : colorTheme[800];
+    } else {
+      return selected ? colorTheme[800] : colorTheme[200];
+    }
+  }, [data.isDarkMode, getColorTheme, selected]);
+
+  const getTitleColor = useCallback((): string => {
+    const colorTheme = getColorTheme();
+    if (data.isDarkMode) {
+      return selected ? colorTheme[700] : colorTheme[800];
+    } else {
+      return selected ? colorTheme[300] : colorTheme[200];
+    }
+  }, [data.isDarkMode, getColorTheme, selected]);
+
+  const getHandleHoverColor = useCallback((): string => {
+    const colorTheme = getColorTheme();
+    if (data.isDarkMode) {
+      return selected ? colorTheme[500] : colorTheme[600];
+    } else {
+      return selected ? colorTheme[200] : colorTheme[100];
+    }
+  }, [data.isDarkMode, getColorTheme, selected]);
 
   const handleInputChange = useCallback(
     (inputPortId: string, value: string): void => {
       data.onInputChange(id, inputPortId, value);
     },
-    [id, data],
+    [data, id],
   );
 
   const handleBodyClick = useCallback((): void => {
     data.onBodyClick(id);
-  }, [id, data]);
+  }, [data, id]);
 
-  // Set colors
-  const colorTheme = getColorTheme();
-  const borderColor = selected ? colorTheme[800] : colorTheme[200];
-  const titleColor = selected ? colorTheme[300] : colorTheme[200];
+  // Get colors
+  const darkenCoefficient = getDarkenCoefficient();
+  const backgroundColor = getBackgroundColor();
+  const borderColor = darken(getBorderColor(), darkenCoefficient);
+  const titleColor = darken(getTitleColor(), darkenCoefficient);
   const handleColor = titleColor;
-  const handleHoverColor = selected ? colorTheme[200] : colorTheme[100];
+  const handleHoverColor = darken(getHandleHoverColor(), darkenCoefficient);
 
   return (
     <>
       {/* Node frame */}
       <Box
-        bgcolor="background.default"
+        bgcolor={backgroundColor}
         border={1}
         borderColor={borderColor}
         borderRadius={1}

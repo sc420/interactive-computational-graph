@@ -1,4 +1,5 @@
 import { Box } from "@mui/material";
+import { grey } from "@mui/material/colors";
 import {
   useCallback,
   useMemo,
@@ -32,6 +33,7 @@ interface ReactFlowGraphProps {
   onSelectionChange: (params: OnSelectionChangeParams) => void;
   onConnect: OnConnect;
   onDropNode: (featureNodeType: FeatureNodeType, position: XYPosition) => void;
+  isDarkMode: boolean;
 }
 
 const ReactFlowGraph: FunctionComponent<ReactFlowGraphProps> = ({
@@ -42,11 +44,16 @@ const ReactFlowGraph: FunctionComponent<ReactFlowGraphProps> = ({
   onSelectionChange,
   onConnect,
   onDropNode,
+  isDarkMode,
 }) => {
   const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
   const [reactFlowInstance, setReactFlowInstance] =
     useState<ReactFlowInstance | null>(null);
 
+  const style = useMemo(
+    () => ({ background: isDarkMode ? grey[900] : "inherit" }),
+    [isDarkMode],
+  );
   const nodeTypes = useMemo(() => ({ custom: CustomNode }), []);
 
   const handleInit: OnInit = useCallback(
@@ -112,6 +119,7 @@ const ReactFlowGraph: FunctionComponent<ReactFlowGraphProps> = ({
           onConnect={onConnect}
           onDragOver={handleDragOver}
           onDrop={handleDrop}
+          style={style}
         >
           <Background />
           <Controls />

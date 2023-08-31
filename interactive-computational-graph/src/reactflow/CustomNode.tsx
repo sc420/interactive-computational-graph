@@ -93,6 +93,7 @@ const CustomNode: FunctionComponent<CustomNodeProps> = ({
   const titleColor = darken(getTitleColor(), darkenCoefficient);
   const handleColor = titleColor;
   const handleHoverColor = darken(getHandleHoverColor(), darkenCoefficient);
+  const handleBorderColor = borderColor;
 
   return (
     <>
@@ -121,6 +122,7 @@ const CustomNode: FunctionComponent<CustomNodeProps> = ({
                   handleSize={handleSize}
                   handleColor={handleColor}
                   handleHoverColor={handleHoverColor}
+                  handleBorderColor={handleBorderColor}
                   onInputChange={handleInputChange}
                 />
               </Box>
@@ -131,9 +133,9 @@ const CustomNode: FunctionComponent<CustomNodeProps> = ({
               <Box borderTop={1} borderColor="divider" p={bodyPadding}>
                 <OutputItems
                   id={id}
+                  data={data}
                   itemHeight={itemHeight}
                   inputWidth={inputWidth}
-                  data={data}
                 />
               </Box>
             )}
@@ -146,6 +148,7 @@ const CustomNode: FunctionComponent<CustomNodeProps> = ({
         handleSize={handleSize}
         handleColor={handleColor}
         handleHoverColor={handleHoverColor}
+        handleBorderColor={handleBorderColor}
       />
     </>
   );

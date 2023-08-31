@@ -6,12 +6,14 @@ interface OutputHandleProps {
   handleSize: number;
   handleColor: string;
   handleHoverColor: string;
+  handleBorderColor: string;
 }
 
 const OutputHandle: FunctionComponent<OutputHandleProps> = ({
   handleSize,
   handleColor,
   handleHoverColor,
+  handleBorderColor,
 }) => {
   return (
     <Box
@@ -26,7 +28,7 @@ const OutputHandle: FunctionComponent<OutputHandleProps> = ({
         position={Position.Right}
         style={{
           background: handleColor,
-          borderColor: "transparent",
+          borderColor: handleBorderColor,
           borderRadius: "0px 10px 10px 0px",
           top: "50%", // centers the handle
           // adds 1 to hide the tiny gap between the node body and the handle

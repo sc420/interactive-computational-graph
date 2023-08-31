@@ -14,6 +14,7 @@ interface InputItemProps {
   handleSize: number;
   handleColor: string;
   handleHoverColor: string;
+  handleBorderColor: string;
   onInputChange: (inputPortId: string, value: string) => void;
 }
 
@@ -26,6 +27,7 @@ const InputItems: FunctionComponent<InputItemProps> = ({
   handleSize,
   handleColor,
   handleHoverColor,
+  handleBorderColor,
   onInputChange,
 }) => {
   const getInputId = useCallback(
@@ -67,7 +69,7 @@ const InputItems: FunctionComponent<InputItemProps> = ({
                   style={{
                     position: "absolute", // needs position="relative" on parent
                     background: handleColor,
-                    borderColor: "transparent",
+                    borderColor: handleBorderColor,
                     borderRadius: "10px 0px 0px 10px",
                     top: 20, // manual offset
                     left: getInputHandleLeft(),

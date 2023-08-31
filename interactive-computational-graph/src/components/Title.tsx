@@ -95,8 +95,9 @@ const Title: FunctionComponent<TitleProps> = ({
               aria-label="github"
               href="https://github.com/sc420/interactive-computational-graph"
               target="_blank"
+              color="inherit"
             >
-              <GitHubIcon sx={{ color: "white" }} />
+              <GitHubIcon />
             </IconButton>
           </Tooltip>
         </Stack>

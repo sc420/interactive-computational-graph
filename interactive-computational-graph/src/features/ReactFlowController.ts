@@ -226,7 +226,7 @@ const updateReactFlowNodeDarkMode = (
   });
 };
 
-const updateLastSelectedNodeId = (nodes: Node[]): string | null => {
+const getLastSelectedNodeId = (nodes: Node[]): string | null => {
   const firstNode = nodes.find((node) => "id" in node) ?? null;
   if (firstNode === null) {
     return null;
@@ -388,11 +388,11 @@ export {
   addReactFlowNode,
   deselectLastSelectedNode,
   findRemovedEdges,
+  getLastSelectedNodeId,
   getNewReactFlowNodePosition,
   hideInputField,
   selectReactFlowNode,
   showInputFields,
-  updateLastSelectedNodeId,
   updateReactFlowNodeDarkMode,
   updateReactFlowNodeDerivatives,
   updateReactFlowNodeFValues,

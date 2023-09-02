@@ -67,11 +67,11 @@ import {
   addReactFlowNode,
   deselectLastSelectedNode,
   findRemovedEdges,
+  getLastSelectedNodeId,
   getNewReactFlowNodePosition,
   hideInputField,
   selectReactFlowNode,
   showInputFields,
-  updateLastSelectedNodeId,
   updateReactFlowNodeDarkMode,
   updateReactFlowNodeDerivatives,
   updateReactFlowNodeFValues,
@@ -483,7 +483,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
 
   const handleSelectionChange = useCallback(
     (params: OnSelectionChangeParams): void => {
-      setLastSelectedNodeId(updateLastSelectedNodeId(params.nodes));
+      setLastSelectedNodeId(getLastSelectedNodeId(params.nodes));
     },
     [],
   );

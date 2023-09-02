@@ -65,7 +65,7 @@ import type FeatureNodeType from "../features/FeatureNodeType";
 import type FeatureOperation from "../features/FeatureOperation";
 import {
   addReactFlowNode,
-  deselectLastSelectedNode,
+  deselectAllNodes,
   findRemovedEdges,
   getLastSelectedNodeId,
   getNewReactFlowNodePosition,
@@ -334,8 +334,8 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
         isDarkMode,
       };
       setReactFlowNodes((nodes) => {
+        nodes = deselectAllNodes(nodes);
         const position = getNewReactFlowNodePosition(nodes, lastSelectedNodeId);
-        nodes = deselectLastSelectedNode(nodes, lastSelectedNodeId);
         return addReactFlowNode(addNodeData, position, nodes);
       });
 
@@ -536,7 +536,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
         isDarkMode,
       };
       setReactFlowNodes((nodes) => {
-        nodes = deselectLastSelectedNode(nodes, lastSelectedNodeId);
+        nodes = deselectAllNodes(nodes);
         return addReactFlowNode(addNodeData, position, nodes);
       });
 
@@ -550,7 +550,6 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       handleInputChange,
       isDarkMode,
       isReverseMode,
-      lastSelectedNodeId,
       nextNodeId,
     ],
   );

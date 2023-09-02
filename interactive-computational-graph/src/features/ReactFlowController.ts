@@ -246,15 +246,11 @@ const selectReactFlowNode = (nodeId: string, nodes: Node[]): Node[] => {
   });
 };
 
-const deselectLastSelectedNode = (
-  nodes: Node[],
-  lastSelectedNodeId: string | null,
-): Node[] => {
-  const node = findLastSelectedNode(nodes, lastSelectedNodeId);
-  if (node !== null) {
+const deselectAllNodes = (nodes: Node[]): Node[] => {
+  return nodes.map((node) => {
     node.selected = false;
-  }
-  return nodes;
+    return node;
+  });
 };
 
 const buildReactFlowNodeData = (addNodeData: AddNodeData): NodeData => {
@@ -386,7 +382,7 @@ const findLastSelectedNode = (
 
 export {
   addReactFlowNode,
-  deselectLastSelectedNode,
+  deselectAllNodes,
   findRemovedEdges,
   getLastSelectedNodeId,
   getNewReactFlowNodePosition,

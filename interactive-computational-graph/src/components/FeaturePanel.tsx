@@ -6,6 +6,7 @@ import type FeatureOperation from "../features/FeatureOperation";
 import type SelectedFeature from "../features/SelectedFeature";
 import AddNodesPanel from "./AddNodesPanel";
 import EditNodesPanel from "./EditNodesPanel";
+import ExplainDerivativesPanel from "./ExplainDerivativesPanel";
 
 interface FeaturePanelProps {
   feature: SelectedFeature;
@@ -32,6 +33,8 @@ const FeaturePanel: FunctionComponent<FeaturePanelProps> = ({
         );
       case "view-nodes":
         return <EditNodesPanel />;
+      case "explain-derivatives":
+        return <ExplainDerivativesPanel />;
       case "network-builder":
         return (
           <AddNodesPanel

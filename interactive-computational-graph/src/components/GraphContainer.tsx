@@ -49,6 +49,9 @@ import {
   connectDummyInputNode,
   disconnectCoreEdge,
   disconnectDummyInputNode,
+  getChainRuleTerms,
+  getExplainDerivativeType,
+  getNodeDerivative,
   getNodeIds,
   isDummyInputNodeConnected,
   isNodeInputPortEmpty,
@@ -61,6 +64,8 @@ import {
   updateNodeValueById,
   validateConnectCoreEdge,
 } from "../features/CoreGraphController";
+import { buildExplainDerivativeItems } from "../features/ExplainDerivativeController";
+import type ExplainDerivativeData from "../features/ExplainDerivativeData";
 import type FeatureNodeType from "../features/FeatureNodeType";
 import type FeatureOperation from "../features/FeatureOperation";
 import {
@@ -107,7 +112,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
   // Core graph
   const [coreGraph, setCoreGraph] = useState<Graph | null>(null);
 
-  // Feature states
+  // Graph states
   const [isReverseMode, setReverseMode] = useState<boolean>(true);
   const [derivativeTarget, setDerivativeTarget] = useState<string | null>(null);
   const [featureOperations, setFeatureOperations] = useState<
@@ -157,9 +162,15 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
   const [nextNodeId, setNextNodeId] = useState<number>(1);
   const [nextOperationId, setNextOperationId] = useState<number>(1);
 
+  // Feature panel states
+  const [explainDerivativeData, setExplainDerivativeData] = useState<
+    ExplainDerivativeData[]
+  >([]);
+
   // React Flow states
   const [reactFlowNodes, setReactFlowNodes] = useState<Node[]>([]);
   const [reactFlowEdges, setReactFlowEdges] = useState<Edge[]>([]);
+  const [selectedNodeIds, setSelectedNodeIds] = useState<string[]>([]);
   const [lastSelectedNodeId, setLastSelectedNodeId] = useState<string | null>(
     null,
   );
@@ -286,6 +297,50 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     );
   }, [coreGraph, derivativeTarget, isReverseMode]);
 
+  const updateExplainDerivatives = useCallback((): void => {
+    if (coreGraph === null) {
+      return;
+    }
+
+    if (derivativeTarget === null) {
+      setExplainDerivativeData(() => []);
+      return;
+    }
+
+    const explainDerivativeData = selectedNodeIds.map(
+      (nodeId): ExplainDerivativeData => {
+        const nodeDerivative = getNodeDerivative(coreGraph, nodeId);
+        const explainDerivativeType = getExplainDerivativeType(
+          coreGraph,
+          nodeId,
+        );
+        const chainRuleTerms = getChainRuleTerms(coreGraph, nodeId);
+        const items = buildExplainDerivativeItems(
+          nodeId,
+          nodeDerivative,
+          derivativeTarget,
+          isReverseMode,
+          explainDerivativeType,
+          chainRuleTerms,
+        );
+        return {
+          nodeId,
+          items,
+        };
+      },
+    );
+
+    setExplainDerivativeData(() => explainDerivativeData);
+  }, [coreGraph, derivativeTarget, isReverseMode, selectedNodeIds]);
+
+  const updateGraphOutputs = useCallback(() => {
+    // Step 1: Update node values and derivatives
+    updateNodeValuesAndDerivatives();
+
+    // Step 2: Update explain derivative outputs
+    updateExplainDerivatives();
+  }, [updateExplainDerivatives, updateNodeValuesAndDerivatives]);
+
   const updateNodeDarkMode = useCallback(() => {
     setReactFlowNodes((nodes) =>
       updateReactFlowNodeDarkMode(isDarkMode, nodes),
@@ -304,9 +359,9 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
         updateReactFlowNodeInputValue(nodeId, inputPortId, value, nodes),
       );
 
-      updateNodeValuesAndDerivatives();
+      updateGraphOutputs();
     },
-    [coreGraph, updateNodeValuesAndDerivatives],
+    [coreGraph, updateGraphOutputs],
   );
 
   const handleBodyClick = useCallback((nodeId: string): void => {
@@ -469,21 +524,19 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
 
       setReactFlowNodes((nodes) => showInputFields(emptyPortEdges, nodes));
 
-      updateNodeValuesAndDerivatives();
+      updateGraphOutputs();
 
       setReactFlowEdges((edges) => applyEdgeChanges(changes, edges));
     },
-    [
-      coreGraph,
-      findEmptyPortEdges,
-      reactFlowEdges,
-      updateNodeValuesAndDerivatives,
-    ],
+    [coreGraph, findEmptyPortEdges, reactFlowEdges, updateGraphOutputs],
   );
 
   const handleSelectionChange = useCallback(
     (params: OnSelectionChangeParams): void => {
       setLastSelectedNodeId(getLastSelectedNodeId(params.nodes));
+
+      const nodeIds = params.nodes.map((node) => node.id);
+      setSelectedNodeIds(() => nodeIds);
     },
     [],
   );
@@ -508,11 +561,11 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
 
       setReactFlowNodes((nodes) => hideInputField(connection, nodes));
 
-      updateNodeValuesAndDerivatives();
+      updateGraphOutputs();
 
       setReactFlowEdges((edges) => addEdge(connection, edges));
     },
-    [coreGraph, tryConnectCoreEdges, updateNodeValuesAndDerivatives],
+    [coreGraph, tryConnectCoreEdges, updateGraphOutputs],
   );
 
   const handleDropNode = useCallback(
@@ -571,15 +624,18 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     setCoreGraph(coreGraph);
   }, []);
 
-  // Update node values and derivatives whenever derivative target or reverse
-  // mode changes
+  // Update graph outputs whenever any of the following changes:
+  // - Derivative target
+  // - Reverse mode
+  // - Selected nodes
   useEffect(() => {
-    updateNodeValuesAndDerivatives();
+    updateGraphOutputs();
   }, [
     coreGraph,
     derivativeTarget,
     isReverseMode,
-    updateNodeValuesAndDerivatives,
+    selectedNodeIds,
+    updateGraphOutputs,
   ]);
 
   // Update node data whenever dark mode changes
@@ -621,6 +677,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
             <FeaturePanel
               feature={selectedFeature}
               featureOperations={featureOperations}
+              explainDerivativeData={explainDerivativeData}
               onAddNode={handleAddNode}
               onAddOperation={handleAddOperation}
             />

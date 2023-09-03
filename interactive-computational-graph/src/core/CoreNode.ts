@@ -12,8 +12,16 @@ interface CoreNode {
 
   setValue: (value: string) => void;
 
+  /**
+   * Updates `f` value.
+   */
   updateF: () => void;
 
+  /**
+   * Calculates partial derivative `df/dx`.
+   * @param x Node for `dx` term.
+   * @returns Partial derivative value.
+   */
   calculateDfdx: (x: CoreNode) => string;
 
   getRelationship: () => NodeRelationship;

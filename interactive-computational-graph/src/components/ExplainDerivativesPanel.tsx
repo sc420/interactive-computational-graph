@@ -1,42 +1,50 @@
-import { Grid, Link, Stack, Typography } from "@mui/material";
+import { Box, Grid, List, ListItem, Typography } from "@mui/material";
 import { type FunctionComponent } from "react";
+import type ExplainDerivativeData from "../features/ExplainDerivativeData";
 import Katex from "../latex/katex";
 
-const ExplainDerivativesPanel: FunctionComponent = () => {
-  return (
-    <>
-      {/* Header and toolbar */}
-      <Grid
-        alignItems="center"
-        container
-        justifyContent="space-between"
-        px={2}
-        py={0.5}
-      >
-        <Grid item>
-          <Typography variant="subtitle1">Explain derivatives</Typography>
-        </Grid>
-      </Grid>
+interface ExplainDerivativesPanelProps {
+  explainDerivativeData: ExplainDerivativeData[];
+}
 
-      <Stack spacing={1}>
-        <Katex latex="\frac{\partial{e}}{\partial{b}} = \frac{\partial{c}}{\partial{b}} \cdot \frac{\partial{e}}{\partial{c}} + \frac{\partial{d}}{\partial{b}} \cdot \frac{\partial{e}}{\partial{d}}"></Katex>
-        <Katex latex="\displaystyle \frac{\partial{e}}{\partial{b}} = \frac{\partial{c}}{\partial{b}} \cdot \frac{\partial{e}}{\partial{c}} + \frac{\partial{d}}{\partial{b}} \cdot \frac{\partial{e}}{\partial{d}}"></Katex>
-        <Katex latex="\sum_i^k x_i"></Katex>
-        <Katex latex="\displaystyle \sum_i^k x_i"></Katex>
-        <Katex latex="\frac{\partial{e}}{\partial{x_i}}\unknown"></Katex>
-        <span>
-          please click
-          <Link href="#">
-            <Katex latex="\displaystyle \frac{\partial{e}}{\partial{c}}"></Katex>
-          </Link>
-          and
-          <Link href="#">
-            <Katex latex="\displaystyle \frac{\partial{e}}{\partial{d}}"></Katex>
-          </Link>
-        </span>
-      </Stack>
-    </>
-  );
-};
+const ExplainDerivativesPanel: FunctionComponent<
+  ExplainDerivativesPanelProps
+> = ({ explainDerivativeData }) => (
+  <>
+    {/* Header and toolbar */}
+    <Grid
+      alignItems="center"
+      container
+      justifyContent="space-between"
+      px={2}
+      py={0.5}
+    >
+      <Grid item>
+        <Typography variant="subtitle1">Explain derivatives</Typography>
+      </Grid>
+    </Grid>
+
+    {/* Explanations */}
+    <List>
+      {explainDerivativeData.map((data) => (
+        <ListItem key={data.nodeId}>
+          <Box>
+            <Typography>{data.nodeId}</Typography>
+            <List>
+              {data.items.map((item, index) => (
+                <Box key={index}>
+                  <Typography>
+                    {JSON.stringify(item.descriptionParts)}
+                  </Typography>
+                  <Katex latex={item.latex} />
+                </Box>
+              ))}
+            </List>
+          </Box>
+        </ListItem>
+      ))}
+    </List>
+  </>
+);
 
 export default ExplainDerivativesPanel;

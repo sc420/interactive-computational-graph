@@ -1,6 +1,7 @@
 import { Box } from "@mui/material";
 import { type FunctionComponent, type ReactElement } from "react";
 import { TITLE_HEIGHT } from "../constants";
+import type ExplainDerivativeData from "../features/ExplainDerivativeData";
 import type FeatureNodeType from "../features/FeatureNodeType";
 import type FeatureOperation from "../features/FeatureOperation";
 import type SelectedFeature from "../features/SelectedFeature";
@@ -11,6 +12,7 @@ import ExplainDerivativesPanel from "./ExplainDerivativesPanel";
 interface FeaturePanelProps {
   feature: SelectedFeature;
   featureOperations: FeatureOperation[];
+  explainDerivativeData: ExplainDerivativeData[];
   onAddNode: (featureNodeType: FeatureNodeType) => void;
   onAddOperation: () => void;
 }
@@ -18,6 +20,7 @@ interface FeaturePanelProps {
 const FeaturePanel: FunctionComponent<FeaturePanelProps> = ({
   feature,
   featureOperations,
+  explainDerivativeData,
   onAddNode,
   onAddOperation,
 }) => {
@@ -34,7 +37,11 @@ const FeaturePanel: FunctionComponent<FeaturePanelProps> = ({
       case "view-nodes":
         return <EditNodesPanel />;
       case "explain-derivatives":
-        return <ExplainDerivativesPanel />;
+        return (
+          <ExplainDerivativesPanel
+            explainDerivativeData={explainDerivativeData}
+          />
+        );
       case "network-builder":
         return (
           <AddNodesPanel

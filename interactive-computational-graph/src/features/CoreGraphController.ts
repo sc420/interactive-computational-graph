@@ -1,9 +1,11 @@
+import type ChainRuleTerm from "../core/ChainRuleTerm";
 import ConstantNode from "../core/ConstantNode";
 import type CoreNode from "../core/CoreNode";
 import type Graph from "../core/Graph";
 import OperationNode from "../core/OperationNode";
 import VariableNode from "../core/VariableNode";
 import { findFeatureOperation } from "./ControllerUtilities";
+import type ExplainDerivativeType from "./ExplainDerivativeType";
 import type FeatureNodeType from "./FeatureNodeType";
 import type FeatureOperation from "./FeatureOperation";
 
@@ -166,6 +168,33 @@ const getNodeIds = (graph: Graph): string[] => {
     .filter((nodeId) => !isDummyInputNodeId(nodeId));
 };
 
+const getNodeDerivative = (graph: Graph, nodeId: string): string => {
+  return graph.getNodeDerivative(nodeId);
+};
+
+const getExplainDerivativeType = (
+  graph: Graph,
+  nodeId: string,
+): ExplainDerivativeType => {
+  if (nodeId === graph.getTargetNode()) {
+    return "oneBecauseXEqualsF";
+  }
+
+  if (!graph.hasNodeDerivative(nodeId)) {
+    return "zeroBecauseFNotDependsOnX";
+  }
+
+  return "someValueBecauseChainRule";
+};
+
+const getChainRuleTerms = (graph: Graph, nodeId: string): ChainRuleTerm[] => {
+  if (getExplainDerivativeType(graph, nodeId) !== "someValueBecauseChainRule") {
+    return [];
+  }
+
+  return graph.explainChainRule(nodeId);
+};
+
 const buildCoreNode = (
   featureNodeType: FeatureNodeType,
   nodeId: string,
@@ -224,6 +253,9 @@ export {
   connectDummyInputNode,
   disconnectCoreEdge,
   disconnectDummyInputNode,
+  getChainRuleTerms,
+  getExplainDerivativeType,
+  getNodeDerivative,
   getNodeIds,
   isDummyInputNodeConnected,
   isNodeInputPortEmpty,

@@ -1,6 +1,7 @@
 type ExplainDerivativeType =
   | "someValueBecauseChainRule"
-  | "oneBecauseXEqualsF"
-  | "zeroBecauseFNotDependsOnX";
+  | "oneBecauseFEqualsX"
+  | "zeroBecauseFNotDependsOnX"
+  | "zeroBecauseXIsConstant";
 
 export default ExplainDerivativeType;

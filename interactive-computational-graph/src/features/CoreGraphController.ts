@@ -177,11 +177,15 @@ const getExplainDerivativeType = (
   nodeId: string,
 ): ExplainDerivativeType => {
   if (nodeId === graph.getTargetNode()) {
-    return "oneBecauseXEqualsF";
+    return "oneBecauseFEqualsX";
   }
 
   if (!graph.hasNodeDerivative(nodeId)) {
     return "zeroBecauseFNotDependsOnX";
+  }
+
+  if (graph.getNodeType(nodeId) === "CONSTANT") {
+    return "zeroBecauseXIsConstant";
   }
 
   return "someValueBecauseChainRule";

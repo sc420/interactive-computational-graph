@@ -309,18 +309,18 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
 
     const explainDerivativeData = selectedNodeIds.map(
       (nodeId): ExplainDerivativeData => {
-        const nodeDerivative = getNodeDerivative(coreGraph, nodeId);
         const explainDerivativeType = getExplainDerivativeType(
           coreGraph,
           nodeId,
         );
+        const nodeDerivative = getNodeDerivative(coreGraph, nodeId);
         const chainRuleTerms = getChainRuleTerms(coreGraph, nodeId);
         const items = buildExplainDerivativeItems(
+          explainDerivativeType,
           nodeId,
           nodeDerivative,
           derivativeTarget,
           isReverseMode,
-          explainDerivativeType,
           chainRuleTerms,
         );
         return {

@@ -1,7 +1,7 @@
 import { Box, Link, ListItem, Stack, Typography } from "@mui/material";
 import { useCallback, type FunctionComponent } from "react";
 import type ExplainDerivativeItem from "../features/ExplainDerivativeItem";
-import Katex from "../latex/katex";
+import Katex from "../latex/Katex";
 
 interface ExplainDerivativesListItemProps {
   item: ExplainDerivativeItem;

@@ -51,17 +51,21 @@ const buildOneBecauseFEqualsXItems = (
   return [
     buildCalculateDerivativeItem(nodeId, targetNodeId, isReverseMode),
     {
+      type: "oneBecauseFEqualsX",
       descriptionParts: [
         {
           type: "text",
+          id: "which",
           text: "Which is 1 because derivative target is ",
         },
         {
           type: "latex",
+          id: "node",
           latex: nodeId,
         },
         {
           type: "text",
+          id: "colon",
           text: ":",
         },
       ],
@@ -78,17 +82,21 @@ const buildZeroBecauseFNotDependsOnXItems = (
   return [
     buildCalculateDerivativeItem(nodeId, targetNodeId, isReverseMode),
     {
+      type: "zeroBecauseFNotDependsOnX",
       descriptionParts: [
         {
           type: "text",
+          id: "which",
           text: "Which is 0 because derivative target doesn't depend on ",
         },
         {
           type: "latex",
+          id: "node",
           latex: nodeId,
         },
         {
           type: "text",
+          id: "colon",
           text: ":",
         },
       ],
@@ -105,17 +113,21 @@ const buildZeroBecauseXIsConstantItems = (
   return [
     buildCalculateDerivativeItem(nodeId, targetNodeId, isReverseMode),
     {
+      type: "zeroBecauseXIsConstant",
       descriptionParts: [
         {
           type: "text",
+          id: "which",
           text: "Which is 0 because ",
         },
         {
           type: "latex",
+          id: "node",
           latex: nodeId,
         },
         {
           type: "text",
+          id: "is",
           text: " is constant:",
         },
       ],
@@ -134,9 +146,11 @@ const buildChainRuleItems = (
   return [
     buildCalculateDerivativeItem(nodeId, targetNodeId, isReverseMode),
     {
+      type: "useChainRule",
       descriptionParts: [
         {
           type: "text",
+          id: "mainText",
           text: "Use the chain rule:",
         },
       ],
@@ -149,6 +163,7 @@ const buildChainRuleItems = (
       ),
     },
     {
+      type: "previousDerivativesReplaced",
       descriptionParts: buildPreviousDerivativesReplacedDescription(
         targetNodeId,
         isReverseMode,
@@ -163,6 +178,7 @@ const buildChainRuleItems = (
       ),
     },
     {
+      type: "allReplaced",
       descriptionParts: buildAllReplacedDescription(isReverseMode),
       latex: buildChainRuleLatex(
         "allReplaced",
@@ -173,9 +189,11 @@ const buildChainRuleItems = (
       ),
     },
     {
+      type: "equalTo",
       descriptionParts: [
         {
           type: "text",
+          id: "mainText",
           text: "Which is equal to:",
         },
       ],
@@ -190,9 +208,11 @@ const buildCalculateDerivativeItem = (
   isReverseMode: boolean,
 ): ExplainDerivativeItem => {
   return {
+    type: "calculatePartialDerivative",
     descriptionParts: [
       {
         type: "text",
+        id: "mainText",
         text: "Calculate the partial derivative:",
       },
     ],
@@ -233,6 +253,7 @@ const buildPreviousDerivativesReplacedDescription = (
       }
       return {
         type: "latexLink",
+        id: `chainRuleTerm-${chainRuleTerm.neighborNodeId}`,
         latex: derivative,
         nodeId: chainRuleTerm.neighborNodeId,
       };
@@ -243,6 +264,7 @@ const buildPreviousDerivativesReplacedDescription = (
     if (index > 0) {
       commaListParts.push({
         type: "text",
+        id: `part-${index}`,
         text: index === previousDerivativeTerms.length - 1 ? " and " : ", ",
       });
     }
@@ -252,11 +274,13 @@ const buildPreviousDerivativesReplacedDescription = (
   return [
     {
       type: "text",
+      id: "replace",
       text: `Replace ${side}-hand side `,
     },
     ...commaListParts,
     {
       type: "text",
+      id: "with",
       text: " with previously calculated value(s):",
     },
   ];
@@ -269,6 +293,7 @@ const buildAllReplacedDescription = (
   return [
     {
       type: "text",
+      id: "mainText",
       text: `Calculate ${side}-hand side derivative(s):`,
     },
   ];

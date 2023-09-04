@@ -49,9 +49,9 @@ const ExplainDerivativesPanel: FunctionComponent<
           </AccordionSummary>
           <AccordionDetails
             id={getContentId(data.nodeId)}
-            sx={{ p: 0, overflow: "auto" }}
+            sx={{ px: 2, py: 1 }}
           >
-            <List sx={{ px: 2, py: 1 }}>
+            <List disablePadding>
               {data.items.map((item, index) => (
                 <ExplainDerivativesListItem
                   key={item.type}

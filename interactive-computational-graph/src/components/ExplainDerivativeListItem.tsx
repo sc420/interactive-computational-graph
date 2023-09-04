@@ -16,8 +16,8 @@ const ExplainDerivativesListItem: FunctionComponent<
   }, []);
 
   return (
-    <ListItem disableGutters divider={hasDivider} sx={{ py: 1.5 }}>
-      <Stack spacing={1}>
+    <ListItem disableGutters divider={hasDivider}>
+      <Stack py={1} spacing={1} overflow="auto hidden">
         {/* Description */}
         <Box>
           {item.descriptionParts.map((part) => {

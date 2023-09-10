@@ -56,7 +56,17 @@ const buildOneBecauseFEqualsXItems = (
         {
           type: "text",
           id: "which",
-          text: "Which is 1 because derivative target is ",
+          text: "Which is ",
+        },
+        {
+          type: "latex",
+          id: "value",
+          latex: "1",
+        },
+        {
+          type: "text",
+          id: "because",
+          text: " because derivative target is ",
         },
         {
           type: "latex",
@@ -87,7 +97,17 @@ const buildZeroBecauseFNotDependsOnXItems = (
         {
           type: "text",
           id: "which",
-          text: "Which is 0 because derivative target doesn't depend on ",
+          text: "Which is ",
+        },
+        {
+          type: "latex",
+          id: "value",
+          latex: "0",
+        },
+        {
+          type: "text",
+          id: "because",
+          text: " because derivative target doesn't depend on ",
         },
         {
           type: "latex",
@@ -118,7 +138,17 @@ const buildZeroBecauseXIsConstantItems = (
         {
           type: "text",
           id: "which",
-          text: "Which is 0 because ",
+          text: "Which is ",
+        },
+        {
+          type: "latex",
+          id: "value",
+          latex: "0",
+        },
+        {
+          type: "text",
+          id: "because",
+          text: " because ",
         },
         {
           type: "latex",

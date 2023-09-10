@@ -68,7 +68,7 @@ const ExplainDerivativesPanel: FunctionComponent<
             aria-controls={getContentId(data.nodeId)}
             id={`explain-derivative-header-${data.nodeId}`}
           >
-            <Typography variant="subtitle2">{data.nodeId}</Typography>
+            <Typography variant="subtitle2">Node {data.nodeId}</Typography>
           </AccordionSummary>
           <AccordionDetails
             id={getContentId(data.nodeId)}

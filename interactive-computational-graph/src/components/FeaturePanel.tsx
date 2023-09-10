@@ -17,6 +17,7 @@ interface FeaturePanelProps {
   explainDerivativeData: ExplainDerivativeData[];
   onAddNode: (featureNodeType: FeatureNodeType) => void;
   onAddOperation: () => void;
+  onClearSelection: () => void;
 }
 
 const FeaturePanel: FunctionComponent<FeaturePanelProps> = ({
@@ -27,6 +28,7 @@ const FeaturePanel: FunctionComponent<FeaturePanelProps> = ({
   explainDerivativeData,
   onAddNode,
   onAddOperation,
+  onClearSelection,
 }) => {
   const renderSelectedPanel = (): ReactElement => {
     switch (feature) {
@@ -46,6 +48,7 @@ const FeaturePanel: FunctionComponent<FeaturePanelProps> = ({
             hasNodes={hasNodes}
             hasDerivativeTarget={hasDerivativeTarget}
             explainDerivativeData={explainDerivativeData}
+            onClearSelection={onClearSelection}
           />
         );
       case "network-builder":

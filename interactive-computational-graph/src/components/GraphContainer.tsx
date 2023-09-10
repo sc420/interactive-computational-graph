@@ -427,6 +427,10 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     setNextOperationId((nextOperationId) => nextOperationId + 1);
   }, [nextOperationId]);
 
+  const handleClearSelection = useCallback(() => {
+    setReactFlowNodes((nodes) => deselectAllNodes(nodes));
+  }, []);
+
   const handleReverseModeChange = useCallback(
     (isReverseMode: boolean) => {
       if (coreGraph === null) {
@@ -682,6 +686,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
               explainDerivativeData={explainDerivativeData}
               onAddNode={handleAddNode}
               onAddOperation={handleAddOperation}
+              onClearSelection={handleClearSelection}
             />
           </Grid>
         )}

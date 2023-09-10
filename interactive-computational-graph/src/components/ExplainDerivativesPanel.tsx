@@ -1,8 +1,10 @@
+import ClearIcon from "@mui/icons-material/Clear";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Button,
   Grid,
   List,
   Typography,
@@ -16,11 +18,17 @@ interface ExplainDerivativesPanelProps {
   hasNodes: boolean;
   hasDerivativeTarget: boolean;
   explainDerivativeData: ExplainDerivativeData[];
+  onClearSelection: () => void;
 }
 
 const ExplainDerivativesPanel: FunctionComponent<
   ExplainDerivativesPanelProps
-> = ({ hasNodes, hasDerivativeTarget, explainDerivativeData }) => {
+> = ({
+  hasNodes,
+  hasDerivativeTarget,
+  explainDerivativeData,
+  onClearSelection,
+}) => {
   const getContentId = useCallback((nodeId: string) => {
     return `explain-derivative-content-${nodeId}`;
   }, []);
@@ -36,7 +44,12 @@ const ExplainDerivativesPanel: FunctionComponent<
         py={0.5}
       >
         <Grid item>
-          <Typography variant="subtitle1">Explain derivatives</Typography>
+          <Typography variant="subtitle1">Explain Derivatives</Typography>
+        </Grid>
+        <Grid item>
+          <Button startIcon={<ClearIcon />} onClick={onClearSelection}>
+            Clear
+          </Button>
         </Grid>
       </Grid>
 

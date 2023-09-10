@@ -305,13 +305,13 @@ const buildPreviousDerivativesReplacedDescription = (
     {
       type: "text",
       id: "replace",
-      text: `Replace ${side}-hand side `,
+      text: `Replace the ${side}-hand side `,
     },
     ...commaListParts,
     {
       type: "text",
       id: "with",
-      text: " with previously calculated value(s):",
+      text: " with the previously calculated value(s):",
     },
   ];
 };
@@ -324,7 +324,7 @@ const buildAllReplacedDescription = (
     {
       type: "text",
       id: "mainText",
-      text: `Calculate ${side}-hand side derivative(s):`,
+      text: `Calculate the ${side}-hand side derivative(s):`,
     },
   ];
 };

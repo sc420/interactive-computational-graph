@@ -4,12 +4,20 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Alert,
   Button,
   Grid,
   List,
+  Snackbar,
   Typography,
+  type AlertColor,
 } from "@mui/material";
-import { useCallback, type FunctionComponent } from "react";
+import {
+  useCallback,
+  useState,
+  type FunctionComponent,
+  type SyntheticEvent,
+} from "react";
 import type ExplainDerivativeData from "../features/ExplainDerivativeData";
 import ExplainDerivativesListItem from "./ExplainDerivativeListItem";
 import ExplainDerivativesHint from "./ExplainDerivativesHint";
@@ -29,9 +37,40 @@ const ExplainDerivativesPanel: FunctionComponent<
   explainDerivativeData,
   onClearSelection,
 }) => {
+  const [isSnackbarOpen, setSnackbarOpen] = useState<boolean>(false);
+  const [alertSeverity, setAlertSeverity] = useState<AlertColor>("success");
+  const [alertMessage, setAlertMessage] = useState<string>("");
+
   const getContentId = useCallback((nodeId: string) => {
     return `explain-derivative-content-${nodeId}`;
   }, []);
+
+  const handleCopyLatex = useCallback((latex: string): void => {
+    window.navigator.clipboard
+      .writeText(latex)
+      .then(() => {
+        setAlertSeverity("success");
+        setAlertMessage("Copied to clipboard");
+        setSnackbarOpen(true);
+      })
+      .catch((error) => {
+        console.error("Unable to copy to clipboard: ", error);
+        setAlertSeverity("error");
+        setAlertMessage("Unable to copy to clipboard, see console for details");
+        setSnackbarOpen(true);
+      });
+  }, []);
+
+  const handleSnackbarClose = useCallback(
+    (event?: SyntheticEvent | Event, reason?: string) => {
+      if (reason === "clickaway") {
+        return;
+      }
+
+      setSnackbarOpen(false);
+    },
+    [],
+  );
 
   return (
     <>
@@ -80,12 +119,29 @@ const ExplainDerivativesPanel: FunctionComponent<
                   key={item.type}
                   item={item}
                   hasDivider={index !== data.items.length - 1}
+                  onCopyLatex={handleCopyLatex}
                 />
               ))}
             </List>
           </AccordionDetails>
         </Accordion>
       ))}
+
+      {/* Error message */}
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        open={isSnackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+      >
+        <Alert
+          onClose={handleSnackbarClose}
+          severity={alertSeverity}
+          sx={{ width: "100%" }}
+        >
+          {alertMessage}
+        </Alert>
+      </Snackbar>
     </>
   );
 };

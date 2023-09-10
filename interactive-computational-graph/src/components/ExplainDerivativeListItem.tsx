@@ -1,4 +1,13 @@
-import { Box, Link, ListItem, Stack, Typography } from "@mui/material";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import {
+  Box,
+  IconButton,
+  Link,
+  ListItem,
+  Stack,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import { useCallback, type FunctionComponent } from "react";
 import type ExplainDerivativeItem from "../features/ExplainDerivativeItem";
 import Katex from "../latex/Katex";
@@ -6,18 +15,19 @@ import Katex from "../latex/Katex";
 interface ExplainDerivativesListItemProps {
   item: ExplainDerivativeItem;
   hasDivider: boolean;
+  onCopyLatex: (latex: string) => void;
 }
 
 const ExplainDerivativesListItem: FunctionComponent<
   ExplainDerivativesListItemProps
-> = ({ item, hasDivider }) => {
+> = ({ item, hasDivider, onCopyLatex }) => {
   const handleClickLatexLink = useCallback((nodeId: string) => {
     console.log(nodeId); // TODO(sc420): Pass event to GraphContainer
   }, []);
 
   return (
     <ListItem disableGutters divider={hasDivider}>
-      <Stack py={1} spacing={1} overflow="auto hidden">
+      <Stack py={1} spacing={1} width="100%">
         {/* Description */}
         <Box>
           {item.descriptionParts.map((part) => {
@@ -53,7 +63,27 @@ const ExplainDerivativesListItem: FunctionComponent<
         </Box>
 
         {/* Expression */}
-        <Katex latex={item.latex} />
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+          spacing={1}
+          overflow="auto hidden"
+        >
+          <Box py={1}>
+            <Katex latex={item.latex} />
+          </Box>
+          <Tooltip title="Copy LaTeX">
+            <IconButton
+              aria-label="copy"
+              onClick={() => {
+                onCopyLatex(item.latex);
+              }}
+            >
+              <ContentCopyIcon />
+            </IconButton>
+          </Tooltip>
+        </Stack>
       </Stack>
     </ListItem>
   );

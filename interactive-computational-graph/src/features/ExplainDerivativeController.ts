@@ -66,7 +66,7 @@ const buildOneBecauseFEqualsXItems = (
         {
           type: "text",
           id: "because",
-          text: " because derivative target is ",
+          text: " because the derivative target is ",
         },
         {
           type: "latex",
@@ -107,7 +107,7 @@ const buildZeroBecauseFNotDependsOnXItems = (
         {
           type: "text",
           id: "because",
-          text: " because derivative target doesn't depend on ",
+          text: " because the derivative target doesn't depend on ",
         },
         {
           type: "latex",
@@ -158,7 +158,7 @@ const buildZeroBecauseXIsConstantItems = (
         {
           type: "text",
           id: "is",
-          text: " is constant:",
+          text: " is a constant:",
         },
       ],
       latex: "\\displaystyle 0",

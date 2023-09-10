@@ -10,14 +10,17 @@ import {
 import { useCallback, type FunctionComponent } from "react";
 import type ExplainDerivativeData from "../features/ExplainDerivativeData";
 import ExplainDerivativesListItem from "./ExplainDerivativeListItem";
+import ExplainDerivativesHint from "./ExplainDerivativesHint";
 
 interface ExplainDerivativesPanelProps {
+  hasNodes: boolean;
+  hasDerivativeTarget: boolean;
   explainDerivativeData: ExplainDerivativeData[];
 }
 
 const ExplainDerivativesPanel: FunctionComponent<
   ExplainDerivativesPanelProps
-> = ({ explainDerivativeData }) => {
+> = ({ hasNodes, hasDerivativeTarget, explainDerivativeData }) => {
   const getContentId = useCallback((nodeId: string) => {
     return `explain-derivative-content-${nodeId}`;
   }, []);
@@ -36,6 +39,13 @@ const ExplainDerivativesPanel: FunctionComponent<
           <Typography variant="subtitle1">Explain derivatives</Typography>
         </Grid>
       </Grid>
+
+      {/* Hint */}
+      <ExplainDerivativesHint
+        hasNodes={hasNodes}
+        hasDerivativeTarget={hasDerivativeTarget}
+        explainDerivativeData={explainDerivativeData}
+      />
 
       {/* Explanations */}
       {explainDerivativeData.map((data) => (

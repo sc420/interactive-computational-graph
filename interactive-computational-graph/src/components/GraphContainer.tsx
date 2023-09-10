@@ -677,6 +677,8 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
             <FeaturePanel
               feature={selectedFeature}
               featureOperations={featureOperations}
+              hasNodes={reactFlowNodes.length > 0}
+              hasDerivativeTarget={derivativeTarget !== null}
               explainDerivativeData={explainDerivativeData}
               onAddNode={handleAddNode}
               onAddOperation={handleAddOperation}

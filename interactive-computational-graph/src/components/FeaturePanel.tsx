@@ -63,7 +63,7 @@ const FeaturePanel: FunctionComponent<FeaturePanelProps> = ({
     }
   };
   return (
-    <Box width={250} height={`calc(100vh - ${TITLE_HEIGHT}px)`} overflow="auto">
+    <Box width={270} height={`calc(100vh - ${TITLE_HEIGHT}px)`} overflow="auto">
       {renderSelectedPanel()}
     </Box>
   );

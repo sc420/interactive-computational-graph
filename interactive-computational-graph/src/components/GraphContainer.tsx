@@ -431,6 +431,13 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     setReactFlowNodes((nodes) => deselectAllNodes(nodes));
   }, []);
 
+  const handleSelectNode = useCallback((nodeId: string) => {
+    setReactFlowNodes((nodes) => {
+      const deselectedNodes = deselectAllNodes(nodes);
+      return selectReactFlowNode(nodeId, deselectedNodes);
+    });
+  }, []);
+
   const handleReverseModeChange = useCallback(
     (isReverseMode: boolean) => {
       if (coreGraph === null) {
@@ -687,6 +694,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
               onAddNode={handleAddNode}
               onAddOperation={handleAddOperation}
               onClearSelection={handleClearSelection}
+              onSelectNode={handleSelectNode}
             />
           </Grid>
         )}

@@ -27,6 +27,7 @@ interface ExplainDerivativesPanelProps {
   hasDerivativeTarget: boolean;
   explainDerivativeData: ExplainDerivativeData[];
   onClearSelection: () => void;
+  onClickLatexLink: (nodeId: string) => void;
 }
 
 const ExplainDerivativesPanel: FunctionComponent<
@@ -36,6 +37,7 @@ const ExplainDerivativesPanel: FunctionComponent<
   hasDerivativeTarget,
   explainDerivativeData,
   onClearSelection,
+  onClickLatexLink,
 }) => {
   const [isSnackbarOpen, setSnackbarOpen] = useState<boolean>(false);
   const [alertSeverity, setAlertSeverity] = useState<AlertColor>("success");
@@ -119,6 +121,7 @@ const ExplainDerivativesPanel: FunctionComponent<
                   key={item.type}
                   item={item}
                   hasDivider={index !== data.items.length - 1}
+                  onClickLatexLink={onClickLatexLink}
                   onCopyLatex={handleCopyLatex}
                 />
               ))}

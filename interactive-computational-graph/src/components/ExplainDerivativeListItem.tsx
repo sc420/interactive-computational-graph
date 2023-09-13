@@ -8,7 +8,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { useCallback, type FunctionComponent } from "react";
+import { type FunctionComponent } from "react";
 import type ExplainDerivativeItem from "../features/ExplainDerivativeItem";
 import Katex from "../latex/Katex";
 
@@ -16,15 +16,12 @@ interface ExplainDerivativesListItemProps {
   item: ExplainDerivativeItem;
   hasDivider: boolean;
   onCopyLatex: (latex: string) => void;
+  onClickLatexLink: (nodeId: string) => void;
 }
 
 const ExplainDerivativesListItem: FunctionComponent<
   ExplainDerivativesListItemProps
-> = ({ item, hasDivider, onCopyLatex }) => {
-  const handleClickLatexLink = useCallback((nodeId: string) => {
-    console.log(nodeId); // TODO(sc420): Pass event to GraphContainer
-  }, []);
-
+> = ({ item, hasDivider, onCopyLatex, onClickLatexLink }) => {
   return (
     <ListItem disableGutters divider={hasDivider}>
       <Stack py={1} spacing={1} width="100%">
@@ -48,7 +45,7 @@ const ExplainDerivativesListItem: FunctionComponent<
                     key={part.id}
                     href="#"
                     onClick={() => {
-                      handleClickLatexLink(part.nodeId);
+                      onClickLatexLink(part.nodeId);
                     }}
                   >
                     <Katex latex={part.latex} />

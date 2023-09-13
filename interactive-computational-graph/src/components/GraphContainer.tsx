@@ -81,6 +81,7 @@ import {
   updateReactFlowNodeDarkMode,
   updateReactFlowNodeDerivatives,
   updateReactFlowNodeFValues,
+  updateReactFlowNodeHighlighted,
   updateReactFlowNodeInputValue,
 } from "../features/ReactFlowController";
 import type SelectedFeature from "../features/SelectedFeature";
@@ -549,6 +550,14 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
 
       const nodeIds = params.nodes.map((node) => node.id);
       setSelectedNodeIds(() => nodeIds);
+
+      setReactFlowNodes((nodes) =>
+        updateReactFlowNodeHighlighted(
+          selectedFeature,
+          derivativeTarget,
+          nodes,
+        ),
+      );
 
       setReactFlowEdges((edges) =>
         updateEdgeAnimations(

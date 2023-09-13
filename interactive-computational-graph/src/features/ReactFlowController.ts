@@ -252,6 +252,22 @@ const updateReactFlowNodeDarkMode = (
   });
 };
 
+const updateReactFlowNodeHighlighted = (
+  selectedFeature: SelectedFeature | null,
+  derivativeTarget: string | null,
+  nodes: Node[],
+): Node[] => {
+  return nodes.map((node) => {
+    const data = node.data as NodeData;
+    data.isHighlighted =
+      selectedFeature === "explain-derivatives" && node.id === derivativeTarget;
+    // Set the new data to notify React Flow about the change
+    const newData: NodeData = { ...node.data };
+    node.data = newData;
+    return node;
+  });
+};
+
 const getLastSelectedNodeId = (nodes: Node[]): string | null => {
   const firstNode = nodes.find((node) => "id" in node) ?? null;
   if (firstNode === null) {
@@ -290,6 +306,7 @@ const buildReactFlowNodeData = (addNodeData: AddNodeData): NodeData => {
     onBodyClick,
     isDarkMode,
   } = addNodeData;
+  const isHighlighted = false;
 
   switch (featureNodeType.nodeType) {
     case "CONSTANT": {
@@ -309,6 +326,7 @@ const buildReactFlowNodeData = (addNodeData: AddNodeData): NodeData => {
         onBodyClick,
         onInputChange,
         isDarkMode,
+        isHighlighted,
       };
     }
     case "VARIABLE": {
@@ -339,6 +357,7 @@ const buildReactFlowNodeData = (addNodeData: AddNodeData): NodeData => {
         onBodyClick,
         onInputChange,
         isDarkMode,
+        isHighlighted,
       };
     }
     case "OPERATION": {
@@ -379,6 +398,7 @@ const buildReactFlowNodeData = (addNodeData: AddNodeData): NodeData => {
         onBodyClick,
         onInputChange,
         isDarkMode,
+        isHighlighted,
       };
     }
   }
@@ -419,5 +439,6 @@ export {
   updateReactFlowNodeDarkMode,
   updateReactFlowNodeDerivatives,
   updateReactFlowNodeFValues,
+  updateReactFlowNodeHighlighted,
   updateReactFlowNodeInputValue,
 };

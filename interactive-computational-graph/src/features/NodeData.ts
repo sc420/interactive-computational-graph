@@ -14,6 +14,7 @@ interface NodeData {
   onInputChange: InputChangeCallback;
   onBodyClick: BodyClickCallback;
   isDarkMode: boolean;
+  isHighlighted: boolean;
 }
 
 export default NodeData;

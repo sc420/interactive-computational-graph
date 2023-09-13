@@ -106,7 +106,12 @@ const CustomNode: FunctionComponent<CustomNodeProps> = ({
       >
         <Stack>
           {/* Header */}
-          <NodeTitle text={data.text} backgroundColor={titleColor} />
+          <NodeTitle
+            text={data.text}
+            backgroundColor={titleColor}
+            isDarkMode={data.isDarkMode}
+            isHighlighted={data.isHighlighted}
+          />
 
           {/* Body */}
           <Box onClick={handleBodyClick} sx={{ cursor: "default" }}>

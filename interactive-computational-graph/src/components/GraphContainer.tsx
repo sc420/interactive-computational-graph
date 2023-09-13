@@ -77,6 +77,7 @@ import {
   hideInputField,
   selectReactFlowNode,
   showInputFields,
+  updateEdgeAnimations,
   updateReactFlowNodeDarkMode,
   updateReactFlowNodeDerivatives,
   updateReactFlowNodeFValues,
@@ -548,8 +549,18 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
 
       const nodeIds = params.nodes.map((node) => node.id);
       setSelectedNodeIds(() => nodeIds);
+
+      setReactFlowEdges((edges) =>
+        updateEdgeAnimations(
+          selectedFeature,
+          isReverseMode,
+          derivativeTarget !== null,
+          nodeIds,
+          edges,
+        ),
+      );
     },
-    [],
+    [derivativeTarget, isReverseMode, selectedFeature],
   );
 
   const handleConnect: OnConnect = useCallback(

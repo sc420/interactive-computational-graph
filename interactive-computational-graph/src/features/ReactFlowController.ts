@@ -9,6 +9,7 @@ import type AddNodeData from "./AddNodeData";
 import { findFeatureOperation } from "./ControllerUtilities";
 import type NodeData from "./NodeData";
 import { randomInteger } from "./RandomUtilities";
+import type SelectedFeature from "./SelectedFeature";
 
 const addReactFlowNode = (
   addNodeData: AddNodeData,
@@ -148,6 +149,31 @@ const findRemovedEdges = (changes: EdgeChange[], edges: Edge[]): Edge[] => {
     }
   });
   return removedEdges;
+};
+
+const updateEdgeAnimations = (
+  selectedFeature: SelectedFeature | null,
+  isReverseMode: boolean,
+  hasDerivativeTarget: boolean,
+  selectedNodeIds: string[],
+  edges: Edge[],
+): Edge[] => {
+  const nodeIds = new Set<string>();
+  selectedNodeIds.forEach((selectedNodeId) => {
+    nodeIds.add(selectedNodeId);
+  });
+
+  return edges.map((edge) => {
+    edge.animated = false;
+    if (selectedFeature === "explain-derivatives" && hasDerivativeTarget) {
+      if (isReverseMode && nodeIds.has(edge.source)) {
+        edge.animated = true;
+      } else if (!isReverseMode && nodeIds.has(edge.target)) {
+        edge.animated = true;
+      }
+    }
+    return edge;
+  });
 };
 
 const updateReactFlowNodeFValues = (
@@ -389,6 +415,7 @@ export {
   hideInputField,
   selectReactFlowNode,
   showInputFields,
+  updateEdgeAnimations,
   updateReactFlowNodeDarkMode,
   updateReactFlowNodeDerivatives,
   updateReactFlowNodeFValues,

@@ -46,6 +46,8 @@ type ExplainDerivativeDataUpdatedCallback = (
 class CoreGraphAdapter {
   private readonly graph = new Graph();
 
+  private selectedNodeIds: string[] = [];
+
   private connectionAddedCallbacks: ConnectionAddedCallback[] = [];
   private connectionErrorCallbacks: ConnectionErrorCallback[] = [];
   private targetNodeUpdatedCallbacks: TargetNodeUpdatedCallback[] = [];
@@ -70,7 +72,7 @@ class CoreGraphAdapter {
 
     this.addDummyInputNodes(coreNode);
 
-    this.updateFValuesAndDerivatives();
+    this.updateOutputs();
   }
 
   private buildCoreNode(
@@ -163,7 +165,7 @@ class CoreGraphAdapter {
 
     this.emitHideInputField(connection);
 
-    this.updateFValuesAndDerivatives();
+    this.updateOutputs();
   }
 
   getNodeIds(): string[] {
@@ -176,13 +178,13 @@ class CoreGraphAdapter {
   setDifferentiationMode(differentiationMode: DifferentiationMode): void {
     this.graph.setDifferentiationMode(differentiationMode);
 
-    this.updateFValuesAndDerivatives();
+    this.updateOutputs();
   }
 
   setTargetNode(nodeId: string | null): void {
     this.graph.setTargetNode(nodeId);
 
-    this.updateFValuesAndDerivatives();
+    this.updateOutputs();
   }
 
   updateNodeValueById(
@@ -207,7 +209,7 @@ class CoreGraphAdapter {
       }
     }
 
-    this.updateFValuesAndDerivatives();
+    this.updateOutputs();
   }
 
   changeNodes(changes: NodeChange[]): void {
@@ -226,7 +228,7 @@ class CoreGraphAdapter {
 
     this.updateTargetNode();
 
-    this.updateFValuesAndDerivatives();
+    this.updateOutputs();
   }
 
   private removeDummyInputNodes(node: CoreNode): void {
@@ -287,7 +289,7 @@ class CoreGraphAdapter {
 
     this.emitShowInputFields(emptyPortEdges);
 
-    this.updateFValuesAndDerivatives();
+    this.updateOutputs();
   }
 
   private findEdgesToRemove(changes: EdgeChange[], edges: Edge[]): Edge[] {
@@ -344,9 +346,10 @@ class CoreGraphAdapter {
     return nodeId.startsWith("dummy-input-node-");
   }
 
-  updateFValuesAndDerivatives(): void {
+  updateOutputs(): void {
     this.updateFValues();
     this.updateDerivatives();
+    this.updateExplainDerivativeData();
   }
 
   private updateFValues(): void {
@@ -372,12 +375,18 @@ class CoreGraphAdapter {
   }
 
   updateSelectedNodes(selectedNodeIds: string[]): void {
+    this.selectedNodeIds = selectedNodeIds;
+
+    this.updateExplainDerivativeData();
+  }
+
+  private updateExplainDerivativeData(): void {
     const targetNodeId = this.graph.getTargetNode();
     let explainDerivativeData: ExplainDerivativeData[];
     if (targetNodeId === null) {
       explainDerivativeData = [];
     } else {
-      explainDerivativeData = selectedNodeIds.map(
+      explainDerivativeData = this.selectedNodeIds.map(
         (nodeId): ExplainDerivativeData => {
           const explainDerivativeType = this.getExplainDerivativeType(nodeId);
           const nodeDerivative = this.graph.getNodeDerivative(nodeId);

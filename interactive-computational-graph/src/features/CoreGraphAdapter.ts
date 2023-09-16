@@ -390,16 +390,14 @@ class CoreGraphAdapter {
         (nodeId): ExplainDerivativeData => {
           const explainDerivativeType = this.getExplainDerivativeType(nodeId);
           const nodeDerivative = this.graph.getNodeDerivative(nodeId);
-          // TODO(sc420): Pass core DifferentiationMode
-          const isReverseMode =
-            this.graph.getDifferentiationMode() === "REVERSE";
+          const differentiationMode = this.graph.getDifferentiationMode();
           const chainRuleTerms = this.getChainRuleTerms(nodeId);
           const items = buildExplainDerivativeItems(
             explainDerivativeType,
             nodeId,
             nodeDerivative,
+            differentiationMode,
             targetNodeId,
-            isReverseMode,
             chainRuleTerms,
           );
           return {

@@ -19,13 +19,8 @@ import {
   type OnSelectionChangeParams,
   type XYPosition,
 } from "reactflow";
+import CoreGraphAdapter from "../adapters/CoreGraphAdapter";
 import { TITLE_HEIGHT } from "../constants";
-import {
-  CycleError,
-  InputNodeAlreadyConnectedError,
-  InputPortFullError,
-} from "../core/CoreErrors";
-import Graph from "../core/Graph";
 import Operation from "../core/Operation";
 import Port from "../core/Port";
 import type AddNodeData from "../features/AddNodeData";
@@ -43,35 +38,12 @@ import {
   TEMPLATE_DFDX_CODE,
   TEMPLATE_F_CODE,
 } from "../features/BuiltInCode";
-import {
-  addCoreNodes,
-  connectCoreEdge,
-  connectDummyInputNode,
-  disconnectCoreEdge,
-  disconnectDummyInputNode,
-  getChainRuleTerms,
-  getExplainDerivativeType,
-  getNodeDerivative,
-  getNodeIds,
-  isDummyInputNodeConnected,
-  isNodeInputPortEmpty,
-  removeCoreNodes,
-  setCoreDerivativeTargetNode,
-  setDifferentiationMode,
-  updateCoreDerivativeTargetNode,
-  updateNodeDerivativeValues,
-  updateNodeFValues,
-  updateNodeValueById,
-  validateConnectCoreEdge,
-} from "../features/CoreGraphController";
-import { buildExplainDerivativeItems } from "../features/ExplainDerivativeController";
 import type ExplainDerivativeData from "../features/ExplainDerivativeData";
 import type FeatureNodeType from "../features/FeatureNodeType";
 import type FeatureOperation from "../features/FeatureOperation";
 import {
   addReactFlowNode,
   deselectAllNodes,
-  findRemovedEdges,
   getLastSelectedNodeId,
   getNewReactFlowNodePosition,
   hideInputField,
@@ -112,7 +84,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
   onToggleDarkMode,
 }) => {
   // Core graph
-  const [coreGraph, setCoreGraph] = useState<Graph | null>(null);
+  const [coreGraphAdapter] = useState<CoreGraphAdapter>(new CoreGraphAdapter());
 
   // Graph states
   const [isReverseMode, setReverseMode] = useState<boolean>(true);
@@ -172,7 +144,6 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
   // React Flow states
   const [reactFlowNodes, setReactFlowNodes] = useState<Node[]>([]);
   const [reactFlowEdges, setReactFlowEdges] = useState<Edge[]>([]);
-  const [selectedNodeIds, setSelectedNodeIds] = useState<string[]>([]);
   const [lastSelectedNodeId, setLastSelectedNodeId] = useState<string | null>(
     null,
   );
@@ -180,168 +151,6 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
   // Error messages
   const [isSnackbarOpen, setSnackbarOpen] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
-
-  const findEmptyPortEdges = useCallback(
-    (removedEdges: Edge[]): Edge[] => {
-      if (coreGraph === null) {
-        return [];
-      }
-
-      return removedEdges.filter(
-        (removedEdge) =>
-          typeof removedEdge.targetHandle === "string" &&
-          isNodeInputPortEmpty(
-            coreGraph,
-            removedEdge.target,
-            removedEdge.targetHandle,
-          ),
-      );
-    },
-    [coreGraph],
-  );
-
-  const showErrorMessage = useCallback((message: string) => {
-    setErrorMessage(message);
-    setSnackbarOpen(true);
-  }, []);
-
-  const tryConnectCoreEdges = useCallback(
-    (connection: Connection): boolean => {
-      if (coreGraph === null) {
-        return false;
-      }
-
-      if (
-        connection.source === null ||
-        connection.target === null ||
-        connection.targetHandle === null
-      ) {
-        return false;
-      }
-
-      let hasDisconnectedDummyInputNode = false;
-      if (
-        isDummyInputNodeConnected(
-          coreGraph,
-          connection.target,
-          connection.targetHandle,
-        )
-      ) {
-        disconnectDummyInputNode(
-          coreGraph,
-          connection.target,
-          connection.targetHandle,
-        );
-        hasDisconnectedDummyInputNode = true;
-      }
-
-      try {
-        validateConnectCoreEdge(
-          coreGraph,
-          connection.source,
-          connection.target,
-          connection.targetHandle,
-        );
-      } catch (error) {
-        if (
-          error instanceof InputNodeAlreadyConnectedError ||
-          error instanceof InputPortFullError ||
-          error instanceof CycleError
-        ) {
-          showErrorMessage(error.message);
-
-          // Revert dummy input node disconnection
-          if (hasDisconnectedDummyInputNode) {
-            connectDummyInputNode(
-              coreGraph,
-              connection.target,
-              connection.targetHandle,
-            );
-          }
-
-          return false;
-        } else {
-          throw error;
-        }
-      }
-
-      connectCoreEdge(
-        coreGraph,
-        connection.source,
-        connection.target,
-        connection.targetHandle,
-      );
-
-      return true;
-    },
-    [coreGraph, showErrorMessage],
-  );
-
-  const updateNodeValuesAndDerivatives = useCallback(() => {
-    if (coreGraph === null) {
-      return;
-    }
-
-    const updatedNodeIdToValues = updateNodeFValues(coreGraph);
-    const updatedNodeIdToDerivatives = updateNodeDerivativeValues(coreGraph);
-
-    setReactFlowNodes((nodes) =>
-      updateReactFlowNodeFValues(updatedNodeIdToValues, nodes),
-    );
-
-    setReactFlowNodes((nodes) =>
-      updateReactFlowNodeDerivatives(
-        updatedNodeIdToDerivatives,
-        isReverseMode,
-        derivativeTarget,
-        nodes,
-      ),
-    );
-  }, [coreGraph, derivativeTarget, isReverseMode]);
-
-  const updateExplainDerivatives = useCallback((): void => {
-    if (coreGraph === null) {
-      return;
-    }
-
-    if (derivativeTarget === null) {
-      setExplainDerivativeData(() => []);
-      return;
-    }
-
-    const explainDerivativeData = selectedNodeIds.map(
-      (nodeId): ExplainDerivativeData => {
-        const explainDerivativeType = getExplainDerivativeType(
-          coreGraph,
-          nodeId,
-        );
-        const nodeDerivative = getNodeDerivative(coreGraph, nodeId);
-        const chainRuleTerms = getChainRuleTerms(coreGraph, nodeId);
-        const items = buildExplainDerivativeItems(
-          explainDerivativeType,
-          nodeId,
-          nodeDerivative,
-          derivativeTarget,
-          isReverseMode,
-          chainRuleTerms,
-        );
-        return {
-          nodeId,
-          items,
-        };
-      },
-    );
-
-    setExplainDerivativeData(() => explainDerivativeData);
-  }, [coreGraph, derivativeTarget, isReverseMode, selectedNodeIds]);
-
-  const updateGraphOutputs = useCallback(() => {
-    // Step 1: Update node values and derivatives
-    updateNodeValuesAndDerivatives();
-
-    // Step 2: Update explain derivative outputs
-    updateExplainDerivatives();
-  }, [updateExplainDerivatives, updateNodeValuesAndDerivatives]);
 
   const updateNodeDarkMode = useCallback(() => {
     setReactFlowNodes((nodes) =>
@@ -351,19 +160,13 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
 
   const handleInputChange = useCallback(
     (nodeId: string, inputPortId: string, value: string): void => {
-      if (coreGraph === null) {
-        return;
-      }
-
-      updateNodeValueById(coreGraph, nodeId, inputPortId, value);
+      coreGraphAdapter.updateNodeValueById(nodeId, inputPortId, value);
 
       setReactFlowNodes((nodes) =>
         updateReactFlowNodeInputValue(nodeId, inputPortId, value, nodes),
       );
-
-      updateGraphOutputs();
     },
-    [coreGraph, updateGraphOutputs],
+    [coreGraphAdapter],
   );
 
   const handleBodyClick = useCallback((nodeId: string): void => {
@@ -372,13 +175,9 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
 
   const handleAddNode = useCallback(
     (featureNodeType: FeatureNodeType) => {
-      if (coreGraph === null) {
-        return;
-      }
-
       const nodeId = `${nextNodeId}`;
 
-      addCoreNodes(coreGraph, featureNodeType, nodeId, featureOperations);
+      coreGraphAdapter.addNode(featureNodeType, nodeId, featureOperations);
 
       const addNodeData: AddNodeData = {
         featureNodeType,
@@ -399,7 +198,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       setNextNodeId((nextNodeId) => nextNodeId + 1);
     },
     [
-      coreGraph,
+      coreGraphAdapter,
       derivativeTarget,
       featureOperations,
       handleBodyClick,
@@ -442,114 +241,49 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
 
   const handleReverseModeChange = useCallback(
     (isReverseMode: boolean) => {
-      if (coreGraph === null) {
-        return;
-      }
+      coreGraphAdapter.setDifferentiationMode(
+        isReverseMode ? "REVERSE" : "FORWARD",
+      );
 
       setReverseMode(() => isReverseMode);
-
-      setDifferentiationMode(coreGraph, isReverseMode);
     },
-    [coreGraph],
+    [coreGraphAdapter],
   );
 
   const handleDerivativeTargetChange = useCallback(
     (nodeId: string | null) => {
-      if (coreGraph === null) {
-        return;
-      }
+      coreGraphAdapter.setTargetNode(nodeId);
 
       setDerivativeTarget(() => nodeId);
-
-      setCoreDerivativeTargetNode(coreGraph, nodeId);
     },
-    [coreGraph],
+    [coreGraphAdapter],
   );
 
   const handleNodesChange: OnNodesChange = useCallback(
     (changes) => {
-      if (coreGraph === null) {
-        return;
-      }
-
-      changes.forEach((change) => {
-        switch (change.type) {
-          case "remove": {
-            removeCoreNodes(coreGraph, change.id);
-            break;
-          }
-        }
-      });
-
-      const updatedTargetNode = updateCoreDerivativeTargetNode(
-        coreGraph,
-        derivativeTarget,
-      );
-
-      setDerivativeTarget(() => updatedTargetNode);
+      coreGraphAdapter.changeNodes(changes);
 
       setReactFlowNodes((nodes) => applyNodeChanges(changes, nodes));
     },
-    [coreGraph, derivativeTarget],
+    [coreGraphAdapter],
   );
 
   const handleEdgesChange: OnEdgesChange = useCallback(
     (changes) => {
-      if (coreGraph === null) {
-        return;
-      }
-
-      const removedEdges = findRemovedEdges(changes, reactFlowEdges);
-
-      removedEdges.forEach((removedEdge) => {
-        if (typeof removedEdge.targetHandle !== "string") {
-          return;
-        }
-        disconnectCoreEdge(
-          coreGraph,
-          removedEdge.source,
-          removedEdge.target,
-          removedEdge.targetHandle,
-        );
-      });
-
-      const emptyPortEdges = findEmptyPortEdges(removedEdges);
-
-      emptyPortEdges.forEach((emptyPortEdge) => {
-        if (typeof emptyPortEdge.targetHandle !== "string") {
-          return;
-        }
-        if (
-          isDummyInputNodeConnected(
-            coreGraph,
-            emptyPortEdge.target,
-            emptyPortEdge.targetHandle,
-          )
-        ) {
-          return;
-        }
-        connectDummyInputNode(
-          coreGraph,
-          emptyPortEdge.target,
-          emptyPortEdge.targetHandle,
-        );
-      });
-
-      setReactFlowNodes((nodes) => showInputFields(emptyPortEdges, nodes));
-
-      updateGraphOutputs();
+      coreGraphAdapter.changeEdges(changes, reactFlowEdges);
 
       setReactFlowEdges((edges) => applyEdgeChanges(changes, edges));
     },
-    [coreGraph, findEmptyPortEdges, reactFlowEdges, updateGraphOutputs],
+    [coreGraphAdapter, reactFlowEdges],
   );
 
   const handleSelectionChange = useCallback(
     (params: OnSelectionChangeParams): void => {
       setLastSelectedNodeId(getLastSelectedNodeId(params.nodes));
 
-      const nodeIds = params.nodes.map((node) => node.id);
-      setSelectedNodeIds(() => nodeIds);
+      const selectedNodeIds = params.nodes.map((node) => node.id);
+
+      coreGraphAdapter.updateSelectedNodes(selectedNodeIds);
 
       setReactFlowNodes((nodes) =>
         updateReactFlowNodeHighlighted(
@@ -564,50 +298,26 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
           selectedFeature,
           isReverseMode,
           derivativeTarget !== null,
-          nodeIds,
+          selectedNodeIds,
           edges,
         ),
       );
     },
-    [derivativeTarget, isReverseMode, selectedFeature],
+    [coreGraphAdapter, derivativeTarget, isReverseMode, selectedFeature],
   );
 
   const handleConnect: OnConnect = useCallback(
     (connection: Connection) => {
-      if (coreGraph === null) {
-        return;
-      }
-
-      if (
-        connection.source === null ||
-        connection.target === null ||
-        connection.targetHandle === null
-      ) {
-        return;
-      }
-
-      if (!tryConnectCoreEdges(connection)) {
-        return;
-      }
-
-      setReactFlowNodes((nodes) => hideInputField(connection, nodes));
-
-      updateGraphOutputs();
-
-      setReactFlowEdges((edges) => addEdge(connection, edges));
+      coreGraphAdapter.addConnection(connection);
     },
-    [coreGraph, tryConnectCoreEdges, updateGraphOutputs],
+    [coreGraphAdapter],
   );
 
   const handleDropNode = useCallback(
     (featureNodeType: FeatureNodeType, position: XYPosition) => {
-      if (coreGraph === null) {
-        return;
-      }
-
       const nodeId = `${nextNodeId}`;
 
-      addCoreNodes(coreGraph, featureNodeType, nodeId, featureOperations);
+      coreGraphAdapter.addNode(featureNodeType, nodeId, featureOperations);
 
       const addNodeData: AddNodeData = {
         featureNodeType,
@@ -627,7 +337,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       setNextNodeId((nextNodeId) => nextNodeId + 1);
     },
     [
-      coreGraph,
+      coreGraphAdapter,
       derivativeTarget,
       featureOperations,
       handleBodyClick,
@@ -649,25 +359,79 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     [],
   );
 
-  // Initialize the core graph
+  // Listen to core graph adapter events
   useEffect(() => {
-    const coreGraph = new Graph();
-    setCoreGraph(coreGraph);
+    coreGraphAdapter.onConnectionAdded(handleConnectionAdded);
+    coreGraphAdapter.onConnectionError(handleConnectionError);
+    coreGraphAdapter.onTargetNodeUpdated(handleTargetNodeUpdated);
+    coreGraphAdapter.onShowInputFields(handleShowInputFields);
+    coreGraphAdapter.onHideInputField(handleHideInputField);
+    coreGraphAdapter.onFValuesUpdated(handleFValuesUpdated);
+    coreGraphAdapter.onDerivativeValuesUpdated(handleDerivativeValuesUpdated);
+    coreGraphAdapter.onExplainDerivativeDataUpdated(
+      handleExplainDerivativeDataUpdated,
+    );
+
+    return () => {
+      coreGraphAdapter.removeAllCallbacks();
+    };
+  });
+
+  const handleConnectionAdded = useCallback((connection: Connection) => {
+    setReactFlowEdges((edges) => addEdge(connection, edges));
   }, []);
 
-  // Update graph outputs whenever any of the following changes:
-  // - Derivative target
-  // - Reverse mode
-  // - Selected nodes
-  useEffect(() => {
-    updateGraphOutputs();
-  }, [
-    coreGraph,
-    derivativeTarget,
-    isReverseMode,
-    selectedNodeIds,
-    updateGraphOutputs,
-  ]);
+  const handleConnectionError = useCallback((error: Error) => {
+    setErrorMessage(error.message);
+    setSnackbarOpen(true);
+  }, []);
+
+  const handleTargetNodeUpdated = useCallback((targetNodeId: string | null) => {
+    setDerivativeTarget(() => targetNodeId);
+  }, []);
+
+  const handleShowInputFields = useCallback((emptyPortEdges: Edge[]) => {
+    setReactFlowNodes((nodes) => showInputFields(emptyPortEdges, nodes));
+  }, []);
+
+  const handleHideInputField = useCallback(
+    (nonEmptyPortConnection: Connection) => {
+      setReactFlowNodes((nodes) =>
+        hideInputField(nonEmptyPortConnection, nodes),
+      );
+    },
+    [],
+  );
+
+  const handleFValuesUpdated = useCallback(
+    (nodeIdToFValues: Map<string, string>) => {
+      setReactFlowNodes((nodes) =>
+        updateReactFlowNodeFValues(nodeIdToFValues, nodes),
+      );
+    },
+    [],
+  );
+
+  const handleDerivativeValuesUpdated = useCallback(
+    (nodeIdToDerivatives: Map<string, string>) => {
+      setReactFlowNodes((nodes) =>
+        updateReactFlowNodeDerivatives(
+          nodeIdToDerivatives,
+          isReverseMode,
+          derivativeTarget,
+          nodes,
+        ),
+      );
+    },
+    [derivativeTarget, isReverseMode],
+  );
+
+  const handleExplainDerivativeDataUpdated = useCallback(
+    (data: ExplainDerivativeData[]): void => {
+      setExplainDerivativeData(() => data);
+    },
+    [],
+  );
 
   // Update node data whenever dark mode changes
   useEffect(() => {
@@ -689,7 +453,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
         <GraphToolbar
           isReverseMode={isReverseMode}
           derivativeTarget={derivativeTarget}
-          nodeIds={coreGraph === null ? [] : getNodeIds(coreGraph)}
+          nodeIds={coreGraphAdapter.getNodeIds()}
           onReverseModeChange={handleReverseModeChange}
           onDerivativeTargetChange={handleDerivativeTargetChange}
         />

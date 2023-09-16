@@ -115,6 +115,10 @@ multiple edges`,
     node2.getRelationship().removeInputNodeByPort(node2PortId, node1Id);
   }
 
+  getDifferentiationMode(): DifferentiationMode {
+    return this.differentiationMode;
+  }
+
   setDifferentiationMode(mode: DifferentiationMode): void {
     this.nodeIdToDerivatives.clear();
     this.differentiationMode = mode;

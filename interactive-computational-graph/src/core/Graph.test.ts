@@ -25,6 +25,30 @@ import OperationNode from "./OperationNode";
 import Port from "./Port";
 import VariableNode from "./VariableNode";
 
+describe("setting/getting properties", () => {
+  test("should set and get the correct differentiation mode", () => {
+    const graph = new Graph();
+    expect(graph.getDifferentiationMode()).toBe("REVERSE");
+
+    graph.setDifferentiationMode("FORWARD");
+    expect(graph.getDifferentiationMode()).toBe("FORWARD");
+  });
+
+  test("should set and get the correct target node", () => {
+    const graph = new Graph();
+    expect(graph.getTargetNode()).toBe(null);
+
+    expect(() => {
+      graph.setTargetNode("v1");
+    }).toThrow("Node v1 doesn't exist");
+
+    const varNode1 = new VariableNode("v1");
+    graph.addNode(varNode1);
+    graph.setTargetNode("v1");
+    expect(graph.getTargetNode()).toBe("v1");
+  });
+});
+
 describe("manipulating connections", () => {
   test("should get a list of nodes", () => {
     const emptyGraph = new Graph();

@@ -19,7 +19,6 @@ import {
   type OnSelectionChangeParams,
   type XYPosition,
 } from "reactflow";
-import CoreGraphAdapter from "../adapters/CoreGraphAdapter";
 import { TITLE_HEIGHT } from "../constants";
 import Operation from "../core/Operation";
 import Port from "../core/Port";
@@ -38,6 +37,7 @@ import {
   TEMPLATE_DFDX_CODE,
   TEMPLATE_F_CODE,
 } from "../features/BuiltInCode";
+import CoreGraphAdapter from "../features/CoreGraphAdapter";
 import type ExplainDerivativeData from "../features/ExplainDerivativeData";
 import type FeatureNodeType from "../features/FeatureNodeType";
 import type FeatureOperation from "../features/FeatureOperation";

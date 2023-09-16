@@ -213,6 +213,7 @@ class CoreGraphAdapter {
   }
 
   changeNodes(changes: NodeChange[]): void {
+    let hasRemovedNodes = false;
     changes.forEach((change) => {
       switch (change.type) {
         case "remove": {
@@ -221,14 +222,17 @@ class CoreGraphAdapter {
           this.removeDummyInputNodes(coreNode);
 
           this.graph.removeNode(nodeId);
+          hasRemovedNodes = true;
           break;
         }
       }
     });
 
-    this.updateTargetNode();
+    if (hasRemovedNodes) {
+      this.updateTargetNode();
 
-    this.updateOutputs();
+      this.updateOutputs();
+    }
   }
 
   private removeDummyInputNodes(node: CoreNode): void {
@@ -256,6 +260,7 @@ class CoreGraphAdapter {
   changeEdges(changes: EdgeChange[], edges: Edge[]): void {
     const removeEdges = this.findEdgesToRemove(changes, edges);
 
+    let hasDisconnectedEdges = false;
     removeEdges.forEach((removeEdge) => {
       if (typeof removeEdge.targetHandle !== "string") {
         return;
@@ -265,6 +270,7 @@ class CoreGraphAdapter {
         removeEdge.target,
         removeEdge.targetHandle,
       );
+      hasDisconnectedEdges = true;
     });
 
     const emptyPortEdges = this.findEmptyPortEdges(removeEdges);
@@ -287,9 +293,11 @@ class CoreGraphAdapter {
       );
     });
 
-    this.emitShowInputFields(emptyPortEdges);
+    if (hasDisconnectedEdges) {
+      this.emitShowInputFields(emptyPortEdges);
 
-    this.updateOutputs();
+      this.updateOutputs();
+    }
   }
 
   private findEdgesToRemove(changes: EdgeChange[], edges: Edge[]): Edge[] {

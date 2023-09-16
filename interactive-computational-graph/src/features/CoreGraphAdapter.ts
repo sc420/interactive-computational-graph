@@ -16,12 +16,12 @@ import type DifferentiationMode from "../core/DifferentiationMode";
 import Graph from "../core/Graph";
 import OperationNode from "../core/OperationNode";
 import VariableNode from "../core/VariableNode";
-import { findFeatureOperation } from "./ControllerUtilities";
 import { buildExplainDerivativeItems } from "./ExplainDerivativeController";
 import type ExplainDerivativeData from "./ExplainDerivativeData";
 import type ExplainDerivativeType from "./ExplainDerivativeType";
 import type FeatureNodeType from "./FeatureNodeType";
 import type FeatureOperation from "./FeatureOperation";
+import { findFeatureOperation } from "./OperationUtilities";
 
 type ConnectionAddedCallback = (connection: Connection) => void;
 

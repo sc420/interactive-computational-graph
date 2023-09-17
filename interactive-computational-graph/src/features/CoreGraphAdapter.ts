@@ -230,6 +230,7 @@ class CoreGraphAdapter {
 
     if (hasRemovedNodes) {
       this.updateTargetNode();
+      this.updateSelectedNodeIds();
 
       this.updateOutputs();
     }
@@ -255,6 +256,12 @@ class CoreGraphAdapter {
     this.graph.setTargetNode(null);
 
     this.emitTargetNodeChanged(null);
+  }
+
+  private updateSelectedNodeIds(): void {
+    this.selectedNodeIds = this.selectedNodeIds.filter((selectedNodeId) =>
+      this.graph.hasNode(selectedNodeId),
+    );
   }
 
   changeEdges(changes: EdgeChange[], edges: Edge[]): void {

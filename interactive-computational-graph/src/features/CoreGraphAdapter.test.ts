@@ -18,17 +18,6 @@ import type FeatureNodeType from "./FeatureNodeType";
 import type FeatureOperation from "./FeatureOperation";
 
 describe("events", () => {
-  const featureOperations: FeatureOperation[] = [
-    {
-      id: "add",
-      text: "Add",
-      type: "SIMPLE",
-      operation: new Operation(ADD_F_CODE, ADD_DFDX_CODE),
-      inputPorts: [new Port("a", false), new Port("b", false)],
-      helpText: "Add two numbers $ a + b $",
-    },
-  ];
-
   test("should emit output updates when adding node", () => {
     const adapter = new CoreGraphAdapter();
     const handleFValuesUpdated = jest.fn();
@@ -378,79 +367,109 @@ describe("events", () => {
     const expectedData: ExplainDerivativeData[] = [];
     expect(explainDerivativeDataUpdated).toHaveBeenCalledWith(expectedData);
   });
+});
 
-  const addConstantNode = (adapter: CoreGraphAdapter, nodeId: string): void => {
-    const featureType: FeatureNodeType = { nodeType: "CONSTANT" };
-    adapter.addNode(featureType, nodeId, featureOperations);
+describe("behavior", () => {
+  test("should not throw error when the current selected node is removed", () => {
+    const adapter = new CoreGraphAdapter();
+
+    addConstantNode(adapter, "c1");
+    addAddNode(adapter, "add1");
+    addConnection(adapter, "c1", "add1", "a");
+
+    adapter.setTargetNode("add1");
+    adapter.updateSelectedNodes(["c1"]);
+
+    const edges = buildReactFlowEdges([["c1", "add1", "a"]]);
+    // Should remove edge first
+    removeEdge(adapter, "c1", "add1", "a", edges);
+    // Should remove node later
+    removeNode(adapter, "c1");
+  });
+});
+
+const featureOperations: FeatureOperation[] = [
+  {
+    id: "add",
+    text: "Add",
+    type: "SIMPLE",
+    operation: new Operation(ADD_F_CODE, ADD_DFDX_CODE),
+    inputPorts: [new Port("a", false), new Port("b", false)],
+    helpText: "Add two numbers $ a + b $",
+  },
+];
+
+const addConstantNode = (adapter: CoreGraphAdapter, nodeId: string): void => {
+  const featureType: FeatureNodeType = { nodeType: "CONSTANT" };
+  adapter.addNode(featureType, nodeId, featureOperations);
+};
+
+const addAddNode = (adapter: CoreGraphAdapter, nodeId: string): void => {
+  const featureType: FeatureNodeType = {
+    nodeType: "OPERATION",
+    operationId: "add",
   };
+  adapter.addNode(featureType, nodeId, featureOperations);
+};
 
-  const addAddNode = (adapter: CoreGraphAdapter, nodeId: string): void => {
-    const featureType: FeatureNodeType = {
-      nodeType: "OPERATION",
-      operationId: "add",
-    };
-    adapter.addNode(featureType, nodeId, featureOperations);
+const addConnection = (
+  adapter: CoreGraphAdapter,
+  source: string,
+  target: string,
+  targetHandle: string,
+): Connection => {
+  const connection: Connection = {
+    source,
+    target,
+    sourceHandle: "output",
+    targetHandle,
   };
+  adapter.addConnection(connection);
+  return connection;
+};
 
-  const addConnection = (
-    adapter: CoreGraphAdapter,
-    source: string,
-    target: string,
-    targetHandle: string,
-  ): Connection => {
-    const connection: Connection = {
+const removeNode = (adapter: CoreGraphAdapter, nodeId: string): void => {
+  const change: NodeRemoveChange = {
+    id: nodeId,
+    type: "remove",
+  };
+  const changes: NodeChange[] = [change];
+  adapter.changeNodes(changes);
+};
+
+const removeEdge = (
+  adapter: CoreGraphAdapter,
+  source: string,
+  target: string,
+  targetHandle: string,
+  edges: Edge[],
+): void => {
+  const change: EdgeRemoveChange = {
+    id: getReactFlowEdgeId(source, target, targetHandle),
+    type: "remove",
+  };
+  const changes: EdgeChange[] = [change];
+  adapter.changeEdges(changes, edges);
+};
+
+const buildReactFlowEdges = (
+  items: Array<[string, string, string]>,
+): Edge[] => {
+  return items.map((item) => {
+    const [source, target, targetHandle] = item;
+    return {
+      id: getReactFlowEdgeId(source, target, targetHandle),
       source,
       target,
-      sourceHandle: "output",
       targetHandle,
     };
-    adapter.addConnection(connection);
-    return connection;
-  };
+  });
+};
 
-  const removeNode = (adapter: CoreGraphAdapter, nodeId: string): void => {
-    const change: NodeRemoveChange = {
-      id: nodeId,
-      type: "remove",
-    };
-    const changes: NodeChange[] = [change];
-    adapter.changeNodes(changes);
-  };
-
-  const removeEdge = (
-    adapter: CoreGraphAdapter,
-    source: string,
-    target: string,
-    targetHandle: string,
-    edges: Edge[],
-  ): void => {
-    const change: EdgeRemoveChange = {
-      id: getReactFlowEdgeId(source, target, targetHandle),
-      type: "remove",
-    };
-    const changes: EdgeChange[] = [change];
-    adapter.changeEdges(changes, edges);
-  };
-
-  const buildReactFlowEdges = (
-    items: Array<[string, string, string]>,
-  ): Edge[] => {
-    return items.map((item) => {
-      const [source, target, targetHandle] = item;
-      return {
-        id: getReactFlowEdgeId(source, target, targetHandle),
-        source,
-        target,
-        targetHandle,
-      };
-    });
-  };
-
-  const getReactFlowEdgeId = (
-    source: string,
-    target: string,
-    targetHandle: string,
-  ): string => {
-    return `reactflow__edge-${source}output-${target}${targetHandle}`;
-  };
-});
+const getReactFlowEdgeId = (
+  source: string,
+  target: string,
+  targetHandle: string,
+): string => {
+  return `reactflow__edge-${source}output-${target}${targetHandle}`;
+};

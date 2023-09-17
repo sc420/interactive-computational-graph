@@ -2,14 +2,14 @@ import { Alert } from "@mui/material";
 import { useCallback, type FunctionComponent } from "react";
 import type ExplainDerivativeData from "../features/ExplainDerivativeData";
 
-interface ExplainDerivativesPanelProps {
+interface ExplainDerivativesHintProps {
   hasNodes: boolean;
   hasDerivativeTarget: boolean;
   explainDerivativeData: ExplainDerivativeData[];
 }
 
-const ExplainDerivativesPanel: FunctionComponent<
-  ExplainDerivativesPanelProps
+const ExplainDerivativesHint: FunctionComponent<
+  ExplainDerivativesHintProps
 > = ({ hasNodes, hasDerivativeTarget, explainDerivativeData }) => {
   const getHintText = useCallback(() => {
     if (hasNodes) {
@@ -33,4 +33,4 @@ const ExplainDerivativesPanel: FunctionComponent<
   );
 };
 
-export default ExplainDerivativesPanel;
+export default ExplainDerivativesHint;

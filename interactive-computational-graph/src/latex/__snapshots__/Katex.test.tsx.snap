@@ -1,0 +1,107 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should render constant 1`] = `
+<div>
+  <span>
+    <span
+      class="katex"
+    >
+      <math
+        xmlns="http://www.w3.org/1998/Math/MathML"
+      >
+        <semantics>
+          <mrow>
+            <mn>
+              3.14
+            </mn>
+          </mrow>
+          <annotation
+            encoding="application/x-tex"
+          >
+            3.14
+          </annotation>
+        </semantics>
+      </math>
+    </span>
+  </span>
+</div>
+`;
+
+exports[`should render displaystyle 1`] = `
+<div>
+  <span>
+    <span
+      class="katex"
+    >
+      <math
+        xmlns="http://www.w3.org/1998/Math/MathML"
+      >
+        <semantics>
+          <mrow>
+            <mstyle
+              displaystyle="true"
+              scriptlevel="0"
+            >
+              <mo>
+                =
+              </mo>
+              <mfrac>
+                <mrow>
+                  <mi
+                    mathvariant="normal"
+                  >
+                    ∂
+                  </mi>
+                  <mi>
+                    a
+                  </mi>
+                </mrow>
+                <mrow>
+                  <mi
+                    mathvariant="normal"
+                  >
+                    ∂
+                  </mi>
+                  <mi>
+                    b
+                  </mi>
+                </mrow>
+              </mfrac>
+              <mo>
+                ⋅
+              </mo>
+              <mfrac>
+                <mrow>
+                  <mi
+                    mathvariant="normal"
+                  >
+                    ∂
+                  </mi>
+                  <mi>
+                    c
+                  </mi>
+                </mrow>
+                <mrow>
+                  <mi
+                    mathvariant="normal"
+                  >
+                    ∂
+                  </mi>
+                  <mi>
+                    d
+                  </mi>
+                </mrow>
+              </mfrac>
+            </mstyle>
+          </mrow>
+          <annotation
+            encoding="application/x-tex"
+          >
+            \\displaystyle =\\frac{\\partial{a}}{\\partial{b}} \\cdot \\frac{\\partial{c}}{\\partial{d}}
+          </annotation>
+        </semantics>
+      </math>
+    </span>
+  </span>
+</div>
+`;

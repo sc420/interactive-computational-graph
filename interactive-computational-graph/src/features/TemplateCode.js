@@ -1,3 +1,11 @@
+/*
+ * These code serve as the template for `BuildInCode.ts` because we would lose
+ * syntax highlighting by wrapping these code in string literals. We use this
+ * file to check if the comments look good.
+ */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 /**
  * Calculates f().
  * @param {Record<string, string[]>} fInputPortToNodes An object where the keys

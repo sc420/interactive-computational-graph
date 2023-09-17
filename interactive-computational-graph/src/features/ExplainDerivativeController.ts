@@ -304,7 +304,7 @@ const buildPreviousDerivativesReplacedDescription = (
     if (index > 0) {
       commaListParts.push({
         type: "text",
-        id: `part-${index}`,
+        id: `and-${index}`,
         text: index === previousDerivativeTerms.length - 1 ? " and " : ", ",
       });
     }

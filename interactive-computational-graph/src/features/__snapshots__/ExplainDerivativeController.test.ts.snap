@@ -1,0 +1,306 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should build chain rule items of forward mode 1`] = `
+Array [
+  Object {
+    "descriptionParts": Array [
+      Object {
+        "id": "mainText",
+        "text": "Calculate the partial derivative:",
+        "type": "text",
+      },
+    ],
+    "latex": "\\\\displaystyle \\\\frac{\\\\partial{v1}}{\\\\partial{f}}",
+    "type": "calculatePartialDerivative",
+  },
+  Object {
+    "descriptionParts": Array [
+      Object {
+        "id": "mainText",
+        "text": "Use the chain rule:",
+        "type": "text",
+      },
+    ],
+    "latex": "\\\\displaystyle =\\\\frac{\\\\partial{op1}}{\\\\partial{f}} \\\\cdot \\\\frac{\\\\partial{v1}}{\\\\partial{op1}}+\\\\frac{\\\\partial{op2}}{\\\\partial{f}} \\\\cdot \\\\frac{\\\\partial{v1}}{\\\\partial{op2}}",
+    "type": "useChainRule",
+  },
+  Object {
+    "descriptionParts": Array [
+      Object {
+        "id": "replace",
+        "text": "Replace the left-hand side ",
+        "type": "text",
+      },
+      Object {
+        "id": "chainRuleTerm-op1",
+        "latex": "\\\\frac{\\\\partial{op1}}{\\\\partial{f}}",
+        "nodeId": "op1",
+        "type": "latexLink",
+      },
+      Object {
+        "id": "and-1",
+        "text": " and ",
+        "type": "text",
+      },
+      Object {
+        "id": "chainRuleTerm-op2",
+        "latex": "\\\\frac{\\\\partial{op2}}{\\\\partial{f}}",
+        "nodeId": "op2",
+        "type": "latexLink",
+      },
+      Object {
+        "id": "with",
+        "text": " with the previously calculated value(s):",
+        "type": "text",
+      },
+    ],
+    "latex": "\\\\displaystyle =1 \\\\cdot \\\\frac{\\\\partial{v1}}{\\\\partial{op1}}+3 \\\\cdot \\\\frac{\\\\partial{v1}}{\\\\partial{op2}}",
+    "type": "previousDerivativesReplaced",
+  },
+  Object {
+    "descriptionParts": Array [
+      Object {
+        "id": "mainText",
+        "text": "Calculate the right-hand side derivative(s):",
+        "type": "text",
+      },
+    ],
+    "latex": "\\\\displaystyle =1 \\\\cdot 2+3 \\\\cdot 4",
+    "type": "allReplaced",
+  },
+  Object {
+    "descriptionParts": Array [
+      Object {
+        "id": "mainText",
+        "text": "Which is equal to:",
+        "type": "text",
+      },
+    ],
+    "latex": "\\\\displaystyle 14",
+    "type": "equalTo",
+  },
+]
+`;
+
+exports[`should build chain rule items of reverse mode 1`] = `
+Array [
+  Object {
+    "descriptionParts": Array [
+      Object {
+        "id": "mainText",
+        "text": "Calculate the partial derivative:",
+        "type": "text",
+      },
+    ],
+    "latex": "\\\\displaystyle \\\\frac{\\\\partial{f}}{\\\\partial{v1}}",
+    "type": "calculatePartialDerivative",
+  },
+  Object {
+    "descriptionParts": Array [
+      Object {
+        "id": "mainText",
+        "text": "Use the chain rule:",
+        "type": "text",
+      },
+    ],
+    "latex": "\\\\displaystyle =\\\\frac{\\\\partial{op1}}{\\\\partial{v1}} \\\\cdot \\\\frac{\\\\partial{f}}{\\\\partial{op1}}+\\\\frac{\\\\partial{op2}}{\\\\partial{v1}} \\\\cdot \\\\frac{\\\\partial{f}}{\\\\partial{op2}}",
+    "type": "useChainRule",
+  },
+  Object {
+    "descriptionParts": Array [
+      Object {
+        "id": "replace",
+        "text": "Replace the right-hand side ",
+        "type": "text",
+      },
+      Object {
+        "id": "chainRuleTerm-op1",
+        "latex": "\\\\frac{\\\\partial{f}}{\\\\partial{op1}}",
+        "nodeId": "op1",
+        "type": "latexLink",
+      },
+      Object {
+        "id": "and-1",
+        "text": " and ",
+        "type": "text",
+      },
+      Object {
+        "id": "chainRuleTerm-op2",
+        "latex": "\\\\frac{\\\\partial{f}}{\\\\partial{op2}}",
+        "nodeId": "op2",
+        "type": "latexLink",
+      },
+      Object {
+        "id": "with",
+        "text": " with the previously calculated value(s):",
+        "type": "text",
+      },
+    ],
+    "latex": "\\\\displaystyle =\\\\frac{\\\\partial{op1}}{\\\\partial{v1}} \\\\cdot 2+\\\\frac{\\\\partial{op2}}{\\\\partial{v1}} \\\\cdot 4",
+    "type": "previousDerivativesReplaced",
+  },
+  Object {
+    "descriptionParts": Array [
+      Object {
+        "id": "mainText",
+        "text": "Calculate the left-hand side derivative(s):",
+        "type": "text",
+      },
+    ],
+    "latex": "\\\\displaystyle =1 \\\\cdot 2+3 \\\\cdot 4",
+    "type": "allReplaced",
+  },
+  Object {
+    "descriptionParts": Array [
+      Object {
+        "id": "mainText",
+        "text": "Which is equal to:",
+        "type": "text",
+      },
+    ],
+    "latex": "\\\\displaystyle 14",
+    "type": "equalTo",
+  },
+]
+`;
+
+exports[`should build items when c is a constant 1`] = `
+Array [
+  Object {
+    "descriptionParts": Array [
+      Object {
+        "id": "mainText",
+        "text": "Calculate the partial derivative:",
+        "type": "text",
+      },
+    ],
+    "latex": "\\\\displaystyle \\\\frac{\\\\partial{c}}{\\\\partial{f}}",
+    "type": "calculatePartialDerivative",
+  },
+  Object {
+    "descriptionParts": Array [
+      Object {
+        "id": "which",
+        "text": "Which is ",
+        "type": "text",
+      },
+      Object {
+        "id": "value",
+        "latex": "0",
+        "type": "latex",
+      },
+      Object {
+        "id": "because",
+        "text": " because ",
+        "type": "text",
+      },
+      Object {
+        "id": "node",
+        "latex": "c",
+        "type": "latex",
+      },
+      Object {
+        "id": "is",
+        "text": " is a constant:",
+        "type": "text",
+      },
+    ],
+    "latex": "\\\\displaystyle 0",
+    "type": "zeroBecauseXIsConstant",
+  },
+]
+`;
+
+exports[`should build items when f doesn't depend on x 1`] = `
+Array [
+  Object {
+    "descriptionParts": Array [
+      Object {
+        "id": "mainText",
+        "text": "Calculate the partial derivative:",
+        "type": "text",
+      },
+    ],
+    "latex": "\\\\displaystyle \\\\frac{\\\\partial{x}}{\\\\partial{f}}",
+    "type": "calculatePartialDerivative",
+  },
+  Object {
+    "descriptionParts": Array [
+      Object {
+        "id": "which",
+        "text": "Which is ",
+        "type": "text",
+      },
+      Object {
+        "id": "value",
+        "latex": "0",
+        "type": "latex",
+      },
+      Object {
+        "id": "because",
+        "text": " because the derivative target doesn't depend on ",
+        "type": "text",
+      },
+      Object {
+        "id": "node",
+        "latex": "x",
+        "type": "latex",
+      },
+      Object {
+        "id": "colon",
+        "text": ":",
+        "type": "text",
+      },
+    ],
+    "latex": "\\\\displaystyle 0",
+    "type": "zeroBecauseFNotDependsOnX",
+  },
+]
+`;
+
+exports[`should build items when f equals x 1`] = `
+Array [
+  Object {
+    "descriptionParts": Array [
+      Object {
+        "id": "mainText",
+        "text": "Calculate the partial derivative:",
+        "type": "text",
+      },
+    ],
+    "latex": "\\\\displaystyle \\\\frac{\\\\partial{x}}{\\\\partial{x}}",
+    "type": "calculatePartialDerivative",
+  },
+  Object {
+    "descriptionParts": Array [
+      Object {
+        "id": "which",
+        "text": "Which is ",
+        "type": "text",
+      },
+      Object {
+        "id": "value",
+        "latex": "1",
+        "type": "latex",
+      },
+      Object {
+        "id": "because",
+        "text": " because the derivative target is ",
+        "type": "text",
+      },
+      Object {
+        "id": "node",
+        "latex": "x",
+        "type": "latex",
+      },
+      Object {
+        "id": "colon",
+        "text": ":",
+        "type": "text",
+      },
+    ],
+    "latex": "\\\\displaystyle 1",
+    "type": "oneBecauseFEqualsX",
+  },
+]
+`;

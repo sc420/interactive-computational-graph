@@ -130,7 +130,7 @@ const ExplainDerivativesPanel: FunctionComponent<
         </Accordion>
       ))}
 
-      {/* Error message */}
+      {/* Message */}
       <Snackbar
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         open={isSnackbarOpen}

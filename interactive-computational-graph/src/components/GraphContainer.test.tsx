@@ -301,11 +301,11 @@ it("outputs should change when derivative mode/target is changed", () => {
   expect(getOutputItemValue("5", "VALUE")).toBe("6");
 
   // Check the derivative labels
-  expect(getOutputItemLabelText("1", "DERIVATIVE")).toBe("d(5)/d(1)");
-  expect(getOutputItemLabelText("2", "DERIVATIVE")).toBe("d(5)/d(2)");
-  expect(getOutputItemLabelText("2", "DERIVATIVE")).toBe("d(5)/d(3)");
-  expect(getOutputItemLabelText("2", "DERIVATIVE")).toBe("d(5)/d(4)");
-  expect(getOutputItemLabelText("2", "DERIVATIVE")).toBe("d(5)/d(5)");
+  expect(getOutputItemLabelText("1", "DERIVATIVE")).toBe("d(5)/d(1) =");
+  expect(getOutputItemLabelText("2", "DERIVATIVE")).toBe("d(5)/d(2) =");
+  expect(getOutputItemLabelText("3", "DERIVATIVE")).toBe("d(5)/d(3) =");
+  expect(getOutputItemLabelText("4", "DERIVATIVE")).toBe("d(5)/d(4) =");
+  expect(getOutputItemLabelText("5", "DERIVATIVE")).toBe("d(5)/d(5) =");
 
   // Check the derivative values
   expect(getOutputItemValue("1", "DERIVATIVE")).toBe("2");
@@ -323,11 +323,11 @@ it("outputs should change when derivative mode/target is changed", () => {
   expect(getOutputItemValue("5", "VALUE")).toBe("6");
 
   // Check the derivative labels
-  expect(getOutputItemLabelText("1", "DERIVATIVE")).toBe("d(1)/d(5)");
-  expect(getOutputItemLabelText("2", "DERIVATIVE")).toBe("d(2)/d(5)");
-  expect(getOutputItemLabelText("2", "DERIVATIVE")).toBe("d(3)/d(5)");
-  expect(getOutputItemLabelText("2", "DERIVATIVE")).toBe("d(4)/d(5)");
-  expect(getOutputItemLabelText("2", "DERIVATIVE")).toBe("d(5)/d(5)");
+  expect(getOutputItemLabelText("1", "DERIVATIVE")).toBe("d(1)/d(5) =");
+  expect(getOutputItemLabelText("2", "DERIVATIVE")).toBe("d(2)/d(5) =");
+  expect(getOutputItemLabelText("3", "DERIVATIVE")).toBe("d(3)/d(5) =");
+  expect(getOutputItemLabelText("4", "DERIVATIVE")).toBe("d(4)/d(5) =");
+  expect(getOutputItemLabelText("5", "DERIVATIVE")).toBe("d(5)/d(5) =");
 
   // Check the derivative values
   expect(getOutputItemValue("1", "DERIVATIVE")).toBe("0");
@@ -345,11 +345,11 @@ it("outputs should change when derivative mode/target is changed", () => {
   expect(getOutputItemValue("5", "VALUE")).toBe("6");
 
   // Check the derivative labels
-  expect(getOutputItemLabelText("1", "DERIVATIVE")).toBe("d(1)/d(2)");
-  expect(getOutputItemLabelText("2", "DERIVATIVE")).toBe("d(2)/d(2)");
-  expect(getOutputItemLabelText("2", "DERIVATIVE")).toBe("d(3)/d(2)");
-  expect(getOutputItemLabelText("2", "DERIVATIVE")).toBe("d(4)/d(2)");
-  expect(getOutputItemLabelText("2", "DERIVATIVE")).toBe("d(5)/d(2)");
+  expect(getOutputItemLabelText("1", "DERIVATIVE")).toBe("d(1)/d(2) =");
+  expect(getOutputItemLabelText("2", "DERIVATIVE")).toBe("d(2)/d(2) =");
+  expect(getOutputItemLabelText("3", "DERIVATIVE")).toBe("d(3)/d(2) =");
+  expect(getOutputItemLabelText("4", "DERIVATIVE")).toBe("d(4)/d(2) =");
+  expect(getOutputItemLabelText("5", "DERIVATIVE")).toBe("d(5)/d(2) =");
 
   // Check the derivative values
   expect(getOutputItemValue("1", "DERIVATIVE")).toBe("0");

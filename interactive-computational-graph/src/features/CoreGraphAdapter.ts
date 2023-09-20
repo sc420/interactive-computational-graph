@@ -36,6 +36,8 @@ type HideInputFieldCallback = (nonEmptyPortConnection: Connection) => void;
 type FValuesUpdatedCallback = (nodeIdToFValues: Map<string, string>) => void;
 
 type DerivativeValuesUpdatedCallback = (
+  differentiationMode: DifferentiationMode,
+  targetNode: string | null,
   nodeIdToDerivatives: Map<string, string>,
 ) => void;
 
@@ -54,7 +56,7 @@ class CoreGraphAdapter {
   private showInputFieldsCallbacks: ShowInputFieldsCallback[] = [];
   private hideInputFieldCallbacks: HideInputFieldCallback[] = [];
   private fValuesUpdatedCallbacks: FValuesUpdatedCallback[] = [];
-  private derivativesUpdatedCallbacks: FValuesUpdatedCallback[] = [];
+  private derivativesUpdatedCallbacks: DerivativeValuesUpdatedCallback[] = [];
   private explainDerivativeDataUpdatedCallbacks: ExplainDerivativeDataUpdatedCallback[] =
     [];
 
@@ -255,7 +257,7 @@ class CoreGraphAdapter {
 
     this.graph.setTargetNode(null);
 
-    this.emitTargetNodeChanged(null);
+    this.emitTargetNodeUpdated();
   }
 
   private updateSelectedNodeIds(): void {
@@ -507,9 +509,9 @@ class CoreGraphAdapter {
     });
   }
 
-  private emitTargetNodeChanged(targetNodeId: string | null): void {
+  private emitTargetNodeUpdated(): void {
     this.targetNodeUpdatedCallbacks.forEach((callback) => {
-      callback(targetNodeId);
+      callback(this.graph.getTargetNode());
     });
   }
 
@@ -535,7 +537,11 @@ class CoreGraphAdapter {
     nodeIdToDerivatives: Map<string, string>,
   ): void {
     this.derivativesUpdatedCallbacks.forEach((callback) => {
-      callback(nodeIdToDerivatives);
+      callback(
+        this.graph.getDifferentiationMode(),
+        this.graph.getTargetNode(),
+        nodeIdToDerivatives,
+      );
     });
   }
 

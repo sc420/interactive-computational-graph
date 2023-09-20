@@ -20,6 +20,7 @@ import {
   type XYPosition,
 } from "reactflow";
 import { TITLE_HEIGHT } from "../constants";
+import type DifferentiationMode from "../core/DifferentiationMode";
 import Operation from "../core/Operation";
 import Port from "../core/Port";
 import type AddNodeData from "../features/AddNodeData";
@@ -413,17 +414,21 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
   );
 
   const handleDerivativeValuesUpdated = useCallback(
-    (nodeIdToDerivatives: Map<string, string>) => {
+    (
+      differentiationMode: DifferentiationMode,
+      targetNodeId: string | null,
+      nodeIdToDerivatives: Map<string, string>,
+    ) => {
       setReactFlowNodes((nodes) =>
         updateReactFlowNodeDerivatives(
           nodeIdToDerivatives,
-          isReverseMode,
-          derivativeTarget,
+          differentiationMode === "REVERSE",
+          targetNodeId,
           nodes,
         ),
       );
     },
-    [derivativeTarget, isReverseMode],
+    [],
   );
 
   const handleExplainDerivativeDataUpdated = useCallback(

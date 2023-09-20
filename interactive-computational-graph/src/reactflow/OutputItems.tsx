@@ -36,7 +36,10 @@ const InputItems: FunctionComponent<InputItemProps> = ({
             height={itemHeight}
           >
             {/* Label */}
-            <InputLabel htmlFor={getOutputId(item.type)}>
+            <InputLabel
+              data-testid={`label-${getOutputId(item.type)}`}
+              htmlFor={getOutputId(item.type)}
+            >
               {item.text}
             </InputLabel>
           </Box>

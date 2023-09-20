@@ -265,7 +265,7 @@ it("derivative target should reset when the target node is removed", () => {
 });
 
 // It uses example from https://colah.github.io/posts/2015-08-Backprop/
-it("derivative values should change when derivative mode/target is changed", () => {
+it("outputs should change when derivative mode/target is changed", () => {
   renderGraphContainer();
 
   // Add the nodes
@@ -300,6 +300,13 @@ it("derivative values should change when derivative mode/target is changed", () 
   expect(getOutputItemValue("4", "VALUE")).toBe("2");
   expect(getOutputItemValue("5", "VALUE")).toBe("6");
 
+  // Check the derivative labels
+  expect(getOutputItemLabelText("1", "DERIVATIVE")).toBe("d(5)/d(1)");
+  expect(getOutputItemLabelText("2", "DERIVATIVE")).toBe("d(5)/d(2)");
+  expect(getOutputItemLabelText("2", "DERIVATIVE")).toBe("d(5)/d(3)");
+  expect(getOutputItemLabelText("2", "DERIVATIVE")).toBe("d(5)/d(4)");
+  expect(getOutputItemLabelText("2", "DERIVATIVE")).toBe("d(5)/d(5)");
+
   // Check the derivative values
   expect(getOutputItemValue("1", "DERIVATIVE")).toBe("2");
   expect(getOutputItemValue("2", "DERIVATIVE")).toBe("5");
@@ -315,6 +322,13 @@ it("derivative values should change when derivative mode/target is changed", () 
   expect(getOutputItemValue("4", "VALUE")).toBe("2");
   expect(getOutputItemValue("5", "VALUE")).toBe("6");
 
+  // Check the derivative labels
+  expect(getOutputItemLabelText("1", "DERIVATIVE")).toBe("d(1)/d(5)");
+  expect(getOutputItemLabelText("2", "DERIVATIVE")).toBe("d(2)/d(5)");
+  expect(getOutputItemLabelText("2", "DERIVATIVE")).toBe("d(3)/d(5)");
+  expect(getOutputItemLabelText("2", "DERIVATIVE")).toBe("d(4)/d(5)");
+  expect(getOutputItemLabelText("2", "DERIVATIVE")).toBe("d(5)/d(5)");
+
   // Check the derivative values
   expect(getOutputItemValue("1", "DERIVATIVE")).toBe("0");
   expect(getOutputItemValue("2", "DERIVATIVE")).toBe("0");
@@ -329,6 +343,13 @@ it("derivative values should change when derivative mode/target is changed", () 
   expect(getOutputItemValue("3", "VALUE")).toBe("3");
   expect(getOutputItemValue("4", "VALUE")).toBe("2");
   expect(getOutputItemValue("5", "VALUE")).toBe("6");
+
+  // Check the derivative labels
+  expect(getOutputItemLabelText("1", "DERIVATIVE")).toBe("d(1)/d(2)");
+  expect(getOutputItemLabelText("2", "DERIVATIVE")).toBe("d(2)/d(2)");
+  expect(getOutputItemLabelText("2", "DERIVATIVE")).toBe("d(3)/d(2)");
+  expect(getOutputItemLabelText("2", "DERIVATIVE")).toBe("d(4)/d(2)");
+  expect(getOutputItemLabelText("2", "DERIVATIVE")).toBe("d(5)/d(2)");
 
   // Check the derivative values
   expect(getOutputItemValue("1", "DERIVATIVE")).toBe("0");
@@ -478,8 +499,18 @@ const setInputItemValue = (
   });
 };
 
+const getOutputItemLabelText = (
+  nodeId: string,
+  portId: string,
+): string | null => {
+  const outputLabel = screen.getByTestId(
+    `label-output-item-${nodeId}-${portId}`,
+  );
+  return outputLabel.textContent;
+};
+
 const getOutputItemValue = (nodeId: string, portId: string): string => {
-  const inputItem = screen.getByTestId(`output-item-${nodeId}-${portId}`);
-  const input = within(inputItem).getByRole("textbox");
-  return (input as HTMLInputElement).value;
+  const outputItem = screen.getByTestId(`output-item-${nodeId}-${portId}`);
+  const output = within(outputItem).getByRole("textbox");
+  return (output as HTMLInputElement).value;
 };

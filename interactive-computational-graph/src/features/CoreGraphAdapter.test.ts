@@ -9,6 +9,7 @@ import {
   type NodeRemoveChange,
 } from "reactflow";
 import { CycleError } from "../core/CoreErrors";
+import type DifferentiationMode from "../core/DifferentiationMode";
 import Operation from "../core/Operation";
 import Port from "../core/Port";
 import { ADD_DFDX_CODE, ADD_F_CODE } from "./BuiltInCode";
@@ -31,11 +32,15 @@ describe("events", () => {
     addConstantNode(adapter, "c1");
 
     const expectedNodeIdToFValues = new Map<string, string>([["c1", "0"]]);
+    const expectedDifferentiationMode: DifferentiationMode = "REVERSE";
+    const expectedTargetNode = null;
     const expectedNodeIdToDerivativeValues = new Map<string, string>([
       ["c1", "0"],
     ]);
     expect(handleFValuesUpdated).toHaveBeenCalledWith(expectedNodeIdToFValues);
     expect(handleDerivativeValuesUpdated).toHaveBeenCalledWith(
+      expectedDifferentiationMode,
+      expectedTargetNode,
       expectedNodeIdToDerivativeValues,
     );
     expect(handleExplainDerivativeDataUpdated).toHaveBeenCalledWith([]);
@@ -69,6 +74,8 @@ describe("events", () => {
       ["dummy-input-node-add1-a", "0"],
       ["dummy-input-node-add1-b", "0"],
     ]);
+    const expectedDifferentiationMode: DifferentiationMode = "REVERSE";
+    const expectedTargetNode = null;
     const expectedNodeIdToDerivativeValues = new Map<string, string>([
       ["c1", "0"],
       ["add1", "0"],
@@ -77,6 +84,8 @@ describe("events", () => {
     ]);
     expect(handleFValuesUpdated).toHaveBeenCalledWith(expectedNodeIdToFValues);
     expect(handleDerivativeValuesUpdated).toHaveBeenCalledWith(
+      expectedDifferentiationMode,
+      expectedTargetNode,
       expectedNodeIdToDerivativeValues,
     );
     expect(handleExplainDerivativeDataUpdated).toHaveBeenCalledWith([]);
@@ -128,11 +137,15 @@ describe("events", () => {
     adapter.setDifferentiationMode("FORWARD");
 
     const expectedNodeIdToFValues = new Map<string, string>([["c1", "0"]]);
+    const expectedDifferentiationMode: DifferentiationMode = "FORWARD";
+    const expectedTargetNode = null;
     const expectedNodeIdToDerivativeValues = new Map<string, string>([
       ["c1", "0"],
     ]);
     expect(handleFValuesUpdated).toHaveBeenCalledWith(expectedNodeIdToFValues);
     expect(handleDerivativeValuesUpdated).toHaveBeenCalledWith(
+      expectedDifferentiationMode,
+      expectedTargetNode,
       expectedNodeIdToDerivativeValues,
     );
     expect(handleExplainDerivativeDataUpdated).toHaveBeenCalledWith([]);
@@ -154,11 +167,15 @@ describe("events", () => {
     adapter.setTargetNode("c1");
 
     const expectedNodeIdToFValues = new Map<string, string>([["c1", "0"]]);
+    const expectedDifferentiationMode: DifferentiationMode = "REVERSE";
+    const expectedTargetNode = "c1";
     const expectedNodeIdToDerivativeValues = new Map<string, string>([
       ["c1", "0"],
     ]);
     expect(handleFValuesUpdated).toHaveBeenCalledWith(expectedNodeIdToFValues);
     expect(handleDerivativeValuesUpdated).toHaveBeenCalledWith(
+      expectedDifferentiationMode,
+      expectedTargetNode,
       expectedNodeIdToDerivativeValues,
     );
     expect(handleExplainDerivativeDataUpdated).toHaveBeenCalledWith([]);
@@ -184,6 +201,8 @@ describe("events", () => {
       ["dummy-input-node-add1-a", "1"],
       ["dummy-input-node-add1-b", "0"],
     ]);
+    const expectedDifferentiationMode: DifferentiationMode = "REVERSE";
+    const expectedTargetNode = null;
     const expectedNodeIdToDerivativeValues = new Map<string, string>([
       ["add1", "0"],
       ["dummy-input-node-add1-a", "0"],
@@ -191,6 +210,8 @@ describe("events", () => {
     ]);
     expect(handleFValuesUpdated).toHaveBeenCalledWith(expectedNodeIdToFValues);
     expect(handleDerivativeValuesUpdated).toHaveBeenCalledWith(
+      expectedDifferentiationMode,
+      expectedTargetNode,
       expectedNodeIdToDerivativeValues,
     );
     expect(handleExplainDerivativeDataUpdated).toHaveBeenCalledWith([]);
@@ -212,9 +233,13 @@ describe("events", () => {
     removeNode(adapter, "add1");
 
     const expectedNodeIdToFValues = new Map<string, string>([]);
+    const expectedDifferentiationMode: DifferentiationMode = "REVERSE";
+    const expectedTargetNode = null;
     const expectedNodeIdToDerivativeValues = new Map<string, string>([]);
     expect(handleFValuesUpdated).toHaveBeenCalledWith(expectedNodeIdToFValues);
     expect(handleDerivativeValuesUpdated).toHaveBeenCalledWith(
+      expectedDifferentiationMode,
+      expectedTargetNode,
       expectedNodeIdToDerivativeValues,
     );
     expect(handleExplainDerivativeDataUpdated).toHaveBeenCalledWith([]);
@@ -291,6 +316,8 @@ describe("events", () => {
       ["dummy-input-node-add1-a", "0"],
       ["dummy-input-node-add1-b", "0"],
     ]);
+    const expectedDifferentiationMode: DifferentiationMode = "REVERSE";
+    const expectedTargetNode = null;
     const expectedNodeIdToDerivativeValues = new Map<string, string>([
       ["c1", "0"],
       ["add1", "0"],
@@ -299,6 +326,8 @@ describe("events", () => {
     ]);
     expect(handleFValuesUpdated).toHaveBeenCalledWith(expectedNodeIdToFValues);
     expect(handleDerivativeValuesUpdated).toHaveBeenCalledWith(
+      expectedDifferentiationMode,
+      expectedTargetNode,
       expectedNodeIdToDerivativeValues,
     );
     expect(handleExplainDerivativeDataUpdated).toHaveBeenCalledWith([]);

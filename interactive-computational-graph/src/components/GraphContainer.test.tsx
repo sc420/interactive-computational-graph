@@ -8,9 +8,15 @@ import {
 import { mockReactFlow } from "../ReactFlowMock";
 import type FeatureNodeType from "../features/FeatureNodeType";
 import { randomInteger } from "../features/RandomUtilities";
+import type SelectedFeature from "../features/SelectedFeature";
 import GraphContainer from "./GraphContainer";
 
+// Make random utilities return the fixed number
 jest.mock("../features/RandomUtilities");
+
+// If we don't mock katex, there would be some strange error:
+// `TypeError: Cannot read properties of undefined (reading 'getPropertyValue')`
+jest.mock("../latex/Katex");
 
 beforeAll(() => {
   mockReactFlow();
@@ -301,11 +307,21 @@ it("outputs should change when derivative mode/target is changed", () => {
   expect(getOutputItemValue("5", "VALUE")).toBe("6");
 
   // Check the derivative labels
-  expect(getOutputItemLabelText("1", "DERIVATIVE")).toBe("d(5)/d(1) =");
-  expect(getOutputItemLabelText("2", "DERIVATIVE")).toBe("d(5)/d(2) =");
-  expect(getOutputItemLabelText("3", "DERIVATIVE")).toBe("d(5)/d(3) =");
-  expect(getOutputItemLabelText("4", "DERIVATIVE")).toBe("d(5)/d(4) =");
-  expect(getOutputItemLabelText("5", "DERIVATIVE")).toBe("d(5)/d(5) =");
+  expect(getOutputItemLabelText("1", "DERIVATIVE")).toBe(
+    "\\displaystyle \\frac{\\partial{5}}{\\partial{1}}=",
+  );
+  expect(getOutputItemLabelText("2", "DERIVATIVE")).toBe(
+    "\\displaystyle \\frac{\\partial{5}}{\\partial{2}}=",
+  );
+  expect(getOutputItemLabelText("3", "DERIVATIVE")).toBe(
+    "\\displaystyle \\frac{\\partial{5}}{\\partial{3}}=",
+  );
+  expect(getOutputItemLabelText("4", "DERIVATIVE")).toBe(
+    "\\displaystyle \\frac{\\partial{5}}{\\partial{4}}=",
+  );
+  expect(getOutputItemLabelText("5", "DERIVATIVE")).toBe(
+    "\\displaystyle \\frac{\\partial{5}}{\\partial{5}}=",
+  );
 
   // Check the derivative values
   expect(getOutputItemValue("1", "DERIVATIVE")).toBe("2");
@@ -323,11 +339,21 @@ it("outputs should change when derivative mode/target is changed", () => {
   expect(getOutputItemValue("5", "VALUE")).toBe("6");
 
   // Check the derivative labels
-  expect(getOutputItemLabelText("1", "DERIVATIVE")).toBe("d(1)/d(5) =");
-  expect(getOutputItemLabelText("2", "DERIVATIVE")).toBe("d(2)/d(5) =");
-  expect(getOutputItemLabelText("3", "DERIVATIVE")).toBe("d(3)/d(5) =");
-  expect(getOutputItemLabelText("4", "DERIVATIVE")).toBe("d(4)/d(5) =");
-  expect(getOutputItemLabelText("5", "DERIVATIVE")).toBe("d(5)/d(5) =");
+  expect(getOutputItemLabelText("1", "DERIVATIVE")).toBe(
+    "\\displaystyle \\frac{\\partial{1}}{\\partial{5}}=",
+  );
+  expect(getOutputItemLabelText("2", "DERIVATIVE")).toBe(
+    "\\displaystyle \\frac{\\partial{2}}{\\partial{5}}=",
+  );
+  expect(getOutputItemLabelText("3", "DERIVATIVE")).toBe(
+    "\\displaystyle \\frac{\\partial{3}}{\\partial{5}}=",
+  );
+  expect(getOutputItemLabelText("4", "DERIVATIVE")).toBe(
+    "\\displaystyle \\frac{\\partial{4}}{\\partial{5}}=",
+  );
+  expect(getOutputItemLabelText("5", "DERIVATIVE")).toBe(
+    "\\displaystyle \\frac{\\partial{5}}{\\partial{5}}=",
+  );
 
   // Check the derivative values
   expect(getOutputItemValue("1", "DERIVATIVE")).toBe("0");
@@ -345,11 +371,21 @@ it("outputs should change when derivative mode/target is changed", () => {
   expect(getOutputItemValue("5", "VALUE")).toBe("6");
 
   // Check the derivative labels
-  expect(getOutputItemLabelText("1", "DERIVATIVE")).toBe("d(1)/d(2) =");
-  expect(getOutputItemLabelText("2", "DERIVATIVE")).toBe("d(2)/d(2) =");
-  expect(getOutputItemLabelText("3", "DERIVATIVE")).toBe("d(3)/d(2) =");
-  expect(getOutputItemLabelText("4", "DERIVATIVE")).toBe("d(4)/d(2) =");
-  expect(getOutputItemLabelText("5", "DERIVATIVE")).toBe("d(5)/d(2) =");
+  expect(getOutputItemLabelText("1", "DERIVATIVE")).toBe(
+    "\\displaystyle \\frac{\\partial{1}}{\\partial{2}}=",
+  );
+  expect(getOutputItemLabelText("2", "DERIVATIVE")).toBe(
+    "\\displaystyle \\frac{\\partial{2}}{\\partial{2}}=",
+  );
+  expect(getOutputItemLabelText("3", "DERIVATIVE")).toBe(
+    "\\displaystyle \\frac{\\partial{3}}{\\partial{2}}=",
+  );
+  expect(getOutputItemLabelText("4", "DERIVATIVE")).toBe(
+    "\\displaystyle \\frac{\\partial{4}}{\\partial{2}}=",
+  );
+  expect(getOutputItemLabelText("5", "DERIVATIVE")).toBe(
+    "\\displaystyle \\frac{\\partial{5}}{\\partial{2}}=",
+  );
 
   // Check the derivative values
   expect(getOutputItemValue("1", "DERIVATIVE")).toBe("0");
@@ -365,7 +401,7 @@ const renderGraphContainer = (): void => {
       isSidebarOpen={false}
       onToggleSidebar={() => {}}
       selectedFeature="add-nodes"
-      onSelectFeature={() => {}}
+      onSelectFeature={(feature: SelectedFeature | null) => {}}
       isDarkMode={false}
       onToggleDarkMode={() => {}}
     />,

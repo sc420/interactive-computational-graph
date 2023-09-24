@@ -188,7 +188,19 @@ Object {
         "isHighlighted": false,
         "outputItems": Array [
           Object {
-            "text": "d(?)/d(2) =",
+            "labelParts": Array [
+              Object {
+                "href": "2",
+                "id": "derivative",
+                "latex": "\\\\displaystyle \\\\frac{\\\\partial{?}}{\\\\partial{2}}",
+                "type": "latexLink",
+              },
+              Object {
+                "id": "equal",
+                "latex": "=",
+                "type": "latex",
+              },
+            ],
             "type": "DERIVATIVE",
             "value": "0",
           },
@@ -225,12 +237,30 @@ Object {
         "isHighlighted": false,
         "outputItems": Array [
           Object {
-            "text": "=",
+            "labelParts": Array [
+              Object {
+                "id": "value",
+                "latex": "=",
+                "type": "latex",
+              },
+            ],
             "type": "VALUE",
             "value": "0",
           },
           Object {
-            "text": "d(?)/d(3) =",
+            "labelParts": Array [
+              Object {
+                "href": "3",
+                "id": "derivative",
+                "latex": "\\\\displaystyle \\\\frac{\\\\partial{?}}{\\\\partial{3}}",
+                "type": "latexLink",
+              },
+              Object {
+                "id": "equal",
+                "latex": "=",
+                "type": "latex",
+              },
+            ],
             "type": "DERIVATIVE",
             "value": "0",
           },

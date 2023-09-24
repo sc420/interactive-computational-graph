@@ -507,15 +507,17 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
           <Grid container direction="column" flexGrow={1}>
             {/* Graph mock */}
             {isTest && (
-              <ReactFlowGraphMock
-                nodes={reactFlowNodes}
-                edges={reactFlowEdges}
-                onNodesChange={handleNodesChange}
-                onEdgesChange={handleEdgesChange}
-                onSelectionChange={handleSelectionChange}
-                onConnect={handleConnect}
-                onDropNode={handleDropNode}
-              />
+              <Grid item display="flex">
+                <ReactFlowGraphMock
+                  nodes={reactFlowNodes}
+                  edges={reactFlowEdges}
+                  onNodesChange={handleNodesChange}
+                  onEdgesChange={handleEdgesChange}
+                  onSelectionChange={handleSelectionChange}
+                  onConnect={handleConnect}
+                  onDropNode={handleDropNode}
+                />
+              </Grid>
             )}
 
             {/* Graph */}

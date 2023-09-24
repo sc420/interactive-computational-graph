@@ -1,9 +1,9 @@
-import type ExplainDerivativeDescriptionType from "./ExplainDerivativeDescriptionType";
 import type ExplainDerivativeItemType from "./ExplainDerivativeItemType";
+import type MathLabelPartType from "./MathLabelPartType";
 
 interface ExplainDerivativeItem {
   type: ExplainDerivativeItemType;
-  descriptionParts: ExplainDerivativeDescriptionType[];
+  descriptionParts: MathLabelPartType[];
   latex: string;
 }
 

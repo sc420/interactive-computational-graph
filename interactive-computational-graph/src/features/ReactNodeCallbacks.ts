@@ -6,4 +6,6 @@ type InputChangeCallback = (
 
 type BodyClickCallback = (nodeId: string) => void;
 
-export type { InputChangeCallback, BodyClickCallback };
+type DerivativeClickCallback = (nodeId: string) => void;
+
+export type { BodyClickCallback, DerivativeClickCallback, InputChangeCallback };

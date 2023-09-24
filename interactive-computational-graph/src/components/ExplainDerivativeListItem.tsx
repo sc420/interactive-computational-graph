@@ -1,16 +1,9 @@
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-import {
-  Box,
-  IconButton,
-  Link,
-  ListItem,
-  Stack,
-  Tooltip,
-  Typography,
-} from "@mui/material";
+import { Box, IconButton, ListItem, Stack, Tooltip } from "@mui/material";
 import { type FunctionComponent } from "react";
 import type ExplainDerivativeItem from "../features/ExplainDerivativeItem";
 import Katex from "../latex/Katex";
+import MathLabel from "./MathLabel";
 
 interface ExplainDerivativesListItemProps {
   item: ExplainDerivativeItem;
@@ -26,38 +19,10 @@ const ExplainDerivativesListItem: FunctionComponent<
     <ListItem disableGutters divider={hasDivider}>
       <Stack py={1} spacing={1} width="100%">
         {/* Description */}
-        <Box>
-          {item.descriptionParts.map((part) => {
-            switch (part.type) {
-              case "text": {
-                return (
-                  <Typography key={part.id} display="inline" variant="body2">
-                    {part.text}
-                  </Typography>
-                );
-              }
-              case "latex": {
-                return <Katex key={part.id} latex={part.latex} />;
-              }
-              case "latexLink": {
-                return (
-                  <Link
-                    key={part.id}
-                    href="#"
-                    onClick={() => {
-                      onClickLatexLink(part.nodeId);
-                    }}
-                  >
-                    <Katex latex={part.latex} />
-                  </Link>
-                );
-              }
-              default: {
-                throw new Error("Unknown description part type");
-              }
-            }
-          })}
-        </Box>
+        <MathLabel
+          parts={item.descriptionParts}
+          onClickLatexLink={onClickLatexLink}
+        />
 
         {/* Expression */}
         <Stack

@@ -365,6 +365,7 @@ const renderGraphContainer = (): void => {
       isSidebarOpen={false}
       onToggleSidebar={() => {}}
       selectedFeature="add-nodes"
+      onSelectFeature={() => {}}
       isDarkMode={false}
       onToggleDarkMode={() => {}}
     />,

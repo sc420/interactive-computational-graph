@@ -6,6 +6,7 @@ import {
   type XYPosition,
 } from "reactflow";
 import type AddNodeData from "./AddNodeData";
+import type LabelType from "./MathLabelPartType";
 import type NodeData from "./NodeData";
 import { findFeatureOperation } from "./OperationUtilities";
 import { randomInteger } from "./RandomUtilities";
@@ -221,12 +222,11 @@ const updateReactFlowNodeDerivatives = (
         (outputItem) => outputItem.type === "DERIVATIVE",
       );
       if (outputItem !== undefined) {
-        const derivativeText = buildDerivativeText(
+        outputItem.labelParts = buildDerivativeLabelParts(
           node.id,
           isReverseMode,
           derivativeTarget,
         );
-        outputItem.text = `${derivativeText} =`;
         outputItem.value = value;
         // Set the new data to notify React Flow about the change
         const newData: NodeData = { ...node.data };
@@ -304,6 +304,7 @@ const buildReactFlowNodeData = (addNodeData: AddNodeData): NodeData => {
     derivativeTarget,
     onInputChange,
     onBodyClick,
+    onDerivativeClick,
     isDarkMode,
   } = addNodeData;
   const isHighlighted = false;
@@ -325,12 +326,13 @@ const buildReactFlowNodeData = (addNodeData: AddNodeData): NodeData => {
         outputItems: [],
         onBodyClick,
         onInputChange,
+        onDerivativeClick,
         isDarkMode,
         isHighlighted,
       };
     }
     case "VARIABLE": {
-      const derivativeText = buildDerivativeText(
+      const derivativeLabelParts = buildDerivativeLabelParts(
         nodeId,
         isReverseMode,
         derivativeTarget,
@@ -350,12 +352,13 @@ const buildReactFlowNodeData = (addNodeData: AddNodeData): NodeData => {
         outputItems: [
           {
             type: "DERIVATIVE",
-            text: `${derivativeText} =`,
+            labelParts: derivativeLabelParts,
             value: "0",
           },
         ],
         onBodyClick,
         onInputChange,
+        onDerivativeClick,
         isDarkMode,
         isHighlighted,
       };
@@ -366,7 +369,7 @@ const buildReactFlowNodeData = (addNodeData: AddNodeData): NodeData => {
         featureOperations,
       );
 
-      const derivativeText = buildDerivativeText(
+      const derivativeLabelParts = buildDerivativeLabelParts(
         nodeId,
         isReverseMode,
         derivativeTarget,
@@ -386,17 +389,24 @@ const buildReactFlowNodeData = (addNodeData: AddNodeData): NodeData => {
         outputItems: [
           {
             type: "VALUE",
-            text: "=",
+            labelParts: [
+              {
+                type: "latex",
+                id: "value",
+                latex: "=",
+              },
+            ],
             value: "0",
           },
           {
             type: "DERIVATIVE",
-            text: `${derivativeText} =`,
+            labelParts: derivativeLabelParts,
             value: "0",
           },
         ],
         onBodyClick,
         onInputChange,
+        onDerivativeClick,
         isDarkMode,
         isHighlighted,
       };
@@ -404,16 +414,29 @@ const buildReactFlowNodeData = (addNodeData: AddNodeData): NodeData => {
   }
 };
 
-const buildDerivativeText = (
+const buildDerivativeLabelParts = (
   nodeId: string,
   isReverseMode: boolean,
   derivativeTarget: string | null,
-): string => {
-  if (isReverseMode) {
-    return `d(${derivativeTarget ?? "?"})/d(${nodeId})`;
-  } else {
-    return `d(${nodeId})/d(${derivativeTarget ?? "?"})`;
-  }
+): LabelType[] => {
+  const targetLatex = `\\partial{${derivativeTarget ?? "?"}}`;
+  const nodeLatex = `\\partial{${nodeId}}`;
+  const derivativeLatex = isReverseMode
+    ? `\\displaystyle \\frac{${targetLatex}}{${nodeLatex}}`
+    : `\\displaystyle \\frac{${nodeLatex}}{${targetLatex}}`;
+  return [
+    {
+      type: "latexLink",
+      id: "derivative",
+      latex: derivativeLatex,
+      href: nodeId,
+    },
+    {
+      type: "latex",
+      id: "equal",
+      latex: "=",
+    },
+  ];
 };
 
 const findLastSelectedNode = (

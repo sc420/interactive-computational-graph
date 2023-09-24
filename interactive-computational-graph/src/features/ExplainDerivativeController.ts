@@ -1,8 +1,8 @@
 import type ChainRuleTerm from "../core/ChainRuleTerm";
 import type DifferentiationMode from "../core/DifferentiationMode";
-import type ExplainDerivativeDescriptionType from "./ExplainDerivativeDescriptionType";
 import type ExplainDerivativeItem from "./ExplainDerivativeItem";
 import type ExplainDerivativeType from "./ExplainDerivativeType";
+import type MathLabelPartType from "./MathLabelPartType";
 
 type ChainRuleType = "raw" | "previousDerivativesReplaced" | "allReplaced";
 
@@ -275,10 +275,10 @@ const buildPreviousDerivativesReplacedDescription = (
   differentiationMode: DifferentiationMode,
   targetNodeId: string,
   chainRuleTerms: ChainRuleTerm[],
-): ExplainDerivativeDescriptionType[] => {
+): MathLabelPartType[] => {
   const side = differentiationMode === "REVERSE" ? "right" : "left";
-  const previousDerivativeTerms: ExplainDerivativeDescriptionType[] =
-    chainRuleTerms.map((chainRuleTerm) => {
+  const previousDerivativeTerms: MathLabelPartType[] = chainRuleTerms.map(
+    (chainRuleTerm) => {
       let derivative: string;
       if (differentiationMode === "REVERSE") {
         derivative = buildPartialDerivativeLatex(
@@ -295,11 +295,12 @@ const buildPreviousDerivativesReplacedDescription = (
         type: "latexLink",
         id: `chainRuleTerm-${chainRuleTerm.neighborNodeId}`,
         latex: derivative,
-        nodeId: chainRuleTerm.neighborNodeId,
+        href: chainRuleTerm.neighborNodeId,
       };
-    });
+    },
+  );
 
-  const commaListParts: ExplainDerivativeDescriptionType[] = [];
+  const commaListParts: MathLabelPartType[] = [];
   previousDerivativeTerms.forEach((previousDerivativeTerm, index) => {
     if (index > 0) {
       commaListParts.push({
@@ -328,7 +329,7 @@ const buildPreviousDerivativesReplacedDescription = (
 
 const buildAllReplacedDescription = (
   differentiationMode: DifferentiationMode,
-): ExplainDerivativeDescriptionType[] => {
+): MathLabelPartType[] => {
   const side = differentiationMode === "REVERSE" ? "left" : "right";
   return [
     {

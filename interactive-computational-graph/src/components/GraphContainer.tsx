@@ -72,6 +72,7 @@ interface GraphContainerProps {
   onToggleSidebar: () => void;
   // Feature
   selectedFeature: SelectedFeature | null;
+  onSelectFeature: (feature: SelectedFeature | null) => void;
   // Theme
   isDarkMode: boolean;
   onToggleDarkMode: () => void;
@@ -81,6 +82,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
   isSidebarOpen,
   onToggleSidebar,
   selectedFeature,
+  onSelectFeature,
   isDarkMode,
   onToggleDarkMode,
 }) => {
@@ -174,6 +176,15 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     setReactFlowNodes((nodes) => selectReactFlowNode(nodeId, nodes));
   }, []);
 
+  const handleDerivativeClick = useCallback(
+    (nodeId: string): void => {
+      onSelectFeature("explain-derivatives");
+
+      setReactFlowNodes((nodes) => selectReactFlowNode(nodeId, nodes));
+    },
+    [onSelectFeature],
+  );
+
   const handleAddNode = useCallback(
     (featureNodeType: FeatureNodeType) => {
       const nodeId = `${nextNodeId}`;
@@ -188,6 +199,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
         derivativeTarget,
         onInputChange: handleInputChange,
         onBodyClick: handleBodyClick,
+        onDerivativeClick: handleDerivativeClick,
         isDarkMode,
       };
       setReactFlowNodes((nodes) => {
@@ -203,6 +215,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       derivativeTarget,
       featureOperations,
       handleBodyClick,
+      handleDerivativeClick,
       handleInputChange,
       isDarkMode,
       isReverseMode,
@@ -328,6 +341,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
         derivativeTarget,
         onInputChange: handleInputChange,
         onBodyClick: handleBodyClick,
+        onDerivativeClick: handleDerivativeClick,
         isDarkMode,
       };
       setReactFlowNodes((nodes) => {
@@ -342,6 +356,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       derivativeTarget,
       featureOperations,
       handleBodyClick,
+      handleDerivativeClick,
       handleInputChange,
       isDarkMode,
       isReverseMode,

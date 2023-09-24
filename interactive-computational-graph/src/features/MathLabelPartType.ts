@@ -14,9 +14,9 @@ interface LatexLinkType {
   type: "latexLink";
   id: string;
   latex: string;
-  nodeId: string;
+  href: string;
 }
 
-type ExplainDerivativeDescriptionType = TextType | LatexType | LatexLinkType;
+type MathLabelPartType = TextType | LatexType | LatexLinkType;
 
-export default ExplainDerivativeDescriptionType;
+export default MathLabelPartType;

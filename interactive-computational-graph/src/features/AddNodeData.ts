@@ -2,6 +2,7 @@ import type FeatureNodeType from "./FeatureNodeType";
 import type FeatureOperation from "./FeatureOperation";
 import {
   type BodyClickCallback,
+  type DerivativeClickCallback,
   type InputChangeCallback,
 } from "./ReactNodeCallbacks";
 
@@ -13,6 +14,7 @@ interface AddNodeData {
   derivativeTarget: string | null;
   onInputChange: InputChangeCallback;
   onBodyClick: BodyClickCallback;
+  onDerivativeClick: DerivativeClickCallback;
   isDarkMode: boolean;
 }
 

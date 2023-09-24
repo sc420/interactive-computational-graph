@@ -3,6 +3,7 @@ import type InputItem from "./InputItem";
 import type OutputItem from "./OutputItem";
 import {
   type BodyClickCallback,
+  type DerivativeClickCallback,
   type InputChangeCallback,
 } from "./ReactNodeCallbacks";
 
@@ -13,6 +14,7 @@ interface NodeData {
   outputItems: OutputItem[];
   onInputChange: InputChangeCallback;
   onBodyClick: BodyClickCallback;
+  onDerivativeClick: DerivativeClickCallback;
   isDarkMode: boolean;
   isHighlighted: boolean;
 }

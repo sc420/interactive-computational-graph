@@ -1,5 +1,6 @@
 import { Box, Grid, InputLabel, OutlinedInput } from "@mui/material";
 import { useCallback, type FunctionComponent } from "react";
+import MathLabel from "../components/MathLabel";
 import type NodeData from "../features/NodeData";
 import type OutputItemType from "../features/OutputItemType";
 
@@ -25,7 +26,7 @@ const InputItems: FunctionComponent<InputItemProps> = ({
 
   return (
     <Grid container columnSpacing={1} wrap="nowrap">
-      {/* Handles and labels */}
+      {/* Labels */}
       <Grid item xs>
         {data.outputItems.map((item) => (
           <Box
@@ -40,7 +41,10 @@ const InputItems: FunctionComponent<InputItemProps> = ({
               data-testid={`label-${getOutputId(item.type)}`}
               htmlFor={getOutputId(item.type)}
             >
-              {item.text}
+              <MathLabel
+                parts={item.labelParts}
+                onClickLatexLink={data.onDerivativeClick}
+              />
             </InputLabel>
           </Box>
         ))}

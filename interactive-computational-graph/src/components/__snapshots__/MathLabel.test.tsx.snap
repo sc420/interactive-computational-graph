@@ -1,0 +1,40 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should render correctly with mixed types 1`] = `
+<div
+  className="MuiBox-root css-0"
+>
+  <p
+    className="MuiTypography-root MuiTypography-body2 css-141vi1f-MuiTypography-root"
+  >
+    To calculate 
+  </p>
+  <span
+    dangerouslySetInnerHTML={
+      Object {
+        "__html": "<span class=\\"katex\\"><math xmlns=\\"http://www.w3.org/1998/Math/MathML\\"><semantics><mrow><mi>x</mi></mrow><annotation encoding=\\"application/x-tex\\">x</annotation></semantics></math></span>",
+      }
+    }
+  />
+  <p
+    className="MuiTypography-root MuiTypography-body2 css-141vi1f-MuiTypography-root"
+  >
+    , we need to calculate 
+  </p>
+  <a
+    className="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
+    href="#"
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+  >
+    <span
+      dangerouslySetInnerHTML={
+        Object {
+          "__html": "<span class=\\"katex\\"><math xmlns=\\"http://www.w3.org/1998/Math/MathML\\"><semantics><mrow><mfrac><mi>a</mi><mi>b</mi></mfrac></mrow><annotation encoding=\\"application/x-tex\\">\\\\frac{a}{b}</annotation></semantics></math></span>",
+        }
+      }
+    />
+  </a>
+</div>
+`;

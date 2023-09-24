@@ -32,9 +32,9 @@ Array [
         "type": "text",
       },
       Object {
+        "href": "op1",
         "id": "chainRuleTerm-op1",
         "latex": "\\\\frac{\\\\partial{op1}}{\\\\partial{f}}",
-        "nodeId": "op1",
         "type": "latexLink",
       },
       Object {
@@ -43,9 +43,9 @@ Array [
         "type": "text",
       },
       Object {
+        "href": "op2",
         "id": "chainRuleTerm-op2",
         "latex": "\\\\frac{\\\\partial{op2}}{\\\\partial{f}}",
-        "nodeId": "op2",
         "type": "latexLink",
       },
       Object {
@@ -114,9 +114,9 @@ Array [
         "type": "text",
       },
       Object {
+        "href": "op1",
         "id": "chainRuleTerm-op1",
         "latex": "\\\\frac{\\\\partial{f}}{\\\\partial{op1}}",
-        "nodeId": "op1",
         "type": "latexLink",
       },
       Object {
@@ -125,9 +125,9 @@ Array [
         "type": "text",
       },
       Object {
+        "href": "op2",
         "id": "chainRuleTerm-op2",
         "latex": "\\\\frac{\\\\partial{f}}{\\\\partial{op2}}",
-        "nodeId": "op2",
         "type": "latexLink",
       },
       Object {

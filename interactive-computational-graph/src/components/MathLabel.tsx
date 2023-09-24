@@ -31,7 +31,8 @@ const MathLabel: FunctionComponent<MathLabelProps> = ({
               <Link
                 key={part.id}
                 href="#"
-                onClick={() => {
+                onClick={(event) => {
+                  event.preventDefault();
                   onClickLatexLink(part.href);
                 }}
               >

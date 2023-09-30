@@ -317,7 +317,7 @@ const buildReactFlowNodeData = (addNodeData: AddNodeData): NodeData => {
         inputItems: [
           {
             id: "value",
-            text: "=",
+            label: "=",
             showHandle: false,
             showInputField: true,
             value: "0",
@@ -343,7 +343,7 @@ const buildReactFlowNodeData = (addNodeData: AddNodeData): NodeData => {
         inputItems: [
           {
             id: "value",
-            text: "=",
+            label: "=",
             showHandle: false,
             showInputField: true,
             value: "0",
@@ -380,7 +380,7 @@ const buildReactFlowNodeData = (addNodeData: AddNodeData): NodeData => {
         inputItems: featureOperation.inputPorts.map((inputPort) => {
           return {
             id: inputPort.getId(),
-            text: inputPort.getId(),
+            label: inputPort.getId(),
             showHandle: true,
             showInputField: true,
             value: "0",

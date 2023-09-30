@@ -12,9 +12,9 @@ Object {
         "inputItems": Array [
           Object {
             "id": "value",
+            "label": "=",
             "showHandle": false,
             "showInputField": true,
-            "text": "=",
             "value": "0",
           },
         ],
@@ -42,9 +42,9 @@ Object {
         "inputItems": Array [
           Object {
             "id": "value",
+            "label": "=",
             "showHandle": false,
             "showInputField": true,
-            "text": "=",
             "value": "0",
           },
         ],
@@ -80,9 +80,9 @@ Object {
         "inputItems": Array [
           Object {
             "id": "value",
+            "label": "=",
             "showHandle": false,
             "showInputField": true,
-            "text": "=",
             "value": "0",
           },
         ],
@@ -110,9 +110,9 @@ Object {
         "inputItems": Array [
           Object {
             "id": "value",
+            "label": "=",
             "showHandle": false,
             "showInputField": true,
-            "text": "=",
             "value": "0",
           },
         ],
@@ -148,9 +148,9 @@ Object {
         "inputItems": Array [
           Object {
             "id": "value",
+            "label": "=",
             "showHandle": false,
             "showInputField": true,
-            "text": "=",
             "value": "0",
           },
         ],
@@ -178,9 +178,9 @@ Object {
         "inputItems": Array [
           Object {
             "id": "value",
+            "label": "=",
             "showHandle": false,
             "showInputField": true,
-            "text": "=",
             "value": "0",
           },
         ],
@@ -227,9 +227,9 @@ Object {
         "inputItems": Array [
           Object {
             "id": "x_i",
+            "label": "x_i",
             "showHandle": true,
             "showInputField": true,
-            "text": "x_i",
             "value": "0",
           },
         ],
@@ -294,9 +294,9 @@ Object {
         "inputItems": Array [
           Object {
             "id": "value",
+            "label": "=",
             "showHandle": false,
             "showInputField": true,
-            "text": "=",
             "value": "0",
           },
         ],
@@ -324,9 +324,9 @@ Object {
         "inputItems": Array [
           Object {
             "id": "value",
+            "label": "=",
             "showHandle": false,
             "showInputField": true,
-            "text": "=",
             "value": "0",
           },
         ],

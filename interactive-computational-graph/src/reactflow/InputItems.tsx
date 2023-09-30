@@ -2,6 +2,7 @@ import { Box, Grid, InputLabel, OutlinedInput } from "@mui/material";
 import { useCallback, type FunctionComponent } from "react";
 import { Handle, Position } from "reactflow";
 import type NodeData from "../features/NodeData";
+import Katex from "../latex/Katex";
 
 interface InputItemProps {
   id: string;
@@ -83,7 +84,9 @@ const InputItems: FunctionComponent<InputItemProps> = ({
             )}
 
             {/* Label */}
-            <InputLabel htmlFor={getInputId(item.id)}>{item.text}</InputLabel>
+            <InputLabel htmlFor={getInputId(item.id)}>
+              <Katex latex={item.label} />
+            </InputLabel>
           </Box>
         ))}
       </Grid>

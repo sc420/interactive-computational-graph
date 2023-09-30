@@ -25,6 +25,30 @@ import OperationNode from "./OperationNode";
 import Port from "./Port";
 import VariableNode from "./VariableNode";
 
+describe("setting/getting properties", () => {
+  test("should set and get the correct differentiation mode", () => {
+    const graph = new Graph();
+    expect(graph.getDifferentiationMode()).toBe("REVERSE");
+
+    graph.setDifferentiationMode("FORWARD");
+    expect(graph.getDifferentiationMode()).toBe("FORWARD");
+  });
+
+  test("should set and get the correct target node", () => {
+    const graph = new Graph();
+    expect(graph.getTargetNode()).toBe(null);
+
+    expect(() => {
+      graph.setTargetNode("v1");
+    }).toThrow("Node v1 doesn't exist");
+
+    const varNode1 = new VariableNode("v1");
+    graph.addNode(varNode1);
+    graph.setTargetNode("v1");
+    expect(graph.getTargetNode()).toBe("v1");
+  });
+});
+
 describe("manipulating connections", () => {
   test("should get a list of nodes", () => {
     const emptyGraph = new Graph();
@@ -372,10 +396,13 @@ describe("updating derivative values", () => {
     let expectedUpdatedNodes: string[] = ["v1"];
     expect(updatedNodes.sort()).toEqual(expectedUpdatedNodes.sort());
     // d(v1)/d(v1) = 1
+    expect(graph.hasNodeDerivative("v1")).toBe(true);
     expect(parseFloat(graph.getNodeDerivative("v1"))).toBeCloseTo(1);
     // d(v1)/d(v2) = 0 (not in the reverse path)
+    expect(graph.hasNodeDerivative("v2")).toBe(false);
     expect(parseFloat(graph.getNodeDerivative("v2"))).toBeCloseTo(0);
     // d(v1)/d(sum1) = 0 (not in the reverse path)
+    expect(graph.hasNodeDerivative("sum1")).toBe(false);
     expect(parseFloat(graph.getNodeDerivative("sum1"))).toBeCloseTo(0);
 
     graph.setTargetNode("sum1");
@@ -383,10 +410,13 @@ describe("updating derivative values", () => {
     expectedUpdatedNodes = ["v1", "v2", "sum1"];
     expect(updatedNodes.sort()).toEqual(expectedUpdatedNodes.sort());
     // d(sum1)/d(v1) = 1
+    expect(graph.hasNodeDerivative("v1")).toBe(true);
     expect(parseFloat(graph.getNodeDerivative("v1"))).toBeCloseTo(1);
     // d(sum1)/d(v2) = 1
+    expect(graph.hasNodeDerivative("v2")).toBe(true);
     expect(parseFloat(graph.getNodeDerivative("v2"))).toBeCloseTo(1);
     // d(sum1)/d(sum1) = 1
+    expect(graph.hasNodeDerivative("sum1")).toBe(true);
     expect(parseFloat(graph.getNodeDerivative("sum1"))).toBeCloseTo(1);
   });
 
@@ -401,10 +431,13 @@ describe("updating derivative values", () => {
     let expectedUpdatedNodes: string[] = ["v1", "sum1"];
     expect(updatedNodes.sort()).toEqual(expectedUpdatedNodes.sort());
     // d(v1)/d(v1) = 1
+    expect(graph.hasNodeDerivative("v1")).toBe(true);
     expect(parseFloat(graph.getNodeDerivative("v1"))).toBeCloseTo(1);
     // d(v2)/d(v1) = 0 (not in the forward path)
+    expect(graph.hasNodeDerivative("v2")).toBe(false);
     expect(parseFloat(graph.getNodeDerivative("v2"))).toBeCloseTo(0);
     // d(sum1)/d(v1) = 1
+    expect(graph.hasNodeDerivative("sum1")).toBe(true);
     expect(parseFloat(graph.getNodeDerivative("sum1"))).toBeCloseTo(1);
 
     graph.setTargetNode("sum1");
@@ -412,10 +445,13 @@ describe("updating derivative values", () => {
     expectedUpdatedNodes = ["sum1"];
     expect(updatedNodes.sort()).toEqual(expectedUpdatedNodes.sort());
     // d(v1)/d(sum1) = 0 (not in the forward path)
+    expect(graph.hasNodeDerivative("v1")).toBe(false);
     expect(parseFloat(graph.getNodeDerivative("v1"))).toBeCloseTo(0);
     // d(v2)/d(sum1) = 0 (not in the forward path)
+    expect(graph.hasNodeDerivative("v2")).toBe(false);
     expect(parseFloat(graph.getNodeDerivative("v2"))).toBeCloseTo(0);
     // d(sum1)/d(sum1) = 1
+    expect(graph.hasNodeDerivative("sum1")).toBe(true);
     expect(parseFloat(graph.getNodeDerivative("sum1"))).toBeCloseTo(1);
   });
 
@@ -752,6 +788,153 @@ describe("updating derivative values", () => {
     // d(relu_h1_2)/d(sum_h1_2) * d(se)/d(relu_h1_2) =
     // 1 * 0.125 = 0.125
     expect(parseFloat(graph.getNodeDerivative("sum_h1_2"))).toBeCloseTo(0.125);
+  });
+});
+
+describe("explaining chain rule", () => {
+  test("should explain chain rule in reverse mode for small graph", () => {
+    const graph = buildSmallGraph();
+    graph.updateFValues();
+    graph.setDifferentiationMode("REVERSE");
+
+    graph.setTargetNode("v1");
+    graph.updateDerivatives();
+
+    expect(graph.explainChainRule("v1")).toEqual([
+      {
+        neighborNodeId: "sum1",
+        derivativeRegardingTarget: "0", // d(target)/d(sum1) = d(v1)/d(sum1)
+        derivativeRegardingCurrent: "1", // d(sum1)/d(v1)
+      },
+    ]);
+
+    expect(graph.explainChainRule("sum1")).toEqual([]);
+
+    graph.setTargetNode("sum1");
+    graph.updateDerivatives();
+
+    expect(graph.explainChainRule("v1")).toEqual([
+      {
+        neighborNodeId: "sum1",
+        derivativeRegardingTarget: "1", // d(target)/d(sum1) = d(sum1)/d(sum1)
+        derivativeRegardingCurrent: "1", // d(sum1)/d(v1)
+      },
+    ]);
+
+    expect(graph.explainChainRule("sum1")).toEqual([]);
+  });
+
+  test("should explain chain rule in forward mode for small graph", () => {
+    const graph = buildSmallGraph();
+    graph.updateFValues();
+    graph.setDifferentiationMode("FORWARD");
+
+    graph.setTargetNode("v1");
+    graph.updateDerivatives();
+
+    expect(graph.explainChainRule("v1")).toEqual([]);
+
+    expect(graph.explainChainRule("sum1")).toEqual([
+      {
+        neighborNodeId: "v1",
+        derivativeRegardingTarget: "1", // d(v1)/d(target) = d(v1)/d(v1)
+        derivativeRegardingCurrent: "1", // d(sum1)/d(v1)
+      },
+      {
+        neighborNodeId: "v2",
+        derivativeRegardingTarget: "0", // d(v2)/d(target) = d(v2)/d(v1)
+        derivativeRegardingCurrent: "1", // d(sum1)/d(v2)
+      },
+    ]);
+
+    graph.setTargetNode("sum1");
+    graph.updateDerivatives();
+
+    expect(graph.explainChainRule("v1")).toEqual([]);
+
+    expect(graph.explainChainRule("sum1")).toEqual([
+      {
+        neighborNodeId: "v1",
+        derivativeRegardingTarget: "0", // d(v1)/d(target) = d(v1)/d(sum1)
+        derivativeRegardingCurrent: "1", // d(sum1)/d(v1)
+      },
+      {
+        neighborNodeId: "v2",
+        derivativeRegardingTarget: "0", // d(v2)/d(target) = d(v2)/d(sum1)
+        derivativeRegardingCurrent: "1", // d(sum1)/d(v2)
+      },
+    ]);
+  });
+
+  test("should explain chain rule in reverse mode for medium graph", () => {
+    const graph = buildMediumGraph();
+    graph.updateFValues();
+    graph.setDifferentiationMode("REVERSE");
+
+    graph.setTargetNode("product1");
+    graph.updateDerivatives();
+
+    expect(graph.explainChainRule("v1")).toEqual([
+      {
+        neighborNodeId: "sum1",
+        // d(target)/d(sum1) = d(product1)/d(sum1)
+        derivativeRegardingTarget: "10",
+        derivativeRegardingCurrent: "1", // d(sum1)/d(v1)
+      },
+    ]);
+
+    expect(graph.explainChainRule("v2")).toEqual([
+      {
+        neighborNodeId: "sum1",
+        // d(target)/d(sum1) = d(product1)/d(sum1)
+        derivativeRegardingTarget: "10",
+        derivativeRegardingCurrent: "1", // d(sum1)/d(v2)
+      },
+      {
+        neighborNodeId: "sum2",
+        // d(target)/d(sum2) = d(product1)/d(sum2)
+        derivativeRegardingTarget: "15",
+        derivativeRegardingCurrent: "1", // d(sum2)/d(v2)
+      },
+    ]);
+  });
+
+  test("should explain chain rule in forward mode for medium graph", () => {
+    const graph = buildMediumGraph();
+    graph.updateFValues();
+    graph.setDifferentiationMode("FORWARD");
+
+    graph.setTargetNode("v2");
+    graph.updateDerivatives();
+
+    expect(graph.explainChainRule("v2")).toEqual([]);
+
+    expect(graph.explainChainRule("product1")).toEqual([
+      {
+        neighborNodeId: "sum1",
+        derivativeRegardingTarget: "1", // d(sum1)/d(target) = d(sum1)/d(v2)
+        derivativeRegardingCurrent: "10", // d(product1)/d(sum1)
+      },
+      {
+        neighborNodeId: "sum2",
+        derivativeRegardingTarget: "1", // d(sum2)/d(target) = d(sum2)/d(v2)
+        derivativeRegardingCurrent: "15", // d(product1)/d(sum2)
+      },
+      {
+        neighborNodeId: "v3",
+        derivativeRegardingTarget: "0", // d(v3)/d(target) = d(v3)/d(v2)
+        derivativeRegardingCurrent: "6", // d(product1)/d(v3)
+      },
+    ]);
+
+    expect(graph.explainChainRule("identity1")).toEqual([
+      {
+        neighborNodeId: "product1",
+        // d(product1)/d(target) = d(product1)/d(v2) = 1*10 + 1*15 + 0*6
+        derivativeRegardingTarget: "25",
+        derivativeRegardingCurrent: "1", // d(identity1)/d(product1)
+      },
+    ]);
   });
 });
 

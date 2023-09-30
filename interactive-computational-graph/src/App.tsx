@@ -113,6 +113,7 @@ const App: FunctionComponent = () => {
             isSidebarOpen={isSidebarOpen}
             onToggleSidebar={toggleSidebar}
             selectedFeature={selectedFeature}
+            onSelectFeature={toggleFeature}
             isDarkMode={isDarkMode}
             onToggleDarkMode={toggleDarkMode}
           />

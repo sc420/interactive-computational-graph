@@ -1,8 +1,9 @@
+import type MathLabelPartType from "./MathLabelPartType";
 import type OutputItemType from "./OutputItemType";
 
 interface OutputItem {
   type: OutputItemType;
-  text: string;
+  labelParts: MathLabelPartType[];
   value: string;
 }
 

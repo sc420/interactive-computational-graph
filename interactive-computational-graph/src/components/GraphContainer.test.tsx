@@ -8,9 +8,15 @@ import {
 import { mockReactFlow } from "../ReactFlowMock";
 import type FeatureNodeType from "../features/FeatureNodeType";
 import { randomInteger } from "../features/RandomUtilities";
+import type SelectedFeature from "../features/SelectedFeature";
 import GraphContainer from "./GraphContainer";
 
+// Make random utilities return the fixed number
 jest.mock("../features/RandomUtilities");
+
+// If we don't mock katex, there would be some strange error:
+// `TypeError: Cannot read properties of undefined (reading 'getPropertyValue')`
+jest.mock("../latex/Katex");
 
 beforeAll(() => {
   mockReactFlow();
@@ -265,7 +271,7 @@ it("derivative target should reset when the target node is removed", () => {
 });
 
 // It uses example from https://colah.github.io/posts/2015-08-Backprop/
-it("derivative values should change when derivative mode/target is changed", () => {
+it("outputs should change when derivative mode/target is changed", () => {
   renderGraphContainer();
 
   // Add the nodes
@@ -300,6 +306,23 @@ it("derivative values should change when derivative mode/target is changed", () 
   expect(getOutputItemValue("4", "VALUE")).toBe("2");
   expect(getOutputItemValue("5", "VALUE")).toBe("6");
 
+  // Check the derivative labels
+  expect(getOutputItemLabelText("1", "DERIVATIVE")).toBe(
+    "\\displaystyle \\frac{\\partial{5}}{\\partial{1}}=",
+  );
+  expect(getOutputItemLabelText("2", "DERIVATIVE")).toBe(
+    "\\displaystyle \\frac{\\partial{5}}{\\partial{2}}=",
+  );
+  expect(getOutputItemLabelText("3", "DERIVATIVE")).toBe(
+    "\\displaystyle \\frac{\\partial{5}}{\\partial{3}}=",
+  );
+  expect(getOutputItemLabelText("4", "DERIVATIVE")).toBe(
+    "\\displaystyle \\frac{\\partial{5}}{\\partial{4}}=",
+  );
+  expect(getOutputItemLabelText("5", "DERIVATIVE")).toBe(
+    "\\displaystyle \\frac{\\partial{5}}{\\partial{5}}=",
+  );
+
   // Check the derivative values
   expect(getOutputItemValue("1", "DERIVATIVE")).toBe("2");
   expect(getOutputItemValue("2", "DERIVATIVE")).toBe("5");
@@ -314,6 +337,23 @@ it("derivative values should change when derivative mode/target is changed", () 
   expect(getOutputItemValue("3", "VALUE")).toBe("3");
   expect(getOutputItemValue("4", "VALUE")).toBe("2");
   expect(getOutputItemValue("5", "VALUE")).toBe("6");
+
+  // Check the derivative labels
+  expect(getOutputItemLabelText("1", "DERIVATIVE")).toBe(
+    "\\displaystyle \\frac{\\partial{1}}{\\partial{5}}=",
+  );
+  expect(getOutputItemLabelText("2", "DERIVATIVE")).toBe(
+    "\\displaystyle \\frac{\\partial{2}}{\\partial{5}}=",
+  );
+  expect(getOutputItemLabelText("3", "DERIVATIVE")).toBe(
+    "\\displaystyle \\frac{\\partial{3}}{\\partial{5}}=",
+  );
+  expect(getOutputItemLabelText("4", "DERIVATIVE")).toBe(
+    "\\displaystyle \\frac{\\partial{4}}{\\partial{5}}=",
+  );
+  expect(getOutputItemLabelText("5", "DERIVATIVE")).toBe(
+    "\\displaystyle \\frac{\\partial{5}}{\\partial{5}}=",
+  );
 
   // Check the derivative values
   expect(getOutputItemValue("1", "DERIVATIVE")).toBe("0");
@@ -330,6 +370,23 @@ it("derivative values should change when derivative mode/target is changed", () 
   expect(getOutputItemValue("4", "VALUE")).toBe("2");
   expect(getOutputItemValue("5", "VALUE")).toBe("6");
 
+  // Check the derivative labels
+  expect(getOutputItemLabelText("1", "DERIVATIVE")).toBe(
+    "\\displaystyle \\frac{\\partial{1}}{\\partial{2}}=",
+  );
+  expect(getOutputItemLabelText("2", "DERIVATIVE")).toBe(
+    "\\displaystyle \\frac{\\partial{2}}{\\partial{2}}=",
+  );
+  expect(getOutputItemLabelText("3", "DERIVATIVE")).toBe(
+    "\\displaystyle \\frac{\\partial{3}}{\\partial{2}}=",
+  );
+  expect(getOutputItemLabelText("4", "DERIVATIVE")).toBe(
+    "\\displaystyle \\frac{\\partial{4}}{\\partial{2}}=",
+  );
+  expect(getOutputItemLabelText("5", "DERIVATIVE")).toBe(
+    "\\displaystyle \\frac{\\partial{5}}{\\partial{2}}=",
+  );
+
   // Check the derivative values
   expect(getOutputItemValue("1", "DERIVATIVE")).toBe("0");
   expect(getOutputItemValue("2", "DERIVATIVE")).toBe("1");
@@ -344,6 +401,7 @@ const renderGraphContainer = (): void => {
       isSidebarOpen={false}
       onToggleSidebar={() => {}}
       selectedFeature="add-nodes"
+      onSelectFeature={(feature: SelectedFeature | null) => {}}
       isDarkMode={false}
       onToggleDarkMode={() => {}}
     />,
@@ -478,8 +536,18 @@ const setInputItemValue = (
   });
 };
 
+const getOutputItemLabelText = (
+  nodeId: string,
+  portId: string,
+): string | null => {
+  const outputLabel = screen.getByTestId(
+    `label-output-item-${nodeId}-${portId}`,
+  );
+  return outputLabel.textContent;
+};
+
 const getOutputItemValue = (nodeId: string, portId: string): string => {
-  const inputItem = screen.getByTestId(`output-item-${nodeId}-${portId}`);
-  const input = within(inputItem).getByRole("textbox");
-  return (input as HTMLInputElement).value;
+  const outputItem = screen.getByTestId(`output-item-${nodeId}-${portId}`);
+  const output = within(outputItem).getByRole("textbox");
+  return (output as HTMLInputElement).value;
 };

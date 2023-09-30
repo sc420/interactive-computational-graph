@@ -6,9 +6,11 @@ import {
   type XYPosition,
 } from "reactflow";
 import type AddNodeData from "./AddNodeData";
-import { findFeatureOperation } from "./ControllerUtilities";
+import type LabelType from "./MathLabelPartType";
 import type NodeData from "./NodeData";
+import { findFeatureOperation } from "./OperationUtilities";
 import { randomInteger } from "./RandomUtilities";
+import type SelectedFeature from "./SelectedFeature";
 
 const addReactFlowNode = (
   addNodeData: AddNodeData,
@@ -150,6 +152,31 @@ const findRemovedEdges = (changes: EdgeChange[], edges: Edge[]): Edge[] => {
   return removedEdges;
 };
 
+const updateEdgeAnimations = (
+  selectedFeature: SelectedFeature | null,
+  isReverseMode: boolean,
+  hasDerivativeTarget: boolean,
+  selectedNodeIds: string[],
+  edges: Edge[],
+): Edge[] => {
+  const nodeIds = new Set<string>();
+  selectedNodeIds.forEach((selectedNodeId) => {
+    nodeIds.add(selectedNodeId);
+  });
+
+  return edges.map((edge) => {
+    edge.animated = false;
+    if (selectedFeature === "explain-derivatives" && hasDerivativeTarget) {
+      if (isReverseMode && nodeIds.has(edge.source)) {
+        edge.animated = true;
+      } else if (!isReverseMode && nodeIds.has(edge.target)) {
+        edge.animated = true;
+      }
+    }
+    return edge;
+  });
+};
+
 const updateReactFlowNodeFValues = (
   updatedNodeIdToValues: Map<string, string>,
   nodes: Node[],
@@ -195,12 +222,11 @@ const updateReactFlowNodeDerivatives = (
         (outputItem) => outputItem.type === "DERIVATIVE",
       );
       if (outputItem !== undefined) {
-        const derivativeText = buildDerivativeText(
+        outputItem.labelParts = buildDerivativeLabelParts(
           node.id,
           isReverseMode,
           derivativeTarget,
         );
-        outputItem.text = `${derivativeText} =`;
         outputItem.value = value;
         // Set the new data to notify React Flow about the change
         const newData: NodeData = { ...node.data };
@@ -219,6 +245,22 @@ const updateReactFlowNodeDarkMode = (
   return nodes.map((node) => {
     const data = node.data as NodeData;
     data.isDarkMode = isDarkMode;
+    // Set the new data to notify React Flow about the change
+    const newData: NodeData = { ...node.data };
+    node.data = newData;
+    return node;
+  });
+};
+
+const updateReactFlowNodeHighlighted = (
+  selectedFeature: SelectedFeature | null,
+  derivativeTarget: string | null,
+  nodes: Node[],
+): Node[] => {
+  return nodes.map((node) => {
+    const data = node.data as NodeData;
+    data.isHighlighted =
+      selectedFeature === "explain-derivatives" && node.id === derivativeTarget;
     // Set the new data to notify React Flow about the change
     const newData: NodeData = { ...node.data };
     node.data = newData;
@@ -246,15 +288,11 @@ const selectReactFlowNode = (nodeId: string, nodes: Node[]): Node[] => {
   });
 };
 
-const deselectLastSelectedNode = (
-  nodes: Node[],
-  lastSelectedNodeId: string | null,
-): Node[] => {
-  const node = findLastSelectedNode(nodes, lastSelectedNodeId);
-  if (node !== null) {
+const deselectAllNodes = (nodes: Node[]): Node[] => {
+  return nodes.map((node) => {
     node.selected = false;
-  }
-  return nodes;
+    return node;
+  });
 };
 
 const buildReactFlowNodeData = (addNodeData: AddNodeData): NodeData => {
@@ -266,8 +304,10 @@ const buildReactFlowNodeData = (addNodeData: AddNodeData): NodeData => {
     derivativeTarget,
     onInputChange,
     onBodyClick,
+    onDerivativeClick,
     isDarkMode,
   } = addNodeData;
+  const isHighlighted = false;
 
   switch (featureNodeType.nodeType) {
     case "CONSTANT": {
@@ -277,7 +317,7 @@ const buildReactFlowNodeData = (addNodeData: AddNodeData): NodeData => {
         inputItems: [
           {
             id: "value",
-            text: "=",
+            label: "=",
             showHandle: false,
             showInputField: true,
             value: "0",
@@ -286,11 +326,13 @@ const buildReactFlowNodeData = (addNodeData: AddNodeData): NodeData => {
         outputItems: [],
         onBodyClick,
         onInputChange,
+        onDerivativeClick,
         isDarkMode,
+        isHighlighted,
       };
     }
     case "VARIABLE": {
-      const derivativeText = buildDerivativeText(
+      const derivativeLabelParts = buildDerivativeLabelParts(
         nodeId,
         isReverseMode,
         derivativeTarget,
@@ -301,7 +343,7 @@ const buildReactFlowNodeData = (addNodeData: AddNodeData): NodeData => {
         inputItems: [
           {
             id: "value",
-            text: "=",
+            label: "=",
             showHandle: false,
             showInputField: true,
             value: "0",
@@ -310,13 +352,15 @@ const buildReactFlowNodeData = (addNodeData: AddNodeData): NodeData => {
         outputItems: [
           {
             type: "DERIVATIVE",
-            text: `${derivativeText} =`,
+            labelParts: derivativeLabelParts,
             value: "0",
           },
         ],
         onBodyClick,
         onInputChange,
+        onDerivativeClick,
         isDarkMode,
+        isHighlighted,
       };
     }
     case "OPERATION": {
@@ -325,7 +369,7 @@ const buildReactFlowNodeData = (addNodeData: AddNodeData): NodeData => {
         featureOperations,
       );
 
-      const derivativeText = buildDerivativeText(
+      const derivativeLabelParts = buildDerivativeLabelParts(
         nodeId,
         isReverseMode,
         derivativeTarget,
@@ -336,7 +380,7 @@ const buildReactFlowNodeData = (addNodeData: AddNodeData): NodeData => {
         inputItems: featureOperation.inputPorts.map((inputPort) => {
           return {
             id: inputPort.getId(),
-            text: inputPort.getId(),
+            label: inputPort.getId(),
             showHandle: true,
             showInputField: true,
             value: "0",
@@ -345,33 +389,54 @@ const buildReactFlowNodeData = (addNodeData: AddNodeData): NodeData => {
         outputItems: [
           {
             type: "VALUE",
-            text: "=",
+            labelParts: [
+              {
+                type: "latex",
+                id: "value",
+                latex: "=",
+              },
+            ],
             value: "0",
           },
           {
             type: "DERIVATIVE",
-            text: `${derivativeText} =`,
+            labelParts: derivativeLabelParts,
             value: "0",
           },
         ],
         onBodyClick,
         onInputChange,
+        onDerivativeClick,
         isDarkMode,
+        isHighlighted,
       };
     }
   }
 };
 
-const buildDerivativeText = (
+const buildDerivativeLabelParts = (
   nodeId: string,
   isReverseMode: boolean,
   derivativeTarget: string | null,
-): string => {
-  if (isReverseMode) {
-    return `d(${derivativeTarget ?? "?"})/d(${nodeId})`;
-  } else {
-    return `d(${nodeId})/d(${derivativeTarget ?? "?"})`;
-  }
+): LabelType[] => {
+  const targetLatex = `\\partial{${derivativeTarget ?? "?"}}`;
+  const nodeLatex = `\\partial{${nodeId}}`;
+  const derivativeLatex = isReverseMode
+    ? `\\displaystyle \\frac{${targetLatex}}{${nodeLatex}}`
+    : `\\displaystyle \\frac{${nodeLatex}}{${targetLatex}}`;
+  return [
+    {
+      type: "latexLink",
+      id: "derivative",
+      latex: derivativeLatex,
+      href: nodeId,
+    },
+    {
+      type: "latex",
+      id: "equal",
+      latex: "=",
+    },
+  ];
 };
 
 const findLastSelectedNode = (
@@ -386,15 +451,17 @@ const findLastSelectedNode = (
 
 export {
   addReactFlowNode,
-  deselectLastSelectedNode,
+  deselectAllNodes,
   findRemovedEdges,
   getLastSelectedNodeId,
   getNewReactFlowNodePosition,
   hideInputField,
   selectReactFlowNode,
   showInputFields,
+  updateEdgeAnimations,
   updateReactFlowNodeDarkMode,
   updateReactFlowNodeDerivatives,
   updateReactFlowNodeFValues,
+  updateReactFlowNodeHighlighted,
   updateReactFlowNodeInputValue,
 };

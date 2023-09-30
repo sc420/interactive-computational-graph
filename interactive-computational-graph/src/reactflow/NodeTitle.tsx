@@ -1,21 +1,33 @@
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import EditIcon from "@mui/icons-material/Edit";
 import { Box, Grid, IconButton, Typography } from "@mui/material";
-import { type FunctionComponent } from "react";
+import { useMemo, type FunctionComponent } from "react";
+import "./NodeTitle.css";
 
 interface NodeTitleProps {
   text: string;
   backgroundColor: string;
+  isDarkMode: boolean;
+  isHighlighted: boolean;
 }
 
 const NodeTitle: FunctionComponent<NodeTitleProps> = ({
   text,
   backgroundColor,
+  isDarkMode,
+  isHighlighted,
 }) => {
+  const animationClassName = useMemo(() => {
+    if (!isHighlighted) {
+      return "";
+    }
+    return isDarkMode ? "striped-animation-dark" : "striped-animation-light";
+  }, [isDarkMode, isHighlighted]);
+
   return (
     <Box
       // corresponds to dragHandle when creating new reactflow.Node
-      className="drag-handle"
+      className={`drag-handle ${animationClassName}`}
       sx={{ backgroundColor }}
       p={0.5}
     >

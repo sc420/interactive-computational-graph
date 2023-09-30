@@ -56,6 +56,9 @@ const ReactFlowGraph: FunctionComponent<ReactFlowGraphProps> = ({
     [isDarkMode],
   );
   const nodeTypes = useMemo(() => ({ custom: CustomNode }), []);
+  const deleteKeyCode = useMemo(() => ["Backspace", "Delete"], []);
+  const multiSelectionKeyCode = useMemo(() => ["Meta", "Control"], []);
+  const zoomActivationKeyCode = useMemo(() => ["Meta", "Control"], []);
 
   const handleInit: OnInit = useCallback(
     (reactFlowInstance: ReactFlowInstance) => {
@@ -115,10 +118,13 @@ const ReactFlowGraph: FunctionComponent<ReactFlowGraphProps> = ({
     >
       <div ref={reactFlowWrapper}>
         <ReactFlow
-          className={isDarkMode ? "dark-mode" : ""}
+          // Basic props
           nodes={nodes}
           edges={edges}
+          style={style}
+          className={isDarkMode ? "dark-mode" : ""}
           nodeTypes={nodeTypes}
+          // Event handlers
           onInit={handleInit}
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
@@ -126,7 +132,10 @@ const ReactFlowGraph: FunctionComponent<ReactFlowGraphProps> = ({
           onConnect={onConnect}
           onDragOver={handleDragOver}
           onDrop={handleDrop}
-          style={style}
+          // Keys
+          deleteKeyCode={deleteKeyCode}
+          multiSelectionKeyCode={multiSelectionKeyCode}
+          zoomActivationKeyCode={zoomActivationKeyCode}
         >
           <Background />
           <Controls />

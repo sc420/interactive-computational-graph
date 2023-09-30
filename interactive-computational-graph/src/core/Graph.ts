@@ -1,3 +1,4 @@
+import type ChainRuleTerm from "./ChainRuleTerm";
 import {
   CycleError,
   InputNodeAlreadyConnectedError,
@@ -7,7 +8,7 @@ import type CoreNode from "./CoreNode";
 import type DifferentiationMode from "./DifferentiationMode";
 import type NodeType from "./NodeType";
 
-type TopologicalSortDirection = "TO_OUTPUT" | "TO_INPUT";
+type NeighborDirection = "TO_OUTPUT" | "TO_INPUT";
 
 interface TopologicalSortCallStackElement {
   nodeId: string;
@@ -114,6 +115,10 @@ multiple edges`,
     node2.getRelationship().removeInputNodeByPort(node2PortId, node1Id);
   }
 
+  getDifferentiationMode(): DifferentiationMode {
+    return this.differentiationMode;
+  }
+
   setDifferentiationMode(mode: DifferentiationMode): void {
     this.nodeIdToDerivatives.clear();
     this.differentiationMode = mode;
@@ -122,6 +127,10 @@ multiple edges`,
   getNodeValue(nodeId: string): string {
     const node = this.getOneNode(nodeId);
     return node.getValue();
+  }
+
+  hasNodeDerivative(nodeId: string): boolean {
+    return this.nodeIdToDerivatives.has(nodeId);
   }
 
   getNodeDerivative(nodeId: string): string {
@@ -227,11 +236,11 @@ multiple edges`,
     }
 
     // Step 3
-    const topologicalSortDirection: TopologicalSortDirection =
+    const direction: NeighborDirection =
       this.differentiationMode === "FORWARD" ? "TO_OUTPUT" : "TO_INPUT";
     const topologicalOrderedNodeIds = this.topologicalSort(
       [this.targetNodeId],
-      topologicalSortDirection,
+      direction,
     );
 
     // Step 4
@@ -244,6 +253,50 @@ multiple edges`,
       updatedNodeIds.push(nodeId);
     }
     return updatedNodeIds;
+  }
+
+  /**
+   * Explains chain rule.
+   *
+   * The data will only be correct after the f values and derivative values are
+   * updated.
+   *
+   * We can use some nodes in the medium graph as an example:
+   * sum1=f(v1,v2)
+   * sum2=f(v2,c1)
+   *
+   * In forward mode, chain rule for sum1 is:
+   * d(sum1)/d(target) = d(v1)/d(target) * d(sum1)/d(v1) +
+   * d(v2)/d(target) * d(sum1)/d(v2)
+   *
+   * In reverse mode, chain rule for v2 is:
+   * d(target)/d(v2) = d(sum1)/d(v2) * d(target)/d(sum1) +
+   * d(sum2)/d(v2) * d(target)/d(sum2)
+   *
+   * @param currentNodeId Current node ID, e.g., v2 or sum1 in the above
+   * examples.
+   * @returns List of chain rule terms. Each term represents
+   * d(neighbor)/d(target) * d(current)/d(neighbor) for forward mode or
+   * d(neighbor)/d(current) * d(target)/d(neighbor) for reverse mode.
+   */
+  explainChainRule(currentNodeId: string): ChainRuleTerm[] {
+    const currentNode = this.getOneNode(currentNodeId);
+    const direction: NeighborDirection =
+      this.differentiationMode === "FORWARD" ? "TO_INPUT" : "TO_OUTPUT";
+    const neighborNodeIds = this.getNeighborNodeIds(currentNode, direction);
+    return neighborNodeIds.map((neighborNodeId) => {
+      const derivativeRegardingTarget = this.getNodeDerivative(neighborNodeId);
+      const neighborNode = this.getOneNode(neighborNodeId);
+      const derivativeRegardingCurrent =
+        this.differentiationMode === "FORWARD"
+          ? currentNode.calculateDfdx(neighborNode)
+          : neighborNode.calculateDfdx(currentNode);
+      return {
+        neighborNodeId,
+        derivativeRegardingTarget,
+        derivativeRegardingCurrent,
+      };
+    });
   }
 
   /**
@@ -461,7 +514,7 @@ multiple edges`,
    */
   private topologicalSort(
     startNodeIds: string[],
-    direction: TopologicalSortDirection,
+    direction: NeighborDirection,
   ): string[] {
     const callStack: TopologicalSortCallStackElement[] = [];
     const markedPermanent = new Set<string>();
@@ -502,10 +555,7 @@ multiple edges`,
 
           // Call visit() for each dependent node (4)
           const node = this.getOneNode(callStackElem.nodeId);
-          const dependentNodeIds = this.getTopologicalSortDirectionNodeIds(
-            node,
-            direction,
-          );
+          const dependentNodeIds = this.getNeighborNodeIds(node, direction);
           dependentNodeIds.forEach((dependentNodeId) => {
             callStack.push({
               nodeId: dependentNodeId,
@@ -541,15 +591,14 @@ multiple edges`,
   }
 
   /**
-   * Gets the neighboring nodes of a node x by following the topological sort
-   * direction.
+   * Gets the neighboring nodes of a node x by following the direction.
    * @param node The node x.
-   * @param direction Topological sort direction.
-   * @returns Neighboring node IDs in the topological sort direction.
+   * @param direction Direction.
+   * @returns Neighboring node IDs in the direction.
    */
-  private getTopologicalSortDirectionNodeIds(
+  private getNeighborNodeIds(
     node: CoreNode,
-    direction: TopologicalSortDirection,
+    direction: NeighborDirection,
   ): string[] {
     let neighborNodes: CoreNode[] = [];
     if (direction === "TO_INPUT") {

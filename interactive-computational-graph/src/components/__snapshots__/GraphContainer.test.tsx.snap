@@ -12,12 +12,14 @@ Object {
         "inputItems": Array [
           Object {
             "id": "value",
+            "label": "=",
             "showHandle": false,
             "showInputField": true,
-            "text": "=",
             "value": "0",
           },
         ],
+        "isDarkMode": false,
+        "isHighlighted": false,
         "outputItems": Array [],
         "text": "c1",
       },
@@ -40,12 +42,14 @@ Object {
         "inputItems": Array [
           Object {
             "id": "value",
+            "label": "=",
             "showHandle": false,
             "showInputField": true,
-            "text": "=",
             "value": "0",
           },
         ],
+        "isDarkMode": false,
+        "isHighlighted": false,
         "outputItems": Array [],
         "text": "c2",
       },
@@ -76,12 +80,14 @@ Object {
         "inputItems": Array [
           Object {
             "id": "value",
+            "label": "=",
             "showHandle": false,
             "showInputField": true,
-            "text": "=",
             "value": "0",
           },
         ],
+        "isDarkMode": false,
+        "isHighlighted": false,
         "outputItems": Array [],
         "text": "c1",
       },
@@ -104,12 +110,14 @@ Object {
         "inputItems": Array [
           Object {
             "id": "value",
+            "label": "=",
             "showHandle": false,
             "showInputField": true,
-            "text": "=",
             "value": "0",
           },
         ],
+        "isDarkMode": false,
+        "isHighlighted": false,
         "outputItems": Array [],
         "text": "c2",
       },
@@ -140,12 +148,14 @@ Object {
         "inputItems": Array [
           Object {
             "id": "value",
+            "label": "=",
             "showHandle": false,
             "showInputField": true,
-            "text": "=",
             "value": "0",
           },
         ],
+        "isDarkMode": false,
+        "isHighlighted": false,
         "outputItems": Array [],
         "text": "c1",
       },
@@ -168,15 +178,29 @@ Object {
         "inputItems": Array [
           Object {
             "id": "value",
+            "label": "=",
             "showHandle": false,
             "showInputField": true,
-            "text": "=",
             "value": "0",
           },
         ],
+        "isDarkMode": false,
+        "isHighlighted": false,
         "outputItems": Array [
           Object {
-            "text": "d(?)/d(2) =",
+            "labelParts": Array [
+              Object {
+                "href": "2",
+                "id": "derivative",
+                "latex": "\\\\displaystyle \\\\frac{\\\\partial{?}}{\\\\partial{2}}",
+                "type": "latexLink",
+              },
+              Object {
+                "id": "equal",
+                "latex": "=",
+                "type": "latex",
+              },
+            ],
             "type": "DERIVATIVE",
             "value": "0",
           },
@@ -203,20 +227,40 @@ Object {
         "inputItems": Array [
           Object {
             "id": "x_i",
+            "label": "x_i",
             "showHandle": true,
             "showInputField": true,
-            "text": "x_i",
             "value": "0",
           },
         ],
+        "isDarkMode": false,
+        "isHighlighted": false,
         "outputItems": Array [
           Object {
-            "text": "=",
+            "labelParts": Array [
+              Object {
+                "id": "value",
+                "latex": "=",
+                "type": "latex",
+              },
+            ],
             "type": "VALUE",
             "value": "0",
           },
           Object {
-            "text": "d(?)/d(3) =",
+            "labelParts": Array [
+              Object {
+                "href": "3",
+                "id": "derivative",
+                "latex": "\\\\displaystyle \\\\frac{\\\\partial{?}}{\\\\partial{3}}",
+                "type": "latexLink",
+              },
+              Object {
+                "id": "equal",
+                "latex": "=",
+                "type": "latex",
+              },
+            ],
             "type": "DERIVATIVE",
             "value": "0",
           },
@@ -250,12 +294,14 @@ Object {
         "inputItems": Array [
           Object {
             "id": "value",
+            "label": "=",
             "showHandle": false,
             "showInputField": true,
-            "text": "=",
             "value": "0",
           },
         ],
+        "isDarkMode": false,
+        "isHighlighted": false,
         "outputItems": Array [],
         "text": "c1",
       },
@@ -278,12 +324,14 @@ Object {
         "inputItems": Array [
           Object {
             "id": "value",
+            "label": "=",
             "showHandle": false,
             "showInputField": true,
-            "text": "=",
             "value": "0",
           },
         ],
+        "isDarkMode": false,
+        "isHighlighted": false,
         "outputItems": Array [],
         "text": "c2",
       },

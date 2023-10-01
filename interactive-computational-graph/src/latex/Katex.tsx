@@ -1,9 +1,6 @@
 import katex from "katex";
 import { useMemo, type FunctionComponent } from "react";
-
-interface KatexProps {
-  latex: string;
-}
+import type KatexProps from "./KatexProps";
 
 const Katex: FunctionComponent<KatexProps> = ({ latex }) => {
   const options = useMemo((): katex.KatexOptions => {

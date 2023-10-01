@@ -12,7 +12,7 @@ import {
 } from "reactflow";
 import type FeatureNodeType from "../features/FeatureNodeType";
 
-interface ReactFlowGraphMockProps {
+interface ReactFlowGraphTestHelperProps {
   nodes: Node[];
   edges: Edge[];
   onNodesChange: OnNodesChange;
@@ -22,7 +22,9 @@ interface ReactFlowGraphMockProps {
   onDropNode: (featureNodeType: FeatureNodeType, position: XYPosition) => void;
 }
 
-const ReactFlowGraphMock: FunctionComponent<ReactFlowGraphMockProps> = ({
+const ReactFlowGraphTestHelper: FunctionComponent<
+  ReactFlowGraphTestHelperProps
+> = ({
   nodes,
   edges,
   onNodesChange,
@@ -96,7 +98,9 @@ const ReactFlowGraphMock: FunctionComponent<ReactFlowGraphMockProps> = ({
         <FormGroup>
           {/* nodes */}
           <TextField
-            label="jsonNodes"
+            inputProps={{
+              "data-testid": "jsonNodes",
+            }}
             size="small"
             value={JSON.stringify(nodes)}
             InputProps={{
@@ -106,7 +110,9 @@ const ReactFlowGraphMock: FunctionComponent<ReactFlowGraphMockProps> = ({
 
           {/* edges */}
           <TextField
-            label="jsonEdges"
+            inputProps={{
+              "data-testid": "jsonEdges",
+            }}
             size="small"
             value={JSON.stringify(edges)}
             InputProps={{
@@ -120,7 +126,9 @@ const ReactFlowGraphMock: FunctionComponent<ReactFlowGraphMockProps> = ({
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <FormGroup>
           <TextField
-            label="onNodesChange.remove.jsonIds"
+            inputProps={{
+              "data-testid": "onNodesChange.remove.jsonIds",
+            }}
             size="small"
             value={jsonRemoveNodeIds}
             onChange={(e) => {
@@ -128,6 +136,7 @@ const ReactFlowGraphMock: FunctionComponent<ReactFlowGraphMockProps> = ({
             }}
           />
           <Button
+            data-testid="trigger.onNodesChange.remove"
             variant="outlined"
             size="small"
             sx={{ textTransform: "none" }}
@@ -142,7 +151,9 @@ const ReactFlowGraphMock: FunctionComponent<ReactFlowGraphMockProps> = ({
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <FormGroup>
           <TextField
-            label="onEdgesChange.remove.jsonIds"
+            inputProps={{
+              "data-testid": "onEdgesChange.remove.jsonIds",
+            }}
             size="small"
             value={jsonRemoveEdgeIds}
             onChange={(e) => {
@@ -150,6 +161,7 @@ const ReactFlowGraphMock: FunctionComponent<ReactFlowGraphMockProps> = ({
             }}
           />
           <Button
+            data-testid="trigger.onEdgesChange.remove"
             variant="outlined"
             size="small"
             sx={{ textTransform: "none" }}
@@ -164,7 +176,9 @@ const ReactFlowGraphMock: FunctionComponent<ReactFlowGraphMockProps> = ({
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <FormGroup>
           <TextField
-            label="onSelectionChange.jsonParams"
+            inputProps={{
+              "data-testid": "onSelectionChange.jsonParams",
+            }}
             size="small"
             value={jsonSelectionChangeParams}
             onChange={(e) => {
@@ -172,6 +186,7 @@ const ReactFlowGraphMock: FunctionComponent<ReactFlowGraphMockProps> = ({
             }}
           />
           <Button
+            data-testid="trigger.onSelectionChange"
             variant="outlined"
             size="small"
             sx={{ textTransform: "none" }}
@@ -186,7 +201,9 @@ const ReactFlowGraphMock: FunctionComponent<ReactFlowGraphMockProps> = ({
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <FormGroup>
           <TextField
-            label="onConnect.jsonConnection"
+            inputProps={{
+              "data-testid": "onConnect.jsonConnection",
+            }}
             size="small"
             value={jsonConnection}
             onChange={(e) => {
@@ -194,6 +211,7 @@ const ReactFlowGraphMock: FunctionComponent<ReactFlowGraphMockProps> = ({
             }}
           />
           <Button
+            data-testid="trigger.onConnect"
             variant="outlined"
             size="small"
             sx={{ textTransform: "none" }}
@@ -208,7 +226,9 @@ const ReactFlowGraphMock: FunctionComponent<ReactFlowGraphMockProps> = ({
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <FormGroup>
           <TextField
-            label="onDropNode.jsonFeatureNodeType"
+            inputProps={{
+              "data-testid": "onDropNode.jsonFeatureNodeType",
+            }}
             size="small"
             value={jsonFeatureNodeType}
             onChange={(e) => {
@@ -216,6 +236,7 @@ const ReactFlowGraphMock: FunctionComponent<ReactFlowGraphMockProps> = ({
             }}
           />
           <Button
+            data-testid="trigger.onDropNode"
             variant="outlined"
             size="small"
             sx={{ textTransform: "none" }}
@@ -229,4 +250,4 @@ const ReactFlowGraphMock: FunctionComponent<ReactFlowGraphMockProps> = ({
   );
 };
 
-export default ReactFlowGraphMock;
+export default ReactFlowGraphTestHelper;

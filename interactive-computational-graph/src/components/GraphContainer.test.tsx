@@ -7,11 +7,9 @@ import {
 } from "reactflow";
 import { mockReactFlow } from "../ReactFlowMock";
 import type FeatureNodeType from "../features/FeatureNodeType";
-import { randomInteger } from "../features/RandomUtilities";
 import type SelectedFeature from "../features/SelectedFeature";
 import GraphContainer from "./GraphContainer";
 
-// Make random utilities return the fixed number
 jest.mock("../features/RandomUtilities");
 
 // If we don't mock katex, there would be some strange error:
@@ -20,10 +18,6 @@ jest.mock("../latex/Katex");
 
 beforeAll(() => {
   mockReactFlow();
-});
-
-beforeEach(() => {
-  (randomInteger as jest.Mock).mockReturnValue(100);
 });
 
 it("should have different node types on the graph after dropping nodes", () => {
@@ -433,55 +427,51 @@ const setDerivativeTarget = (targetNodeId: string): void => {
 };
 
 const getNodes = (): Node[] => {
-  const jsonNodes = screen.getByRole("textbox", {
-    name: "jsonNodes",
-  });
+  const jsonNodes = screen.getByTestId("jsonNodes");
   return JSON.parse((jsonNodes as HTMLInputElement).value);
 };
 
 const getEdges = (): Node[] => {
-  const jsonEdges = screen.getByRole("textbox", {
-    name: "jsonEdges",
-  });
+  const jsonEdges = screen.getByTestId("jsonEdges");
   return JSON.parse((jsonEdges as HTMLInputElement).value);
 };
 
 const removeNode = (ids: string[]): void => {
-  const onNodesChangeRemoveJsonIds = screen.getByRole("textbox", {
-    name: "onNodesChange.remove.jsonIds",
-  });
+  const onNodesChangeRemoveJsonIds = screen.getByTestId(
+    "onNodesChange.remove.jsonIds",
+  );
   const jsonIds = JSON.stringify(ids);
   fireEvent.change(onNodesChangeRemoveJsonIds, { target: { value: jsonIds } });
-  const triggerOnNodesChangeRemoveButton = screen.getByRole("button", {
-    name: "Trigger onNodesChange: remove",
-  });
+  const triggerOnNodesChangeRemoveButton = screen.getByTestId(
+    "trigger.onNodesChange.remove",
+  );
   fireEvent.click(triggerOnNodesChangeRemoveButton);
 };
 
 const removeEdge = (ids: string[]): void => {
-  const onEdgesChangeRemoveJsonIds = screen.getByRole("textbox", {
-    name: "onEdgesChange.remove.jsonIds",
-  });
+  const onEdgesChangeRemoveJsonIds = screen.getByTestId(
+    "onEdgesChange.remove.jsonIds",
+  );
   const jsonIds = JSON.stringify(ids);
   fireEvent.change(onEdgesChangeRemoveJsonIds, { target: { value: jsonIds } });
-  const triggerOnEdgesChangeRemoveButton = screen.getByRole("button", {
-    name: "Trigger onEdgesChange: remove",
-  });
+  const triggerOnEdgesChangeRemoveButton = screen.getByTestId(
+    "trigger.onEdgesChange.remove",
+  );
   fireEvent.click(triggerOnEdgesChangeRemoveButton);
 };
 
 const changeSelection = (nodes: Node[], edges: Edge[]): void => {
-  const onSelectionChangeJsonParams = screen.getByRole("textbox", {
-    name: "onSelectionChange.jsonParams",
-  });
+  const onSelectionChangeJsonParams = screen.getByTestId(
+    "onSelectionChange.jsonParams",
+  );
   const params: OnSelectionChangeParams = { nodes, edges };
   const jsonParams = JSON.stringify(params);
   fireEvent.change(onSelectionChangeJsonParams, {
     target: { value: jsonParams },
   });
-  const triggerOnSelectionChangeButton = screen.getByRole("button", {
-    name: "Trigger onSelectionChange",
-  });
+  const triggerOnSelectionChangeButton = screen.getByTestId(
+    "trigger.onSelectionChange",
+  );
   fireEvent.click(triggerOnSelectionChangeButton);
 };
 
@@ -498,29 +488,26 @@ const connectEdge = (
     targetHandle,
   };
   const jsonConnection = JSON.stringify(connection);
-  const onConnectJsonConnection = screen.getByRole("textbox", {
-    name: "onConnect.jsonConnection",
-  });
+  const onConnectJsonConnection = screen.getByTestId(
+    "onConnect.jsonConnection",
+  );
   fireEvent.change(onConnectJsonConnection, {
     target: { value: jsonConnection },
   });
-  const triggerOnConnectButton = screen.getByRole("button", {
-    name: "Trigger onConnect",
-  });
+  const triggerOnConnectButton = screen.getByTestId("trigger.onConnect");
   fireEvent.click(triggerOnConnectButton);
 };
 
 const dropNode = (featureNodeType: FeatureNodeType): void => {
-  const onDropNodeJsonFeatureNodeType = screen.getByRole("textbox", {
-    name: "onDropNode.jsonFeatureNodeType",
-  });
+  const onDropNodeJsonFeatureNodeType = screen.getByTestId(
+    "onDropNode.jsonFeatureNodeType",
+  );
   const jsonFeatureNodeType = JSON.stringify(featureNodeType);
   fireEvent.change(onDropNodeJsonFeatureNodeType, {
     target: { value: jsonFeatureNodeType },
   });
-  const triggerOnEdgesChangeRemoveButton = screen.getByRole("button", {
-    name: "Trigger onDropNode",
-  });
+  const triggerOnEdgesChangeRemoveButton =
+    screen.getByTestId("trigger.onDropNode");
   fireEvent.click(triggerOnEdgesChangeRemoveButton);
 };
 

@@ -59,7 +59,7 @@ import {
 } from "../features/ReactFlowController";
 import type SelectedFeature from "../features/SelectedFeature";
 import ReactFlowGraph from "../reactflow/ReactFlowGraph";
-import ReactFlowGraphMock from "../reactflow/ReactFlowGraphMock";
+import ReactFlowGraphTestHelper from "../reactflow/ReactFlowGraphTestHelper";
 import FeaturePanel from "./FeaturePanel";
 import GraphToolbar from "./GraphToolbar";
 import Title from "./Title";
@@ -508,7 +508,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
             {/* Graph mock */}
             {isTest && (
               <Grid item display="flex">
-                <ReactFlowGraphMock
+                <ReactFlowGraphTestHelper
                   nodes={reactFlowNodes}
                   edges={reactFlowEdges}
                   onNodesChange={handleNodesChange}

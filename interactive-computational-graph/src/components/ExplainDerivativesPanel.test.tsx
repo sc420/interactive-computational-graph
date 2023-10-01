@@ -1,27 +1,11 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import type ExplainDerivativeData from "../features/ExplainDerivativeData";
 import ExplainDerivativesPanel from "./ExplainDerivativesPanel";
 
+jest.mock("../latex/Katex");
+
 test("should trigger event when clicking the clear button", () => {
-  const data: ExplainDerivativeData[] = [
-    {
-      nodeId: "v1",
-      items: [
-        {
-          type: "previousDerivativesReplaced",
-          descriptionParts: [
-            {
-              type: "latexLink",
-              id: "chainRuleTerm-v1",
-              latex: "x",
-              href: "v1",
-            },
-          ],
-          latex: "123",
-        },
-      ],
-    },
-  ];
+  const data = getExplainDerivativeData();
   const handleClearSelection = jest.fn();
   const handleClickLatexLink = jest.fn();
   render(
@@ -39,18 +23,27 @@ test("should trigger event when clicking the clear button", () => {
   expect(handleClearSelection).toHaveBeenCalled();
 });
 
-test("should copy to clipboard when clicking the copy latex icon", async () => {
-  // Mock the writeText function
-  const originalNavigator = { ...window.navigator };
-  Object.assign(window.navigator, {
-    clipboard: {
-      writeText: jest.fn(async () => {
-        await Promise.resolve();
-      }),
-    },
-  });
+test("should trigger event when clicking latex link", async () => {
+  const data = getExplainDerivativeData();
+  const handleClearSelection = jest.fn();
+  const handleClickLatexLink = jest.fn();
+  render(
+    <ExplainDerivativesPanel
+      hasNodes={true}
+      hasDerivativeTarget={true}
+      explainDerivativeData={data}
+      onClearSelection={handleClearSelection}
+      onClickLatexLink={handleClickLatexLink}
+    />,
+  );
 
-  const data: ExplainDerivativeData[] = [
+  const link = screen.getByRole("link");
+  fireEvent.click(link);
+  expect(handleClickLatexLink).toHaveBeenCalled();
+});
+
+const getExplainDerivativeData = (): ExplainDerivativeData[] => {
+  return [
     {
       nodeId: "v1",
       items: [
@@ -69,24 +62,4 @@ test("should copy to clipboard when clicking the copy latex icon", async () => {
       ],
     },
   ];
-  const handleClearSelection = jest.fn();
-  const handleClickLatexLink = jest.fn();
-  render(
-    <ExplainDerivativesPanel
-      hasNodes={true}
-      hasDerivativeTarget={true}
-      explainDerivativeData={data}
-      onClearSelection={handleClearSelection}
-      onClickLatexLink={handleClickLatexLink}
-    />,
-  );
-
-  const copyIcon = screen.getByRole("button", { name: "copy" });
-  fireEvent.click(copyIcon);
-  await waitFor(() => {
-    // Assert that clipboard.writeText was called with the expected value
-    expect(window.navigator.clipboard.writeText).toHaveBeenCalledWith("123");
-  });
-
-  Object.assign(window.navigator, originalNavigator);
-});
+};

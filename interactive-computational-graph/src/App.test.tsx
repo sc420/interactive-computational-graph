@@ -8,6 +8,6 @@ beforeAll(() => {
 
 test("renders title", () => {
   render(<App />);
-  const linkElement = screen.getByText(/Interactive Computational Graph/i);
+  const linkElement = screen.getByRole("heading", { level: 1 });
   expect(linkElement).toBeInTheDocument();
 });

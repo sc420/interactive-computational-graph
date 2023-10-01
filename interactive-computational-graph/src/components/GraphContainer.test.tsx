@@ -7,11 +7,9 @@ import {
 } from "reactflow";
 import { mockReactFlow } from "../ReactFlowMock";
 import type FeatureNodeType from "../features/FeatureNodeType";
-import { randomInteger } from "../features/RandomUtilities";
 import type SelectedFeature from "../features/SelectedFeature";
 import GraphContainer from "./GraphContainer";
 
-// Make random utilities return the fixed number
 jest.mock("../features/RandomUtilities");
 
 // If we don't mock katex, there would be some strange error:
@@ -20,10 +18,6 @@ jest.mock("../latex/Katex");
 
 beforeAll(() => {
   mockReactFlow();
-});
-
-beforeEach(() => {
-  (randomInteger as jest.Mock).mockReturnValue(100);
 });
 
 it("should have different node types on the graph after dropping nodes", () => {

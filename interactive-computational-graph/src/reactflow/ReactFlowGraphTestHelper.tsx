@@ -12,7 +12,7 @@ import {
 } from "reactflow";
 import type FeatureNodeType from "../features/FeatureNodeType";
 
-interface ReactFlowGraphMockProps {
+interface ReactFlowGraphTestHelperProps {
   nodes: Node[];
   edges: Edge[];
   onNodesChange: OnNodesChange;
@@ -22,7 +22,9 @@ interface ReactFlowGraphMockProps {
   onDropNode: (featureNodeType: FeatureNodeType, position: XYPosition) => void;
 }
 
-const ReactFlowGraphMock: FunctionComponent<ReactFlowGraphMockProps> = ({
+const ReactFlowGraphTestHelper: FunctionComponent<
+  ReactFlowGraphTestHelperProps
+> = ({
   nodes,
   edges,
   onNodesChange,
@@ -229,4 +231,4 @@ const ReactFlowGraphMock: FunctionComponent<ReactFlowGraphMockProps> = ({
   );
 };
 
-export default ReactFlowGraphMock;
+export default ReactFlowGraphTestHelper;

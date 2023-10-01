@@ -177,9 +177,15 @@ describe("evaluating problematic code", () => {
   });
 
   test("should throw error when eval dfdx", () => {
+    const mockConsole = jest.spyOn(console, "error").mockImplementation();
+
     const xId = "v2";
     expect(() => {
       operation.evalDfdx(fInputPortToNodes, fInputNodeToValues, xId);
     }).toThrow("The eval result should be string, but got type number");
+
+    expect(mockConsole).toHaveBeenCalled();
+
+    jest.restoreAllMocks(); // restores the spy created with spyOn
   });
 });

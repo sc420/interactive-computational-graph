@@ -1,8 +1,5 @@
 import { type FunctionComponent } from "react";
-
-interface KatexProps {
-  latex: string;
-}
+import type KatexProps from "../KatexProps";
 
 const KatexMock: FunctionComponent<KatexProps> = ({ latex }) => {
   return <span>{latex}</span>;

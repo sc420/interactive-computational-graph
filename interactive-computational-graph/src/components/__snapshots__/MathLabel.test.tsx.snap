@@ -9,13 +9,9 @@ exports[`should render correctly with mixed types 1`] = `
   >
     To calculate 
   </p>
-  <span
-    dangerouslySetInnerHTML={
-      Object {
-        "__html": "<span class=\\"katex\\"><math xmlns=\\"http://www.w3.org/1998/Math/MathML\\"><semantics><mrow><mi>x</mi></mrow><annotation encoding=\\"application/x-tex\\">x</annotation></semantics></math></span>",
-      }
-    }
-  />
+  <span>
+    x
+  </span>
   <p
     className="MuiTypography-root MuiTypography-body2 css-141vi1f-MuiTypography-root"
   >
@@ -28,13 +24,9 @@ exports[`should render correctly with mixed types 1`] = `
     onClick={[Function]}
     onFocus={[Function]}
   >
-    <span
-      dangerouslySetInnerHTML={
-        Object {
-          "__html": "<span class=\\"katex\\"><math xmlns=\\"http://www.w3.org/1998/Math/MathML\\"><semantics><mrow><mfrac><mi>a</mi><mi>b</mi></mfrac></mrow><annotation encoding=\\"application/x-tex\\">\\\\frac{a}{b}</annotation></semantics></math></span>",
-        }
-      }
-    />
+    <span>
+      \\frac{a}{b}
+    </span>
   </a>
 </div>
 `;

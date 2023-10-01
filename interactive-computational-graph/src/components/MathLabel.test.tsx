@@ -3,6 +3,8 @@ import renderer from "react-test-renderer";
 import type MathLabelPartType from "../features/MathLabelPartType";
 import MathLabel from "./MathLabel";
 
+jest.mock("../latex/Katex");
+
 test("should render correctly with mixed types", () => {
   const parts: MathLabelPartType[] = [
     {

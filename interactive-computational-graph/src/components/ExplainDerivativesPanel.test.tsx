@@ -2,6 +2,8 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import type ExplainDerivativeData from "../features/ExplainDerivativeData";
 import ExplainDerivativesPanel from "./ExplainDerivativesPanel";
 
+jest.mock("../latex/Katex");
+
 test("should trigger event when clicking the clear button", () => {
   const data = getExplainDerivativeData();
   const handleClearSelection = jest.fn();

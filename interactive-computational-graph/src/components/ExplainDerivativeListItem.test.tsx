@@ -2,6 +2,8 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import type ExplainDerivativeItem from "../features/ExplainDerivativeItem";
 import ExplainDerivativesListItem from "./ExplainDerivativeListItem";
 
+jest.mock("../latex/Katex");
+
 test("should trigger event when clicking the copy latex icon", () => {
   const item: ExplainDerivativeItem = {
     type: "previousDerivativesReplaced",

@@ -7,22 +7,22 @@ test("should render correctly with mixed types", () => {
   const parts: MathLabelPartType[] = [
     {
       type: "text",
-      id: "text",
+      id: "id1",
       text: "To calculate ",
     },
     {
       type: "latex",
-      id: "text",
+      id: "id2",
       latex: "x",
     },
     {
       type: "text",
-      id: "text",
+      id: "id3",
       text: ", we need to calculate ",
     },
     {
       type: "latexLink",
-      id: "link",
+      id: "id4",
       latex: "\\frac{a}{b}",
       href: "123",
     },

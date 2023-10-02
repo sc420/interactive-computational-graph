@@ -5,14 +5,14 @@ import { useMemo, type FunctionComponent } from "react";
 import "./NodeTitle.css";
 
 interface NodeTitleProps {
-  text: string;
+  name: string;
   backgroundColor: string;
   isDarkMode: boolean;
   isHighlighted: boolean;
 }
 
 const NodeTitle: FunctionComponent<NodeTitleProps> = ({
-  text,
+  name,
   backgroundColor,
   isDarkMode,
   isHighlighted,
@@ -36,8 +36,8 @@ const NodeTitle: FunctionComponent<NodeTitleProps> = ({
           <Box display="flex" alignItems="center">
             {/* Drag indicator */}
             <DragIndicatorIcon fontSize="small" />
-            {/* Graph ID */}
-            <Typography variant="body1">{text}</Typography>
+            {/* Node name */}
+            <Typography variant="body1">{name}</Typography>
           </Box>
         </Grid>
         <Grid item>

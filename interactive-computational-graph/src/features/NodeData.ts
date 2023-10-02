@@ -8,7 +8,7 @@ import {
 } from "./ReactNodeCallbacks";
 
 interface NodeData {
-  text: string;
+  name: string;
   featureNodeType: FeatureNodeType;
   inputItems: InputItem[];
   outputItems: OutputItem[];

@@ -312,7 +312,7 @@ const buildReactFlowNodeData = (addNodeData: AddNodeData): NodeData => {
   switch (featureNodeType.nodeType) {
     case "CONSTANT": {
       return {
-        text: `c${nodeId}`,
+        name: `c${nodeId}`,
         featureNodeType,
         inputItems: [
           {
@@ -338,7 +338,7 @@ const buildReactFlowNodeData = (addNodeData: AddNodeData): NodeData => {
         derivativeTarget,
       );
       return {
-        text: `v${nodeId}`,
+        name: `v${nodeId}`,
         featureNodeType,
         inputItems: [
           {
@@ -375,7 +375,7 @@ const buildReactFlowNodeData = (addNodeData: AddNodeData): NodeData => {
         derivativeTarget,
       );
       return {
-        text: `${featureOperation.id}${nodeId}`,
+        name: `${featureOperation.id}${nodeId}`,
         featureNodeType,
         inputItems: featureOperation.inputPorts.map((inputPort) => {
           return {

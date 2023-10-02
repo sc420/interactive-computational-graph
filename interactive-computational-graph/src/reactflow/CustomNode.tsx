@@ -75,6 +75,13 @@ const CustomNode: FunctionComponent<CustomNodeProps> = ({
     }
   }, [data.isDarkMode, getColorTheme, selected]);
 
+  const handleNameChange = useCallback(
+    (name: string): void => {
+      data.onNameChange(id, name);
+    },
+    [data, id],
+  );
+
   const handleInputChange = useCallback(
     (inputPortId: string, value: string): void => {
       data.onInputChange(id, inputPortId, value);
@@ -111,6 +118,7 @@ const CustomNode: FunctionComponent<CustomNodeProps> = ({
             backgroundColor={titleColor}
             isDarkMode={data.isDarkMode}
             isHighlighted={data.isHighlighted}
+            onNameChange={handleNameChange}
           />
 
           {/* Body */}

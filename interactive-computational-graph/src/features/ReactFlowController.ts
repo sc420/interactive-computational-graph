@@ -55,6 +55,24 @@ const getNewReactFlowNodePosition = (
   }
 };
 
+const updateReactFlowNodeName = (
+  nodeId: string,
+  name: string,
+  nodes: Node[],
+): Node[] => {
+  return nodes.map((node) => {
+    if (node.id === nodeId) {
+      const data = node.data as NodeData;
+      data.name = name;
+      // Set the new data to notify React Flow about the change
+      const newData: NodeData = { ...node.data };
+      node.data = newData;
+    }
+
+    return node;
+  });
+};
+
 const updateReactFlowNodeInputValue = (
   nodeId: string,
   inputPortId: string,
@@ -302,6 +320,7 @@ const buildReactFlowNodeData = (addNodeData: AddNodeData): NodeData => {
     featureOperations,
     isReverseMode,
     derivativeTarget,
+    onNameChange,
     onInputChange,
     onBodyClick,
     onDerivativeClick,
@@ -324,6 +343,7 @@ const buildReactFlowNodeData = (addNodeData: AddNodeData): NodeData => {
           },
         ],
         outputItems: [],
+        onNameChange,
         onBodyClick,
         onInputChange,
         onDerivativeClick,
@@ -356,6 +376,7 @@ const buildReactFlowNodeData = (addNodeData: AddNodeData): NodeData => {
             value: "0",
           },
         ],
+        onNameChange,
         onBodyClick,
         onInputChange,
         onDerivativeClick,
@@ -404,6 +425,7 @@ const buildReactFlowNodeData = (addNodeData: AddNodeData): NodeData => {
             value: "0",
           },
         ],
+        onNameChange,
         onBodyClick,
         onInputChange,
         onDerivativeClick,
@@ -464,4 +486,5 @@ export {
   updateReactFlowNodeFValues,
   updateReactFlowNodeHighlighted,
   updateReactFlowNodeInputValue,
+  updateReactFlowNodeName,
 };

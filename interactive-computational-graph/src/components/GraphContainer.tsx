@@ -56,6 +56,7 @@ import {
   updateReactFlowNodeFValues,
   updateReactFlowNodeHighlighted,
   updateReactFlowNodeInputValue,
+  updateReactFlowNodeName,
 } from "../features/ReactFlowController";
 import type SelectedFeature from "../features/SelectedFeature";
 import ReactFlowGraph from "../reactflow/ReactFlowGraph";
@@ -161,6 +162,10 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     );
   }, [isDarkMode]);
 
+  const handleNameChange = useCallback((nodeId: string, name: string): void => {
+    setReactFlowNodes((nodes) => updateReactFlowNodeName(nodeId, name, nodes));
+  }, []);
+
   const handleInputChange = useCallback(
     (nodeId: string, inputPortId: string, value: string): void => {
       coreGraphAdapter.updateNodeValueById(nodeId, inputPortId, value);
@@ -197,6 +202,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
         featureOperations,
         isReverseMode,
         derivativeTarget,
+        onNameChange: handleNameChange,
         onInputChange: handleInputChange,
         onBodyClick: handleBodyClick,
         onDerivativeClick: handleDerivativeClick,
@@ -217,6 +223,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       handleBodyClick,
       handleDerivativeClick,
       handleInputChange,
+      handleNameChange,
       isDarkMode,
       isReverseMode,
       lastSelectedNodeId,
@@ -339,6 +346,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
         featureOperations,
         isReverseMode,
         derivativeTarget,
+        onNameChange: handleNameChange,
         onInputChange: handleInputChange,
         onBodyClick: handleBodyClick,
         onDerivativeClick: handleDerivativeClick,
@@ -358,6 +366,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       handleBodyClick,
       handleDerivativeClick,
       handleInputChange,
+      handleNameChange,
       isDarkMode,
       isReverseMode,
       nextNodeId,

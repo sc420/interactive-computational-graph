@@ -64,6 +64,7 @@ const EditableName: FunctionComponent<EditableNameProps> = ({
           <Typography variant="body1">{name}</Typography>
           {/* Edit button */}
           <IconButton
+            aria-label="edit"
             size="small"
             onClick={() => {
               setIsEditing(true);

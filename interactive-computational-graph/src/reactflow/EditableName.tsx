@@ -1,11 +1,12 @@
 import EditIcon from "@mui/icons-material/Edit";
-import { IconButton, Stack, TextField, Typography } from "@mui/material";
+import { IconButton, Stack, TextField } from "@mui/material";
 import {
   useCallback,
   useState,
   type FunctionComponent,
   type KeyboardEvent,
 } from "react";
+import Katex from "../latex/Katex";
 
 interface EditableNameProps {
   name: string;
@@ -61,7 +62,8 @@ const EditableName: FunctionComponent<EditableNameProps> = ({
         />
       ) : (
         <>
-          <Typography variant="body1">{name}</Typography>
+          {/* Name */}
+          <Katex latex={name} />
           {/* Edit button */}
           <IconButton
             aria-label="edit"

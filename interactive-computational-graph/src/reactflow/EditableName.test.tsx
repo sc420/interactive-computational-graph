@@ -1,6 +1,8 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import EditableName from "./EditableName";
 
+jest.mock("../latex/Katex");
+
 test("should render the name", () => {
   const handleNameChange = jest.fn();
   render(<EditableName name="abc" onNameChange={handleNameChange} />);

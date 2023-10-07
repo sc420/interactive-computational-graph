@@ -1,6 +1,8 @@
 import { render, screen } from "@testing-library/react";
 import NodeTitle from "./NodeTitle";
 
+jest.mock("../latex/Katex");
+
 test("should render the name", () => {
   const handleNameChange = jest.fn();
   render(

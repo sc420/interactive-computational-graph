@@ -28,6 +28,7 @@ const NodeTitle: FunctionComponent<NodeTitleProps> = ({
 
   return (
     <Box
+      data-testid="node-title"
       // corresponds to dragHandle when creating new reactflow.Node
       className={`drag-handle ${animationClassName}`}
       display="flex"

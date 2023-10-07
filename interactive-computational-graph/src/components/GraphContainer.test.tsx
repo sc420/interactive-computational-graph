@@ -255,7 +255,7 @@ it("derivative target should reset when the target node is removed", () => {
   connectEdge("2", "output", "3", "x_i");
 
   // Select the sum node as the derivative target
-  setDerivativeTarget("3");
+  setDerivativeTarget("sum3");
 
   // Remove the sum node
   removeEdge(["reactflow__edge-1output-3x_i", "reactflow__edge-2output-3x_i"]);
@@ -293,7 +293,7 @@ it("outputs should change when derivative mode/target is changed", () => {
   connectEdge("4", "output", "5", "b");
 
   // Select the multiply node as the derivative target
-  setDerivativeTarget("5");
+  setDerivativeTarget("multiply5");
 
   // Check the output values
   expect(getOutputItemValue("3", "VALUE")).toBe("3");
@@ -357,7 +357,7 @@ it("outputs should change when derivative mode/target is changed", () => {
   expect(getOutputItemValue("5", "DERIVATIVE")).toBe("1");
 
   // Select the second variable node as the derivative target
-  setDerivativeTarget("2");
+  setDerivativeTarget("v2");
 
   // Check the output values
   expect(getOutputItemValue("3", "VALUE")).toBe("3");
@@ -413,17 +413,17 @@ const getDerivativeTarget = (): string => {
   return (input as HTMLInputElement).value;
 };
 
-const setDerivativeTarget = (targetNodeId: string): void => {
+const setDerivativeTarget = (targetNodeName: string): void => {
   const derivativeTargetAutocomplete = screen.getByTestId("derivative-target");
   const input = within(derivativeTargetAutocomplete).getByRole("combobox");
 
   fireEvent.click(derivativeTargetAutocomplete);
-  fireEvent.change(input, { target: { value: targetNodeId } });
+  fireEvent.change(input, { target: { value: targetNodeName } });
   fireEvent.keyDown(derivativeTargetAutocomplete, { key: "ArrowDown" });
   fireEvent.keyDown(derivativeTargetAutocomplete, { key: "Enter" });
 
   // Check if the input has been updated successfully
-  expect(input).toHaveValue(targetNodeId);
+  expect(input).toHaveValue(targetNodeName);
 };
 
 const getNodes = (): Node[] => {

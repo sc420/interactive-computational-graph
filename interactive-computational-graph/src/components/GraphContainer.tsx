@@ -42,6 +42,7 @@ import CoreGraphAdapter from "../features/CoreGraphAdapter";
 import type ExplainDerivativeData from "../features/ExplainDerivativeData";
 import type FeatureNodeType from "../features/FeatureNodeType";
 import type FeatureOperation from "../features/FeatureOperation";
+import type NodeData from "../features/NodeData";
 import {
   addReactFlowNode,
   deselectAllNodes,
@@ -155,6 +156,13 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
   // Error messages
   const [isSnackbarOpen, setSnackbarOpen] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
+
+  const getNodeNames = useCallback(() => {
+    return reactFlowNodes.map((node) => {
+      const data = node.data as NodeData;
+      return data.name;
+    });
+  }, [reactFlowNodes]);
 
   const updateNodeDarkMode = useCallback(() => {
     setReactFlowNodes((nodes) =>
@@ -483,6 +491,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
           isReverseMode={isReverseMode}
           derivativeTarget={derivativeTarget}
           nodeIds={coreGraphAdapter.getNodeIds()}
+          nodeNames={getNodeNames()}
           onReverseModeChange={handleReverseModeChange}
           onDerivativeTargetChange={handleDerivativeTargetChange}
         />

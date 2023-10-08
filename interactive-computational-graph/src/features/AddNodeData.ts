@@ -9,8 +9,9 @@ import {
 
 interface AddNodeData {
   featureNodeType: FeatureNodeType;
+  featureOperation: FeatureOperation | null;
   nodeId: string;
-  featureOperations: FeatureOperation[];
+  nodeName: string;
   isReverseMode: boolean;
   derivativeTarget: string | null;
   onNameChange: NameChangeCallback;

@@ -45,7 +45,8 @@ test("should trigger event when clicking latex link", async () => {
 const getExplainDerivativeData = (): ExplainDerivativeData[] => {
   return [
     {
-      nodeId: "v1",
+      nodeId: "1",
+      nodeName: "v_1",
       items: [
         {
           type: "previousDerivativesReplaced",

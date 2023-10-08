@@ -417,20 +417,19 @@ describe("behavior", () => {
   });
 });
 
-const featureOperations: FeatureOperation[] = [
-  {
-    id: "add",
-    text: "Add",
-    type: "SIMPLE",
-    operation: new Operation(ADD_F_CODE, ADD_DFDX_CODE),
-    inputPorts: [new Port("a", false), new Port("b", false)],
-    helpText: "Add two numbers $ a + b $",
-  },
-];
+const featureOperation: FeatureOperation = {
+  id: "add",
+  text: "Add",
+  type: "SIMPLE",
+  operation: new Operation(ADD_F_CODE, ADD_DFDX_CODE),
+  inputPorts: [new Port("a", false), new Port("b", false)],
+  helpText: "Add two numbers $ a + b $",
+};
 
 const addConstantNode = (adapter: CoreGraphAdapter, nodeId: string): void => {
   const featureType: FeatureNodeType = { nodeType: "CONSTANT" };
-  adapter.addNode(featureType, nodeId, featureOperations);
+  const nodeName = `c_${nodeId}`;
+  adapter.addNode(featureType, featureOperation, nodeId, nodeName);
 };
 
 const addAddNode = (adapter: CoreGraphAdapter, nodeId: string): void => {
@@ -438,7 +437,8 @@ const addAddNode = (adapter: CoreGraphAdapter, nodeId: string): void => {
     nodeType: "OPERATION",
     operationId: "add",
   };
-  adapter.addNode(featureType, nodeId, featureOperations);
+  const nodeName = `add_${nodeId}`;
+  adapter.addNode(featureType, featureOperation, nodeId, nodeName);
 };
 
 const addConnection = (

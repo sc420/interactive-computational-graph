@@ -8,7 +8,6 @@ import {
 import type AddNodeData from "./AddNodeData";
 import type LabelType from "./MathLabelPartType";
 import type NodeData from "./NodeData";
-import { findFeatureOperation } from "./OperationUtilities";
 import { randomInteger } from "./RandomUtilities";
 import type SelectedFeature from "./SelectedFeature";
 
@@ -313,11 +312,19 @@ const deselectAllNodes = (nodes: Node[]): Node[] => {
   });
 };
 
+const getNodeNames = (nodes: Node[]): string[] => {
+  return nodes.map((node) => {
+    const data = node.data as NodeData;
+    return data.name;
+  });
+};
+
 const buildReactFlowNodeData = (addNodeData: AddNodeData): NodeData => {
   const {
     featureNodeType,
+    featureOperation,
     nodeId,
-    featureOperations,
+    nodeName,
     isReverseMode,
     derivativeTarget,
     onNameChange,
@@ -331,7 +338,7 @@ const buildReactFlowNodeData = (addNodeData: AddNodeData): NodeData => {
   switch (featureNodeType.nodeType) {
     case "CONSTANT": {
       return {
-        name: `c${nodeId}`,
+        name: nodeName,
         featureNodeType,
         inputItems: [
           {
@@ -358,7 +365,7 @@ const buildReactFlowNodeData = (addNodeData: AddNodeData): NodeData => {
         derivativeTarget,
       );
       return {
-        name: `v${nodeId}`,
+        name: nodeName,
         featureNodeType,
         inputItems: [
           {
@@ -385,18 +392,16 @@ const buildReactFlowNodeData = (addNodeData: AddNodeData): NodeData => {
       };
     }
     case "OPERATION": {
-      const featureOperation = findFeatureOperation(
-        featureNodeType.operationId,
-        featureOperations,
-      );
-
       const derivativeLabelParts = buildDerivativeLabelParts(
         nodeId,
         isReverseMode,
         derivativeTarget,
       );
+      if (featureOperation === null) {
+        throw new Error("Should provide feature operation");
+      }
       return {
-        name: `${featureOperation.id}${nodeId}`,
+        name: nodeName,
         featureNodeType,
         inputItems: featureOperation.inputPorts.map((inputPort) => {
           return {
@@ -477,6 +482,7 @@ export {
   findRemovedEdges,
   getLastSelectedNodeId,
   getNewReactFlowNodePosition,
+  getNodeNames,
   hideInputField,
   selectReactFlowNode,
   showInputFields,

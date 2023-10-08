@@ -21,7 +21,6 @@ import type ExplainDerivativeData from "./ExplainDerivativeData";
 import type ExplainDerivativeType from "./ExplainDerivativeType";
 import type FeatureNodeType from "./FeatureNodeType";
 import type FeatureOperation from "./FeatureOperation";
-import { findFeatureOperation } from "./OperationUtilities";
 
 type ConnectionAddedCallback = (connection: Connection) => void;
 
@@ -48,6 +47,7 @@ type ExplainDerivativeDataUpdatedCallback = (
 class CoreGraphAdapter {
   private readonly graph = new Graph();
 
+  private readonly nodeIdToNames = new Map<string, string>();
   private selectedNodeIds: string[] = [];
 
   private connectionAddedCallbacks: ConnectionAddedCallback[] = [];
@@ -62,15 +62,17 @@ class CoreGraphAdapter {
 
   addNode(
     featureNodeType: FeatureNodeType,
+    featureOperation: FeatureOperation | null,
     nodeId: string,
-    featureOperations: FeatureOperation[],
+    nodeName: string,
   ): void {
     const coreNode = this.buildCoreNode(
       featureNodeType,
+      featureOperation,
       nodeId,
-      featureOperations,
     );
     this.graph.addNode(coreNode);
+    this.nodeIdToNames.set(nodeId, nodeName);
 
     this.addDummyInputNodes(coreNode);
 
@@ -79,8 +81,8 @@ class CoreGraphAdapter {
 
   private buildCoreNode(
     featureNodeType: FeatureNodeType,
+    featureOperation: FeatureOperation | null,
     nodeId: string,
-    featureOperations: FeatureOperation[],
   ): CoreNode {
     switch (featureNodeType.nodeType) {
       case "CONSTANT": {
@@ -90,10 +92,9 @@ class CoreGraphAdapter {
         return new VariableNode(nodeId);
       }
       case "OPERATION": {
-        const featureOperation = findFeatureOperation(
-          featureNodeType.operationId,
-          featureOperations,
-        );
+        if (featureOperation === null) {
+          throw new Error("Should provide the operation");
+        }
         return new OperationNode(
           nodeId,
           featureOperation.inputPorts,
@@ -189,6 +190,12 @@ class CoreGraphAdapter {
     this.updateOutputs();
   }
 
+  updateNodeNameById(nodeId: string, name: string): void {
+    this.nodeIdToNames.set(nodeId, name);
+
+    this.updateExplainDerivativeData();
+  }
+
   updateNodeValueById(
     nodeId: string,
     inputPortId: string,
@@ -224,6 +231,7 @@ class CoreGraphAdapter {
           this.removeDummyInputNodes(coreNode);
 
           this.graph.removeNode(nodeId);
+          this.removeNodeName(nodeId);
           hasRemovedNodes = true;
           break;
         }
@@ -244,6 +252,12 @@ class CoreGraphAdapter {
       const dummyNodeId = this.getDummyInputNodeId(node.getId(), portId);
       this.graph.removeNode(dummyNodeId);
     });
+  }
+
+  private removeNodeName(nodeId: string): void {
+    if (!this.nodeIdToNames.delete(nodeId)) {
+      throw new Error(`nodeIdToNames have nodeId ${nodeId}`);
+    }
   }
 
   private updateTargetNode(): void {
@@ -405,6 +419,10 @@ class CoreGraphAdapter {
     } else {
       explainDerivativeData = this.selectedNodeIds.map(
         (nodeId): ExplainDerivativeData => {
+          const nodeName = this.nodeIdToNames.get(nodeId);
+          if (nodeName === undefined) {
+            throw new Error(`Should find the node name of node ID ${nodeId}`);
+          }
           const explainDerivativeType = this.getExplainDerivativeType(nodeId);
           const nodeDerivative = this.graph.getNodeDerivative(nodeId);
           const differentiationMode = this.graph.getDifferentiationMode();
@@ -419,6 +437,7 @@ class CoreGraphAdapter {
           );
           return {
             nodeId,
+            nodeName,
             items,
           };
         },

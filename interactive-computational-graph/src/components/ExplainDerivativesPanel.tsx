@@ -98,7 +98,7 @@ const ExplainDerivativesPanel: FunctionComponent<
       <ExplainDerivativesHint
         hasNodes={hasNodes}
         hasDerivativeTarget={hasDerivativeTarget}
-        explainDerivativeData={explainDerivativeData}
+        hasExplainDerivativeData={explainDerivativeData.length > 0}
       />
 
       {/* Explanations */}
@@ -109,7 +109,7 @@ const ExplainDerivativesPanel: FunctionComponent<
             aria-controls={getContentId(data.nodeId)}
             id={`explain-derivative-header-${data.nodeId}`}
           >
-            <Typography variant="subtitle2">Node {data.nodeId}</Typography>
+            <Typography variant="subtitle2">Node {data.nodeName}</Typography>
           </AccordionSummary>
           <AccordionDetails
             id={getContentId(data.nodeId)}

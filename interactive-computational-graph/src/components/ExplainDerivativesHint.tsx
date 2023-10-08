@@ -1,16 +1,15 @@
 import { Alert } from "@mui/material";
 import { useCallback, type FunctionComponent } from "react";
-import type ExplainDerivativeData from "../features/ExplainDerivativeData";
 
 interface ExplainDerivativesHintProps {
   hasNodes: boolean;
   hasDerivativeTarget: boolean;
-  explainDerivativeData: ExplainDerivativeData[];
+  hasExplainDerivativeData: boolean;
 }
 
 const ExplainDerivativesHint: FunctionComponent<
   ExplainDerivativesHintProps
-> = ({ hasNodes, hasDerivativeTarget, explainDerivativeData }) => {
+> = ({ hasNodes, hasDerivativeTarget, hasExplainDerivativeData }) => {
   const getHintText = useCallback(() => {
     if (hasNodes) {
       if (hasDerivativeTarget) {
@@ -26,7 +25,7 @@ const ExplainDerivativesHint: FunctionComponent<
   return (
     <>
       {/* Hints */}
-      {explainDerivativeData.length === 0 && (
+      {!hasExplainDerivativeData && (
         <Alert severity="info">{getHintText()}</Alert>
       )}
     </>

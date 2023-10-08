@@ -27,9 +27,9 @@ it("should have different node types on the graph after dropping nodes", () => {
   dropNode({ nodeType: "VARIABLE" });
   dropNode({ nodeType: "OPERATION", operationId: "sum" });
 
-  expect(screen.getByText("c1")).toBeInTheDocument();
-  expect(screen.getByText("v2")).toBeInTheDocument();
-  expect(screen.getByText("sum3")).toBeInTheDocument();
+  expect(screen.getByText("c_1")).toBeInTheDocument();
+  expect(screen.getByText("v_1")).toBeInTheDocument();
+  expect(screen.getByText("sum_1")).toBeInTheDocument();
 
   const reactFlowData = {
     nodes: getNodes(),
@@ -83,9 +83,9 @@ it("edges and add node itself should be removed after removing add node", () => 
   removeEdge(["reactflow__edge-1output-3a", "reactflow__edge-2output-3b"]);
   removeNode(["3"]);
 
-  expect(screen.getByText("c1")).toBeInTheDocument();
-  expect(screen.getByText("c2")).toBeInTheDocument();
-  expect(screen.queryByText("add3")).toBeNull();
+  expect(screen.getByText("c_1")).toBeInTheDocument();
+  expect(screen.getByText("c_1")).toBeInTheDocument();
+  expect(screen.queryByText("add_1")).toBeNull();
 
   const reactFlowData = {
     nodes: getNodes(),
@@ -114,9 +114,9 @@ it("edges and sum node itself should be removed after removing sum node", () => 
   removeEdge(["reactflow__edge-1output-3x_i", "reactflow__edge-2output-3x_i"]);
   removeNode(["3"]);
 
-  expect(screen.getByText("c1")).toBeInTheDocument();
-  expect(screen.getByText("c2")).toBeInTheDocument();
-  expect(screen.queryByText("sum3")).toBeNull();
+  expect(screen.getByText("c_1")).toBeInTheDocument();
+  expect(screen.getByText("c_2")).toBeInTheDocument();
+  expect(screen.queryByText("sum_1")).toBeNull();
 
   const reactFlowData = {
     nodes: getNodes(),
@@ -255,7 +255,7 @@ it("derivative target should reset when the target node is removed", () => {
   connectEdge("2", "output", "3", "x_i");
 
   // Select the sum node as the derivative target
-  setDerivativeTarget("sum3");
+  setDerivativeTarget("sum_1");
 
   // Remove the sum node
   removeEdge(["reactflow__edge-1output-3x_i", "reactflow__edge-2output-3x_i"]);
@@ -293,7 +293,7 @@ it("outputs should change when derivative mode/target is changed", () => {
   connectEdge("4", "output", "5", "b");
 
   // Select the multiply node as the derivative target
-  setDerivativeTarget("multiply5");
+  setDerivativeTarget("multiply_1");
 
   // Check the output values
   expect(getOutputItemValue("3", "VALUE")).toBe("3");
@@ -357,7 +357,7 @@ it("outputs should change when derivative mode/target is changed", () => {
   expect(getOutputItemValue("5", "DERIVATIVE")).toBe("1");
 
   // Select the second variable node as the derivative target
-  setDerivativeTarget("v2");
+  setDerivativeTarget("v_2");
 
   // Check the output values
   expect(getOutputItemValue("3", "VALUE")).toBe("3");

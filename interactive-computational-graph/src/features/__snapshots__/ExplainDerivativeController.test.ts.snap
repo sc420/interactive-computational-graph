@@ -10,7 +10,7 @@ Array [
         "type": "text",
       },
     ],
-    "latex": "\\\\displaystyle \\\\frac{\\\\partial{v1}}{\\\\partial{f}}",
+    "latex": "\\\\displaystyle \\\\frac{\\\\partial{v_1}}{\\\\partial{f}}",
     "type": "calculatePartialDerivative",
   },
   Object {
@@ -21,7 +21,7 @@ Array [
         "type": "text",
       },
     ],
-    "latex": "\\\\displaystyle =\\\\frac{\\\\partial{op1}}{\\\\partial{f}} \\\\cdot \\\\frac{\\\\partial{v1}}{\\\\partial{op1}}+\\\\frac{\\\\partial{op2}}{\\\\partial{f}} \\\\cdot \\\\frac{\\\\partial{v1}}{\\\\partial{op2}}",
+    "latex": "\\\\displaystyle =\\\\frac{\\\\partial{op_1}}{\\\\partial{f}} \\\\cdot \\\\frac{\\\\partial{v_1}}{\\\\partial{op_1}}+\\\\frac{\\\\partial{op_2}}{\\\\partial{f}} \\\\cdot \\\\frac{\\\\partial{v_1}}{\\\\partial{op_2}}",
     "type": "useChainRule",
   },
   Object {
@@ -34,7 +34,7 @@ Array [
       Object {
         "href": "op1",
         "id": "chainRuleTerm-op1",
-        "latex": "\\\\frac{\\\\partial{op1}}{\\\\partial{f}}",
+        "latex": "\\\\frac{\\\\partial{op_1}}{\\\\partial{f}}",
         "type": "latexLink",
       },
       Object {
@@ -45,7 +45,7 @@ Array [
       Object {
         "href": "op2",
         "id": "chainRuleTerm-op2",
-        "latex": "\\\\frac{\\\\partial{op2}}{\\\\partial{f}}",
+        "latex": "\\\\frac{\\\\partial{op_2}}{\\\\partial{f}}",
         "type": "latexLink",
       },
       Object {
@@ -54,7 +54,7 @@ Array [
         "type": "text",
       },
     ],
-    "latex": "\\\\displaystyle =1 \\\\cdot \\\\frac{\\\\partial{v1}}{\\\\partial{op1}}+3 \\\\cdot \\\\frac{\\\\partial{v1}}{\\\\partial{op2}}",
+    "latex": "\\\\displaystyle =1 \\\\cdot \\\\frac{\\\\partial{v_1}}{\\\\partial{op_1}}+3 \\\\cdot \\\\frac{\\\\partial{v_1}}{\\\\partial{op_2}}",
     "type": "previousDerivativesReplaced",
   },
   Object {
@@ -92,7 +92,7 @@ Array [
         "type": "text",
       },
     ],
-    "latex": "\\\\displaystyle \\\\frac{\\\\partial{f}}{\\\\partial{v1}}",
+    "latex": "\\\\displaystyle \\\\frac{\\\\partial{f}}{\\\\partial{v_1}}",
     "type": "calculatePartialDerivative",
   },
   Object {
@@ -103,7 +103,7 @@ Array [
         "type": "text",
       },
     ],
-    "latex": "\\\\displaystyle =\\\\frac{\\\\partial{op1}}{\\\\partial{v1}} \\\\cdot \\\\frac{\\\\partial{f}}{\\\\partial{op1}}+\\\\frac{\\\\partial{op2}}{\\\\partial{v1}} \\\\cdot \\\\frac{\\\\partial{f}}{\\\\partial{op2}}",
+    "latex": "\\\\displaystyle =\\\\frac{\\\\partial{op_1}}{\\\\partial{v_1}} \\\\cdot \\\\frac{\\\\partial{f}}{\\\\partial{op_1}}+\\\\frac{\\\\partial{op_2}}{\\\\partial{v_1}} \\\\cdot \\\\frac{\\\\partial{f}}{\\\\partial{op_2}}",
     "type": "useChainRule",
   },
   Object {
@@ -116,7 +116,7 @@ Array [
       Object {
         "href": "op1",
         "id": "chainRuleTerm-op1",
-        "latex": "\\\\frac{\\\\partial{f}}{\\\\partial{op1}}",
+        "latex": "\\\\frac{\\\\partial{f}}{\\\\partial{op_1}}",
         "type": "latexLink",
       },
       Object {
@@ -127,7 +127,7 @@ Array [
       Object {
         "href": "op2",
         "id": "chainRuleTerm-op2",
-        "latex": "\\\\frac{\\\\partial{f}}{\\\\partial{op2}}",
+        "latex": "\\\\frac{\\\\partial{f}}{\\\\partial{op_2}}",
         "type": "latexLink",
       },
       Object {
@@ -136,7 +136,7 @@ Array [
         "type": "text",
       },
     ],
-    "latex": "\\\\displaystyle =\\\\frac{\\\\partial{op1}}{\\\\partial{v1}} \\\\cdot 2+\\\\frac{\\\\partial{op2}}{\\\\partial{v1}} \\\\cdot 4",
+    "latex": "\\\\displaystyle =\\\\frac{\\\\partial{op_1}}{\\\\partial{v_1}} \\\\cdot 2+\\\\frac{\\\\partial{op_2}}{\\\\partial{v_1}} \\\\cdot 4",
     "type": "previousDerivativesReplaced",
   },
   Object {

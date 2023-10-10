@@ -21,6 +21,7 @@ import type ExplainDerivativeData from "./ExplainDerivativeData";
 import type ExplainDerivativeType from "./ExplainDerivativeType";
 import type FeatureNodeType from "./FeatureNodeType";
 import type FeatureOperation from "./FeatureOperation";
+import type ExplainDerivativeBuildOptions from "./ExplainDerivativeBuildOptions";
 
 type ConnectionAddedCallback = (connection: Connection) => void;
 
@@ -440,16 +441,17 @@ class CoreGraphAdapter {
             throw new Error(`Should find the node name of node ID ${nodeId}`);
           }
           const explainDerivativeType = this.getExplainDerivativeType(nodeId);
-          const nodeDerivative = this.graph.getNodeDerivative(nodeId);
-          const differentiationMode = this.graph.getDifferentiationMode();
-          const chainRuleTerms = this.getChainRuleTerms(nodeId);
+          const options: ExplainDerivativeBuildOptions = {
+            differentiationMode: this.graph.getDifferentiationMode(),
+            targetNodeId,
+            nodeId,
+            nodeDerivative: this.graph.getNodeDerivative(nodeId),
+            chainRuleTerms: this.getChainRuleTerms(nodeId),
+            nodeIdToNames: this.nodeIdToNames,
+          };
           const items = buildExplainDerivativeItems(
             explainDerivativeType,
-            nodeId,
-            nodeDerivative,
-            differentiationMode,
-            targetNodeId,
-            chainRuleTerms,
+            options,
           );
           return {
             nodeId,

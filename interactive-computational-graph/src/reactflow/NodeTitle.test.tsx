@@ -32,7 +32,7 @@ test("should not have striped animation when not highlighted", () => {
     />,
   );
 
-  const nodeTitle = screen.getByTestId("node-title");
+  const nodeTitle = screen.getByTestId("node-title-1");
   expect(nodeTitle).not.toHaveClass("striped-animation-light");
   expect(nodeTitle).not.toHaveClass("striped-animation-dark");
 });
@@ -50,7 +50,7 @@ test("should have light striped animation when highlighted in light mode", () =>
     />,
   );
 
-  const nodeTitle = screen.getByTestId("node-title");
+  const nodeTitle = screen.getByTestId("node-title-1");
   expect(nodeTitle).toHaveClass("striped-animation-light");
   expect(nodeTitle).not.toHaveClass("striped-animation-dark");
 });
@@ -68,7 +68,7 @@ test("should have dark striped animation when highlighted in dark mode", () => {
     />,
   );
 
-  const nodeTitle = screen.getByTestId("node-title");
+  const nodeTitle = screen.getByTestId("node-title-1");
   expect(nodeTitle).not.toHaveClass("striped-animation-light");
   expect(nodeTitle).toHaveClass("striped-animation-dark");
 });

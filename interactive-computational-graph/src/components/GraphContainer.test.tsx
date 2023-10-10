@@ -264,6 +264,31 @@ it("derivative target should reset when the target node is removed", () => {
   expect(getDerivativeTarget()).toBe("");
 });
 
+it("derivative target name should update when the node name is updated", () => {
+  renderGraphContainer();
+
+  // Add two constant nodes
+  const constantItem = screen.getByText("Constant");
+  fireEvent.click(constantItem);
+  fireEvent.click(constantItem);
+
+  // Add a sum node
+  const sumItem = screen.getByText("Sum");
+  fireEvent.click(sumItem);
+
+  // Connect from the constant nodes to the sum node
+  connectEdge("1", "output", "3", "x_i");
+  connectEdge("2", "output", "3", "x_i");
+
+  // Select the sum node as the derivative target
+  setDerivativeTarget("sum_1");
+
+  // Update the node name of the sum node
+  setNodeName("3", "s_1");
+
+  expect(getDerivativeTarget()).toBe("s_1");
+});
+
 // It uses example from https://colah.github.io/posts/2015-08-Backprop/
 it("outputs should change when derivative mode/target is changed", () => {
   renderGraphContainer();
@@ -509,6 +534,18 @@ const dropNode = (featureNodeType: FeatureNodeType): void => {
   const triggerOnEdgesChangeRemoveButton =
     screen.getByTestId("trigger.onDropNode");
   fireEvent.click(triggerOnEdgesChangeRemoveButton);
+};
+
+const setNodeName = (nodeId: string, name: string): void => {
+  const nodeTitle = screen.getByTestId(`node-title-${nodeId}`);
+  const editIcon = within(nodeTitle).getByRole("button", { name: "edit" });
+  fireEvent.click(editIcon);
+
+  const input = within(nodeTitle).getByRole("textbox");
+  fireEvent.change(input, {
+    target: { value: name },
+  });
+  fireEvent.keyDown(input, { key: "Enter" });
 };
 
 const setInputItemValue = (

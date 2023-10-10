@@ -47,8 +47,8 @@ test("should not trigger event with old name when Escape is pressed", () => {
 });
 
 const clickEditIcon = (): void => {
-  const copyIcon = screen.getByRole("button", { name: "edit" });
-  fireEvent.click(copyIcon);
+  const editIcon = screen.getByRole("button", { name: "edit" });
+  fireEvent.click(editIcon);
 };
 
 const changeName = (name: string): void => {

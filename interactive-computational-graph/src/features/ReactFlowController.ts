@@ -312,13 +312,6 @@ const deselectAllNodes = (nodes: Node[]): Node[] => {
   });
 };
 
-const getNodeNames = (nodes: Node[]): string[] => {
-  return nodes.map((node) => {
-    const data = node.data as NodeData;
-    return data.name;
-  });
-};
-
 const buildReactFlowNodeData = (addNodeData: AddNodeData): NodeData => {
   const {
     featureNodeType,
@@ -482,7 +475,6 @@ export {
   findRemovedEdges,
   getLastSelectedNodeId,
   getNewReactFlowNodePosition,
-  getNodeNames,
   hideInputField,
   selectReactFlowNode,
   showInputFields,

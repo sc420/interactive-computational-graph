@@ -48,7 +48,6 @@ import {
   deselectAllNodes,
   getLastSelectedNodeId,
   getNewReactFlowNodePosition,
-  getNodeNames,
   hideInputField,
   selectReactFlowNode,
   showInputFields,
@@ -58,6 +57,7 @@ import {
   updateReactFlowNodeFValues,
   updateReactFlowNodeHighlighted,
   updateReactFlowNodeInputValue,
+  updateReactFlowNodeName,
 } from "../features/ReactFlowController";
 import type SelectedFeature from "../features/SelectedFeature";
 import ReactFlowGraph from "../reactflow/ReactFlowGraph";
@@ -166,11 +166,6 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
 
   const handleNameChange = useCallback(
     (nodeId: string, name: string): void => {
-      // TODO(sc420): Do this in adapter callback
-      // setReactFlowNodes((nodes) =>
-      //   updateReactFlowNodeName(nodeId, name, nodes),
-      // );
-
       coreGraphAdapter.updateNodeNameById(nodeId, name);
     },
     [coreGraphAdapter],
@@ -431,6 +426,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     coreGraphAdapter.onConnectionAdded(handleConnectionAdded);
     coreGraphAdapter.onConnectionError(handleConnectionError);
     coreGraphAdapter.onTargetNodeUpdated(handleTargetNodeUpdated);
+    coreGraphAdapter.onNodeNameUpdated(handleNodeNameUpdated);
     coreGraphAdapter.onShowInputFields(handleShowInputFields);
     coreGraphAdapter.onHideInputField(handleHideInputField);
     coreGraphAdapter.onFValuesUpdated(handleFValuesUpdated);
@@ -455,6 +451,10 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
 
   const handleTargetNodeUpdated = useCallback((targetNodeId: string | null) => {
     setDerivativeTarget(() => targetNodeId);
+  }, []);
+
+  const handleNodeNameUpdated = useCallback((nodeId: string, name: string) => {
+    setReactFlowNodes((nodes) => updateReactFlowNodeName(nodeId, name, nodes));
   }, []);
 
   const handleShowInputFields = useCallback((emptyPortEdges: Edge[]) => {
@@ -541,7 +541,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
           isReverseMode={isReverseMode}
           derivativeTarget={derivativeTarget}
           nodeIds={coreGraphAdapter.getNodeIds()}
-          nodeNames={getNodeNames(reactFlowNodes)}
+          nodeNames={coreGraphAdapter.getNodeNames()}
           onReverseModeChange={handleReverseModeChange}
           onDerivativeTargetChange={handleDerivativeTargetChange}
         />

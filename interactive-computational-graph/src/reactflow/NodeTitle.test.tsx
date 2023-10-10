@@ -7,6 +7,7 @@ test("should render the name", () => {
   const handleNameChange = jest.fn();
   render(
     <NodeTitle
+      id="1"
       name="abc"
       backgroundColor="white"
       isDarkMode={false}
@@ -22,6 +23,7 @@ test("should not have striped animation when not highlighted", () => {
   const handleNameChange = jest.fn();
   render(
     <NodeTitle
+      id="1"
       name="abc"
       backgroundColor="white"
       isDarkMode={false}
@@ -39,6 +41,7 @@ test("should have light striped animation when highlighted in light mode", () =>
   const handleNameChange = jest.fn();
   render(
     <NodeTitle
+      id="1"
       name="abc"
       backgroundColor="white"
       isDarkMode={false}
@@ -56,6 +59,7 @@ test("should have dark striped animation when highlighted in dark mode", () => {
   const handleNameChange = jest.fn();
   render(
     <NodeTitle
+      id="1"
       name="abc"
       backgroundColor="white"
       isDarkMode={true}

@@ -114,6 +114,7 @@ const CustomNode: FunctionComponent<CustomNodeProps> = ({
         <Stack>
           {/* Header */}
           <NodeTitle
+            id={id}
             name={data.name}
             backgroundColor={titleColor}
             isDarkMode={data.isDarkMode}

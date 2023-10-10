@@ -181,6 +181,23 @@ describe("events", () => {
     expect(handleExplainDerivativeDataUpdated).toHaveBeenCalledWith([]);
   });
 
+  test("should emit events when updating node name", () => {
+    const adapter = new CoreGraphAdapter();
+
+    addConstantNode(adapter, "c1");
+
+    const handleNodeNameUpdated = jest.fn();
+    const handleExplainDerivativeDataUpdated = jest.fn();
+
+    adapter.onNodeNameUpdated(handleNodeNameUpdated);
+    adapter.onExplainDerivativeDataUpdated(handleExplainDerivativeDataUpdated);
+
+    adapter.updateNodeNameById("c1", "c_2");
+
+    expect(handleNodeNameUpdated).toHaveBeenCalledWith("c1", "c_2");
+    expect(handleExplainDerivativeDataUpdated).toHaveBeenCalledWith([]);
+  });
+
   test("should emit output updates when updating node value", () => {
     const adapter = new CoreGraphAdapter();
 

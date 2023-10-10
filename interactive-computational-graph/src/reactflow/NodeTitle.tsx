@@ -5,6 +5,7 @@ import "./NodeTitle.css";
 import EditableName from "./EditableName";
 
 interface NodeTitleProps {
+  id: string;
   name: string;
   backgroundColor: string;
   isDarkMode: boolean;
@@ -13,6 +14,7 @@ interface NodeTitleProps {
 }
 
 const NodeTitle: FunctionComponent<NodeTitleProps> = ({
+  id,
   name,
   backgroundColor,
   isDarkMode,
@@ -28,7 +30,7 @@ const NodeTitle: FunctionComponent<NodeTitleProps> = ({
 
   return (
     <Box
-      data-testid="node-title"
+      data-testid={`node-title-${id}`}
       // corresponds to dragHandle when creating new reactflow.Node
       className={`drag-handle ${animationClassName}`}
       display="flex"

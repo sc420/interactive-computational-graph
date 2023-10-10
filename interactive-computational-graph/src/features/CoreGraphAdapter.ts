@@ -28,6 +28,8 @@ type ConnectionErrorCallback = (error: Error) => void;
 
 type TargetNodeUpdatedCallback = (targetNodeId: string | null) => void;
 
+type NodeNameUpdatedCallback = (nodeId: string, name: string) => void;
+
 type ShowInputFieldsCallback = (emptyPortEdges: Edge[]) => void;
 
 type HideInputFieldCallback = (nonEmptyPortConnection: Connection) => void;
@@ -53,6 +55,7 @@ class CoreGraphAdapter {
   private connectionAddedCallbacks: ConnectionAddedCallback[] = [];
   private connectionErrorCallbacks: ConnectionErrorCallback[] = [];
   private targetNodeUpdatedCallbacks: TargetNodeUpdatedCallback[] = [];
+  private nodeNameUpdatedCallbacks: NodeNameUpdatedCallback[] = [];
   private showInputFieldsCallbacks: ShowInputFieldsCallback[] = [];
   private hideInputFieldCallbacks: HideInputFieldCallback[] = [];
   private fValuesUpdatedCallbacks: FValuesUpdatedCallback[] = [];
@@ -178,6 +181,17 @@ class CoreGraphAdapter {
       .filter((nodeId) => !this.isDummyInputNodeId(nodeId));
   }
 
+  getNodeNames(): string[] {
+    const nodeIds = this.getNodeIds();
+    return nodeIds.map((nodeId) => {
+      const nodeName = this.nodeIdToNames.get(nodeId);
+      if (nodeName === undefined) {
+        throw new Error(`Should have node name for node ID ${nodeId}`);
+      }
+      return nodeName;
+    });
+  }
+
   setDifferentiationMode(differentiationMode: DifferentiationMode): void {
     this.graph.setDifferentiationMode(differentiationMode);
 
@@ -192,6 +206,8 @@ class CoreGraphAdapter {
 
   updateNodeNameById(nodeId: string, name: string): void {
     this.nodeIdToNames.set(nodeId, name);
+
+    this.emitNodeNameUpdated(nodeId, name);
 
     this.updateExplainDerivativeData();
   }
@@ -483,6 +499,10 @@ class CoreGraphAdapter {
     this.targetNodeUpdatedCallbacks.push(callback);
   }
 
+  onNodeNameUpdated(callback: NodeNameUpdatedCallback): void {
+    this.nodeNameUpdatedCallbacks.push(callback);
+  }
+
   onShowInputFields(callback: ShowInputFieldsCallback): void {
     this.showInputFieldsCallbacks.push(callback);
   }
@@ -509,6 +529,7 @@ class CoreGraphAdapter {
     this.connectionAddedCallbacks = [];
     this.connectionErrorCallbacks = [];
     this.targetNodeUpdatedCallbacks = [];
+    this.nodeNameUpdatedCallbacks = [];
     this.showInputFieldsCallbacks = [];
     this.hideInputFieldCallbacks = [];
     this.fValuesUpdatedCallbacks = [];
@@ -531,6 +552,12 @@ class CoreGraphAdapter {
   private emitTargetNodeUpdated(): void {
     this.targetNodeUpdatedCallbacks.forEach((callback) => {
       callback(this.graph.getTargetNode());
+    });
+  }
+
+  private emitNodeNameUpdated(nodeId: string, name: string): void {
+    this.nodeNameUpdatedCallbacks.forEach((callback) => {
+      callback(nodeId, name);
     });
   }
 

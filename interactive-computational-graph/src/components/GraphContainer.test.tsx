@@ -327,19 +327,19 @@ it("outputs should change when derivative mode/target is changed", () => {
 
   // Check the derivative labels
   expect(getOutputItemLabelText("1", "DERIVATIVE")).toBe(
-    "\\displaystyle \\frac{\\partial{5}}{\\partial{1}}=",
+    "\\displaystyle \\frac{\\partial{multiply_1}}{\\partial{v_1}}=",
   );
   expect(getOutputItemLabelText("2", "DERIVATIVE")).toBe(
-    "\\displaystyle \\frac{\\partial{5}}{\\partial{2}}=",
+    "\\displaystyle \\frac{\\partial{multiply_1}}{\\partial{v_2}}=",
   );
   expect(getOutputItemLabelText("3", "DERIVATIVE")).toBe(
-    "\\displaystyle \\frac{\\partial{5}}{\\partial{3}}=",
+    "\\displaystyle \\frac{\\partial{multiply_1}}{\\partial{add_1}}=",
   );
   expect(getOutputItemLabelText("4", "DERIVATIVE")).toBe(
-    "\\displaystyle \\frac{\\partial{5}}{\\partial{4}}=",
+    "\\displaystyle \\frac{\\partial{multiply_1}}{\\partial{add_2}}=",
   );
   expect(getOutputItemLabelText("5", "DERIVATIVE")).toBe(
-    "\\displaystyle \\frac{\\partial{5}}{\\partial{5}}=",
+    "\\displaystyle \\frac{\\partial{multiply_1}}{\\partial{multiply_1}}=",
   );
 
   // Check the derivative values
@@ -359,19 +359,19 @@ it("outputs should change when derivative mode/target is changed", () => {
 
   // Check the derivative labels
   expect(getOutputItemLabelText("1", "DERIVATIVE")).toBe(
-    "\\displaystyle \\frac{\\partial{1}}{\\partial{5}}=",
+    "\\displaystyle \\frac{\\partial{v_1}}{\\partial{multiply_1}}=",
   );
   expect(getOutputItemLabelText("2", "DERIVATIVE")).toBe(
-    "\\displaystyle \\frac{\\partial{2}}{\\partial{5}}=",
+    "\\displaystyle \\frac{\\partial{v_2}}{\\partial{multiply_1}}=",
   );
   expect(getOutputItemLabelText("3", "DERIVATIVE")).toBe(
-    "\\displaystyle \\frac{\\partial{3}}{\\partial{5}}=",
+    "\\displaystyle \\frac{\\partial{add_1}}{\\partial{multiply_1}}=",
   );
   expect(getOutputItemLabelText("4", "DERIVATIVE")).toBe(
-    "\\displaystyle \\frac{\\partial{4}}{\\partial{5}}=",
+    "\\displaystyle \\frac{\\partial{add_2}}{\\partial{multiply_1}}=",
   );
   expect(getOutputItemLabelText("5", "DERIVATIVE")).toBe(
-    "\\displaystyle \\frac{\\partial{5}}{\\partial{5}}=",
+    "\\displaystyle \\frac{\\partial{multiply_1}}{\\partial{multiply_1}}=",
   );
 
   // Check the derivative values
@@ -391,19 +391,19 @@ it("outputs should change when derivative mode/target is changed", () => {
 
   // Check the derivative labels
   expect(getOutputItemLabelText("1", "DERIVATIVE")).toBe(
-    "\\displaystyle \\frac{\\partial{1}}{\\partial{2}}=",
+    "\\displaystyle \\frac{\\partial{v_1}}{\\partial{v_2}}=",
   );
   expect(getOutputItemLabelText("2", "DERIVATIVE")).toBe(
-    "\\displaystyle \\frac{\\partial{2}}{\\partial{2}}=",
+    "\\displaystyle \\frac{\\partial{v_2}}{\\partial{v_2}}=",
   );
   expect(getOutputItemLabelText("3", "DERIVATIVE")).toBe(
-    "\\displaystyle \\frac{\\partial{3}}{\\partial{2}}=",
+    "\\displaystyle \\frac{\\partial{add_1}}{\\partial{v_2}}=",
   );
   expect(getOutputItemLabelText("4", "DERIVATIVE")).toBe(
-    "\\displaystyle \\frac{\\partial{4}}{\\partial{2}}=",
+    "\\displaystyle \\frac{\\partial{add_2}}{\\partial{v_2}}=",
   );
   expect(getOutputItemLabelText("5", "DERIVATIVE")).toBe(
-    "\\displaystyle \\frac{\\partial{5}}{\\partial{2}}=",
+    "\\displaystyle \\frac{\\partial{multiply_1}}{\\partial{v_2}}=",
   );
 
   // Check the derivative values

@@ -353,7 +353,7 @@ const buildPartialDerivativeLatex = (
 
 const getNodeName = (
   nodeId: string,
-  nodeIdToNames: Map<string, string>,
+  nodeIdToNames: ReadonlyMap<string, string>,
 ): string => {
   const name = nodeIdToNames.get(nodeId);
   if (name === undefined) {

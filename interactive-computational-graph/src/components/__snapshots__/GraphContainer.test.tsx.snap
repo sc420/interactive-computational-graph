@@ -193,7 +193,7 @@ Object {
               Object {
                 "href": "2",
                 "id": "derivative",
-                "latex": "\\\\displaystyle \\\\frac{\\\\partial{?}}{\\\\partial{2}}",
+                "latex": "\\\\displaystyle \\\\frac{\\\\partial{?}}{\\\\partial{v_1}}",
                 "type": "latexLink",
               },
               Object {
@@ -253,7 +253,7 @@ Object {
               Object {
                 "href": "3",
                 "id": "derivative",
-                "latex": "\\\\displaystyle \\\\frac{\\\\partial{?}}{\\\\partial{3}}",
+                "latex": "\\\\displaystyle \\\\frac{\\\\partial{?}}{\\\\partial{sum_1}}",
                 "type": "latexLink",
               },
               Object {

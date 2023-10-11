@@ -215,13 +215,17 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
         nodeName,
       );
 
+      const derivativeTargetName =
+        derivativeTarget === null
+          ? null
+          : coreGraphAdapter.getNodeNameById(derivativeTarget);
       const addNodeData: AddNodeData = {
         featureNodeType,
         featureOperation,
         nodeId,
         nodeName,
         isReverseMode,
-        derivativeTarget,
+        derivativeTargetName,
         onNameChange: handleNameChange,
         onInputChange: handleInputChange,
         onBodyClick: handleBodyClick,
@@ -375,13 +379,17 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
         nodeName,
       );
 
+      const derivativeTargetName =
+        derivativeTarget === null
+          ? null
+          : coreGraphAdapter.getNodeNameById(derivativeTarget);
       const addNodeData: AddNodeData = {
         featureNodeType,
         featureOperation,
         nodeId,
         nodeName,
         isReverseMode,
-        derivativeTarget,
+        derivativeTargetName,
         onNameChange: handleNameChange,
         onInputChange: handleInputChange,
         onBodyClick: handleBodyClick,
@@ -482,14 +490,16 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
   const handleDerivativeValuesUpdated = useCallback(
     (
       differentiationMode: DifferentiationMode,
-      targetNodeId: string | null,
-      nodeIdToDerivatives: Map<string, string>,
+      targetNodeName: string | null,
+      nodeIdToDerivatives: ReadonlyMap<string, string>,
+      nodeIdToNames: ReadonlyMap<string, string>,
     ) => {
       setReactFlowNodes((nodes) =>
         updateReactFlowNodeDerivatives(
           nodeIdToDerivatives,
+          nodeIdToNames,
           differentiationMode === "REVERSE",
-          targetNodeId,
+          targetNodeName,
           nodes,
         ),
       );

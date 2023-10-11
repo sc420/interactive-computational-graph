@@ -39,8 +39,9 @@ type FValuesUpdatedCallback = (nodeIdToFValues: Map<string, string>) => void;
 
 type DerivativeValuesUpdatedCallback = (
   differentiationMode: DifferentiationMode,
-  targetNode: string | null,
-  nodeIdToDerivatives: Map<string, string>,
+  targetNodeName: string | null,
+  nodeIdToDerivatives: ReadonlyMap<string, string>,
+  nodeIdToNames: ReadonlyMap<string, string>,
 ) => void;
 
 type ExplainDerivativeDataUpdatedCallback = (
@@ -182,15 +183,24 @@ class CoreGraphAdapter {
       .filter((nodeId) => !this.isDummyInputNodeId(nodeId));
   }
 
+  getNodeNameById(nodeId: string): string {
+    if (this.isDummyInputNodeId(nodeId)) {
+      return nodeId; // TODO(sc420): Should build "${nodeName}.${portName}"
+    }
+
+    const nodeName = this.nodeIdToNames.get(nodeId);
+    if (nodeName === undefined) {
+      throw new Error(`Should find the node name of node ID ${nodeId}`);
+    }
+    return nodeName;
+  }
+
   getNodeNames(): string[] {
-    const nodeIds = this.getNodeIds();
-    return nodeIds.map((nodeId) => {
-      const nodeName = this.nodeIdToNames.get(nodeId);
-      if (nodeName === undefined) {
-        throw new Error(`Should have node name for node ID ${nodeId}`);
-      }
-      return nodeName;
-    });
+    return this.getNodeIds().map((nodeId) => this.getNodeNameById(nodeId));
+  }
+
+  getNodeIdToNames(): ReadonlyMap<string, string> {
+    return this.nodeIdToNames;
   }
 
   setDifferentiationMode(differentiationMode: DifferentiationMode): void {
@@ -210,6 +220,7 @@ class CoreGraphAdapter {
 
     this.emitNodeNameUpdated(nodeId, name);
 
+    this.updateDerivatives();
     this.updateExplainDerivativeData();
   }
 
@@ -414,12 +425,18 @@ class CoreGraphAdapter {
   private updateDerivatives(): void {
     this.graph.updateDerivatives();
     const updatedNodeIdToDerivatives = new Map<string, string>();
+    const updatedNodeIdToNames = new Map<string, string>();
     this.graph.getNodes().forEach((node) => {
       const value = this.graph.getNodeDerivative(node.getId());
       updatedNodeIdToDerivatives.set(node.getId(), `${value}`);
+      const nodeName = this.getNodeNameById(node.getId());
+      updatedNodeIdToNames.set(node.getId(), nodeName);
     });
 
-    this.emitDerivativeValuesUpdated(updatedNodeIdToDerivatives);
+    this.emitDerivativeValuesUpdated(
+      updatedNodeIdToDerivatives,
+      updatedNodeIdToNames,
+    );
   }
 
   updateSelectedNodes(selectedNodeIds: string[]): void {
@@ -436,10 +453,7 @@ class CoreGraphAdapter {
     } else {
       explainDerivativeData = this.selectedNodeIds.map(
         (nodeId): ExplainDerivativeData => {
-          const nodeName = this.nodeIdToNames.get(nodeId);
-          if (nodeName === undefined) {
-            throw new Error(`Should find the node name of node ID ${nodeId}`);
-          }
+          const nodeName = this.getNodeNameById(nodeId);
           const explainDerivativeType = this.getExplainDerivativeType(nodeId);
           const options: ExplainDerivativeBuildOptions = {
             differentiationMode: this.graph.getDifferentiationMode(),
@@ -583,12 +597,15 @@ class CoreGraphAdapter {
 
   private emitDerivativeValuesUpdated(
     nodeIdToDerivatives: Map<string, string>,
+    nodeIdToNames: Map<string, string>,
   ): void {
+    const targetNode = this.graph.getTargetNode();
     this.derivativesUpdatedCallbacks.forEach((callback) => {
       callback(
         this.graph.getDifferentiationMode(),
-        this.graph.getTargetNode(),
+        targetNode === null ? null : this.getNodeNameById(targetNode),
         nodeIdToDerivatives,
+        nodeIdToNames,
       );
     });
   }

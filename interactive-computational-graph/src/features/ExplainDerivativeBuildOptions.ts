@@ -7,7 +7,7 @@ interface ExplainDerivativeBuildOptions {
   nodeId: string;
   nodeDerivative: string;
   chainRuleTerms: ChainRuleTerm[];
-  nodeIdToNames: Map<string, string>;
+  nodeIdToNames: ReadonlyMap<string, string>;
 }
 
 export default ExplainDerivativeBuildOptions;

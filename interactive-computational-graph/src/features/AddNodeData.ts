@@ -13,7 +13,7 @@ interface AddNodeData {
   nodeId: string;
   nodeName: string;
   isReverseMode: boolean;
-  derivativeTarget: string | null;
+  derivativeTargetName: string | null;
   onNameChange: NameChangeCallback;
   onInputChange: InputChangeCallback;
   onBodyClick: BodyClickCallback;

@@ -29,19 +29,21 @@ describe("events", () => {
     adapter.onDerivativeValuesUpdated(handleDerivativeValuesUpdated);
     adapter.onExplainDerivativeDataUpdated(handleExplainDerivativeDataUpdated);
 
-    addConstantNode(adapter, "c1");
+    addConstantNode(adapter, "1", "c_1");
 
-    const expectedNodeIdToFValues = new Map<string, string>([["c1", "0"]]);
+    const expectedNodeIdToFValues = new Map<string, string>([["1", "0"]]);
     const expectedDifferentiationMode: DifferentiationMode = "REVERSE";
     const expectedTargetNode = null;
     const expectedNodeIdToDerivativeValues = new Map<string, string>([
-      ["c1", "0"],
+      ["1", "0"],
     ]);
+    const expectedNodeIdToNames = new Map<string, string>([["1", "c_1"]]);
     expect(handleFValuesUpdated).toHaveBeenCalledWith(expectedNodeIdToFValues);
     expect(handleDerivativeValuesUpdated).toHaveBeenCalledWith(
       expectedDifferentiationMode,
       expectedTargetNode,
       expectedNodeIdToDerivativeValues,
+      expectedNodeIdToNames,
     );
     expect(handleExplainDerivativeDataUpdated).toHaveBeenCalledWith([]);
   });
@@ -49,8 +51,8 @@ describe("events", () => {
   test("should emit events when adding connection successfully", () => {
     const adapter = new CoreGraphAdapter();
 
-    addConstantNode(adapter, "c1");
-    addAddNode(adapter, "add1");
+    addConstantNode(adapter, "1", "c_1");
+    addAddNode(adapter, "2", "add_1");
 
     const handleConnectionAdded = jest.fn();
     const handleHideInputField = jest.fn();
@@ -64,29 +66,36 @@ describe("events", () => {
     adapter.onDerivativeValuesUpdated(handleDerivativeValuesUpdated);
     adapter.onExplainDerivativeDataUpdated(handleExplainDerivativeDataUpdated);
 
-    const connection = addConnection(adapter, "c1", "add1", "a");
+    const connection = addConnection(adapter, "1", "2", "a");
 
     expect(handleConnectionAdded).toHaveBeenCalledWith(connection);
     expect(handleHideInputField).toHaveBeenCalledWith(connection);
     const expectedNodeIdToFValues = new Map<string, string>([
-      ["c1", "0"],
-      ["add1", "0"],
-      ["dummy-input-node-add1-a", "0"],
-      ["dummy-input-node-add1-b", "0"],
+      ["1", "0"],
+      ["2", "0"],
+      ["dummy-input-node-2-a", "0"],
+      ["dummy-input-node-2-b", "0"],
     ]);
     const expectedDifferentiationMode: DifferentiationMode = "REVERSE";
     const expectedTargetNode = null;
     const expectedNodeIdToDerivativeValues = new Map<string, string>([
-      ["c1", "0"],
-      ["add1", "0"],
-      ["dummy-input-node-add1-a", "0"],
-      ["dummy-input-node-add1-b", "0"],
+      ["1", "0"],
+      ["2", "0"],
+      ["dummy-input-node-2-a", "0"],
+      ["dummy-input-node-2-b", "0"],
+    ]);
+    const expectedNodeIdToNames = new Map<string, string>([
+      ["1", "c_1"],
+      ["2", "add_1"],
+      ["dummy-input-node-2-a", "dummy-input-node-2-a"],
+      ["dummy-input-node-2-b", "dummy-input-node-2-b"],
     ]);
     expect(handleFValuesUpdated).toHaveBeenCalledWith(expectedNodeIdToFValues);
     expect(handleDerivativeValuesUpdated).toHaveBeenCalledWith(
       expectedDifferentiationMode,
       expectedTargetNode,
       expectedNodeIdToDerivativeValues,
+      expectedNodeIdToNames,
     );
     expect(handleExplainDerivativeDataUpdated).toHaveBeenCalledWith([]);
   });
@@ -94,7 +103,7 @@ describe("events", () => {
   test("should emit events when there's error when adding connection", () => {
     const adapter = new CoreGraphAdapter();
 
-    addAddNode(adapter, "add1");
+    addAddNode(adapter, "1", "add_1");
 
     const handleConnectionAdded = jest.fn();
     const handleConnectionError = jest.fn();
@@ -109,11 +118,11 @@ describe("events", () => {
     adapter.onDerivativeValuesUpdated(handleDerivativeValuesUpdated);
     adapter.onExplainDerivativeDataUpdated(handleExplainDerivativeDataUpdated);
 
-    addConnection(adapter, "add1", "add1", "a");
+    addConnection(adapter, "1", "1", "a");
 
     expect(handleConnectionAdded).not.toHaveBeenCalled();
     expect(handleConnectionError).toHaveBeenCalledWith(
-      new CycleError("Connecting node add1 to node add1 would cause a cycle"),
+      new CycleError("Connecting node 1 to node 1 would cause a cycle"),
     );
     expect(handleHideInputField).not.toHaveBeenCalled();
     expect(handleFValuesUpdated).not.toHaveBeenCalled();
@@ -124,7 +133,7 @@ describe("events", () => {
   test("should emit output updates when setting differentiation mode", () => {
     const adapter = new CoreGraphAdapter();
 
-    addConstantNode(adapter, "c1");
+    addConstantNode(adapter, "1", "c_1");
 
     const handleFValuesUpdated = jest.fn();
     const handleDerivativeValuesUpdated = jest.fn();
@@ -136,17 +145,19 @@ describe("events", () => {
 
     adapter.setDifferentiationMode("FORWARD");
 
-    const expectedNodeIdToFValues = new Map<string, string>([["c1", "0"]]);
+    const expectedNodeIdToFValues = new Map<string, string>([["1", "0"]]);
     const expectedDifferentiationMode: DifferentiationMode = "FORWARD";
     const expectedTargetNode = null;
     const expectedNodeIdToDerivativeValues = new Map<string, string>([
-      ["c1", "0"],
+      ["1", "0"],
     ]);
+    const expectedNodeIdToNames = new Map<string, string>([["1", "c_1"]]);
     expect(handleFValuesUpdated).toHaveBeenCalledWith(expectedNodeIdToFValues);
     expect(handleDerivativeValuesUpdated).toHaveBeenCalledWith(
       expectedDifferentiationMode,
       expectedTargetNode,
       expectedNodeIdToDerivativeValues,
+      expectedNodeIdToNames,
     );
     expect(handleExplainDerivativeDataUpdated).toHaveBeenCalledWith([]);
   });
@@ -154,7 +165,7 @@ describe("events", () => {
   test("should emit output updates when setting target node", () => {
     const adapter = new CoreGraphAdapter();
 
-    addConstantNode(adapter, "c1");
+    addConstantNode(adapter, "1", "c_1");
 
     const handleFValuesUpdated = jest.fn();
     const handleDerivativeValuesUpdated = jest.fn();
@@ -164,19 +175,21 @@ describe("events", () => {
     adapter.onDerivativeValuesUpdated(handleDerivativeValuesUpdated);
     adapter.onExplainDerivativeDataUpdated(handleExplainDerivativeDataUpdated);
 
-    adapter.setTargetNode("c1");
+    adapter.setTargetNode("1");
 
-    const expectedNodeIdToFValues = new Map<string, string>([["c1", "0"]]);
+    const expectedNodeIdToFValues = new Map<string, string>([["1", "0"]]);
     const expectedDifferentiationMode: DifferentiationMode = "REVERSE";
-    const expectedTargetNode = "c1";
+    const expectedTargetNode = "c_1";
     const expectedNodeIdToDerivativeValues = new Map<string, string>([
-      ["c1", "0"],
+      ["1", "0"],
     ]);
+    const expectedNodeIdToNames = new Map<string, string>([["1", "c_1"]]);
     expect(handleFValuesUpdated).toHaveBeenCalledWith(expectedNodeIdToFValues);
     expect(handleDerivativeValuesUpdated).toHaveBeenCalledWith(
       expectedDifferentiationMode,
       expectedTargetNode,
       expectedNodeIdToDerivativeValues,
+      expectedNodeIdToNames,
     );
     expect(handleExplainDerivativeDataUpdated).toHaveBeenCalledWith([]);
   });
@@ -184,7 +197,7 @@ describe("events", () => {
   test("should emit events when updating node name", () => {
     const adapter = new CoreGraphAdapter();
 
-    addConstantNode(adapter, "c1");
+    addConstantNode(adapter, "1", "c_1");
 
     const handleNodeNameUpdated = jest.fn();
     const handleExplainDerivativeDataUpdated = jest.fn();
@@ -192,16 +205,16 @@ describe("events", () => {
     adapter.onNodeNameUpdated(handleNodeNameUpdated);
     adapter.onExplainDerivativeDataUpdated(handleExplainDerivativeDataUpdated);
 
-    adapter.updateNodeNameById("c1", "c_2");
+    adapter.updateNodeNameById("1", "c_2");
 
-    expect(handleNodeNameUpdated).toHaveBeenCalledWith("c1", "c_2");
+    expect(handleNodeNameUpdated).toHaveBeenCalledWith("1", "c_2");
     expect(handleExplainDerivativeDataUpdated).toHaveBeenCalledWith([]);
   });
 
   test("should emit output updates when updating node value", () => {
     const adapter = new CoreGraphAdapter();
 
-    addAddNode(adapter, "add1");
+    addAddNode(adapter, "1", "add_1");
 
     const handleFValuesUpdated = jest.fn();
     const handleDerivativeValuesUpdated = jest.fn();
@@ -211,25 +224,31 @@ describe("events", () => {
     adapter.onDerivativeValuesUpdated(handleDerivativeValuesUpdated);
     adapter.onExplainDerivativeDataUpdated(handleExplainDerivativeDataUpdated);
 
-    adapter.updateNodeValueById("add1", "a", "1");
+    adapter.updateNodeValueById("1", "a", "1");
 
     const expectedNodeIdToFValues = new Map<string, string>([
-      ["add1", "1"],
-      ["dummy-input-node-add1-a", "1"],
-      ["dummy-input-node-add1-b", "0"],
+      ["1", "1"],
+      ["dummy-input-node-1-a", "1"],
+      ["dummy-input-node-1-b", "0"],
     ]);
     const expectedDifferentiationMode: DifferentiationMode = "REVERSE";
     const expectedTargetNode = null;
     const expectedNodeIdToDerivativeValues = new Map<string, string>([
-      ["add1", "0"],
-      ["dummy-input-node-add1-a", "0"],
-      ["dummy-input-node-add1-b", "0"],
+      ["1", "0"],
+      ["dummy-input-node-1-a", "0"],
+      ["dummy-input-node-1-b", "0"],
+    ]);
+    const expectedNodeIdToNames = new Map<string, string>([
+      ["1", "add_1"],
+      ["dummy-input-node-1-a", "dummy-input-node-1-a"],
+      ["dummy-input-node-1-b", "dummy-input-node-1-b"],
     ]);
     expect(handleFValuesUpdated).toHaveBeenCalledWith(expectedNodeIdToFValues);
     expect(handleDerivativeValuesUpdated).toHaveBeenCalledWith(
       expectedDifferentiationMode,
       expectedTargetNode,
       expectedNodeIdToDerivativeValues,
+      expectedNodeIdToNames,
     );
     expect(handleExplainDerivativeDataUpdated).toHaveBeenCalledWith([]);
   });
@@ -237,7 +256,7 @@ describe("events", () => {
   test("should emit output updates when removing the node", () => {
     const adapter = new CoreGraphAdapter();
 
-    addAddNode(adapter, "add1");
+    addAddNode(adapter, "1", "add_1");
 
     const handleFValuesUpdated = jest.fn();
     const handleDerivativeValuesUpdated = jest.fn();
@@ -247,17 +266,19 @@ describe("events", () => {
     adapter.onDerivativeValuesUpdated(handleDerivativeValuesUpdated);
     adapter.onExplainDerivativeDataUpdated(handleExplainDerivativeDataUpdated);
 
-    removeNode(adapter, "add1");
+    removeNode(adapter, "1");
 
     const expectedNodeIdToFValues = new Map<string, string>([]);
     const expectedDifferentiationMode: DifferentiationMode = "REVERSE";
     const expectedTargetNode = null;
     const expectedNodeIdToDerivativeValues = new Map<string, string>([]);
+    const expectedNodeIdToNames = new Map<string, string>([]);
     expect(handleFValuesUpdated).toHaveBeenCalledWith(expectedNodeIdToFValues);
     expect(handleDerivativeValuesUpdated).toHaveBeenCalledWith(
       expectedDifferentiationMode,
       expectedTargetNode,
       expectedNodeIdToDerivativeValues,
+      expectedNodeIdToNames,
     );
     expect(handleExplainDerivativeDataUpdated).toHaveBeenCalledWith([]);
   });
@@ -265,14 +286,14 @@ describe("events", () => {
   test("should emit target node update when removing the target node", () => {
     const adapter = new CoreGraphAdapter();
 
-    addAddNode(adapter, "add1");
-    adapter.setTargetNode("add1");
+    addAddNode(adapter, "1", "add_1");
+    adapter.setTargetNode("1");
 
     const handleTargetNodeUpdated = jest.fn();
 
     adapter.onTargetNodeUpdated(handleTargetNodeUpdated);
 
-    removeNode(adapter, "add1");
+    removeNode(adapter, "1");
 
     expect(handleTargetNodeUpdated).toHaveBeenCalledWith(null);
   });
@@ -280,7 +301,7 @@ describe("events", () => {
   test("should not emit output updates when doing other node changes", () => {
     const adapter = new CoreGraphAdapter();
 
-    addAddNode(adapter, "add1");
+    addAddNode(adapter, "1", "add_1");
 
     const handleFValuesUpdated = jest.fn();
     const handleDerivativeValuesUpdated = jest.fn();
@@ -291,7 +312,7 @@ describe("events", () => {
     adapter.onExplainDerivativeDataUpdated(handleExplainDerivativeDataUpdated);
 
     const change: NodePositionChange = {
-      id: "add1",
+      id: "1",
       type: "position",
       position: {
         x: 100,
@@ -309,9 +330,9 @@ describe("events", () => {
   test("should emit events when removing connection", () => {
     const adapter = new CoreGraphAdapter();
 
-    addConstantNode(adapter, "c1");
-    addAddNode(adapter, "add1");
-    addConnection(adapter, "c1", "add1", "a");
+    addConstantNode(adapter, "1", "c_1");
+    addAddNode(adapter, "2", "add_1");
+    addConnection(adapter, "1", "2", "a");
 
     const handleShowInputFields = jest.fn();
     const handleFValuesUpdated = jest.fn();
@@ -323,29 +344,36 @@ describe("events", () => {
     adapter.onDerivativeValuesUpdated(handleDerivativeValuesUpdated);
     adapter.onExplainDerivativeDataUpdated(handleExplainDerivativeDataUpdated);
 
-    const edges = buildReactFlowEdges([["c1", "add1", "a"]]);
-    removeEdge(adapter, "c1", "add1", "a", edges);
+    const edges = buildReactFlowEdges([["1", "2", "a"]]);
+    removeEdge(adapter, "1", "2", "a", edges);
 
     expect(handleShowInputFields).toHaveBeenCalledWith(edges);
     const expectedNodeIdToFValues = new Map<string, string>([
-      ["c1", "0"],
-      ["add1", "0"],
-      ["dummy-input-node-add1-a", "0"],
-      ["dummy-input-node-add1-b", "0"],
+      ["1", "0"],
+      ["2", "0"],
+      ["dummy-input-node-2-a", "0"],
+      ["dummy-input-node-2-b", "0"],
     ]);
     const expectedDifferentiationMode: DifferentiationMode = "REVERSE";
     const expectedTargetNode = null;
     const expectedNodeIdToDerivativeValues = new Map<string, string>([
-      ["c1", "0"],
-      ["add1", "0"],
-      ["dummy-input-node-add1-a", "0"],
-      ["dummy-input-node-add1-b", "0"],
+      ["1", "0"],
+      ["2", "0"],
+      ["dummy-input-node-2-a", "0"],
+      ["dummy-input-node-2-b", "0"],
+    ]);
+    const expectedNodeIdToNames = new Map<string, string>([
+      ["1", "c_1"],
+      ["2", "add_1"],
+      ["dummy-input-node-2-a", "dummy-input-node-2-a"],
+      ["dummy-input-node-2-b", "dummy-input-node-2-b"],
     ]);
     expect(handleFValuesUpdated).toHaveBeenCalledWith(expectedNodeIdToFValues);
     expect(handleDerivativeValuesUpdated).toHaveBeenCalledWith(
       expectedDifferentiationMode,
       expectedTargetNode,
       expectedNodeIdToDerivativeValues,
+      expectedNodeIdToNames,
     );
     expect(handleExplainDerivativeDataUpdated).toHaveBeenCalledWith([]);
   });
@@ -353,9 +381,9 @@ describe("events", () => {
   test("should not emit events when doing other connection changes", () => {
     const adapter = new CoreGraphAdapter();
 
-    addConstantNode(adapter, "c1");
-    addAddNode(adapter, "add1");
-    addConnection(adapter, "c1", "add1", "a");
+    addConstantNode(adapter, "1", "c_1");
+    addAddNode(adapter, "2", "add_1");
+    addConnection(adapter, "1", "2", "a");
 
     const handleShowInputFields = jest.fn();
     const handleFValuesUpdated = jest.fn();
@@ -368,12 +396,12 @@ describe("events", () => {
     adapter.onExplainDerivativeDataUpdated(handleExplainDerivativeDataUpdated);
 
     const change: EdgeSelectionChange = {
-      id: getReactFlowEdgeId("c1", "add1", "a"),
+      id: getReactFlowEdgeId("1", "2", "a"),
       type: "select",
       selected: true,
     };
     const changes: EdgeChange[] = [change];
-    const edges = buildReactFlowEdges([["c1", "add1", "a"]]);
+    const edges = buildReactFlowEdges([["1", "2", "a"]]);
     adapter.changeEdges(changes, edges);
 
     expect(handleShowInputFields).not.toHaveBeenCalled();
@@ -385,14 +413,14 @@ describe("events", () => {
   test("should emit non-empty explain derivative data when selecting nodes", () => {
     const adapter = new CoreGraphAdapter();
 
-    addConstantNode(adapter, "c1");
-    adapter.setTargetNode("c1");
+    addConstantNode(adapter, "1", "c_1");
+    adapter.setTargetNode("1");
 
     const explainDerivativeDataUpdated = jest.fn();
 
     adapter.onExplainDerivativeDataUpdated(explainDerivativeDataUpdated);
 
-    adapter.updateSelectedNodes(["c1"]);
+    adapter.updateSelectedNodes(["1"]);
 
     const firstCallArgs = explainDerivativeDataUpdated.mock.calls[0];
     const data = firstCallArgs[0];
@@ -402,13 +430,13 @@ describe("events", () => {
   test("should emit empty explain derivative data when selecting nodes with null target node", () => {
     const adapter = new CoreGraphAdapter();
 
-    addConstantNode(adapter, "c1");
+    addConstantNode(adapter, "1", "c_1");
 
     const explainDerivativeDataUpdated = jest.fn();
 
     adapter.onExplainDerivativeDataUpdated(explainDerivativeDataUpdated);
 
-    adapter.updateSelectedNodes(["c1"]);
+    adapter.updateSelectedNodes(["1"]);
 
     const expectedData: ExplainDerivativeData[] = [];
     expect(explainDerivativeDataUpdated).toHaveBeenCalledWith(expectedData);
@@ -419,18 +447,18 @@ describe("behavior", () => {
   test("should not throw error when the current selected node is removed", () => {
     const adapter = new CoreGraphAdapter();
 
-    addConstantNode(adapter, "c1");
-    addAddNode(adapter, "add1");
-    addConnection(adapter, "c1", "add1", "a");
+    addConstantNode(adapter, "1", "c_1");
+    addAddNode(adapter, "2", "add_1");
+    addConnection(adapter, "1", "2", "a");
 
-    adapter.setTargetNode("add1");
-    adapter.updateSelectedNodes(["c1"]);
+    adapter.setTargetNode("1");
+    adapter.updateSelectedNodes(["1"]);
 
-    const edges = buildReactFlowEdges([["c1", "add1", "a"]]);
+    const edges = buildReactFlowEdges([["1", "2", "a"]]);
     // Should remove edge first
-    removeEdge(adapter, "c1", "add1", "a", edges);
+    removeEdge(adapter, "1", "2", "a", edges);
     // Should remove node later
-    removeNode(adapter, "c1");
+    removeNode(adapter, "1");
   });
 });
 
@@ -443,18 +471,24 @@ const featureOperation: FeatureOperation = {
   helpText: "Add two numbers $ a + b $",
 };
 
-const addConstantNode = (adapter: CoreGraphAdapter, nodeId: string): void => {
+const addConstantNode = (
+  adapter: CoreGraphAdapter,
+  nodeId: string,
+  nodeName: string,
+): void => {
   const featureType: FeatureNodeType = { nodeType: "CONSTANT" };
-  const nodeName = `c_${nodeId}`;
   adapter.addNode(featureType, featureOperation, nodeId, nodeName);
 };
 
-const addAddNode = (adapter: CoreGraphAdapter, nodeId: string): void => {
+const addAddNode = (
+  adapter: CoreGraphAdapter,
+  nodeId: string,
+  nodeName: string,
+): void => {
   const featureType: FeatureNodeType = {
     nodeType: "OPERATION",
     operationId: "add",
   };
-  const nodeName = `add_${nodeId}`;
   adapter.addNode(featureType, featureOperation, nodeId, nodeName);
 };
 

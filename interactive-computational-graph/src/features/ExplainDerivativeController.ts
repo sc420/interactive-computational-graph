@@ -228,7 +228,7 @@ const buildPreviousDerivativesReplacedDescription = (
     options.nodeIdToNames,
   );
   const previousDerivativeTerms: MathLabelPartType[] =
-    options.chainRuleTerms.map((chainRuleTerm) => {
+    options.chainRuleTerms.map((chainRuleTerm, index) => {
       const neighborNodeName = getNodeName(
         chainRuleTerm.neighborNodeId,
         options.nodeIdToNames,
@@ -247,7 +247,7 @@ const buildPreviousDerivativesReplacedDescription = (
       }
       return {
         type: "latexLink",
-        id: `chainRuleTerm-${chainRuleTerm.neighborNodeId}`,
+        id: `chainRuleTerm-${chainRuleTerm.neighborNodeId}-${index}`,
         latex: derivative,
         href: chainRuleTerm.neighborNodeId,
       };

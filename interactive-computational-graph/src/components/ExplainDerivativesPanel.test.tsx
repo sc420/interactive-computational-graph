@@ -53,7 +53,7 @@ const getExplainDerivativeData = (): ExplainDerivativeData[] => {
           descriptionParts: [
             {
               type: "latexLink",
-              id: "chainRuleTerm-v1",
+              id: "chainRuleTerm-v1-0",
               latex: "x",
               href: "v1",
             },

@@ -138,7 +138,7 @@ describe("manipulating connections", () => {
 
     expect(() => {
       graph.connect("v1", "sum1", "x_i");
-    }).toThrow("Input node v1 already exists by port x_i");
+    }).toThrow("Input node v1 is already connected to node sum1 by port x_i");
   });
 
   test("should throw error when connecting to non-existent port", () => {
@@ -156,21 +156,34 @@ describe("manipulating connections", () => {
     const varNode4 = new VariableNode("v4");
     graph.addNode(varNode4);
 
-    expect(() => {
+    try {
       graph.validateConnect("v4", "identity1", "x");
-    }).toThrow(InputPortFullError);
+    } catch (error) {
+      expect(error).toBeInstanceOf(InputPortFullError);
+      const inputPortFullError = error as InputPortFullError;
+      expect(inputPortFullError.message).toBe(
+        "Input port x of node identity1 doesn't allow multiple edges",
+      );
+      expect(inputPortFullError.nodeId).toBe("identity1");
+      expect(inputPortFullError.portId).toBe("x");
+    }
   });
 
   test("should throw error when connecting the same node to same port again", () => {
     const graph = buildMediumGraph();
 
-    const connectVariableToSum = (): void => {
+    try {
       graph.connect("v1", "sum1", "x_i");
-    };
-    expect(connectVariableToSum).toThrow(InputNodeAlreadyConnectedError);
-    expect(connectVariableToSum).toThrow(
-      "Input node v1 already exists by port x_i of node sum1",
-    );
+    } catch (error) {
+      expect(error).toBeInstanceOf(InputNodeAlreadyConnectedError);
+      const alreadyConnectedError = error as InputNodeAlreadyConnectedError;
+      expect(alreadyConnectedError.message).toBe(
+        "Input node v1 is already connected to node sum1 by port x_i",
+      );
+      expect(alreadyConnectedError.node1Id).toBe("v1");
+      expect(alreadyConnectedError.node2Id).toBe("sum1");
+      expect(alreadyConnectedError.node2PortId).toBe("x_i");
+    }
   });
 
   test("should throw error when connecting to single-connection port", () => {
@@ -197,12 +210,29 @@ describe("manipulating connections", () => {
   test("should indicate if the connection would cause cycle", () => {
     const graph = buildMediumGraph();
 
-    expect(() => {
+    try {
       graph.validateConnect("identity1", "sum1", "x_i");
-    }).toThrow(CycleError);
-    expect(() => {
+    } catch (error) {
+      expect(error).toBeInstanceOf(CycleError);
+      const cycleError = error as CycleError;
+      expect(cycleError.message).toBe(
+        "Connecting node identity1 to node sum1 would cause a cycle",
+      );
+      expect(cycleError.node1Id).toBe("identity1");
+      expect(cycleError.node2Id).toBe("sum1");
+    }
+
+    try {
       graph.validateConnect("sum1", "sum1", "x_i");
-    }).toThrow(CycleError);
+    } catch (error) {
+      expect(error).toBeInstanceOf(CycleError);
+      const cycleError = error as CycleError;
+      expect(cycleError.message).toBe(
+        "Connecting node sum1 to node sum1 would cause a cycle",
+      );
+      expect(cycleError.node1Id).toBe("sum1");
+      expect(cycleError.node2Id).toBe("sum1");
+    }
 
     const varNode3 = new VariableNode("v4");
     graph.addNode(varNode3);

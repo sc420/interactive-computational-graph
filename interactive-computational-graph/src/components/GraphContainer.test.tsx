@@ -194,7 +194,7 @@ it("should show error message when connecting the same edge twice", () => {
   const snackbar = screen.getByRole("alert");
   expect(snackbar).toBeInTheDocument();
   expect(snackbar).toHaveTextContent(
-    "Input node 1 already exists by port x_i of node 2",
+    "Input node c_1 is already connected to node sum_1 by port x_i",
   );
 });
 
@@ -217,7 +217,7 @@ it("should show error message when connecting to the single-connection port", ()
   const snackbar = screen.getByRole("alert");
   expect(snackbar).toBeInTheDocument();
   expect(snackbar).toHaveTextContent(
-    "Input port a of node 3 doesn't allow multiple edges",
+    "Input port a of node add_1 doesn't allow multiple edges",
   );
 });
 
@@ -234,7 +234,7 @@ it("should show error message when causing a cycle", () => {
   const snackbar = screen.getByRole("alert");
   expect(snackbar).toBeInTheDocument();
   expect(snackbar).toHaveTextContent(
-    "Connecting node 1 to node 1 would cause a cycle",
+    "Connecting node sum_1 to node sum_1 would cause a cycle",
   );
 });
 

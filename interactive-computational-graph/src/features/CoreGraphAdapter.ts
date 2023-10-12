@@ -156,7 +156,8 @@ class CoreGraphAdapter {
           );
         }
 
-        this.emitConnectionError(error as Error);
+        const errorMessage = this.buildConnectionErrorMessage(error);
+        this.emitConnectionError(new Error(errorMessage));
         return;
       } else {
         throw error;
@@ -174,6 +175,32 @@ class CoreGraphAdapter {
     this.emitHideInputField(connection);
 
     this.updateOutputs();
+  }
+
+  private buildConnectionErrorMessage(error: any): string {
+    if (error instanceof InputNodeAlreadyConnectedError) {
+      if (error.node2Id === undefined) {
+        throw new Error("Error should contain node2Id");
+      }
+      const node1Name = this.getNodeNameById(error.node1Id);
+      const node2Name = this.getNodeNameById(error.node2Id);
+      return `Input node ${node1Name} is already connected to node \
+${node2Name} by port ${error.node2PortId}`;
+    } else if (error instanceof InputPortFullError) {
+      if (error.nodeId === undefined) {
+        throw new Error("Error should contain node2Id");
+      }
+      const nodeName = this.getNodeNameById(error.nodeId);
+      return `Input port ${error.portId} of node ${nodeName} doesn't allow \
+multiple edges`;
+    } else if (error instanceof CycleError) {
+      const node1Name = this.getNodeNameById(error.node1Id);
+      const node2Name = this.getNodeNameById(error.node2Id);
+      return `Connecting node ${node1Name} to node ${node2Name} would cause a \
+cycle`;
+    }
+
+    return error.message;
   }
 
   getNodeIds(): string[] {

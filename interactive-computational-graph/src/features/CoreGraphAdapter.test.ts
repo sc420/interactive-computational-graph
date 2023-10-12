@@ -8,7 +8,6 @@ import {
   type NodePositionChange,
   type NodeRemoveChange,
 } from "reactflow";
-import { CycleError } from "../core/CoreErrors";
 import type DifferentiationMode from "../core/DifferentiationMode";
 import Operation from "../core/Operation";
 import Port from "../core/Port";
@@ -122,7 +121,7 @@ describe("events", () => {
 
     expect(handleConnectionAdded).not.toHaveBeenCalled();
     expect(handleConnectionError).toHaveBeenCalledWith(
-      new CycleError("Connecting node 1 to node 1 would cause a cycle"),
+      new Error("Connecting node add_1 to node add_1 would cause a cycle"),
     );
     expect(handleHideInputField).not.toHaveBeenCalled();
     expect(handleFValuesUpdated).not.toHaveBeenCalled();

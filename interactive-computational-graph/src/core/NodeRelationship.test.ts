@@ -94,7 +94,9 @@ describe("input behavior", () => {
       nodeRelationship.addInputNodeByPort("a", varNode1);
     };
     expect(addNodeToPortA).toThrow(InputNodeAlreadyConnectedError);
-    expect(addNodeToPortA).toThrow("Input node v1 already exists by port a");
+    expect(addNodeToPortA).toThrow(
+      "Input node v1 is already connected to port a",
+    );
   });
 
   test("Port b should have multiple input nodes after adding", () => {

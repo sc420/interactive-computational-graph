@@ -72,7 +72,9 @@ class NodeRelationship {
 
     if (this.isNodeConnected(inputPortData.connectedNodes, inputNodeId)) {
       throw new InputNodeAlreadyConnectedError(
-        `Input node ${inputNodeId} already exists by port ${portId}`,
+        `Input node ${inputNodeId} is already connected to port ${portId}`,
+        inputNodeId,
+        portId,
       );
     }
 
@@ -80,8 +82,10 @@ class NodeRelationship {
       !inputPortData.port.isAllowMultiEdges() &&
       inputPortData.connectedNodes.length > 0
     ) {
+      const inputPort = inputPortData.port.getId();
       throw new InputPortFullError(
-        `Input port ${inputPortData.port.getId()} doesn't allow multiple edges`,
+        `Input port ${inputPort} doesn't allow multiple edges`,
+        inputPort,
       );
     }
   }

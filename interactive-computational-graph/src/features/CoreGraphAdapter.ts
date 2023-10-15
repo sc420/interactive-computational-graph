@@ -225,10 +225,6 @@ cycle`;
     return this.getNodeIds().map((nodeId) => this.getNodeNameById(nodeId));
   }
 
-  getNodeIdToNames(): ReadonlyMap<string, string> {
-    return this.nodeIdToNames;
-  }
-
   setDifferentiationMode(differentiationMode: DifferentiationMode): void {
     this.graph.setDifferentiationMode(differentiationMode);
 

@@ -21,6 +21,7 @@ import {
 import type ExplainDerivativeData from "../features/ExplainDerivativeData";
 import ExplainDerivativesListItem from "./ExplainDerivativeListItem";
 import ExplainDerivativesHint from "./ExplainDerivativesHint";
+import Katex from "../latex/Katex";
 
 interface ExplainDerivativesPanelProps {
   hasNodes: boolean;
@@ -109,7 +110,8 @@ const ExplainDerivativesPanel: FunctionComponent<
             aria-controls={getContentId(data.nodeId)}
             id={`explain-derivative-header-${data.nodeId}`}
           >
-            <Typography variant="subtitle2">Node {data.nodeName}</Typography>
+            <Typography variant="subtitle2">Node:&nbsp;</Typography>
+            <Katex latex={data.nodeName} />
           </AccordionSummary>
           <AccordionDetails
             id={getContentId(data.nodeId)}

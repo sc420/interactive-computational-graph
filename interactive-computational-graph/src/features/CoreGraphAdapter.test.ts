@@ -86,8 +86,8 @@ describe("events", () => {
     const expectedNodeIdToNames = new Map<string, string>([
       ["1", "c_1"],
       ["2", "add_1"],
-      ["dummy-input-node-2-a", "dummy-input-node-2-a"],
-      ["dummy-input-node-2-b", "dummy-input-node-2-b"],
+      ["dummy-input-node-2-a", "add_1.a"],
+      ["dummy-input-node-2-b", "add_1.b"],
     ]);
     expect(handleFValuesUpdated).toHaveBeenCalledWith(expectedNodeIdToFValues);
     expect(handleDerivativeValuesUpdated).toHaveBeenCalledWith(
@@ -239,8 +239,8 @@ describe("events", () => {
     ]);
     const expectedNodeIdToNames = new Map<string, string>([
       ["1", "add_1"],
-      ["dummy-input-node-1-a", "dummy-input-node-1-a"],
-      ["dummy-input-node-1-b", "dummy-input-node-1-b"],
+      ["dummy-input-node-1-a", "add_1.a"],
+      ["dummy-input-node-1-b", "add_1.b"],
     ]);
     expect(handleFValuesUpdated).toHaveBeenCalledWith(expectedNodeIdToFValues);
     expect(handleDerivativeValuesUpdated).toHaveBeenCalledWith(
@@ -364,8 +364,8 @@ describe("events", () => {
     const expectedNodeIdToNames = new Map<string, string>([
       ["1", "c_1"],
       ["2", "add_1"],
-      ["dummy-input-node-2-a", "dummy-input-node-2-a"],
-      ["dummy-input-node-2-b", "dummy-input-node-2-b"],
+      ["dummy-input-node-2-a", "add_1.a"],
+      ["dummy-input-node-2-b", "add_1.b"],
     ]);
     expect(handleFValuesUpdated).toHaveBeenCalledWith(expectedNodeIdToFValues);
     expect(handleDerivativeValuesUpdated).toHaveBeenCalledWith(
@@ -458,6 +458,43 @@ describe("behavior", () => {
     removeEdge(adapter, "1", "2", "a", edges);
     // Should remove node later
     removeNode(adapter, "1");
+  });
+
+  test("should update the node name", () => {
+    const adapter = new CoreGraphAdapter();
+
+    addConstantNode(adapter, "1", "c_1");
+
+    expect(adapter.getNodeNameById("1")).toBe("c_1");
+
+    adapter.updateNodeNameById("1", "C");
+
+    expect(adapter.getNodeNameById("1")).toBe("C");
+  });
+
+  test("should rename dummy input nodes when the associated node is renamed", () => {
+    const adapter = new CoreGraphAdapter();
+
+    addAddNode(adapter, "1", "a_1");
+
+    expect(adapter.getNodeNameById("dummy-input-node-1-a")).toBe("a_1.a");
+    expect(adapter.getNodeNameById("dummy-input-node-1-b")).toBe("a_1.b");
+
+    adapter.updateNodeNameById("1", "x");
+
+    expect(adapter.getNodeNameById("dummy-input-node-1-a")).toBe("x.a");
+    expect(adapter.getNodeNameById("dummy-input-node-1-b")).toBe("x.b");
+  });
+
+  test("should get a list of node names without dummy input nodes", () => {
+    const adapter = new CoreGraphAdapter();
+
+    addConstantNode(adapter, "1", "c_1");
+    addAddNode(adapter, "2", "a_1");
+    addConnection(adapter, "1", "2", "a");
+
+    const expectedNodeNames: string[] = ["c_1", "a_1"];
+    expect(adapter.getNodeNames().sort()).toEqual(expectedNodeNames.sort());
   });
 });
 

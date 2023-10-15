@@ -52,6 +52,7 @@ class CoreGraphAdapter {
   private readonly graph = new Graph();
 
   private readonly nodeIdToNames = new Map<string, string>();
+  private readonly dummyInputNodeIdToNodeIds = new Map<string, string>();
   private selectedNodeIds: string[] = [];
 
   private connectionAddedCallbacks: ConnectionAddedCallback[] = [];
@@ -117,6 +118,7 @@ class CoreGraphAdapter {
       const dummyInputNode = new ConstantNode(dummyInputNodeId);
       this.graph.addNode(dummyInputNode);
       this.nodeIdToNames.set(dummyInputNodeId, dummyInputNodeName);
+      this.dummyInputNodeIdToNodeIds.set(dummyInputNodeId, node.getId());
 
       this.graph.connect(dummyInputNodeId, node.getId(), portId);
     });
@@ -206,25 +208,6 @@ cycle`;
     return error.message;
   }
 
-  getNodeNames(): string[] {
-    return this.getNodeIds().map((nodeId) => this.getNodeNameById(nodeId));
-  }
-
-  getNodeIds(): string[] {
-    return this.graph
-      .getNodes()
-      .map((node) => node.getId())
-      .filter((nodeId) => !this.isDummyInputNodeId(nodeId));
-  }
-
-  getNodeNameById(nodeId: string): string {
-    const nodeName = this.nodeIdToNames.get(nodeId);
-    if (nodeName === undefined) {
-      throw new Error(`Should find the node name of node ID ${nodeId}`);
-    }
-    return nodeName;
-  }
-
   setDifferentiationMode(differentiationMode: DifferentiationMode): void {
     this.graph.setDifferentiationMode(differentiationMode);
 
@@ -311,15 +294,24 @@ cycle`;
   private removeDummyInputNodes(node: CoreNode): void {
     node.getRelationship().inputPorts.forEach((inputPort) => {
       const portId = inputPort.getId();
-      const dummyNodeId = this.getDummyInputNodeId(node.getId(), portId);
-      this.graph.removeNode(dummyNodeId);
-      this.removeNodeName(dummyNodeId);
+      const dummyInputNodeId = this.getDummyInputNodeId(node.getId(), portId);
+      this.graph.removeNode(dummyInputNodeId);
+      this.removeDummyInputNodeToNodeId(dummyInputNodeId);
+      this.removeNodeName(dummyInputNodeId);
     });
+  }
+
+  private removeDummyInputNodeToNodeId(dummyInputNodeId: string): void {
+    if (!this.dummyInputNodeIdToNodeIds.delete(dummyInputNodeId)) {
+      throw new Error(
+        `dummyInputNodeIdToNodeIds has no dummyInputNodeId ${dummyInputNodeId}`,
+      );
+    }
   }
 
   private removeNodeName(nodeId: string): void {
     if (!this.nodeIdToNames.delete(nodeId)) {
-      throw new Error(`nodeIdToNames have no nodeId ${nodeId}`);
+      throw new Error(`nodeIdToNames has no nodeId ${nodeId}`);
     }
   }
 
@@ -512,6 +504,41 @@ cycle`;
     }
 
     return "someValueBecauseChainRule";
+  }
+
+  getVisibleNodeNames(): string[] {
+    return this.getVisibleNodeIds().map((nodeId) =>
+      this.getNodeNameById(nodeId),
+    );
+  }
+
+  getVisibleNodeIdById(nodeId: string): string {
+    if (!this.isDummyInputNodeId(nodeId)) {
+      return nodeId;
+    }
+
+    const visibleNodeId = this.dummyInputNodeIdToNodeIds.get(nodeId);
+    if (visibleNodeId === undefined) {
+      throw new Error(
+        `Should get the visible node ID from the dummy input node Id ${nodeId}`,
+      );
+    }
+    return visibleNodeId;
+  }
+
+  getVisibleNodeIds(): string[] {
+    return this.graph
+      .getNodes()
+      .map((node) => node.getId())
+      .filter((nodeId) => !this.isDummyInputNodeId(nodeId));
+  }
+
+  getNodeNameById(nodeId: string): string {
+    const nodeName = this.nodeIdToNames.get(nodeId);
+    if (nodeName === undefined) {
+      throw new Error(`Should find the node name of node ID ${nodeId}`);
+    }
+    return nodeName;
   }
 
   private connectDummyInputNode(nodeId: string, portId: string): void {

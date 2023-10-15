@@ -486,7 +486,7 @@ describe("behavior", () => {
     expect(adapter.getNodeNameById("dummy-input-node-1-b")).toBe("x.b");
   });
 
-  test("should get a list of node names without dummy input nodes", () => {
+  test("should get a list of visible node names without dummy input nodes", () => {
     const adapter = new CoreGraphAdapter();
 
     addConstantNode(adapter, "1", "c_1");
@@ -494,7 +494,73 @@ describe("behavior", () => {
     addConnection(adapter, "1", "2", "a");
 
     const expectedNodeNames: string[] = ["c_1", "a_1"];
-    expect(adapter.getNodeNames().sort()).toEqual(expectedNodeNames.sort());
+    expect(adapter.getVisibleNodeNames().sort()).toEqual(
+      expectedNodeNames.sort(),
+    );
+  });
+
+  test("should get the visible node ID by the visible node ID", () => {
+    const adapter = new CoreGraphAdapter();
+
+    addConstantNode(adapter, "1", "c_1");
+
+    expect(adapter.getVisibleNodeIdById("1")).toBe("1");
+  });
+
+  test("should get the visible node ID by the dummy input node ID", () => {
+    const adapter = new CoreGraphAdapter();
+
+    addAddNode(adapter, "1", "a_1");
+
+    expect(adapter.getVisibleNodeIdById("dummy-input-node-1-a")).toBe("1");
+    expect(adapter.getVisibleNodeIdById("dummy-input-node-1-b")).toBe("1");
+  });
+
+  test("should throw error when getting the visible node ID by the removed dummy input node ID", () => {
+    const adapter = new CoreGraphAdapter();
+
+    addAddNode(adapter, "1", "a_1");
+
+    removeNode(adapter, "1");
+
+    expect(() => {
+      adapter.getVisibleNodeIdById("dummy-input-node-1-a");
+    }).toThrow();
+    expect(() => {
+      adapter.getVisibleNodeIdById("dummy-input-node-1-b");
+    }).toThrow();
+  });
+
+  test("should get a list of visible node IDs", () => {
+    const adapter = new CoreGraphAdapter();
+
+    addConstantNode(adapter, "1", "c_1");
+    addAddNode(adapter, "2", "a_1");
+
+    const expectedNodeIds: string[] = ["1", "2"];
+    expect(adapter.getVisibleNodeIds().sort()).toEqual(expectedNodeIds.sort());
+  });
+
+  test("should get the node name by ID", () => {
+    const adapter = new CoreGraphAdapter();
+
+    addConstantNode(adapter, "1", "c_1");
+    addAddNode(adapter, "2", "a_1");
+
+    expect(adapter.getNodeNameById("1")).toBe("c_1");
+    expect(adapter.getNodeNameById("2")).toBe("a_1");
+  });
+
+  test("should throw error when getting the node name of the removed ID", () => {
+    const adapter = new CoreGraphAdapter();
+
+    addConstantNode(adapter, "1", "c_1");
+    addAddNode(adapter, "2", "a_1");
+    removeNode(adapter, "1");
+
+    expect(() => {
+      adapter.getNodeNameById("1");
+    }).toThrow();
   });
 });
 

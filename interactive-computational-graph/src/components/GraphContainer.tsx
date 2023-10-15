@@ -278,12 +278,17 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     setReactFlowNodes((nodes) => deselectAllNodes(nodes));
   }, []);
 
-  const handleSelectNode = useCallback((nodeId: string) => {
-    setReactFlowNodes((nodes) => {
-      const deselectedNodes = deselectAllNodes(nodes);
-      return selectReactFlowNode(nodeId, deselectedNodes);
-    });
-  }, []);
+  const handleSelectNode = useCallback(
+    (nodeId: string) => {
+      const visibleNodeId = coreGraphAdapter.getVisibleNodeIdById(nodeId);
+
+      setReactFlowNodes((nodes) => {
+        const deselectedNodes = deselectAllNodes(nodes);
+        return selectReactFlowNode(visibleNodeId, deselectedNodes);
+      });
+    },
+    [coreGraphAdapter],
+  );
 
   const handleReverseModeChange = useCallback(
     (isReverseMode: boolean) => {
@@ -550,8 +555,8 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
         <GraphToolbar
           isReverseMode={isReverseMode}
           derivativeTarget={derivativeTarget}
-          nodeIds={coreGraphAdapter.getNodeIds()}
-          nodeNames={coreGraphAdapter.getNodeNames()}
+          nodeIds={coreGraphAdapter.getVisibleNodeIds()}
+          nodeNames={coreGraphAdapter.getVisibleNodeNames()}
           onReverseModeChange={handleReverseModeChange}
           onDerivativeTargetChange={handleDerivativeTargetChange}
         />

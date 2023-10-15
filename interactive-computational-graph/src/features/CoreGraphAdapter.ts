@@ -206,6 +206,10 @@ cycle`;
     return error.message;
   }
 
+  getNodeNames(): string[] {
+    return this.getNodeIds().map((nodeId) => this.getNodeNameById(nodeId));
+  }
+
   getNodeIds(): string[] {
     return this.graph
       .getNodes()
@@ -219,10 +223,6 @@ cycle`;
       throw new Error(`Should find the node name of node ID ${nodeId}`);
     }
     return nodeName;
-  }
-
-  getNodeNames(): string[] {
-    return this.getNodeIds().map((nodeId) => this.getNodeNameById(nodeId));
   }
 
   setDifferentiationMode(differentiationMode: DifferentiationMode): void {
@@ -416,34 +416,6 @@ cycle`;
     });
   }
 
-  private connectDummyInputNode(nodeId: string, portId: string): void {
-    const dummyInputNodeId = this.getDummyInputNodeId(nodeId, portId);
-    this.graph.connect(dummyInputNodeId, nodeId, portId);
-  }
-
-  private disconnectDummyInputNode(nodeId: string, portId: string): void {
-    const dummyInputNodeId = this.getDummyInputNodeId(nodeId, portId);
-    this.graph.disconnect(dummyInputNodeId, nodeId, portId);
-  }
-
-  private isDummyInputNodeConnected(nodeId: string, portId: string): boolean {
-    const node = this.graph.getOneNode(nodeId);
-    const dummyInputNodeId = this.getDummyInputNodeId(nodeId, portId);
-    return node.getRelationship().hasInputNodeByPort(portId, dummyInputNodeId);
-  }
-
-  private getDummyInputNodeId(nodeId: string, portId: string): string {
-    return `dummy-input-node-${nodeId}-${portId}`;
-  }
-
-  private getDummyInputNodeName(nodeName: string, portId: string): string {
-    return `${nodeName}.${portId}`;
-  }
-
-  private isDummyInputNodeId(nodeId: string): boolean {
-    return nodeId.startsWith("dummy-input-node-");
-  }
-
   updateOutputs(): void {
     this.updateFValues();
     this.updateDerivatives();
@@ -540,6 +512,34 @@ cycle`;
     }
 
     return "someValueBecauseChainRule";
+  }
+
+  private connectDummyInputNode(nodeId: string, portId: string): void {
+    const dummyInputNodeId = this.getDummyInputNodeId(nodeId, portId);
+    this.graph.connect(dummyInputNodeId, nodeId, portId);
+  }
+
+  private disconnectDummyInputNode(nodeId: string, portId: string): void {
+    const dummyInputNodeId = this.getDummyInputNodeId(nodeId, portId);
+    this.graph.disconnect(dummyInputNodeId, nodeId, portId);
+  }
+
+  private isDummyInputNodeConnected(nodeId: string, portId: string): boolean {
+    const node = this.graph.getOneNode(nodeId);
+    const dummyInputNodeId = this.getDummyInputNodeId(nodeId, portId);
+    return node.getRelationship().hasInputNodeByPort(portId, dummyInputNodeId);
+  }
+
+  private getDummyInputNodeId(nodeId: string, portId: string): string {
+    return `dummy-input-node-${nodeId}-${portId}`;
+  }
+
+  private getDummyInputNodeName(nodeName: string, portId: string): string {
+    return `${nodeName}.${portId}`;
+  }
+
+  private isDummyInputNodeId(nodeId: string): boolean {
+    return nodeId.startsWith("dummy-input-node-");
   }
 
   onConnectionAdded(callback: ConnectionAddedCallback): void {

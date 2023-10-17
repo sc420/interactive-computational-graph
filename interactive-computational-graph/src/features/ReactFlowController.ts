@@ -8,7 +8,6 @@ import {
 import type AddNodeData from "./AddNodeData";
 import type LabelType from "./MathLabelPartType";
 import type NodeData from "./NodeData";
-import { findFeatureOperation } from "./OperationUtilities";
 import { randomInteger } from "./RandomUtilities";
 import type SelectedFeature from "./SelectedFeature";
 
@@ -53,6 +52,24 @@ const getNewReactFlowNodePosition = (
       y: randomInteger(0, randomMax),
     };
   }
+};
+
+const updateReactFlowNodeName = (
+  nodeId: string,
+  name: string,
+  nodes: Node[],
+): Node[] => {
+  return nodes.map((node) => {
+    if (node.id === nodeId) {
+      const data = node.data as NodeData;
+      data.name = name;
+      // Set the new data to notify React Flow about the change
+      const newData: NodeData = { ...node.data };
+      node.data = newData;
+    }
+
+    return node;
+  });
 };
 
 const updateReactFlowNodeInputValue = (
@@ -205,9 +222,10 @@ const updateReactFlowNodeFValues = (
 };
 
 const updateReactFlowNodeDerivatives = (
-  updatedNodeIdToDerivatives: Map<string, string>,
+  updatedNodeIdToDerivatives: ReadonlyMap<string, string>,
+  updatedNodeIdToNames: ReadonlyMap<string, string>,
   isReverseMode: boolean,
-  derivativeTarget: string | null,
+  derivativeTargetName: string | null,
   nodes: Node[],
 ): Node[] => {
   return nodes.map((node) => {
@@ -216,6 +234,10 @@ const updateReactFlowNodeDerivatives = (
       if (value === undefined) {
         throw new Error(`Should find the value of node ${node.id}`);
       }
+      const nodeName = updatedNodeIdToNames.get(node.id);
+      if (nodeName === undefined) {
+        throw new Error(`Should find the node name of node ${node.id}`);
+      }
 
       const data = node.data as NodeData;
       const outputItem = data.outputItems.find(
@@ -223,9 +245,10 @@ const updateReactFlowNodeDerivatives = (
       );
       if (outputItem !== undefined) {
         outputItem.labelParts = buildDerivativeLabelParts(
-          node.id,
           isReverseMode,
-          derivativeTarget,
+          node.id,
+          nodeName,
+          derivativeTargetName,
         );
         outputItem.value = value;
         // Set the new data to notify React Flow about the change
@@ -298,10 +321,12 @@ const deselectAllNodes = (nodes: Node[]): Node[] => {
 const buildReactFlowNodeData = (addNodeData: AddNodeData): NodeData => {
   const {
     featureNodeType,
+    featureOperation,
     nodeId,
-    featureOperations,
+    nodeName,
     isReverseMode,
-    derivativeTarget,
+    derivativeTargetName,
+    onNameChange,
     onInputChange,
     onBodyClick,
     onDerivativeClick,
@@ -312,7 +337,7 @@ const buildReactFlowNodeData = (addNodeData: AddNodeData): NodeData => {
   switch (featureNodeType.nodeType) {
     case "CONSTANT": {
       return {
-        text: `c${nodeId}`,
+        name: nodeName,
         featureNodeType,
         inputItems: [
           {
@@ -324,6 +349,7 @@ const buildReactFlowNodeData = (addNodeData: AddNodeData): NodeData => {
           },
         ],
         outputItems: [],
+        onNameChange,
         onBodyClick,
         onInputChange,
         onDerivativeClick,
@@ -333,12 +359,13 @@ const buildReactFlowNodeData = (addNodeData: AddNodeData): NodeData => {
     }
     case "VARIABLE": {
       const derivativeLabelParts = buildDerivativeLabelParts(
-        nodeId,
         isReverseMode,
-        derivativeTarget,
+        nodeId,
+        nodeName,
+        derivativeTargetName,
       );
       return {
-        text: `v${nodeId}`,
+        name: nodeName,
         featureNodeType,
         inputItems: [
           {
@@ -356,6 +383,7 @@ const buildReactFlowNodeData = (addNodeData: AddNodeData): NodeData => {
             value: "0",
           },
         ],
+        onNameChange,
         onBodyClick,
         onInputChange,
         onDerivativeClick,
@@ -364,18 +392,17 @@ const buildReactFlowNodeData = (addNodeData: AddNodeData): NodeData => {
       };
     }
     case "OPERATION": {
-      const featureOperation = findFeatureOperation(
-        featureNodeType.operationId,
-        featureOperations,
-      );
-
       const derivativeLabelParts = buildDerivativeLabelParts(
-        nodeId,
         isReverseMode,
-        derivativeTarget,
+        nodeId,
+        nodeName,
+        derivativeTargetName,
       );
+      if (featureOperation === null) {
+        throw new Error("Should provide feature operation");
+      }
       return {
-        text: `${featureOperation.id}${nodeId}`,
+        name: nodeName,
         featureNodeType,
         inputItems: featureOperation.inputPorts.map((inputPort) => {
           return {
@@ -404,6 +431,7 @@ const buildReactFlowNodeData = (addNodeData: AddNodeData): NodeData => {
             value: "0",
           },
         ],
+        onNameChange,
         onBodyClick,
         onInputChange,
         onDerivativeClick,
@@ -415,12 +443,13 @@ const buildReactFlowNodeData = (addNodeData: AddNodeData): NodeData => {
 };
 
 const buildDerivativeLabelParts = (
-  nodeId: string,
   isReverseMode: boolean,
-  derivativeTarget: string | null,
+  nodeId: string,
+  nodeName: string,
+  derivativeTargetName: string | null,
 ): LabelType[] => {
-  const targetLatex = `\\partial{${derivativeTarget ?? "?"}}`;
-  const nodeLatex = `\\partial{${nodeId}}`;
+  const targetLatex = `\\partial{${derivativeTargetName ?? "?"}}`;
+  const nodeLatex = `\\partial{${nodeName}}`;
   const derivativeLatex = isReverseMode
     ? `\\displaystyle \\frac{${targetLatex}}{${nodeLatex}}`
     : `\\displaystyle \\frac{${nodeLatex}}{${targetLatex}}`;
@@ -464,4 +493,5 @@ export {
   updateReactFlowNodeFValues,
   updateReactFlowNodeHighlighted,
   updateReactFlowNodeInputValue,
+  updateReactFlowNodeName,
 };

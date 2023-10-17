@@ -1,19 +1,12 @@
 import { render, screen } from "@testing-library/react";
-import type ExplainDerivativeData from "../features/ExplainDerivativeData";
 import ExplainDerivativesHint from "./ExplainDerivativesHint";
 
 test("should not render anything when the data is non-empty", () => {
-  const explainDerivativeData: ExplainDerivativeData[] = [
-    {
-      nodeId: "v1",
-      items: [],
-    },
-  ];
   render(
     <ExplainDerivativesHint
       hasNodes={true}
       hasDerivativeTarget={true}
-      explainDerivativeData={explainDerivativeData}
+      hasExplainDerivativeData={true}
     />,
   );
 
@@ -25,7 +18,7 @@ test("should display some text when there're no nodes", () => {
     <ExplainDerivativesHint
       hasNodes={false}
       hasDerivativeTarget={false}
-      explainDerivativeData={[]}
+      hasExplainDerivativeData={false}
     />,
   );
 
@@ -39,7 +32,7 @@ test("should display some text when the derivative target is not set", () => {
     <ExplainDerivativesHint
       hasNodes={true}
       hasDerivativeTarget={false}
-      explainDerivativeData={[]}
+      hasExplainDerivativeData={false}
     />,
   );
 
@@ -53,7 +46,7 @@ test("should display some text when there're no selected nodes", () => {
     <ExplainDerivativesHint
       hasNodes={true}
       hasDerivativeTarget={true}
-      explainDerivativeData={[]}
+      hasExplainDerivativeData={false}
     />,
   );
 

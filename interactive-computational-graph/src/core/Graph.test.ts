@@ -138,7 +138,7 @@ describe("manipulating connections", () => {
 
     expect(() => {
       graph.connect("v1", "sum1", "x_i");
-    }).toThrow("Input node v1 already exists by port x_i");
+    }).toThrow("Input node v1 is already connected to node sum1 by port x_i");
   });
 
   test("should throw error when connecting to non-existent port", () => {
@@ -156,21 +156,34 @@ describe("manipulating connections", () => {
     const varNode4 = new VariableNode("v4");
     graph.addNode(varNode4);
 
-    expect(() => {
+    try {
       graph.validateConnect("v4", "identity1", "x");
-    }).toThrow(InputPortFullError);
+    } catch (error) {
+      expect(error).toBeInstanceOf(InputPortFullError);
+      const inputPortFullError = error as InputPortFullError;
+      expect(inputPortFullError.message).toBe(
+        "Input port x of node identity1 doesn't allow multiple edges",
+      );
+      expect(inputPortFullError.nodeId).toBe("identity1");
+      expect(inputPortFullError.portId).toBe("x");
+    }
   });
 
   test("should throw error when connecting the same node to same port again", () => {
     const graph = buildMediumGraph();
 
-    const connectVariableToSum = (): void => {
+    try {
       graph.connect("v1", "sum1", "x_i");
-    };
-    expect(connectVariableToSum).toThrow(InputNodeAlreadyConnectedError);
-    expect(connectVariableToSum).toThrow(
-      "Input node v1 already exists by port x_i of node sum1",
-    );
+    } catch (error) {
+      expect(error).toBeInstanceOf(InputNodeAlreadyConnectedError);
+      const alreadyConnectedError = error as InputNodeAlreadyConnectedError;
+      expect(alreadyConnectedError.message).toBe(
+        "Input node v1 is already connected to node sum1 by port x_i",
+      );
+      expect(alreadyConnectedError.node1Id).toBe("v1");
+      expect(alreadyConnectedError.node2Id).toBe("sum1");
+      expect(alreadyConnectedError.node2PortId).toBe("x_i");
+    }
   });
 
   test("should throw error when connecting to single-connection port", () => {
@@ -197,12 +210,29 @@ describe("manipulating connections", () => {
   test("should indicate if the connection would cause cycle", () => {
     const graph = buildMediumGraph();
 
-    expect(() => {
+    try {
       graph.validateConnect("identity1", "sum1", "x_i");
-    }).toThrow(CycleError);
-    expect(() => {
+    } catch (error) {
+      expect(error).toBeInstanceOf(CycleError);
+      const cycleError = error as CycleError;
+      expect(cycleError.message).toBe(
+        "Connecting node identity1 to node sum1 would cause a cycle",
+      );
+      expect(cycleError.node1Id).toBe("identity1");
+      expect(cycleError.node2Id).toBe("sum1");
+    }
+
+    try {
       graph.validateConnect("sum1", "sum1", "x_i");
-    }).toThrow(CycleError);
+    } catch (error) {
+      expect(error).toBeInstanceOf(CycleError);
+      const cycleError = error as CycleError;
+      expect(cycleError.message).toBe(
+        "Connecting node sum1 to node sum1 would cause a cycle",
+      );
+      expect(cycleError.node1Id).toBe("sum1");
+      expect(cycleError.node2Id).toBe("sum1");
+    }
 
     const varNode3 = new VariableNode("v4");
     graph.addNode(varNode3);
@@ -336,7 +366,7 @@ describe("updating f values", () => {
       "b_o_1",
       "sum_o_1",
       "sigmoid_o_1",
-      "y_estimate",
+      "y_e",
       "y",
       "se",
     ];
@@ -353,7 +383,7 @@ describe("updating f values", () => {
     expect(parseFloat(graph.getNodeValue("mul_o_1_2"))).toBeCloseTo(0.25);
     expect(parseFloat(graph.getNodeValue("sum_o_1"))).toBeCloseTo(0);
     expect(parseFloat(graph.getNodeValue("sigmoid_o_1"))).toBeCloseTo(0.5);
-    expect(parseFloat(graph.getNodeValue("y_estimate"))).toBeCloseTo(0.5);
+    expect(parseFloat(graph.getNodeValue("y_e"))).toBeCloseTo(0.5);
     expect(parseFloat(graph.getNodeValue("se"))).toBeCloseTo(0.25);
   });
 });
@@ -734,16 +764,16 @@ describe("updating derivative values", () => {
 
     // d(se)/d(se) = 1
     expect(parseFloat(graph.getNodeDerivative("se"))).toBeCloseTo(1);
-    // d(se)/d(y_estimate) =
-    // d(se)/d(y_estimate) * d(se)/d(se) =
-    // (2 * (y_estimate - y)) * (1) = 1
-    expect(parseFloat(graph.getNodeDerivative("y_estimate"))).toBeCloseTo(1);
+    // d(se)/d(y_e) =
+    // d(se)/d(y_e) * d(se)/d(se) =
+    // (2 * (y_e - y)) * (1) = 1
+    expect(parseFloat(graph.getNodeDerivative("y_e"))).toBeCloseTo(1);
     // d(se)/d(y) =
     // d(se)/d(y) * d(se)/d(se) =
-    // (2 * (y - y_estimate)) * 1 = -1
+    // (2 * (y - y_e)) * 1 = -1
     expect(parseFloat(graph.getNodeDerivative("y"))).toBeCloseTo(-1);
     // d(se)/d(sigmoid_o_1) =
-    // d(y_estimate)/d(sigmoid_o_1) * d(se)/d(y_estimate) =
+    // d(y_e)/d(sigmoid_o_1) * d(se)/d(y_e) =
     // 1 * 1 = 1
     expect(parseFloat(graph.getNodeDerivative("sigmoid_o_1"))).toBeCloseTo(1);
     // d(se)/d(sum_o_1) =
@@ -1113,7 +1143,7 @@ function buildNeuralNetworkGraph(): Graph {
   // Output layer: Activation
   const sigmoid_o_1 = buildSigmoidNode("sigmoid_o_1");
   // Loss function input: Estimate y
-  const y_estimate = buildIdentityNode("y_estimate");
+  const y_e = buildIdentityNode("y_e");
   // Loss function input: True y
   const y = new VariableNode("y");
   // Loss function
@@ -1144,7 +1174,7 @@ function buildNeuralNetworkGraph(): Graph {
     b_o_1,
     sum_o_1,
     sigmoid_o_1,
-    y_estimate,
+    y_e,
     y,
     se,
   ];
@@ -1187,11 +1217,11 @@ function buildNeuralNetworkGraph(): Graph {
   // Output layer: Sum --> Output layer: Activation
   graph.connect(sum_o_1.getId(), sigmoid_o_1.getId(), "x");
   // Output layer: Activation --> Loss function input: Estimate y
-  graph.connect(sigmoid_o_1.getId(), y_estimate.getId(), "x");
+  graph.connect(sigmoid_o_1.getId(), y_e.getId(), "x");
   // Loss function input: Estimate y --> Loss function
-  graph.connect(y_estimate.getId(), se.getId(), "y_estimate");
+  graph.connect(y_e.getId(), se.getId(), "y_e");
   // Loss function input: True y --> Loss function
-  graph.connect(y.getId(), se.getId(), "y_true");
+  graph.connect(y.getId(), se.getId(), "y_t");
 
   // Input layer values
   graph.setNodeValue(i_1.getId(), "0.0");
@@ -1247,10 +1277,7 @@ function buildSigmoidNode(id: string): CoreNode {
 }
 
 function buildSquaredErrorNode(id: string): CoreNode {
-  const ports: Port[] = [
-    new Port("y_estimate", false),
-    new Port("y_true", false),
-  ];
+  const ports: Port[] = [new Port("y_e", false), new Port("y_t", false)];
   const operation = new Operation(
     SQUARED_ERROR_F_CODE,
     SQUARED_ERROR_DFDX_CODE,

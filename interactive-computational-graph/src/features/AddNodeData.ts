@@ -4,14 +4,17 @@ import {
   type BodyClickCallback,
   type DerivativeClickCallback,
   type InputChangeCallback,
+  type NameChangeCallback,
 } from "./ReactNodeCallbacks";
 
 interface AddNodeData {
   featureNodeType: FeatureNodeType;
+  featureOperation: FeatureOperation | null;
   nodeId: string;
-  featureOperations: FeatureOperation[];
+  nodeName: string;
   isReverseMode: boolean;
-  derivativeTarget: string | null;
+  derivativeTargetName: string | null;
+  onNameChange: NameChangeCallback;
   onInputChange: InputChangeCallback;
   onBodyClick: BodyClickCallback;
   onDerivativeClick: DerivativeClickCallback;

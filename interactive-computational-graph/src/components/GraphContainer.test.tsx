@@ -27,9 +27,9 @@ it("should have different node types on the graph after dropping nodes", () => {
   dropNode({ nodeType: "VARIABLE" });
   dropNode({ nodeType: "OPERATION", operationId: "sum" });
 
-  expect(screen.getByText("c1")).toBeInTheDocument();
-  expect(screen.getByText("v2")).toBeInTheDocument();
-  expect(screen.getByText("sum3")).toBeInTheDocument();
+  expect(screen.getByText("c_1")).toBeInTheDocument();
+  expect(screen.getByText("v_1")).toBeInTheDocument();
+  expect(screen.getByText("s_1")).toBeInTheDocument();
 
   const reactFlowData = {
     nodes: getNodes(),
@@ -83,9 +83,9 @@ it("edges and add node itself should be removed after removing add node", () => 
   removeEdge(["reactflow__edge-1output-3a", "reactflow__edge-2output-3b"]);
   removeNode(["3"]);
 
-  expect(screen.getByText("c1")).toBeInTheDocument();
-  expect(screen.getByText("c2")).toBeInTheDocument();
-  expect(screen.queryByText("add3")).toBeNull();
+  expect(screen.getByText("c_1")).toBeInTheDocument();
+  expect(screen.getByText("c_1")).toBeInTheDocument();
+  expect(screen.queryByText("a_1")).toBeNull();
 
   const reactFlowData = {
     nodes: getNodes(),
@@ -114,9 +114,9 @@ it("edges and sum node itself should be removed after removing sum node", () => 
   removeEdge(["reactflow__edge-1output-3x_i", "reactflow__edge-2output-3x_i"]);
   removeNode(["3"]);
 
-  expect(screen.getByText("c1")).toBeInTheDocument();
-  expect(screen.getByText("c2")).toBeInTheDocument();
-  expect(screen.queryByText("sum3")).toBeNull();
+  expect(screen.getByText("c_1")).toBeInTheDocument();
+  expect(screen.getByText("c_2")).toBeInTheDocument();
+  expect(screen.queryByText("s_1")).toBeNull();
 
   const reactFlowData = {
     nodes: getNodes(),
@@ -194,7 +194,7 @@ it("should show error message when connecting the same edge twice", () => {
   const snackbar = screen.getByRole("alert");
   expect(snackbar).toBeInTheDocument();
   expect(snackbar).toHaveTextContent(
-    "Input node 1 already exists by port x_i of node 2",
+    "Input node c_1 is already connected to node s_1 by port x_i",
   );
 });
 
@@ -217,7 +217,7 @@ it("should show error message when connecting to the single-connection port", ()
   const snackbar = screen.getByRole("alert");
   expect(snackbar).toBeInTheDocument();
   expect(snackbar).toHaveTextContent(
-    "Input port a of node 3 doesn't allow multiple edges",
+    "Input port a of node a_1 doesn't allow multiple edges",
   );
 });
 
@@ -234,7 +234,7 @@ it("should show error message when causing a cycle", () => {
   const snackbar = screen.getByRole("alert");
   expect(snackbar).toBeInTheDocument();
   expect(snackbar).toHaveTextContent(
-    "Connecting node 1 to node 1 would cause a cycle",
+    "Connecting node s_1 to node s_1 would cause a cycle",
   );
 });
 
@@ -255,13 +255,38 @@ it("derivative target should reset when the target node is removed", () => {
   connectEdge("2", "output", "3", "x_i");
 
   // Select the sum node as the derivative target
-  setDerivativeTarget("3");
+  setDerivativeTarget("s_1");
 
   // Remove the sum node
   removeEdge(["reactflow__edge-1output-3x_i", "reactflow__edge-2output-3x_i"]);
   removeNode(["3"]);
 
   expect(getDerivativeTarget()).toBe("");
+});
+
+it("derivative target name should update when the node name is updated", () => {
+  renderGraphContainer();
+
+  // Add two constant nodes
+  const constantItem = screen.getByText("Constant");
+  fireEvent.click(constantItem);
+  fireEvent.click(constantItem);
+
+  // Add a sum node
+  const sumItem = screen.getByText("Sum");
+  fireEvent.click(sumItem);
+
+  // Connect from the constant nodes to the sum node
+  connectEdge("1", "output", "3", "x_i");
+  connectEdge("2", "output", "3", "x_i");
+
+  // Select the sum node as the derivative target
+  setDerivativeTarget("s_1");
+
+  // Update the node name of the sum node
+  setNodeName("3", "s_1");
+
+  expect(getDerivativeTarget()).toBe("s_1");
 });
 
 // It uses example from https://colah.github.io/posts/2015-08-Backprop/
@@ -293,7 +318,7 @@ it("outputs should change when derivative mode/target is changed", () => {
   connectEdge("4", "output", "5", "b");
 
   // Select the multiply node as the derivative target
-  setDerivativeTarget("5");
+  setDerivativeTarget("m_1");
 
   // Check the output values
   expect(getOutputItemValue("3", "VALUE")).toBe("3");
@@ -302,19 +327,19 @@ it("outputs should change when derivative mode/target is changed", () => {
 
   // Check the derivative labels
   expect(getOutputItemLabelText("1", "DERIVATIVE")).toBe(
-    "\\displaystyle \\frac{\\partial{5}}{\\partial{1}}=",
+    "\\displaystyle \\frac{\\partial{m_1}}{\\partial{v_1}}=",
   );
   expect(getOutputItemLabelText("2", "DERIVATIVE")).toBe(
-    "\\displaystyle \\frac{\\partial{5}}{\\partial{2}}=",
+    "\\displaystyle \\frac{\\partial{m_1}}{\\partial{v_2}}=",
   );
   expect(getOutputItemLabelText("3", "DERIVATIVE")).toBe(
-    "\\displaystyle \\frac{\\partial{5}}{\\partial{3}}=",
+    "\\displaystyle \\frac{\\partial{m_1}}{\\partial{a_1}}=",
   );
   expect(getOutputItemLabelText("4", "DERIVATIVE")).toBe(
-    "\\displaystyle \\frac{\\partial{5}}{\\partial{4}}=",
+    "\\displaystyle \\frac{\\partial{m_1}}{\\partial{a_2}}=",
   );
   expect(getOutputItemLabelText("5", "DERIVATIVE")).toBe(
-    "\\displaystyle \\frac{\\partial{5}}{\\partial{5}}=",
+    "\\displaystyle \\frac{\\partial{m_1}}{\\partial{m_1}}=",
   );
 
   // Check the derivative values
@@ -334,19 +359,19 @@ it("outputs should change when derivative mode/target is changed", () => {
 
   // Check the derivative labels
   expect(getOutputItemLabelText("1", "DERIVATIVE")).toBe(
-    "\\displaystyle \\frac{\\partial{1}}{\\partial{5}}=",
+    "\\displaystyle \\frac{\\partial{v_1}}{\\partial{m_1}}=",
   );
   expect(getOutputItemLabelText("2", "DERIVATIVE")).toBe(
-    "\\displaystyle \\frac{\\partial{2}}{\\partial{5}}=",
+    "\\displaystyle \\frac{\\partial{v_2}}{\\partial{m_1}}=",
   );
   expect(getOutputItemLabelText("3", "DERIVATIVE")).toBe(
-    "\\displaystyle \\frac{\\partial{3}}{\\partial{5}}=",
+    "\\displaystyle \\frac{\\partial{a_1}}{\\partial{m_1}}=",
   );
   expect(getOutputItemLabelText("4", "DERIVATIVE")).toBe(
-    "\\displaystyle \\frac{\\partial{4}}{\\partial{5}}=",
+    "\\displaystyle \\frac{\\partial{a_2}}{\\partial{m_1}}=",
   );
   expect(getOutputItemLabelText("5", "DERIVATIVE")).toBe(
-    "\\displaystyle \\frac{\\partial{5}}{\\partial{5}}=",
+    "\\displaystyle \\frac{\\partial{m_1}}{\\partial{m_1}}=",
   );
 
   // Check the derivative values
@@ -357,7 +382,7 @@ it("outputs should change when derivative mode/target is changed", () => {
   expect(getOutputItemValue("5", "DERIVATIVE")).toBe("1");
 
   // Select the second variable node as the derivative target
-  setDerivativeTarget("2");
+  setDerivativeTarget("v_2");
 
   // Check the output values
   expect(getOutputItemValue("3", "VALUE")).toBe("3");
@@ -366,19 +391,19 @@ it("outputs should change when derivative mode/target is changed", () => {
 
   // Check the derivative labels
   expect(getOutputItemLabelText("1", "DERIVATIVE")).toBe(
-    "\\displaystyle \\frac{\\partial{1}}{\\partial{2}}=",
+    "\\displaystyle \\frac{\\partial{v_1}}{\\partial{v_2}}=",
   );
   expect(getOutputItemLabelText("2", "DERIVATIVE")).toBe(
-    "\\displaystyle \\frac{\\partial{2}}{\\partial{2}}=",
+    "\\displaystyle \\frac{\\partial{v_2}}{\\partial{v_2}}=",
   );
   expect(getOutputItemLabelText("3", "DERIVATIVE")).toBe(
-    "\\displaystyle \\frac{\\partial{3}}{\\partial{2}}=",
+    "\\displaystyle \\frac{\\partial{a_1}}{\\partial{v_2}}=",
   );
   expect(getOutputItemLabelText("4", "DERIVATIVE")).toBe(
-    "\\displaystyle \\frac{\\partial{4}}{\\partial{2}}=",
+    "\\displaystyle \\frac{\\partial{a_2}}{\\partial{v_2}}=",
   );
   expect(getOutputItemLabelText("5", "DERIVATIVE")).toBe(
-    "\\displaystyle \\frac{\\partial{5}}{\\partial{2}}=",
+    "\\displaystyle \\frac{\\partial{m_1}}{\\partial{v_2}}=",
   );
 
   // Check the derivative values
@@ -413,17 +438,17 @@ const getDerivativeTarget = (): string => {
   return (input as HTMLInputElement).value;
 };
 
-const setDerivativeTarget = (targetNodeId: string): void => {
+const setDerivativeTarget = (targetNodeName: string): void => {
   const derivativeTargetAutocomplete = screen.getByTestId("derivative-target");
   const input = within(derivativeTargetAutocomplete).getByRole("combobox");
 
   fireEvent.click(derivativeTargetAutocomplete);
-  fireEvent.change(input, { target: { value: targetNodeId } });
+  fireEvent.change(input, { target: { value: targetNodeName } });
   fireEvent.keyDown(derivativeTargetAutocomplete, { key: "ArrowDown" });
   fireEvent.keyDown(derivativeTargetAutocomplete, { key: "Enter" });
 
   // Check if the input has been updated successfully
-  expect(input).toHaveValue(targetNodeId);
+  expect(input).toHaveValue(targetNodeName);
 };
 
 const getNodes = (): Node[] => {
@@ -509,6 +534,18 @@ const dropNode = (featureNodeType: FeatureNodeType): void => {
   const triggerOnEdgesChangeRemoveButton =
     screen.getByTestId("trigger.onDropNode");
   fireEvent.click(triggerOnEdgesChangeRemoveButton);
+};
+
+const setNodeName = (nodeId: string, name: string): void => {
+  const nodeTitle = screen.getByTestId(`node-title-${nodeId}`);
+  const editIcon = within(nodeTitle).getByRole("button", { name: "edit" });
+  fireEvent.click(editIcon);
+
+  const input = within(nodeTitle).getByRole("textbox");
+  fireEvent.change(input, {
+    target: { value: name },
+  });
+  fireEvent.keyDown(input, { key: "Enter" });
 };
 
 const setInputItemValue = (

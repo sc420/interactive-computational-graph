@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import {
   useCallback,
+  useMemo,
   type ChangeEvent,
   type FunctionComponent,
   type SyntheticEvent,
@@ -18,17 +19,39 @@ interface GraphToolbarProps {
   isReverseMode: boolean;
   derivativeTarget: string | null;
   nodeIds: string[];
+  nodeNames: string[];
   onReverseModeChange: (isReversedMode: boolean) => void;
   onDerivativeTargetChange: (nodeId: string | null) => void;
+}
+
+interface AutocompleteOption {
+  label: string;
+  id: string;
 }
 
 const GraphToolbar: FunctionComponent<GraphToolbarProps> = ({
   isReverseMode,
   derivativeTarget,
   nodeIds,
+  nodeNames,
   onReverseModeChange,
   onDerivativeTargetChange,
 }) => {
+  const options: AutocompleteOption[] = useMemo(() => {
+    return nodeIds.map((nodeId, index) => ({
+      label: nodeNames[index],
+      id: nodeId,
+    }));
+  }, [nodeIds, nodeNames]);
+
+  const selectedValue: AutocompleteOption | null = useMemo(() => {
+    const option = options.find((option) => option.id === derivativeTarget);
+    if (option === undefined) {
+      return null;
+    }
+    return option;
+  }, [derivativeTarget, options]);
+
   const handleReverseModeChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
       onReverseModeChange(event.target.checked);
@@ -37,8 +60,12 @@ const GraphToolbar: FunctionComponent<GraphToolbarProps> = ({
   );
 
   const handleDerivativeTargetChange = useCallback(
-    (event: SyntheticEvent, newValue: string | null) => {
-      onDerivativeTargetChange(newValue);
+    (event: SyntheticEvent, newValue: AutocompleteOption | null) => {
+      if (newValue === null) {
+        onDerivativeTargetChange(null);
+      } else {
+        onDerivativeTargetChange(newValue.id);
+      }
     },
     [onDerivativeTargetChange],
   );
@@ -60,6 +87,7 @@ const GraphToolbar: FunctionComponent<GraphToolbarProps> = ({
                   backgroundColor: "black",
                 },
               }}
+              inputProps={{ "aria-label": "toggle-differentiation-mode" }}
             />
           }
           label={
@@ -74,8 +102,8 @@ const GraphToolbar: FunctionComponent<GraphToolbarProps> = ({
       <FormGroup>
         <Autocomplete
           data-testid="derivative-target"
-          options={nodeIds}
-          value={derivativeTarget}
+          options={options}
+          value={selectedValue}
           sx={{
             width: 200,
             // Need to override the color because it will be put on AppBar

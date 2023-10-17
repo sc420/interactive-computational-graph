@@ -1,5 +1,5 @@
-import type ChainRuleTerm from "../core/ChainRuleTerm";
 import type DifferentiationMode from "../core/DifferentiationMode";
+import type ExplainDerivativeBuildOptions from "./ExplainDerivativeBuildOptions";
 import type ExplainDerivativeItem from "./ExplainDerivativeItem";
 import type ExplainDerivativeType from "./ExplainDerivativeType";
 import type MathLabelPartType from "./MathLabelPartType";
@@ -8,53 +8,30 @@ type ChainRuleType = "raw" | "previousDerivativesReplaced" | "allReplaced";
 
 const buildExplainDerivativeItems = (
   explainDerivativeType: ExplainDerivativeType,
-  nodeId: string,
-  nodeDerivative: string,
-  differentiationMode: DifferentiationMode,
-  targetNodeId: string,
-  chainRuleTerms: ChainRuleTerm[],
+  options: ExplainDerivativeBuildOptions,
 ): ExplainDerivativeItem[] => {
   switch (explainDerivativeType) {
     case "someValueBecauseChainRule": {
-      return buildChainRuleItems(
-        nodeId,
-        nodeDerivative,
-        differentiationMode,
-        targetNodeId,
-        chainRuleTerms,
-      );
+      return buildChainRuleItems(options);
     }
     case "oneBecauseFEqualsX": {
-      return buildOneBecauseFEqualsXItems(
-        nodeId,
-        differentiationMode,
-        targetNodeId,
-      );
+      return buildOneBecauseFEqualsXItems(options);
     }
     case "zeroBecauseFNotDependsOnX": {
-      return buildZeroBecauseFNotDependsOnXItems(
-        nodeId,
-        differentiationMode,
-        targetNodeId,
-      );
+      return buildZeroBecauseFNotDependsOnXItems(options);
     }
     case "zeroBecauseXIsConstant": {
-      return buildZeroBecauseXIsConstantItems(
-        nodeId,
-        differentiationMode,
-        targetNodeId,
-      );
+      return buildZeroBecauseXIsConstantItems(options);
     }
   }
 };
 
 const buildOneBecauseFEqualsXItems = (
-  nodeId: string,
-  differentiationMode: DifferentiationMode,
-  targetNodeId: string,
+  options: ExplainDerivativeBuildOptions,
 ): ExplainDerivativeItem[] => {
+  const nodeName = getNodeName(options.nodeId, options.nodeIdToNames);
   return [
-    buildCalculateDerivativeItem(nodeId, differentiationMode, targetNodeId),
+    buildCalculateDerivativeItem(options),
     {
       type: "oneBecauseFEqualsX",
       descriptionParts: [
@@ -76,7 +53,7 @@ const buildOneBecauseFEqualsXItems = (
         {
           type: "latex",
           id: "node",
-          latex: nodeId,
+          latex: nodeName,
         },
         {
           type: "text",
@@ -90,12 +67,11 @@ const buildOneBecauseFEqualsXItems = (
 };
 
 const buildZeroBecauseFNotDependsOnXItems = (
-  nodeId: string,
-  differentiationMode: DifferentiationMode,
-  targetNodeId: string,
+  options: ExplainDerivativeBuildOptions,
 ): ExplainDerivativeItem[] => {
+  const nodeName = getNodeName(options.nodeId, options.nodeIdToNames);
   return [
-    buildCalculateDerivativeItem(nodeId, differentiationMode, targetNodeId),
+    buildCalculateDerivativeItem(options),
     {
       type: "zeroBecauseFNotDependsOnX",
       descriptionParts: [
@@ -117,7 +93,7 @@ const buildZeroBecauseFNotDependsOnXItems = (
         {
           type: "latex",
           id: "node",
-          latex: nodeId,
+          latex: nodeName,
         },
         {
           type: "text",
@@ -131,12 +107,11 @@ const buildZeroBecauseFNotDependsOnXItems = (
 };
 
 const buildZeroBecauseXIsConstantItems = (
-  nodeId: string,
-  differentiationMode: DifferentiationMode,
-  targetNodeId: string,
+  options: ExplainDerivativeBuildOptions,
 ): ExplainDerivativeItem[] => {
+  const nodeName = getNodeName(options.nodeId, options.nodeIdToNames);
   return [
-    buildCalculateDerivativeItem(nodeId, differentiationMode, targetNodeId),
+    buildCalculateDerivativeItem(options),
     {
       type: "zeroBecauseXIsConstant",
       descriptionParts: [
@@ -158,7 +133,7 @@ const buildZeroBecauseXIsConstantItems = (
         {
           type: "latex",
           id: "node",
-          latex: nodeId,
+          latex: nodeName,
         },
         {
           type: "text",
@@ -172,14 +147,10 @@ const buildZeroBecauseXIsConstantItems = (
 };
 
 const buildChainRuleItems = (
-  nodeId: string,
-  nodeDerivative: string,
-  differentiationMode: DifferentiationMode,
-  targetNodeId: string,
-  chainRuleTerms: ChainRuleTerm[],
+  options: ExplainDerivativeBuildOptions,
 ): ExplainDerivativeItem[] => {
   return [
-    buildCalculateDerivativeItem(nodeId, differentiationMode, targetNodeId),
+    buildCalculateDerivativeItem(options),
     {
       type: "useChainRule",
       descriptionParts: [
@@ -189,39 +160,19 @@ const buildChainRuleItems = (
           text: "Use the chain rule:",
         },
       ],
-      latex: buildChainRuleLatex(
-        "raw",
-        nodeId,
-        differentiationMode,
-        targetNodeId,
-        chainRuleTerms,
-      ),
+      latex: buildChainRuleLatex("raw", options),
     },
     {
       type: "previousDerivativesReplaced",
-      descriptionParts: buildPreviousDerivativesReplacedDescription(
-        differentiationMode,
-        targetNodeId,
-        chainRuleTerms,
-      ),
-      latex: buildChainRuleLatex(
-        "previousDerivativesReplaced",
-        nodeId,
-        differentiationMode,
-        targetNodeId,
-        chainRuleTerms,
-      ),
+      descriptionParts: buildPreviousDerivativesReplacedDescription(options),
+      latex: buildChainRuleLatex("previousDerivativesReplaced", options),
     },
     {
       type: "allReplaced",
-      descriptionParts: buildAllReplacedDescription(differentiationMode),
-      latex: buildChainRuleLatex(
-        "allReplaced",
-        nodeId,
-        differentiationMode,
-        targetNodeId,
-        chainRuleTerms,
+      descriptionParts: buildAllReplacedDescription(
+        options.differentiationMode,
       ),
+      latex: buildChainRuleLatex("allReplaced", options),
     },
     {
       type: "equalTo",
@@ -232,15 +183,13 @@ const buildChainRuleItems = (
           text: "Which is equal to:",
         },
       ],
-      latex: `\\displaystyle ${nodeDerivative}`,
+      latex: `\\displaystyle ${options.nodeDerivative}`,
     },
   ];
 };
 
 const buildCalculateDerivativeItem = (
-  nodeId: string,
-  differentiationMode: DifferentiationMode,
-  targetNodeId: string,
+  options: ExplainDerivativeBuildOptions,
 ): ExplainDerivativeItem => {
   return {
     type: "calculatePartialDerivative",
@@ -251,54 +200,58 @@ const buildCalculateDerivativeItem = (
         text: "Calculate the partial derivative:",
       },
     ],
-    latex: buildPartialDerivativeSubject(
-      nodeId,
-      differentiationMode,
-      targetNodeId,
-    ),
+    latex: buildPartialDerivativeSubject(options),
   };
 };
 
 const buildPartialDerivativeSubject = (
-  nodeId: string,
-  differentiationMode: DifferentiationMode,
-  targetNodeId: string,
+  options: ExplainDerivativeBuildOptions,
 ): string => {
+  const nodeName = getNodeName(options.nodeId, options.nodeIdToNames);
+  const targetNodeName = getNodeName(
+    options.targetNodeId,
+    options.nodeIdToNames,
+  );
   const derivative =
-    differentiationMode === "REVERSE"
-      ? buildPartialDerivativeLatex(targetNodeId, nodeId)
-      : buildPartialDerivativeLatex(nodeId, targetNodeId);
+    options.differentiationMode === "REVERSE"
+      ? buildPartialDerivativeLatex(targetNodeName, nodeName)
+      : buildPartialDerivativeLatex(nodeName, targetNodeName);
   return `\\displaystyle ${derivative}`;
 };
 
 const buildPreviousDerivativesReplacedDescription = (
-  differentiationMode: DifferentiationMode,
-  targetNodeId: string,
-  chainRuleTerms: ChainRuleTerm[],
+  options: ExplainDerivativeBuildOptions,
 ): MathLabelPartType[] => {
-  const side = differentiationMode === "REVERSE" ? "right" : "left";
-  const previousDerivativeTerms: MathLabelPartType[] = chainRuleTerms.map(
-    (chainRuleTerm) => {
+  const side = options.differentiationMode === "REVERSE" ? "right" : "left";
+  const targetNodeName = getNodeName(
+    options.targetNodeId,
+    options.nodeIdToNames,
+  );
+  const previousDerivativeTerms: MathLabelPartType[] =
+    options.chainRuleTerms.map((chainRuleTerm, index) => {
+      const neighborNodeName = getNodeName(
+        chainRuleTerm.neighborNodeId,
+        options.nodeIdToNames,
+      );
       let derivative: string;
-      if (differentiationMode === "REVERSE") {
+      if (options.differentiationMode === "REVERSE") {
         derivative = buildPartialDerivativeLatex(
-          targetNodeId,
-          chainRuleTerm.neighborNodeId,
+          targetNodeName,
+          neighborNodeName,
         );
       } else {
         derivative = buildPartialDerivativeLatex(
-          chainRuleTerm.neighborNodeId,
-          targetNodeId,
+          neighborNodeName,
+          targetNodeName,
         );
       }
       return {
         type: "latexLink",
-        id: `chainRuleTerm-${chainRuleTerm.neighborNodeId}`,
+        id: `chainRuleTerm-${chainRuleTerm.neighborNodeId}-${index}`,
         latex: derivative,
         href: chainRuleTerm.neighborNodeId,
       };
-    },
-  );
+    });
 
   const commaListParts: MathLabelPartType[] = [];
   previousDerivativeTerms.forEach((previousDerivativeTerm, index) => {
@@ -342,20 +295,53 @@ const buildAllReplacedDescription = (
 
 const buildChainRuleLatex = (
   chainRuleType: ChainRuleType,
-  nodeId: string,
-  differentiationMode: DifferentiationMode,
-  targetNodeId: string,
-  chainRuleTerms: ChainRuleTerm[],
+  options: ExplainDerivativeBuildOptions,
 ): string => {
   const multiplicationTerms = buildChainRuleMultiplicationTerms(
     chainRuleType,
-    nodeId,
-    differentiationMode,
-    targetNodeId,
-    chainRuleTerms,
+    options,
   );
   const expression = multiplicationTerms.join("+");
   return `\\displaystyle =${expression}`;
+};
+
+const buildChainRuleMultiplicationTerms = (
+  chainRuleType: ChainRuleType,
+  options: ExplainDerivativeBuildOptions,
+): string[] => {
+  const nodeName = getNodeName(options.nodeId, options.nodeIdToNames);
+  const targetNodeName = getNodeName(
+    options.targetNodeId,
+    options.nodeIdToNames,
+  );
+  return options.chainRuleTerms.map((chainRuleTerm) => {
+    const neighborNodeName = getNodeName(
+      chainRuleTerm.neighborNodeId,
+      options.nodeIdToNames,
+    );
+    let derivative1: string;
+    let derivative2: string;
+    if (options.differentiationMode === "REVERSE") {
+      derivative1 =
+        chainRuleType === "allReplaced"
+          ? chainRuleTerm.derivativeRegardingCurrent
+          : buildPartialDerivativeLatex(neighborNodeName, nodeName);
+      derivative2 =
+        chainRuleType === "raw"
+          ? buildPartialDerivativeLatex(targetNodeName, neighborNodeName)
+          : chainRuleTerm.derivativeRegardingTarget;
+    } else {
+      derivative1 =
+        chainRuleType === "raw"
+          ? buildPartialDerivativeLatex(neighborNodeName, targetNodeName)
+          : chainRuleTerm.derivativeRegardingTarget;
+      derivative2 =
+        chainRuleType === "allReplaced"
+          ? chainRuleTerm.derivativeRegardingCurrent
+          : buildPartialDerivativeLatex(nodeName, neighborNodeName);
+    }
+    return `${derivative1} \\cdot ${derivative2}`;
+  });
 };
 
 const buildPartialDerivativeLatex = (
@@ -365,43 +351,15 @@ const buildPartialDerivativeLatex = (
   return `\\frac{\\partial{${numerator}}}{\\partial{${denominator}}}`;
 };
 
-const buildChainRuleMultiplicationTerms = (
-  chainRuleType: ChainRuleType,
+const getNodeName = (
   nodeId: string,
-  differentiationMode: DifferentiationMode,
-  targetNodeId: string,
-  chainRuleTerms: ChainRuleTerm[],
-): string[] => {
-  return chainRuleTerms.map((chainRuleTerm) => {
-    let derivative1: string;
-    let derivative2: string;
-    if (differentiationMode === "REVERSE") {
-      derivative1 =
-        chainRuleType === "allReplaced"
-          ? chainRuleTerm.derivativeRegardingCurrent
-          : buildPartialDerivativeLatex(chainRuleTerm.neighborNodeId, nodeId);
-      derivative2 =
-        chainRuleType === "raw"
-          ? buildPartialDerivativeLatex(
-              targetNodeId,
-              chainRuleTerm.neighborNodeId,
-            )
-          : chainRuleTerm.derivativeRegardingTarget;
-    } else {
-      derivative1 =
-        chainRuleType === "raw"
-          ? buildPartialDerivativeLatex(
-              chainRuleTerm.neighborNodeId,
-              targetNodeId,
-            )
-          : chainRuleTerm.derivativeRegardingTarget;
-      derivative2 =
-        chainRuleType === "allReplaced"
-          ? chainRuleTerm.derivativeRegardingCurrent
-          : buildPartialDerivativeLatex(nodeId, chainRuleTerm.neighborNodeId);
-    }
-    return `${derivative1} \\cdot ${derivative2}`;
-  });
+  nodeIdToNames: ReadonlyMap<string, string>,
+): string => {
+  const name = nodeIdToNames.get(nodeId);
+  if (name === undefined) {
+    throw new Error(`The nodeIdToNames mapping should have node ID ${nodeId}`);
+  }
+  return name;
 };
 
 export { buildExplainDerivativeItems };

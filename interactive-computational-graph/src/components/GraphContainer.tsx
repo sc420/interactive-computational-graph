@@ -42,6 +42,7 @@ import CoreGraphAdapter from "../features/CoreGraphAdapter";
 import type ExplainDerivativeData from "../features/ExplainDerivativeData";
 import type FeatureNodeType from "../features/FeatureNodeType";
 import type FeatureOperation from "../features/FeatureOperation";
+import NodeNameBuilder from "../features/NodeNameBuilder";
 import {
   addReactFlowNode,
   deselectAllNodes,
@@ -56,6 +57,7 @@ import {
   updateReactFlowNodeFValues,
   updateReactFlowNodeHighlighted,
   updateReactFlowNodeInputValue,
+  updateReactFlowNodeName,
 } from "../features/ReactFlowController";
 import type SelectedFeature from "../features/SelectedFeature";
 import ReactFlowGraph from "../reactflow/ReactFlowGraph";
@@ -99,6 +101,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       id: "add",
       text: "Add",
       type: "SIMPLE",
+      namePrefix: "a",
       operation: new Operation(ADD_F_CODE, ADD_DFDX_CODE),
       inputPorts: [new Port("a", false), new Port("b", false)],
       helpText: "Add two numbers $ a + b $",
@@ -107,6 +110,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       id: "multiply",
       text: "Multiply",
       type: "SIMPLE",
+      namePrefix: "m",
       operation: new Operation(MULTIPLY_F_CODE, MULTIPLY_DFDX_CODE),
       inputPorts: [new Port("a", false), new Port("b", false)],
       helpText: "Multiply two numbers $ a * b $",
@@ -115,6 +119,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       id: "sum",
       text: "Sum",
       type: "SIMPLE",
+      namePrefix: "s",
       operation: new Operation(SUM_F_CODE, SUM_DFDX_CODE),
       inputPorts: [new Port("x_i", true)],
       helpText: "Add all inputs $ \\sum_i x_{i} $",
@@ -123,6 +128,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       id: "product",
       text: "Product",
       type: "SIMPLE",
+      namePrefix: "p",
       operation: new Operation(PRODUCT_F_CODE, PRODUCT_DFDX_CODE),
       inputPorts: [new Port("x_i", true)],
       helpText: "Multiply all inputs $ \\prod_i x_{i} $",
@@ -131,12 +137,14 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       id: "squared_error",
       text: "Squared Error",
       type: "SIMPLE",
+      namePrefix: "s",
       operation: new Operation(SQUARED_ERROR_F_CODE, SQUARED_ERROR_DFDX_CODE),
-      inputPorts: [new Port("y_true", false), new Port("y_estimate", false)],
+      inputPorts: [new Port("y_t", false), new Port("y_e", false)],
       helpText: "Calculates squared error $ (y_t - y_e)^2 $",
     },
   ]);
   const [nextNodeId, setNextNodeId] = useState<number>(1);
+  const [nodeNameBuilder] = useState<NodeNameBuilder>(new NodeNameBuilder());
   const [nextOperationId, setNextOperationId] = useState<number>(1);
 
   // Feature panel states
@@ -160,6 +168,13 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       updateReactFlowNodeDarkMode(isDarkMode, nodes),
     );
   }, [isDarkMode]);
+
+  const handleNameChange = useCallback(
+    (nodeId: string, name: string): void => {
+      coreGraphAdapter.updateNodeNameById(nodeId, name);
+    },
+    [coreGraphAdapter],
+  );
 
   const handleInputChange = useCallback(
     (nodeId: string, inputPortId: string, value: string): void => {
@@ -187,16 +202,36 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
 
   const handleAddNode = useCallback(
     (featureNodeType: FeatureNodeType) => {
+      const featureOperation = findFeatureOperation(
+        featureNodeType,
+        featureOperations,
+      );
+
       const nodeId = `${nextNodeId}`;
+      const nodeName = nodeNameBuilder.buildName(
+        featureNodeType,
+        featureOperation,
+      );
 
-      coreGraphAdapter.addNode(featureNodeType, nodeId, featureOperations);
+      coreGraphAdapter.addNode(
+        featureNodeType,
+        featureOperation,
+        nodeId,
+        nodeName,
+      );
 
+      const derivativeTargetName =
+        derivativeTarget === null
+          ? null
+          : coreGraphAdapter.getNodeNameById(derivativeTarget);
       const addNodeData: AddNodeData = {
         featureNodeType,
+        featureOperation,
         nodeId,
-        featureOperations,
+        nodeName,
         isReverseMode,
-        derivativeTarget,
+        derivativeTargetName,
+        onNameChange: handleNameChange,
         onInputChange: handleInputChange,
         onBodyClick: handleBodyClick,
         onDerivativeClick: handleDerivativeClick,
@@ -217,10 +252,12 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       handleBodyClick,
       handleDerivativeClick,
       handleInputChange,
+      handleNameChange,
       isDarkMode,
       isReverseMode,
       lastSelectedNodeId,
       nextNodeId,
+      nodeNameBuilder,
     ],
   );
 
@@ -231,6 +268,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       id,
       text: `Operation ${nextOperationId}`,
       type: "CUSTOM",
+      namePrefix: "f",
       operation: new Operation(TEMPLATE_F_CODE, TEMPLATE_DFDX_CODE),
       inputPorts: [],
       helpText: "Write some Markdown and LaTeX here",
@@ -246,12 +284,17 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     setReactFlowNodes((nodes) => deselectAllNodes(nodes));
   }, []);
 
-  const handleSelectNode = useCallback((nodeId: string) => {
-    setReactFlowNodes((nodes) => {
-      const deselectedNodes = deselectAllNodes(nodes);
-      return selectReactFlowNode(nodeId, deselectedNodes);
-    });
-  }, []);
+  const handleSelectNode = useCallback(
+    (nodeId: string) => {
+      const visibleNodeId = coreGraphAdapter.getVisibleNodeIdById(nodeId);
+
+      setReactFlowNodes((nodes) => {
+        const deselectedNodes = deselectAllNodes(nodes);
+        return selectReactFlowNode(visibleNodeId, deselectedNodes);
+      });
+    },
+    [coreGraphAdapter],
+  );
 
   const handleReverseModeChange = useCallback(
     (isReverseMode: boolean) => {
@@ -329,16 +372,36 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
 
   const handleDropNode = useCallback(
     (featureNodeType: FeatureNodeType, position: XYPosition) => {
+      const featureOperation = findFeatureOperation(
+        featureNodeType,
+        featureOperations,
+      );
+
       const nodeId = `${nextNodeId}`;
+      const nodeName = nodeNameBuilder.buildName(
+        featureNodeType,
+        featureOperation,
+      );
 
-      coreGraphAdapter.addNode(featureNodeType, nodeId, featureOperations);
+      coreGraphAdapter.addNode(
+        featureNodeType,
+        featureOperation,
+        nodeId,
+        nodeName,
+      );
 
+      const derivativeTargetName =
+        derivativeTarget === null
+          ? null
+          : coreGraphAdapter.getNodeNameById(derivativeTarget);
       const addNodeData: AddNodeData = {
         featureNodeType,
+        featureOperation,
         nodeId,
-        featureOperations,
+        nodeName,
         isReverseMode,
-        derivativeTarget,
+        derivativeTargetName,
+        onNameChange: handleNameChange,
         onInputChange: handleInputChange,
         onBodyClick: handleBodyClick,
         onDerivativeClick: handleDerivativeClick,
@@ -358,9 +421,11 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       handleBodyClick,
       handleDerivativeClick,
       handleInputChange,
+      handleNameChange,
       isDarkMode,
       isReverseMode,
       nextNodeId,
+      nodeNameBuilder,
     ],
   );
 
@@ -380,6 +445,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     coreGraphAdapter.onConnectionAdded(handleConnectionAdded);
     coreGraphAdapter.onConnectionError(handleConnectionError);
     coreGraphAdapter.onTargetNodeUpdated(handleTargetNodeUpdated);
+    coreGraphAdapter.onNodeNameUpdated(handleNodeNameUpdated);
     coreGraphAdapter.onShowInputFields(handleShowInputFields);
     coreGraphAdapter.onHideInputField(handleHideInputField);
     coreGraphAdapter.onFValuesUpdated(handleFValuesUpdated);
@@ -404,6 +470,10 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
 
   const handleTargetNodeUpdated = useCallback((targetNodeId: string | null) => {
     setDerivativeTarget(() => targetNodeId);
+  }, []);
+
+  const handleNodeNameUpdated = useCallback((nodeId: string, name: string) => {
+    setReactFlowNodes((nodes) => updateReactFlowNodeName(nodeId, name, nodes));
   }, []);
 
   const handleShowInputFields = useCallback((emptyPortEdges: Edge[]) => {
@@ -431,14 +501,16 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
   const handleDerivativeValuesUpdated = useCallback(
     (
       differentiationMode: DifferentiationMode,
-      targetNodeId: string | null,
-      nodeIdToDerivatives: Map<string, string>,
+      targetNodeName: string | null,
+      nodeIdToDerivatives: ReadonlyMap<string, string>,
+      nodeIdToNames: ReadonlyMap<string, string>,
     ) => {
       setReactFlowNodes((nodes) =>
         updateReactFlowNodeDerivatives(
           nodeIdToDerivatives,
+          nodeIdToNames,
           differentiationMode === "REVERSE",
-          targetNodeId,
+          targetNodeName,
           nodes,
         ),
       );
@@ -458,6 +530,22 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     updateNodeDarkMode();
   }, [isDarkMode, updateNodeDarkMode]);
 
+  const findFeatureOperation = (
+    featureNodeType: FeatureNodeType,
+    featureOperations: FeatureOperation[],
+  ): FeatureOperation | null => {
+    if (featureNodeType.nodeType !== "OPERATION") {
+      return null;
+    }
+
+    const operationId = featureNodeType.operationId;
+    const operation = featureOperations.find((op) => op.id === operationId);
+    if (operation === undefined) {
+      throw new Error(`Couldn't find the feature operation ${operationId}`);
+    }
+    return operation;
+  };
+
   return (
     <>
       {/* Toolbar padding */}
@@ -473,7 +561,8 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
         <GraphToolbar
           isReverseMode={isReverseMode}
           derivativeTarget={derivativeTarget}
-          nodeIds={coreGraphAdapter.getNodeIds()}
+          nodeIds={coreGraphAdapter.getVisibleNodeIds()}
+          nodeNames={coreGraphAdapter.getVisibleNodeNames()}
           onReverseModeChange={handleReverseModeChange}
           onDerivativeTargetChange={handleDerivativeTargetChange}
         />

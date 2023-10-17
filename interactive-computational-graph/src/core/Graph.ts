@@ -76,13 +76,18 @@ class Graph {
     } catch (error) {
       if (error instanceof InputNodeAlreadyConnectedError) {
         throw new InputNodeAlreadyConnectedError(
-          `Input node ${node1Id} already exists by port ${node2PortId} of \
-node ${node2Id}`,
+          `Input node ${node1Id} is already connected to node ${node2Id} by \
+port ${node2PortId}`,
+          node1Id,
+          node2PortId,
+          node2Id,
         );
       } else if (error instanceof InputPortFullError) {
         throw new InputPortFullError(
           `Input port ${node2PortId} of node ${node2Id} doesn't allow \
 multiple edges`,
+          node2PortId,
+          node2Id,
         );
       } else {
         throw error;
@@ -92,6 +97,8 @@ multiple edges`,
     if (this.canVisit(node2Id, node1Id)) {
       throw new CycleError(
         `Connecting node ${node1Id} to node ${node2Id} would cause a cycle`,
+        node1Id,
+        node2Id,
       );
     }
   }

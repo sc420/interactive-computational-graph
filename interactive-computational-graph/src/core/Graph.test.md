@@ -83,7 +83,7 @@ The notations:
     - `{op}==sigmoid`: Sigmoid activation function for `sum_l_x`
 - `w_{l}_{x}_{y}`: Weight for operation `mul_{l}_{x}_{y}`
 - `b_{l}_{x}`: Bias for operation `sum_{l}_{x}`
-- `y_estimate`: The estimate `y` value
+- `y_e`: The estimate `y` value
 - `y`: The true `y` value
 - `se`: Squared error function which outputs the loss (MSE with 1 sample data)
 
@@ -122,8 +122,8 @@ flowchart LR
     %% Output layer: Activation
     sum_o_1 --> sigmoid_o_1[sigmoid_o_1=0.5]
     %% Output layer: Outputs (redundant for clarity)
-    sigmoid_o_1 --> y_estimate[y_estimate=0.5]
+    sigmoid_o_1 --> y_e[y_e=0.5]
     %% Loss function
-    y_estimate --> se
+    y_e --> se
     y[y=0] --> se
 ```

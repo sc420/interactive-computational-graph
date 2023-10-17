@@ -366,7 +366,7 @@ describe("updating f values", () => {
       "b_o_1",
       "sum_o_1",
       "sigmoid_o_1",
-      "y_estimate",
+      "y_e",
       "y",
       "se",
     ];
@@ -383,7 +383,7 @@ describe("updating f values", () => {
     expect(parseFloat(graph.getNodeValue("mul_o_1_2"))).toBeCloseTo(0.25);
     expect(parseFloat(graph.getNodeValue("sum_o_1"))).toBeCloseTo(0);
     expect(parseFloat(graph.getNodeValue("sigmoid_o_1"))).toBeCloseTo(0.5);
-    expect(parseFloat(graph.getNodeValue("y_estimate"))).toBeCloseTo(0.5);
+    expect(parseFloat(graph.getNodeValue("y_e"))).toBeCloseTo(0.5);
     expect(parseFloat(graph.getNodeValue("se"))).toBeCloseTo(0.25);
   });
 });
@@ -764,16 +764,16 @@ describe("updating derivative values", () => {
 
     // d(se)/d(se) = 1
     expect(parseFloat(graph.getNodeDerivative("se"))).toBeCloseTo(1);
-    // d(se)/d(y_estimate) =
-    // d(se)/d(y_estimate) * d(se)/d(se) =
-    // (2 * (y_estimate - y)) * (1) = 1
-    expect(parseFloat(graph.getNodeDerivative("y_estimate"))).toBeCloseTo(1);
+    // d(se)/d(y_e) =
+    // d(se)/d(y_e) * d(se)/d(se) =
+    // (2 * (y_e - y)) * (1) = 1
+    expect(parseFloat(graph.getNodeDerivative("y_e"))).toBeCloseTo(1);
     // d(se)/d(y) =
     // d(se)/d(y) * d(se)/d(se) =
-    // (2 * (y - y_estimate)) * 1 = -1
+    // (2 * (y - y_e)) * 1 = -1
     expect(parseFloat(graph.getNodeDerivative("y"))).toBeCloseTo(-1);
     // d(se)/d(sigmoid_o_1) =
-    // d(y_estimate)/d(sigmoid_o_1) * d(se)/d(y_estimate) =
+    // d(y_e)/d(sigmoid_o_1) * d(se)/d(y_e) =
     // 1 * 1 = 1
     expect(parseFloat(graph.getNodeDerivative("sigmoid_o_1"))).toBeCloseTo(1);
     // d(se)/d(sum_o_1) =
@@ -1143,7 +1143,7 @@ function buildNeuralNetworkGraph(): Graph {
   // Output layer: Activation
   const sigmoid_o_1 = buildSigmoidNode("sigmoid_o_1");
   // Loss function input: Estimate y
-  const y_estimate = buildIdentityNode("y_estimate");
+  const y_e = buildIdentityNode("y_e");
   // Loss function input: True y
   const y = new VariableNode("y");
   // Loss function
@@ -1174,7 +1174,7 @@ function buildNeuralNetworkGraph(): Graph {
     b_o_1,
     sum_o_1,
     sigmoid_o_1,
-    y_estimate,
+    y_e,
     y,
     se,
   ];
@@ -1217,11 +1217,11 @@ function buildNeuralNetworkGraph(): Graph {
   // Output layer: Sum --> Output layer: Activation
   graph.connect(sum_o_1.getId(), sigmoid_o_1.getId(), "x");
   // Output layer: Activation --> Loss function input: Estimate y
-  graph.connect(sigmoid_o_1.getId(), y_estimate.getId(), "x");
+  graph.connect(sigmoid_o_1.getId(), y_e.getId(), "x");
   // Loss function input: Estimate y --> Loss function
-  graph.connect(y_estimate.getId(), se.getId(), "y_estimate");
+  graph.connect(y_e.getId(), se.getId(), "y_e");
   // Loss function input: True y --> Loss function
-  graph.connect(y.getId(), se.getId(), "y_true");
+  graph.connect(y.getId(), se.getId(), "y_t");
 
   // Input layer values
   graph.setNodeValue(i_1.getId(), "0.0");
@@ -1277,10 +1277,7 @@ function buildSigmoidNode(id: string): CoreNode {
 }
 
 function buildSquaredErrorNode(id: string): CoreNode {
-  const ports: Port[] = [
-    new Port("y_estimate", false),
-    new Port("y_true", false),
-  ];
+  const ports: Port[] = [new Port("y_e", false), new Port("y_t", false)];
   const operation = new Operation(
     SQUARED_ERROR_F_CODE,
     SQUARED_ERROR_DFDX_CODE,

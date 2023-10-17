@@ -139,7 +139,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       type: "SIMPLE",
       namePrefix: "s",
       operation: new Operation(SQUARED_ERROR_F_CODE, SQUARED_ERROR_DFDX_CODE),
-      inputPorts: [new Port("y_true", false), new Port("y_estimate", false)],
+      inputPorts: [new Port("y_t", false), new Port("y_e", false)],
       helpText: "Calculates squared error $ (y_t - y_e)^2 $",
     },
   ]);

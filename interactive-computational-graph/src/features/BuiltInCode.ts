@@ -638,14 +638,14 @@ const SQUARED_ERROR_F_CODE = `\
  * \`f({v1, v3, v2}) = v1 * v3 * v2 = 1 * 3 * 2 = 6\`.
  */
 function f(fInputPortToNodes, fInputNodeToValues) {
-  if (fInputPortToNodes.y_true.length !== 1) {
-    throw new Error("Should have exactly 1 input node for port y_true");
+  if (fInputPortToNodes.y_t.length !== 1) {
+    throw new Error("Should have exactly 1 input node for port y_t");
   }
-  if (fInputPortToNodes.y_estimate.length !== 1) {
-    throw new Error("Should have exactly 1 input node for port y_estimate");
+  if (fInputPortToNodes.y_e.length !== 1) {
+    throw new Error("Should have exactly 1 input node for port y_e");
   }
-  const yTrueInputNodeId = fInputPortToNodes.y_true[0];
-  const yEstimateInputNodeId = fInputPortToNodes.y_estimate[0];
+  const yTrueInputNodeId = fInputPortToNodes.y_t[0];
+  const yEstimateInputNodeId = fInputPortToNodes.y_e[0];
   const yTrue = parseFloat(fInputNodeToValues[yTrueInputNodeId]);
   const yEstimate = parseFloat(fInputNodeToValues[yEstimateInputNodeId]);
   const y = Math.pow(yTrue - yEstimate, 2);
@@ -683,13 +683,13 @@ const SQUARED_ERROR_DFDX_CODE = `\
  * since \`f = v1 * v3 * v2\` and \`df/dx = v1 * v3 = 3\`.
  */
 function dfdx(fInputPortToNodes, fInputNodeToValues, xId) {
-  const hasXInYTrue = fInputPortToNodes.y_true.includes(xId);
-  const hasXInYEstimate = fInputPortToNodes.y_estimate.includes(xId);
+  const hasXInYTrue = fInputPortToNodes.y_t.includes(xId);
+  const hasXInYEstimate = fInputPortToNodes.y_e.includes(xId);
   if (!hasXInYTrue && !hasXInYEstimate) {
     return "0";
   }
-  const yTrueInputNodeId = fInputPortToNodes.y_true[0];
-  const yEstimateInputNodeId = fInputPortToNodes.y_estimate[0];
+  const yTrueInputNodeId = fInputPortToNodes.y_t[0];
+  const yEstimateInputNodeId = fInputPortToNodes.y_e[0];
   const yTrue = parseFloat(fInputNodeToValues[yTrueInputNodeId]);
   const yEstimate = parseFloat(fInputNodeToValues[yEstimateInputNodeId]);
   let df = 0;

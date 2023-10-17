@@ -6,6 +6,8 @@ interface FeatureOperation {
   id: string;
   text: string;
   type: OperationType;
+  // Prefix when adding a new operation
+  namePrefix: string;
   // Core operation
   operation: Operation;
   // List of input ports

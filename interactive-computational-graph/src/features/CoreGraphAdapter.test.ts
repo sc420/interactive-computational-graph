@@ -51,7 +51,7 @@ describe("events", () => {
     const adapter = new CoreGraphAdapter();
 
     addConstantNode(adapter, "1", "c_1");
-    addAddNode(adapter, "2", "add_1");
+    addAddNode(adapter, "2", "a_1");
 
     const handleConnectionAdded = jest.fn();
     const handleHideInputField = jest.fn();
@@ -85,9 +85,9 @@ describe("events", () => {
     ]);
     const expectedNodeIdToNames = new Map<string, string>([
       ["1", "c_1"],
-      ["2", "add_1"],
-      ["dummy-input-node-2-a", "add_1.a"],
-      ["dummy-input-node-2-b", "add_1.b"],
+      ["2", "a_1"],
+      ["dummy-input-node-2-a", "a_1.a"],
+      ["dummy-input-node-2-b", "a_1.b"],
     ]);
     expect(handleFValuesUpdated).toHaveBeenCalledWith(expectedNodeIdToFValues);
     expect(handleDerivativeValuesUpdated).toHaveBeenCalledWith(
@@ -102,7 +102,7 @@ describe("events", () => {
   test("should emit events when there's error when adding connection", () => {
     const adapter = new CoreGraphAdapter();
 
-    addAddNode(adapter, "1", "add_1");
+    addAddNode(adapter, "1", "a_1");
 
     const handleConnectionAdded = jest.fn();
     const handleConnectionError = jest.fn();
@@ -121,7 +121,7 @@ describe("events", () => {
 
     expect(handleConnectionAdded).not.toHaveBeenCalled();
     expect(handleConnectionError).toHaveBeenCalledWith(
-      new Error("Connecting node add_1 to node add_1 would cause a cycle"),
+      new Error("Connecting node a_1 to node a_1 would cause a cycle"),
     );
     expect(handleHideInputField).not.toHaveBeenCalled();
     expect(handleFValuesUpdated).not.toHaveBeenCalled();
@@ -213,7 +213,7 @@ describe("events", () => {
   test("should emit output updates when updating node value", () => {
     const adapter = new CoreGraphAdapter();
 
-    addAddNode(adapter, "1", "add_1");
+    addAddNode(adapter, "1", "a_1");
 
     const handleFValuesUpdated = jest.fn();
     const handleDerivativeValuesUpdated = jest.fn();
@@ -238,9 +238,9 @@ describe("events", () => {
       ["dummy-input-node-1-b", "0"],
     ]);
     const expectedNodeIdToNames = new Map<string, string>([
-      ["1", "add_1"],
-      ["dummy-input-node-1-a", "add_1.a"],
-      ["dummy-input-node-1-b", "add_1.b"],
+      ["1", "a_1"],
+      ["dummy-input-node-1-a", "a_1.a"],
+      ["dummy-input-node-1-b", "a_1.b"],
     ]);
     expect(handleFValuesUpdated).toHaveBeenCalledWith(expectedNodeIdToFValues);
     expect(handleDerivativeValuesUpdated).toHaveBeenCalledWith(
@@ -255,7 +255,7 @@ describe("events", () => {
   test("should emit output updates when removing the node", () => {
     const adapter = new CoreGraphAdapter();
 
-    addAddNode(adapter, "1", "add_1");
+    addAddNode(adapter, "1", "a_1");
 
     const handleFValuesUpdated = jest.fn();
     const handleDerivativeValuesUpdated = jest.fn();
@@ -285,7 +285,7 @@ describe("events", () => {
   test("should emit target node update when removing the target node", () => {
     const adapter = new CoreGraphAdapter();
 
-    addAddNode(adapter, "1", "add_1");
+    addAddNode(adapter, "1", "a_1");
     adapter.setTargetNode("1");
 
     const handleTargetNodeUpdated = jest.fn();
@@ -300,7 +300,7 @@ describe("events", () => {
   test("should not emit output updates when doing other node changes", () => {
     const adapter = new CoreGraphAdapter();
 
-    addAddNode(adapter, "1", "add_1");
+    addAddNode(adapter, "1", "a_1");
 
     const handleFValuesUpdated = jest.fn();
     const handleDerivativeValuesUpdated = jest.fn();
@@ -330,7 +330,7 @@ describe("events", () => {
     const adapter = new CoreGraphAdapter();
 
     addConstantNode(adapter, "1", "c_1");
-    addAddNode(adapter, "2", "add_1");
+    addAddNode(adapter, "2", "a_1");
     addConnection(adapter, "1", "2", "a");
 
     const handleShowInputFields = jest.fn();
@@ -363,9 +363,9 @@ describe("events", () => {
     ]);
     const expectedNodeIdToNames = new Map<string, string>([
       ["1", "c_1"],
-      ["2", "add_1"],
-      ["dummy-input-node-2-a", "add_1.a"],
-      ["dummy-input-node-2-b", "add_1.b"],
+      ["2", "a_1"],
+      ["dummy-input-node-2-a", "a_1.a"],
+      ["dummy-input-node-2-b", "a_1.b"],
     ]);
     expect(handleFValuesUpdated).toHaveBeenCalledWith(expectedNodeIdToFValues);
     expect(handleDerivativeValuesUpdated).toHaveBeenCalledWith(
@@ -381,7 +381,7 @@ describe("events", () => {
     const adapter = new CoreGraphAdapter();
 
     addConstantNode(adapter, "1", "c_1");
-    addAddNode(adapter, "2", "add_1");
+    addAddNode(adapter, "2", "a_1");
     addConnection(adapter, "1", "2", "a");
 
     const handleShowInputFields = jest.fn();
@@ -447,7 +447,7 @@ describe("behavior", () => {
     const adapter = new CoreGraphAdapter();
 
     addConstantNode(adapter, "1", "c_1");
-    addAddNode(adapter, "2", "add_1");
+    addAddNode(adapter, "2", "a_1");
     addConnection(adapter, "1", "2", "a");
 
     adapter.setTargetNode("1");
@@ -568,6 +568,7 @@ const featureOperation: FeatureOperation = {
   id: "add",
   text: "Add",
   type: "SIMPLE",
+  namePrefix: "a",
   operation: new Operation(ADD_F_CODE, ADD_DFDX_CODE),
   inputPorts: [new Port("a", false), new Port("b", false)],
   helpText: "Add two numbers $ a + b $",

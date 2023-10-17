@@ -235,7 +235,7 @@ Object {
         ],
         "isDarkMode": false,
         "isHighlighted": false,
-        "name": "sum_1",
+        "name": "s_1",
         "outputItems": Array [
           Object {
             "labelParts": Array [
@@ -253,7 +253,7 @@ Object {
               Object {
                 "href": "3",
                 "id": "derivative",
-                "latex": "\\\\displaystyle \\\\frac{\\\\partial{?}}{\\\\partial{sum_1}}",
+                "latex": "\\\\displaystyle \\\\frac{\\\\partial{?}}{\\\\partial{s_1}}",
                 "type": "latexLink",
               },
               Object {

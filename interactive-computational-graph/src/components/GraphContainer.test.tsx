@@ -29,7 +29,7 @@ it("should have different node types on the graph after dropping nodes", () => {
 
   expect(screen.getByText("c_1")).toBeInTheDocument();
   expect(screen.getByText("v_1")).toBeInTheDocument();
-  expect(screen.getByText("sum_1")).toBeInTheDocument();
+  expect(screen.getByText("s_1")).toBeInTheDocument();
 
   const reactFlowData = {
     nodes: getNodes(),
@@ -85,7 +85,7 @@ it("edges and add node itself should be removed after removing add node", () => 
 
   expect(screen.getByText("c_1")).toBeInTheDocument();
   expect(screen.getByText("c_1")).toBeInTheDocument();
-  expect(screen.queryByText("add_1")).toBeNull();
+  expect(screen.queryByText("a_1")).toBeNull();
 
   const reactFlowData = {
     nodes: getNodes(),
@@ -116,7 +116,7 @@ it("edges and sum node itself should be removed after removing sum node", () => 
 
   expect(screen.getByText("c_1")).toBeInTheDocument();
   expect(screen.getByText("c_2")).toBeInTheDocument();
-  expect(screen.queryByText("sum_1")).toBeNull();
+  expect(screen.queryByText("s_1")).toBeNull();
 
   const reactFlowData = {
     nodes: getNodes(),
@@ -194,7 +194,7 @@ it("should show error message when connecting the same edge twice", () => {
   const snackbar = screen.getByRole("alert");
   expect(snackbar).toBeInTheDocument();
   expect(snackbar).toHaveTextContent(
-    "Input node c_1 is already connected to node sum_1 by port x_i",
+    "Input node c_1 is already connected to node s_1 by port x_i",
   );
 });
 
@@ -217,7 +217,7 @@ it("should show error message when connecting to the single-connection port", ()
   const snackbar = screen.getByRole("alert");
   expect(snackbar).toBeInTheDocument();
   expect(snackbar).toHaveTextContent(
-    "Input port a of node add_1 doesn't allow multiple edges",
+    "Input port a of node a_1 doesn't allow multiple edges",
   );
 });
 
@@ -234,7 +234,7 @@ it("should show error message when causing a cycle", () => {
   const snackbar = screen.getByRole("alert");
   expect(snackbar).toBeInTheDocument();
   expect(snackbar).toHaveTextContent(
-    "Connecting node sum_1 to node sum_1 would cause a cycle",
+    "Connecting node s_1 to node s_1 would cause a cycle",
   );
 });
 
@@ -255,7 +255,7 @@ it("derivative target should reset when the target node is removed", () => {
   connectEdge("2", "output", "3", "x_i");
 
   // Select the sum node as the derivative target
-  setDerivativeTarget("sum_1");
+  setDerivativeTarget("s_1");
 
   // Remove the sum node
   removeEdge(["reactflow__edge-1output-3x_i", "reactflow__edge-2output-3x_i"]);
@@ -281,7 +281,7 @@ it("derivative target name should update when the node name is updated", () => {
   connectEdge("2", "output", "3", "x_i");
 
   // Select the sum node as the derivative target
-  setDerivativeTarget("sum_1");
+  setDerivativeTarget("s_1");
 
   // Update the node name of the sum node
   setNodeName("3", "s_1");
@@ -318,7 +318,7 @@ it("outputs should change when derivative mode/target is changed", () => {
   connectEdge("4", "output", "5", "b");
 
   // Select the multiply node as the derivative target
-  setDerivativeTarget("multiply_1");
+  setDerivativeTarget("m_1");
 
   // Check the output values
   expect(getOutputItemValue("3", "VALUE")).toBe("3");
@@ -327,19 +327,19 @@ it("outputs should change when derivative mode/target is changed", () => {
 
   // Check the derivative labels
   expect(getOutputItemLabelText("1", "DERIVATIVE")).toBe(
-    "\\displaystyle \\frac{\\partial{multiply_1}}{\\partial{v_1}}=",
+    "\\displaystyle \\frac{\\partial{m_1}}{\\partial{v_1}}=",
   );
   expect(getOutputItemLabelText("2", "DERIVATIVE")).toBe(
-    "\\displaystyle \\frac{\\partial{multiply_1}}{\\partial{v_2}}=",
+    "\\displaystyle \\frac{\\partial{m_1}}{\\partial{v_2}}=",
   );
   expect(getOutputItemLabelText("3", "DERIVATIVE")).toBe(
-    "\\displaystyle \\frac{\\partial{multiply_1}}{\\partial{add_1}}=",
+    "\\displaystyle \\frac{\\partial{m_1}}{\\partial{a_1}}=",
   );
   expect(getOutputItemLabelText("4", "DERIVATIVE")).toBe(
-    "\\displaystyle \\frac{\\partial{multiply_1}}{\\partial{add_2}}=",
+    "\\displaystyle \\frac{\\partial{m_1}}{\\partial{a_2}}=",
   );
   expect(getOutputItemLabelText("5", "DERIVATIVE")).toBe(
-    "\\displaystyle \\frac{\\partial{multiply_1}}{\\partial{multiply_1}}=",
+    "\\displaystyle \\frac{\\partial{m_1}}{\\partial{m_1}}=",
   );
 
   // Check the derivative values
@@ -359,19 +359,19 @@ it("outputs should change when derivative mode/target is changed", () => {
 
   // Check the derivative labels
   expect(getOutputItemLabelText("1", "DERIVATIVE")).toBe(
-    "\\displaystyle \\frac{\\partial{v_1}}{\\partial{multiply_1}}=",
+    "\\displaystyle \\frac{\\partial{v_1}}{\\partial{m_1}}=",
   );
   expect(getOutputItemLabelText("2", "DERIVATIVE")).toBe(
-    "\\displaystyle \\frac{\\partial{v_2}}{\\partial{multiply_1}}=",
+    "\\displaystyle \\frac{\\partial{v_2}}{\\partial{m_1}}=",
   );
   expect(getOutputItemLabelText("3", "DERIVATIVE")).toBe(
-    "\\displaystyle \\frac{\\partial{add_1}}{\\partial{multiply_1}}=",
+    "\\displaystyle \\frac{\\partial{a_1}}{\\partial{m_1}}=",
   );
   expect(getOutputItemLabelText("4", "DERIVATIVE")).toBe(
-    "\\displaystyle \\frac{\\partial{add_2}}{\\partial{multiply_1}}=",
+    "\\displaystyle \\frac{\\partial{a_2}}{\\partial{m_1}}=",
   );
   expect(getOutputItemLabelText("5", "DERIVATIVE")).toBe(
-    "\\displaystyle \\frac{\\partial{multiply_1}}{\\partial{multiply_1}}=",
+    "\\displaystyle \\frac{\\partial{m_1}}{\\partial{m_1}}=",
   );
 
   // Check the derivative values
@@ -397,13 +397,13 @@ it("outputs should change when derivative mode/target is changed", () => {
     "\\displaystyle \\frac{\\partial{v_2}}{\\partial{v_2}}=",
   );
   expect(getOutputItemLabelText("3", "DERIVATIVE")).toBe(
-    "\\displaystyle \\frac{\\partial{add_1}}{\\partial{v_2}}=",
+    "\\displaystyle \\frac{\\partial{a_1}}{\\partial{v_2}}=",
   );
   expect(getOutputItemLabelText("4", "DERIVATIVE")).toBe(
-    "\\displaystyle \\frac{\\partial{add_2}}{\\partial{v_2}}=",
+    "\\displaystyle \\frac{\\partial{a_2}}{\\partial{v_2}}=",
   );
   expect(getOutputItemLabelText("5", "DERIVATIVE")).toBe(
-    "\\displaystyle \\frac{\\partial{multiply_1}}{\\partial{v_2}}=",
+    "\\displaystyle \\frac{\\partial{m_1}}{\\partial{v_2}}=",
   );
 
   // Check the derivative values

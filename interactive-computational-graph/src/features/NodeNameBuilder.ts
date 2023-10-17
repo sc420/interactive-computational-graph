@@ -24,7 +24,7 @@ class NodeNameBuilder {
       if (featureOperation === null) {
         throw new Error("Should provide operation for operation type");
       }
-      prefix = featureOperation.id;
+      prefix = featureOperation.namePrefix;
       const operationId = featureNodeType.operationId;
       const foundCounter = this.operationIdToCounter.get(operationId);
       counter = foundCounter === undefined ? 1 : foundCounter;

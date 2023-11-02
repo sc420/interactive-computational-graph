@@ -17,6 +17,7 @@ interface FeaturePanelProps {
   explainDerivativeData: ExplainDerivativeData[];
   onAddNode: (featureNodeType: FeatureNodeType) => void;
   onAddOperation: () => void;
+  onEditOperation: (featureNodeType: FeatureNodeType) => void;
   onClearSelection: () => void;
   onSelectNode: (nodeId: string) => void;
 }
@@ -29,6 +30,7 @@ const FeaturePanel: FunctionComponent<FeaturePanelProps> = ({
   explainDerivativeData,
   onAddNode,
   onAddOperation,
+  onEditOperation,
   onClearSelection,
   onSelectNode,
 }) => {
@@ -40,6 +42,7 @@ const FeaturePanel: FunctionComponent<FeaturePanelProps> = ({
             featureOperations={featureOperations}
             onAddNode={onAddNode}
             onAddOperation={onAddOperation}
+            onEditOperation={onEditOperation}
           />
         );
       case "view-nodes":
@@ -60,6 +63,7 @@ const FeaturePanel: FunctionComponent<FeaturePanelProps> = ({
             featureOperations={featureOperations}
             onAddNode={onAddNode}
             onAddOperation={onAddOperation}
+            onEditOperation={onEditOperation}
           />
         );
       case "examples":

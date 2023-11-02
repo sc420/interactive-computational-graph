@@ -280,6 +280,14 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     setNextOperationId((nextOperationId) => nextOperationId + 1);
   }, [nextOperationId]);
 
+  const handleEditOperation = useCallback(
+    (featureNodeType: FeatureNodeType) => {
+      // TODO(sc420): Open edit operation modal
+      console.log(featureNodeType);
+    },
+    [],
+  );
+
   const handleClearSelection = useCallback(() => {
     setReactFlowNodes((nodes) => deselectAllNodes(nodes));
   }, []);
@@ -586,6 +594,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
               explainDerivativeData={explainDerivativeData}
               onAddNode={handleAddNode}
               onAddOperation={handleAddOperation}
+              onEditOperation={handleEditOperation}
               onClearSelection={handleClearSelection}
               onSelectNode={handleSelectNode}
             />

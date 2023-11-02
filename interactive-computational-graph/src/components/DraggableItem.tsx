@@ -1,5 +1,7 @@
 import DragHandleIcon from "@mui/icons-material/DragHandle";
+import EditIcon from "@mui/icons-material/Edit";
 import {
+  Icon,
   IconButton,
   ListItem,
   ListItemButton,
@@ -11,13 +13,17 @@ import type FeatureNodeType from "../features/FeatureNodeType";
 interface DraggableItemProps {
   featureNodeType: FeatureNodeType;
   text: string;
-  onClick: (featureNodeType: FeatureNodeType) => void;
+  isEditing: boolean;
+  onClickItem: (featureNodeType: FeatureNodeType) => void;
+  onClickEditIcon: (featureNodeType: FeatureNodeType) => void;
 }
 
 const DraggableItem: FunctionComponent<DraggableItemProps> = ({
   featureNodeType,
   text,
-  onClick,
+  isEditing,
+  onClickItem,
+  onClickEditIcon,
 }) => {
   const handleDragStart = useCallback(
     (event: DragEvent): void => {
@@ -34,9 +40,21 @@ const DraggableItem: FunctionComponent<DraggableItemProps> = ({
     <ListItem
       disablePadding
       secondaryAction={
-        <IconButton edge="end">
-          <DragHandleIcon />
-        </IconButton>
+        isEditing ? (
+          <IconButton
+            edge="end"
+            size="small"
+            onClick={() => {
+              onClickEditIcon(featureNodeType);
+            }}
+          >
+            <EditIcon />
+          </IconButton>
+        ) : (
+          <Icon color="action">
+            <DragHandleIcon />
+          </Icon>
+        )
       }
     >
       <ListItemButton
@@ -46,7 +64,7 @@ const DraggableItem: FunctionComponent<DraggableItemProps> = ({
           handleDragStart(event);
         }}
         onClick={() => {
-          onClick(featureNodeType);
+          onClickItem(featureNodeType);
         }}
       >
         <ListItemText primary={text} />

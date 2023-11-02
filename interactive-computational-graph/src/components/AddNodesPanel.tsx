@@ -19,12 +19,14 @@ import DraggableItem from "./DraggableItem";
 interface AddNodesPanelProps {
   onAddNode: (featureNodeType: FeatureNodeType) => void;
   onAddOperation: () => void;
+  onEditOperation: (featureNodeType: FeatureNodeType) => void;
   featureOperations: FeatureOperation[];
 }
 
 const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
   onAddNode,
   onAddOperation,
+  onEditOperation,
   featureOperations,
 }) => {
   const simpleOperations = featureOperations.filter(
@@ -66,12 +68,16 @@ const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
             <DraggableItem
               featureNodeType={{ nodeType: "CONSTANT" }}
               text="Constant"
-              onClick={onAddNode}
+              isEditing={false}
+              onClickItem={onAddNode}
+              onClickEditIcon={onEditOperation}
             />
             <DraggableItem
               featureNodeType={{ nodeType: "VARIABLE" }}
               text="Variable"
-              onClick={onAddNode}
+              isEditing={false}
+              onClickItem={onAddNode}
+              onClickEditIcon={onEditOperation}
             />
           </List>
         </AccordionDetails>
@@ -96,7 +102,9 @@ const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
                   operationId: operation.id,
                 }}
                 text={operation.text}
-                onClick={onAddNode}
+                isEditing={false}
+                onClickItem={onAddNode}
+                onClickEditIcon={onEditOperation}
               />
             ))}
           </List>
@@ -122,7 +130,9 @@ const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
                   operationId: operation.id,
                 }}
                 text={operation.text}
-                onClick={onAddNode}
+                isEditing={true}
+                onClickItem={onAddNode}
+                onClickEditIcon={onEditOperation}
               />
             ))}
             {/* Add operation */}

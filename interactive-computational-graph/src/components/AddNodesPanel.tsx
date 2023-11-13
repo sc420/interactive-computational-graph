@@ -1,6 +1,4 @@
 import AddIcon from "@mui/icons-material/Add";
-import CancelIcon from "@mui/icons-material/Cancel";
-import EditIcon from "@mui/icons-material/Edit";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
   Accordion,
@@ -12,7 +10,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { useState, type FunctionComponent, useCallback } from "react";
+import { type FunctionComponent } from "react";
 import type FeatureNodeType from "../features/FeatureNodeType";
 import type FeatureOperation from "../features/FeatureOperation";
 import DraggableItem from "./DraggableItem";
@@ -37,12 +35,6 @@ const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
     (operation) => operation.type === "CUSTOM",
   );
 
-  const [isEditMode, setIsEditMode] = useState(false);
-
-  const handleToggleEditMode = useCallback(() => {
-    setIsEditMode(!isEditMode);
-  }, [isEditMode]);
-
   return (
     <>
       {/* Header and toolbar */}
@@ -54,12 +46,6 @@ const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
         py={0.5}
       >
         <Typography variant="subtitle1">Add Nodes</Typography>
-        <Button
-          startIcon={isEditMode ? <CancelIcon /> : <EditIcon />}
-          onClick={handleToggleEditMode}
-        >
-          {isEditMode ? "Cancel" : "Edit"}
-        </Button>
       </Stack>
 
       {/* Value nodes */}
@@ -76,14 +62,12 @@ const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
             <DraggableItem
               featureNodeType={{ nodeType: "CONSTANT" }}
               text="Constant"
-              isEditing={isEditMode}
               onClickItem={onAddNode}
               onClickEditIcon={onEditOperation}
             />
             <DraggableItem
               featureNodeType={{ nodeType: "VARIABLE" }}
               text="Variable"
-              isEditing={isEditMode}
               onClickItem={onAddNode}
               onClickEditIcon={onEditOperation}
             />
@@ -110,7 +94,6 @@ const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
                   operationId: operation.id,
                 }}
                 text={operation.text}
-                isEditing={isEditMode}
                 onClickItem={onAddNode}
                 onClickEditIcon={onEditOperation}
               />
@@ -138,7 +121,6 @@ const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
                   operationId: operation.id,
                 }}
                 text={operation.text}
-                isEditing={isEditMode}
                 onClickItem={onAddNode}
                 onClickEditIcon={onEditOperation}
               />

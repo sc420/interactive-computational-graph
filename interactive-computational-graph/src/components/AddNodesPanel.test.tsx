@@ -6,7 +6,7 @@ import type FeatureNodeType from "../features/FeatureNodeType";
 import type FeatureOperation from "../features/FeatureOperation";
 import AddNodesPanel from "./AddNodesPanel";
 
-test("should trigger event when clicking item in view mode", () => {
+test("should trigger event when clicking item", () => {
   const featureOperations = getFeatureOperations();
   const handleAddNode = jest.fn();
   const handleAddOperation = jest.fn();
@@ -61,9 +61,6 @@ test("should trigger event when clicking edit icon button", () => {
       onEditOperation={handleEditOperation}
     />,
   );
-
-  const editButton = screen.getByText("Edit");
-  fireEvent.click(editButton);
 
   const editAddButton = screen.getByLabelText("Edit Add");
   fireEvent.click(editAddButton);

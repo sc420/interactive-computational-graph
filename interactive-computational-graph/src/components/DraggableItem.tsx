@@ -47,6 +47,7 @@ const DraggableItem: FunctionComponent<DraggableItemProps> = ({
             onClick={() => {
               onClickEditIcon(featureNodeType);
             }}
+            aria-label={`Edit ${text}`}
           >
             <EditIcon />
           </IconButton>

@@ -18,17 +18,17 @@ import type FeatureOperation from "../features/FeatureOperation";
 import DraggableItem from "./DraggableItem";
 
 interface AddNodesPanelProps {
+  featureOperations: FeatureOperation[];
   onAddNode: (featureNodeType: FeatureNodeType) => void;
   onAddOperation: () => void;
   onEditOperation: (featureNodeType: FeatureNodeType) => void;
-  featureOperations: FeatureOperation[];
 }
 
 const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
+  featureOperations,
   onAddNode,
   onAddOperation,
   onEditOperation,
-  featureOperations,
 }) => {
   const simpleOperations = featureOperations.filter(
     (operation) => operation.type === "SIMPLE",
@@ -144,7 +144,11 @@ const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
               />
             ))}
             {/* Add operation */}
-            <ListItem onClick={onAddOperation}>
+            <ListItem
+              onClick={() => {
+                onAddOperation();
+              }}
+            >
               <Button startIcon={<AddIcon />}>Add Operation</Button>
             </ListItem>
           </List>

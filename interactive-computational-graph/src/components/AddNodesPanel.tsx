@@ -6,9 +6,9 @@ import {
   AccordionDetails,
   AccordionSummary,
   Button,
-  Grid,
   List,
   ListItem,
+  Stack,
   Typography,
 } from "@mui/material";
 import { type FunctionComponent } from "react";
@@ -39,20 +39,16 @@ const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
   return (
     <>
       {/* Header and toolbar */}
-      <Grid
+      <Stack
+        direction="row"
         alignItems="center"
-        container
         justifyContent="space-between"
         px={2}
         py={0.5}
       >
-        <Grid item>
-          <Typography variant="subtitle1">Add Nodes</Typography>
-        </Grid>
-        <Grid item>
-          <Button startIcon={<EditIcon />}>Edit</Button>
-        </Grid>
-      </Grid>
+        <Typography variant="subtitle1">Add Nodes</Typography>
+        <Button startIcon={<EditIcon />}>Edit</Button>
+      </Stack>
 
       {/* Value nodes */}
       <Accordion defaultExpanded disableGutters square sx={{ width: "100%" }}>

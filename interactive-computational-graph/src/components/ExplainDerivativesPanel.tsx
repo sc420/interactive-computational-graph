@@ -6,9 +6,9 @@ import {
   AccordionSummary,
   Alert,
   Button,
-  Grid,
   List,
   Snackbar,
+  Stack,
   Typography,
   type AlertColor,
 } from "@mui/material";
@@ -19,9 +19,9 @@ import {
   type SyntheticEvent,
 } from "react";
 import type ExplainDerivativeData from "../features/ExplainDerivativeData";
+import Katex from "../latex/Katex";
 import ExplainDerivativesListItem from "./ExplainDerivativeListItem";
 import ExplainDerivativesHint from "./ExplainDerivativesHint";
-import Katex from "../latex/Katex";
 
 interface ExplainDerivativesPanelProps {
   hasNodes: boolean;
@@ -78,22 +78,18 @@ const ExplainDerivativesPanel: FunctionComponent<
   return (
     <>
       {/* Header and toolbar */}
-      <Grid
+      <Stack
+        direction="row"
         alignItems="center"
-        container
         justifyContent="space-between"
         px={2}
         py={0.5}
       >
-        <Grid item>
-          <Typography variant="subtitle1">Explain Derivatives</Typography>
-        </Grid>
-        <Grid item>
-          <Button startIcon={<ClearIcon />} onClick={onClearSelection}>
-            Clear
-          </Button>
-        </Grid>
-      </Grid>
+        <Typography variant="subtitle1">Explain Derivatives</Typography>
+        <Button startIcon={<ClearIcon />} onClick={onClearSelection}>
+          Clear
+        </Button>
+      </Stack>
 
       {/* Hint */}
       <ExplainDerivativesHint

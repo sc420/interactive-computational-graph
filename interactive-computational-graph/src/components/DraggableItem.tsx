@@ -11,13 +11,15 @@ import type FeatureNodeType from "../features/FeatureNodeType";
 interface DraggableItemProps {
   featureNodeType: FeatureNodeType;
   text: string;
+  editable: boolean;
   onClickItem: (featureNodeType: FeatureNodeType) => void;
-  onClickEditIcon: (featureNodeType: FeatureNodeType) => void;
+  onClickEditIcon: ((featureNodeType: FeatureNodeType) => void) | null;
 }
 
 const DraggableItem: FunctionComponent<DraggableItemProps> = ({
   featureNodeType,
   text,
+  editable,
   onClickItem,
   onClickEditIcon,
 }) => {
@@ -32,20 +34,27 @@ const DraggableItem: FunctionComponent<DraggableItemProps> = ({
     [featureNodeType],
   );
 
+  const handleClickEditIcon = useCallback(() => {
+    if (onClickEditIcon === null) {
+      return;
+    }
+    onClickEditIcon(featureNodeType);
+  }, [featureNodeType, onClickEditIcon]);
+
   return (
     <ListItem
       disablePadding
       secondaryAction={
-        <IconButton
-          edge="end"
-          size="small"
-          onClick={() => {
-            onClickEditIcon(featureNodeType);
-          }}
-          aria-label={`Edit ${text}`}
-        >
-          <EditIcon />
-        </IconButton>
+        editable ? (
+          <IconButton
+            edge="end"
+            size="small"
+            onClick={handleClickEditIcon}
+            aria-label={`Edit ${text}`}
+          >
+            <EditIcon />
+          </IconButton>
+        ) : null
       }
     >
       <ListItemButton

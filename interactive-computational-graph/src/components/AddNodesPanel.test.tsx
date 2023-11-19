@@ -11,12 +11,14 @@ test("should trigger event when clicking item", () => {
   const handleAddNode = jest.fn();
   const handleAddOperation = jest.fn();
   const handleEditOperation = jest.fn();
+  const handleDeleteOperation = jest.fn();
   render(
     <AddNodesPanel
       featureOperations={featureOperations}
       onAddNode={handleAddNode}
       onAddOperation={handleAddOperation}
       onEditOperation={handleEditOperation}
+      onDeleteOperation={handleDeleteOperation}
     />,
   );
 
@@ -34,12 +36,14 @@ test("should trigger event when clicking add operation button", () => {
   const handleAddNode = jest.fn();
   const handleAddOperation = jest.fn();
   const handleEditOperation = jest.fn();
+  const handleDeleteOperation = jest.fn();
   render(
     <AddNodesPanel
       featureOperations={featureOperations}
       onAddNode={handleAddNode}
       onAddOperation={handleAddOperation}
       onEditOperation={handleEditOperation}
+      onDeleteOperation={handleDeleteOperation}
     />,
   );
 
@@ -48,29 +52,61 @@ test("should trigger event when clicking add operation button", () => {
   expect(handleAddOperation).toHaveBeenCalledWith();
 });
 
-test("should trigger event when clicking edit icon button", () => {
+test("should not trigger event when canceling editing operation", () => {
   const featureOperations = getFeatureOperations();
   const handleAddNode = jest.fn();
   const handleAddOperation = jest.fn();
   const handleEditOperation = jest.fn();
+  const handleDeleteOperation = jest.fn();
   render(
     <AddNodesPanel
       featureOperations={featureOperations}
       onAddNode={handleAddNode}
       onAddOperation={handleAddOperation}
       onEditOperation={handleEditOperation}
+      onDeleteOperation={handleDeleteOperation}
     />,
   );
 
   const editAddButton = screen.getByLabelText("Edit Add");
   fireEvent.click(editAddButton);
 
-  const expectedNodeType: FeatureNodeType = {
-    nodeType: "OPERATION",
-    operationId: "add",
-  };
-  expect(handleEditOperation).toHaveBeenCalledWith(expectedNodeType);
+  const closeButton = screen.getByLabelText("close");
+  fireEvent.click(closeButton);
+
+  expect(handleAddNode).not.toHaveBeenCalled();
+  expect(handleAddOperation).not.toHaveBeenCalled();
+  expect(handleEditOperation).not.toHaveBeenCalled();
+  expect(handleDeleteOperation).not.toHaveBeenCalled();
 });
+
+test("should trigger event when clicking edit icon button", () => {
+  const featureOperations = getFeatureOperations();
+  const handleAddNode = jest.fn();
+  const handleAddOperation = jest.fn();
+  const handleEditOperation = jest.fn();
+  const handleDeleteOperation = jest.fn();
+  render(
+    <AddNodesPanel
+      featureOperations={featureOperations}
+      onAddNode={handleAddNode}
+      onAddOperation={handleAddOperation}
+      onEditOperation={handleEditOperation}
+      onDeleteOperation={handleDeleteOperation}
+    />,
+  );
+
+  const editAddButton = screen.getByLabelText("Edit Add");
+  fireEvent.click(editAddButton);
+
+  const saveButton = screen.getByText("Save");
+  fireEvent.click(saveButton);
+
+  const expectedUpdatedOperation = featureOperations[0];
+  expect(handleEditOperation).toHaveBeenCalledWith(expectedUpdatedOperation);
+});
+
+// TODO(sc420): Click delete button to test for handleDeleteOperation
 
 const getFeatureOperations = (): FeatureOperation[] => {
   return [

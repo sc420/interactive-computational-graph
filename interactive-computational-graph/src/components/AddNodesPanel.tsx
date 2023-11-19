@@ -10,16 +10,18 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { type FunctionComponent } from "react";
+import { useState, type FunctionComponent, useCallback } from "react";
 import type FeatureNodeType from "../features/FeatureNodeType";
 import type FeatureOperation from "../features/FeatureOperation";
 import DraggableItem from "./DraggableItem";
+import EditOperationDialog from "./EditOperationDialog";
 
 interface AddNodesPanelProps {
   featureOperations: FeatureOperation[];
   onAddNode: (featureNodeType: FeatureNodeType) => void;
   onAddOperation: () => void;
-  onEditOperation: (featureNodeType: FeatureNodeType) => void;
+  onEditOperation: (updatedOperation: FeatureOperation) => void;
+  onDeleteOperation: (operationId: string) => void;
 }
 
 const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
@@ -27,12 +29,45 @@ const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
   onAddNode,
   onAddOperation,
   onEditOperation,
+  onDeleteOperation,
 }) => {
   const simpleOperations = featureOperations.filter(
     (operation) => operation.type === "SIMPLE",
   );
   const customOperations = featureOperations.filter(
     (operation) => operation.type === "CUSTOM",
+  );
+
+  const [isEditDialogOpen, setEditDialogOpen] = useState(false);
+  const [editingOperation, setEditingOperation] =
+    useState<FeatureOperation | null>(null);
+
+  const handleOpenEditDialog = useCallback(
+    (featureOperation: FeatureOperation) => {
+      setEditingOperation(featureOperation);
+      setEditDialogOpen(true);
+    },
+    [],
+  );
+
+  const handleCloseEditDialog = useCallback(() => {
+    setEditDialogOpen(false);
+  }, []);
+
+  const handleSaveOperation = useCallback(
+    (updatedOperation: FeatureOperation) => {
+      setEditDialogOpen(false);
+      onEditOperation(updatedOperation);
+    },
+    [onEditOperation],
+  );
+
+  const handleDeleteOperation = useCallback(
+    (operationId: string) => {
+      setEditDialogOpen(false);
+      onDeleteOperation(operationId);
+    },
+    [onDeleteOperation],
   );
 
   return (
@@ -62,14 +97,16 @@ const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
             <DraggableItem
               featureNodeType={{ nodeType: "CONSTANT" }}
               text="Constant"
+              editable={false}
               onClickItem={onAddNode}
-              onClickEditIcon={onEditOperation}
+              onClickEditIcon={null}
             />
             <DraggableItem
               featureNodeType={{ nodeType: "VARIABLE" }}
               text="Variable"
+              editable={false}
               onClickItem={onAddNode}
-              onClickEditIcon={onEditOperation}
+              onClickEditIcon={null}
             />
           </List>
         </AccordionDetails>
@@ -94,8 +131,11 @@ const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
                   operationId: operation.id,
                 }}
                 text={operation.text}
+                editable
                 onClickItem={onAddNode}
-                onClickEditIcon={onEditOperation}
+                onClickEditIcon={() => {
+                  handleOpenEditDialog(operation);
+                }}
               />
             ))}
           </List>
@@ -121,8 +161,11 @@ const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
                   operationId: operation.id,
                 }}
                 text={operation.text}
+                editable
                 onClickItem={onAddNode}
-                onClickEditIcon={onEditOperation}
+                onClickEditIcon={() => {
+                  handleOpenEditDialog(operation);
+                }}
               />
             ))}
             {/* Add operation */}
@@ -136,6 +179,17 @@ const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
           </List>
         </AccordionDetails>
       </Accordion>
+
+      {/* Operation editing dialog */}
+      {editingOperation !== null && (
+        <EditOperationDialog
+          open={isEditDialogOpen}
+          readOperation={editingOperation}
+          onCancel={handleCloseEditDialog}
+          onSave={handleSaveOperation}
+          onDelete={handleDeleteOperation}
+        />
+      )}
     </>
   );
 };

@@ -281,12 +281,26 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
   }, [nextOperationId]);
 
   const handleEditOperation = useCallback(
-    (featureNodeType: FeatureNodeType) => {
-      // TODO(sc420): Open edit operation modal
-      console.log(featureNodeType);
+    (updatedOperation: FeatureOperation) => {
+      setFeatureOperations((featureOperations) => {
+        return featureOperations.map((featureOperation) => {
+          if (featureOperation.id !== updatedOperation.id) {
+            return featureOperation;
+          }
+          return updatedOperation;
+        });
+      });
     },
     [],
   );
+
+  const handleDeleteOperation = useCallback((operationId: string) => {
+    setFeatureOperations((featureOperations) => {
+      return featureOperations.filter((featureOperation) => {
+        return featureOperation.id !== operationId;
+      });
+    });
+  }, []);
 
   const handleClearSelection = useCallback(() => {
     setReactFlowNodes((nodes) => deselectAllNodes(nodes));
@@ -595,6 +609,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
               onAddNode={handleAddNode}
               onAddOperation={handleAddOperation}
               onEditOperation={handleEditOperation}
+              onDeleteOperation={handleDeleteOperation}
               onClearSelection={handleClearSelection}
               onSelectNode={handleSelectNode}
             />

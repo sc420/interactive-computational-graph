@@ -181,7 +181,7 @@ const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
       </Accordion>
 
       {/* Operation editing dialog */}
-      {editingOperation !== null && (
+      {editingOperation !== null && isEditDialogOpen && (
         <EditOperationDialog
           open={isEditDialogOpen}
           readOperation={editingOperation}

@@ -17,6 +17,8 @@ import {
   type SyntheticEvent,
 } from "react";
 import type FeatureOperation from "../features/FeatureOperation";
+import EditOperationBasicTab from "./EditOperationBasicTab";
+import EditOperationDialogMenu from "./EditOperationDialogMenu";
 import EditOperationTabPanel from "./EditOperationTabPanel";
 
 interface EditOperationDialogProps {
@@ -35,6 +37,9 @@ const EditOperationDialog: FunctionComponent<EditOperationDialogProps> = ({
   onDelete,
 }) => {
   const [activeTabIndex, setActiveTabIndex] = useState(0);
+  const [editingOperation, setEditingOperation] =
+    useState<FeatureOperation>(readOperation);
+  const [hasValidationError, setValidationError] = useState(false);
 
   const getTabProps = useCallback((index: number): Record<string, string> => {
     return {
@@ -48,9 +53,12 @@ const EditOperationDialog: FunctionComponent<EditOperationDialogProps> = ({
   }, [onCancel]);
 
   const handleSave = useCallback(() => {
-    // TODO(sc420): Validate and build updated operation
-    onSave(readOperation);
-  }, [onSave, readOperation]);
+    onSave(editingOperation);
+  }, [editingOperation, onSave]);
+
+  const handleDelete = useCallback(() => {
+    onDelete(editingOperation.id);
+  }, [onDelete, editingOperation.id]);
 
   const handleTabChange = useCallback(
     (event: SyntheticEvent, newIndex: number): void => {
@@ -59,11 +67,32 @@ const EditOperationDialog: FunctionComponent<EditOperationDialogProps> = ({
     [],
   );
 
+  const handleBasicChangeValues = useCallback(
+    (name: string, prefix: string, helpText: string) => {
+      setEditingOperation((operation) => {
+        const newOperation: FeatureOperation = {
+          ...operation,
+          text: name,
+          namePrefix: prefix,
+          helpText,
+        };
+
+        return newOperation;
+      });
+    },
+    [],
+  );
+
+  const handleValidate = useCallback((hasError: boolean) => {
+    setValidationError(hasError);
+  }, []);
+
   return (
     <Dialog fullScreen open={open} onClose={handleClose}>
-      {/* Title */}
+      {/* Toolbar */}
       <AppBar sx={{ position: "relative" }}>
         <Toolbar>
+          {/* Close button */}
           <IconButton
             edge="start"
             color="inherit"
@@ -72,18 +101,30 @@ const EditOperationDialog: FunctionComponent<EditOperationDialogProps> = ({
           >
             <CloseIcon />
           </IconButton>
+
+          {/* Title */}
           <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-            Edit Operation: {readOperation.text}
+            Edit Operation: {editingOperation.text}
           </Typography>
-          <Button autoFocus color="inherit" onClick={handleSave}>
+
+          {/* Menu */}
+          <EditOperationDialogMenu onDelete={handleDelete} />
+
+          {/* Save */}
+          <Button
+            autoFocus
+            disabled={hasValidationError}
+            color="inherit"
+            onClick={handleSave}
+          >
             Save
           </Button>
         </Toolbar>
       </AppBar>
 
       {/* Tabs */}
-      <Box sx={{ width: "100%" }}>
-        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+      <Box>
+        <Box borderBottom={1} borderColor="divider">
           <Tabs
             value={activeTabIndex}
             onChange={handleTabChange}
@@ -95,15 +136,29 @@ const EditOperationDialog: FunctionComponent<EditOperationDialogProps> = ({
             <Tab label="DF/DX Code" {...getTabProps(3)} />
           </Tabs>
         </Box>
+
+        {/* Basic */}
         <EditOperationTabPanel index={0} value={activeTabIndex}>
-          Basic
+          <EditOperationBasicTab
+            name={readOperation.text}
+            prefix={readOperation.namePrefix}
+            helpText={readOperation.helpText}
+            onChangeValues={handleBasicChangeValues}
+            onValidate={handleValidate}
+          />
         </EditOperationTabPanel>
+
+        {/* Input ports */}
         <EditOperationTabPanel index={1} value={activeTabIndex}>
           Input Ports
         </EditOperationTabPanel>
+
+        {/* f code */}
         <EditOperationTabPanel index={2} value={activeTabIndex}>
           F Code
         </EditOperationTabPanel>
+
+        {/* df/dx code */}
         <EditOperationTabPanel index={3} value={activeTabIndex}>
           DF/DX Code
         </EditOperationTabPanel>

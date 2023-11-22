@@ -21,7 +21,7 @@ const EditOperationDialog: FunctionComponent<EditOperationDialogProps> = ({
       aria-labelledby={`edit-operation-tab-${index}`}
       {...other}
     >
-      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+      <Box sx={{ p: 3 }}>{children}</Box>
     </div>
   );
 };

@@ -1,10 +1,17 @@
+import DeleteIcon from "@mui/icons-material/Delete";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { IconButton, Menu, MenuItem } from "@mui/material";
 import {
+  IconButton,
+  ListItemIcon,
+  ListItemText,
+  Menu,
+  MenuItem,
+} from "@mui/material";
+import {
+  useCallback,
   useState,
   type FunctionComponent,
   type MouseEvent,
-  useCallback,
 } from "react";
 
 interface EditOperationDialogMenuProps {
@@ -56,7 +63,10 @@ const EditOperationDialogMenu: FunctionComponent<
             onDelete();
           }}
         >
-          Delete Operation
+          <ListItemIcon>
+            <DeleteIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>Delete Operation</ListItemText>
         </MenuItem>
       </Menu>
     </>

@@ -3,7 +3,7 @@ import CancelIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
-import { Button, Container } from "@mui/material";
+import { Alert, Button, Container, Stack } from "@mui/material";
 import {
   DataGrid,
   GridActionsCellItem,
@@ -11,7 +11,6 @@ import {
   GridToolbarContainer,
   type GridColDef,
   type GridEventListener,
-  type GridPreProcessEditCellProps,
   type GridRowId,
   type GridRowModel,
   type GridRowModesModel,
@@ -89,7 +88,7 @@ const EditOperationInputPortsTab: FunctionComponent<
     (inputPort: Port): GridRowModelProps => {
       return {
         id: randomId(),
-        portId: inputPort.getId(),
+        portId: inputPort.getId().trim(),
         allowMultipleEdges: inputPort.isAllowMultiEdges() ? "Yes" : "No",
         isNew: false,
       };
@@ -97,59 +96,63 @@ const EditOperationInputPortsTab: FunctionComponent<
     [],
   );
 
-  const rowModelToInputPort = useCallback((rowModel: GridRowModel): Port => {
-    return new Port(rowModel.portId, rowModel.allowMultipleEdges === "Yes");
-  }, []);
-
   const initialRows = useMemo((): GridRowsProp<GridRowModelProps> => {
     return inputPorts.map((inputPort) => inputPortToRowModel(inputPort));
   }, [inputPortToRowModel, inputPorts]);
 
-  const [editingInputPorts, setEditingInputPorts] =
-    useState<Port[]>(inputPorts);
   const [isEditingRow, setEditingRow] = useState(false);
+  const [errorMessages, setErrorMessages] = useState<string[]>([]);
 
   const [rows, setRows] =
     useState<GridRowsProp<GridRowModelProps>>(initialRows);
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
 
+  const rowsToInputPorts = useCallback((): Port[] => {
+    return rows.map((row) => {
+      return new Port(row.portId.trim(), row.allowMultipleEdges === "Yes");
+    });
+  }, [rows]);
+
+  const updateStatesOnStartEdit = useCallback(() => {
+    setEditingRow(true);
+  }, []);
+
+  const updateStatesOnStopEdit = useCallback(() => {
+    setEditingRow(false);
+  }, []);
+
   const handleRowEditStart: GridEventListener<"rowEditStart"> = (
     params,
     event,
   ) => {
-    setEditingRow(true);
+    updateStatesOnStartEdit();
   };
 
   const handleRowEditStop: GridEventListener<"rowEditStop"> = (
     params,
     event,
   ) => {
-    setEditingRow(false);
+    updateStatesOnStopEdit();
   };
 
   const handleEditClick = (id: GridRowId) => () => {
-    setEditingRow(true);
+    updateStatesOnStartEdit();
 
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
   };
 
   const handleSaveClick = (id: GridRowId) => () => {
-    setEditingRow(false);
+    updateStatesOnStopEdit();
 
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
   };
 
-  const handleDeleteClick = (id: GridRowId, row: GridRowModel) => () => {
-    // Delete the old input port
-    setEditingInputPorts((inputPorts) =>
-      inputPorts.filter((inputPort) => inputPort.getId() !== row.portId),
-    );
-
+  const handleDeleteClick = (id: GridRowId) => () => {
     setRows(rows.filter((row) => row.id !== id));
   };
 
   const handleCancelClick = (id: GridRowId) => () => {
-    setEditingRow(false);
+    updateStatesOnStopEdit();
 
     setRowModesModel({
       ...rowModesModel,
@@ -171,23 +174,8 @@ const EditOperationInputPortsTab: FunctionComponent<
 
   const processRowUpdate = (
     newRow: GridRowModel<GridRowModelProps>,
-    oldRow: GridRowModel<GridRowModelProps>,
   ): GridRowModel<GridRowModelProps> => {
     const updatedRow = { ...newRow, isNew: false };
-
-    // Update the old input port or insert new input port
-    setEditingInputPorts((inputPorts) => {
-      const oldInputPortIndex = inputPorts.findIndex(
-        (inputPort) => inputPort.getId() === oldRow.portId,
-      );
-      const newPort = rowModelToInputPort(newRow);
-      if (oldInputPortIndex >= 0) {
-        inputPorts[oldInputPortIndex] = newPort;
-      } else {
-        inputPorts = inputPorts.concat(newPort);
-      }
-      return inputPorts;
-    });
 
     setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
     return updatedRow;
@@ -200,12 +188,6 @@ const EditOperationInputPortsTab: FunctionComponent<
       description: "Port ID used in the code",
       width: 200,
       editable: true,
-      preProcessEditCellProps: (params: GridPreProcessEditCellProps) => {
-        const hasError = params.props.value.trim() === "";
-        // TODO(sc420): Also check for duplicate portId
-        // TODO(sc420): Show error message in snackbar
-        return { ...params.props, error: hasError };
-      },
     },
     {
       field: "allowMultipleEdges",
@@ -222,7 +204,7 @@ const EditOperationInputPortsTab: FunctionComponent<
       headerName: "Actions",
       width: 100,
       cellClassName: "actions",
-      getActions: ({ id, row }) => {
+      getActions: ({ id }) => {
         const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
 
         if (isInEditMode) {
@@ -260,7 +242,7 @@ const EditOperationInputPortsTab: FunctionComponent<
             key="delete"
             icon={<DeleteIcon />}
             label="Delete"
-            onClick={handleDeleteClick(id, row)}
+            onClick={handleDeleteClick(id)}
             color="inherit"
           />,
         ];
@@ -268,37 +250,93 @@ const EditOperationInputPortsTab: FunctionComponent<
     },
   ];
 
+  const getEmptyRowsErrorMessages = useCallback((): string[] => {
+    const errorMessages: string[] = [];
+    if (rows.length === 0) {
+      errorMessages.push("Please add at least one input port");
+    }
+    return errorMessages;
+  }, [rows.length]);
+
+  const getInvalidPortIdErrorMessages = useCallback((): string[] => {
+    const errorMessages: string[] = [];
+    if (rows.some((row) => !row.isNew && row.portId.trim() === "")) {
+      errorMessages.push("Please enter non-empty input port");
+    }
+    return errorMessages;
+  }, [rows]);
+
+  const getDuplicatePortIdsErrorMessages = useCallback((): string[] => {
+    const errorMessages: string[] = [];
+    const portIdSet = new Set<string>();
+    rows.forEach((row) => {
+      const portId = row.portId.trim();
+      if (portIdSet.has(portId)) {
+        errorMessages.push(`Duplicate port ID ${portId}`);
+      } else {
+        portIdSet.add(portId);
+      }
+    });
+    return errorMessages;
+  }, [rows]);
+
   // Validate the values when input port changes
   useEffect(() => {
-    // TODO(sc420): Validate input ports (must have at least one row, must have port ID, no duplicates)
+    const errorMessages: string[] = [];
+    errorMessages.push(...getEmptyRowsErrorMessages());
+    errorMessages.push(...getInvalidPortIdErrorMessages());
+    errorMessages.push(...getDuplicatePortIdsErrorMessages());
 
-    const hasError = isEditingRow;
+    setErrorMessages(errorMessages);
+
+    const hasError = isEditingRow || errorMessages.length > 0;
 
     onValidate(hasError);
 
+    if (hasError) {
+      return;
+    }
+
+    const editingInputPorts = rowsToInputPorts();
     onChangeValues(editingInputPorts);
-  }, [editingInputPorts, isEditingRow, onChangeValues, onValidate]);
+  }, [
+    getDuplicatePortIdsErrorMessages,
+    getEmptyRowsErrorMessages,
+    getInvalidPortIdErrorMessages,
+    isEditingRow,
+    onChangeValues,
+    onValidate,
+    rowsToInputPorts,
+  ]);
 
   return (
     isVisible && (
       <Container sx={{ height: "400px" }}>
-        <DataGrid
-          rows={rows}
-          columns={columns}
-          editMode="row"
-          rowModesModel={rowModesModel}
-          onRowModesModelChange={handleRowModesModelChange}
-          onRowEditStart={handleRowEditStart}
-          onRowEditStop={handleRowEditStop}
-          processRowUpdate={processRowUpdate}
-          slots={{
-            toolbar: EditToolbar,
-          }}
-          slotProps={{
-            toolbar: { setRows, setRowModesModel },
-          }}
-          disableColumnMenu
-        />
+        <Stack spacing={1}>
+          <DataGrid
+            rows={rows}
+            columns={columns}
+            editMode="row"
+            rowModesModel={rowModesModel}
+            onRowModesModelChange={handleRowModesModelChange}
+            onRowEditStart={handleRowEditStart}
+            onRowEditStop={handleRowEditStop}
+            processRowUpdate={processRowUpdate}
+            slots={{
+              toolbar: EditToolbar,
+            }}
+            slotProps={{
+              toolbar: { setRows, setRowModesModel },
+            }}
+            disableColumnMenu
+          />
+          {!isEditingRow &&
+            errorMessages.map((errorMessage, index) => (
+              <Alert key={index} severity="error" sx={{ width: "100%" }}>
+                {errorMessage}
+              </Alert>
+            ))}
+        </Stack>
       </Container>
     )
   );

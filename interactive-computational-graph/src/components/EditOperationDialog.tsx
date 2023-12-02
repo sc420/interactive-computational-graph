@@ -16,9 +16,11 @@ import {
   type FunctionComponent,
   type SyntheticEvent,
 } from "react";
+import type Port from "../core/Port";
 import type FeatureOperation from "../features/FeatureOperation";
 import EditOperationBasicTab from "./EditOperationBasicTab";
 import EditOperationDialogMenu from "./EditOperationDialogMenu";
+import EditOperationInputPortsTab from "./EditOperationInputPortsTab";
 import EditOperationTabPanel from "./EditOperationTabPanel";
 
 interface EditOperationDialogProps {
@@ -82,6 +84,17 @@ const EditOperationDialog: FunctionComponent<EditOperationDialogProps> = ({
     },
     [],
   );
+
+  const handleInputPortsChangeValues = useCallback((inputPorts: Port[]) => {
+    setEditingOperation((operation) => {
+      const newOperation: FeatureOperation = {
+        ...operation,
+        inputPorts,
+      };
+
+      return newOperation;
+    });
+  }, []);
 
   const handleValidate = useCallback((hasError: boolean) => {
     setValidationError(hasError);
@@ -150,7 +163,12 @@ const EditOperationDialog: FunctionComponent<EditOperationDialogProps> = ({
 
         {/* Input ports */}
         <EditOperationTabPanel index={1} value={activeTabIndex}>
-          Input Ports
+          <EditOperationInputPortsTab
+            isVisible={activeTabIndex === 1}
+            inputPorts={readOperation.inputPorts}
+            onChangeValues={handleInputPortsChangeValues}
+            onValidate={handleValidate}
+          />
         </EditOperationTabPanel>
 
         {/* f code */}

@@ -6,7 +6,12 @@ import {
   InputLabel,
   Stack,
 } from "@mui/material";
-import { useEffect, useState, type FunctionComponent } from "react";
+import {
+  useEffect,
+  useState,
+  type ChangeEvent,
+  type FunctionComponent,
+} from "react";
 
 interface EditOperationBasicTabProps {
   name: string;
@@ -60,7 +65,7 @@ const EditOperationBasicTab: FunctionComponent<EditOperationBasicTabProps> = ({
               id="edit-operation-name"
               defaultValue={name}
               aria-describedby="edit-operation-name-text"
-              onChange={(event) => {
+              onChange={(event: ChangeEvent<HTMLInputElement>) => {
                 setEditingName(event.target.value.trim());
               }}
             />
@@ -76,7 +81,7 @@ const EditOperationBasicTab: FunctionComponent<EditOperationBasicTabProps> = ({
               id="edit-operation-prefix"
               defaultValue={prefix}
               aria-describedby="edit-operation-prefix-text"
-              onChange={(event) => {
+              onChange={(event: ChangeEvent<HTMLInputElement>) => {
                 setEditingPrefix(event.target.value.trim());
               }}
             />
@@ -93,7 +98,7 @@ const EditOperationBasicTab: FunctionComponent<EditOperationBasicTabProps> = ({
             id="edit-operation-help-text"
             defaultValue={helpText}
             aria-describedby="edit-operation-help-text-text"
-            onChange={(event) => {
+            onChange={(event: ChangeEvent<HTMLInputElement>) => {
               setEditingHelpText(event.target.value.trim());
             }}
           />

@@ -1,11 +1,4 @@
-import {
-  Container,
-  FormControl,
-  FormHelperText,
-  Input,
-  InputLabel,
-  Stack,
-} from "@mui/material";
+import { Container, Stack, TextField } from "@mui/material";
 import {
   useEffect,
   useState,
@@ -54,58 +47,46 @@ const EditOperationBasicTab: FunctionComponent<EditOperationBasicTabProps> = ({
       <Stack direction="column" spacing={3}>
         <Stack direction="row" justifyContent="space-between" spacing={3}>
           {/* Name */}
-          <FormControl
+          <TextField
+            id="edit-operation-name"
+            inputProps={{
+              "data-testid": "nameInput",
+            }}
+            label="Name"
             required
-            error={nameHasError}
-            variant="standard"
+            defaultValue={name}
+            helperText="Display text on the side panel"
             fullWidth
-          >
-            <InputLabel htmlFor="edit-operation-name">Name</InputLabel>
-            <Input
-              id="edit-operation-name"
-              defaultValue={name}
-              aria-describedby="edit-operation-name-text"
-              onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                setEditingName(event.target.value.trim());
-              }}
-            />
-            <FormHelperText id="edit-operation-name-text">
-              Display text on the side panel
-            </FormHelperText>
-          </FormControl>
+            error={nameHasError}
+            onChange={(event: ChangeEvent<HTMLInputElement>) => {
+              setEditingName(event.target.value.trim());
+            }}
+          />
 
           {/* Prefix */}
-          <FormControl variant="standard" fullWidth>
-            <InputLabel htmlFor="edit-operation-prefix">Prefix</InputLabel>
-            <Input
-              id="edit-operation-prefix"
-              defaultValue={prefix}
-              aria-describedby="edit-operation-prefix-text"
-              onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                setEditingPrefix(event.target.value.trim());
-              }}
-            />
-            <FormHelperText id="edit-operation-prefix-text">
-              Name prefix (LaTeX) for new nodes
-            </FormHelperText>
-          </FormControl>
+          <TextField
+            id="edit-operation-prefix"
+            label="Prefix"
+            defaultValue={prefix}
+            helperText="Name prefix (LaTeX) for new nodes"
+            fullWidth
+            onChange={(event: ChangeEvent<HTMLInputElement>) => {
+              setEditingPrefix(event.target.value.trim());
+            }}
+          />
         </Stack>
 
         {/* Help text */}
-        <FormControl variant="standard" fullWidth>
-          <InputLabel htmlFor="edit-operation-help-text">Help Text</InputLabel>
-          <Input
-            id="edit-operation-help-text"
-            defaultValue={helpText}
-            aria-describedby="edit-operation-help-text-text"
-            onChange={(event: ChangeEvent<HTMLInputElement>) => {
-              setEditingHelpText(event.target.value.trim());
-            }}
-          />
-          <FormHelperText id="edit-operation-help-text-text">
-            Markdown shown when mouse hovers on the item on the side panel
-          </FormHelperText>
-        </FormControl>
+        <TextField
+          id="edit-operation-help-text"
+          label="Help Text"
+          defaultValue={helpText}
+          helperText="Markdown shown when mouse hovers on the item on the side panel"
+          fullWidth
+          onChange={(event: ChangeEvent<HTMLInputElement>) => {
+            setEditingHelpText(event.target.value.trim());
+          }}
+        />
       </Stack>
     </Container>
   );

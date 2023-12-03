@@ -173,12 +173,12 @@ const EditOperationDialog: FunctionComponent<EditOperationDialogProps> = ({
 
         {/* f code */}
         <EditOperationTabPanel index={2} value={activeTabIndex}>
-          F Code
+          F Code Contents
         </EditOperationTabPanel>
 
         {/* df/dx code */}
         <EditOperationTabPanel index={3} value={activeTabIndex}>
-          DF/DX Code
+          DF/DX Code Contents
         </EditOperationTabPanel>
       </Box>
     </Dialog>

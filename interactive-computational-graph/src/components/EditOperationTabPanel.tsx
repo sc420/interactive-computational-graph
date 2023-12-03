@@ -1,13 +1,13 @@
 import { Box } from "@mui/material";
 import { type FunctionComponent } from "react";
 
-interface EditOperationDialogProps {
+interface EditOperationTabPanelProps {
   index: number;
   value: number;
   children?: React.ReactNode;
 }
 
-const EditOperationDialog: FunctionComponent<EditOperationDialogProps> = ({
+const EditOperationTabPanel: FunctionComponent<EditOperationTabPanelProps> = ({
   index,
   value,
   children,
@@ -26,4 +26,4 @@ const EditOperationDialog: FunctionComponent<EditOperationDialogProps> = ({
   );
 };
 
-export default EditOperationDialog;
+export default EditOperationTabPanel;

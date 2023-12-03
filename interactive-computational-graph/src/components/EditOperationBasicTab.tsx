@@ -11,7 +11,7 @@ interface EditOperationBasicTabProps {
   prefix: string;
   helpText: string;
   onChangeValues: (name: string, prefix: string, helpText: string) => void;
-  onValidate: (hasError: boolean) => void;
+  onValidate: (isValid: boolean) => void;
 }
 
 const EditOperationBasicTab: FunctionComponent<EditOperationBasicTabProps> = ({
@@ -33,9 +33,10 @@ const EditOperationBasicTab: FunctionComponent<EditOperationBasicTabProps> = ({
     const isNameEmpty = editingName === "";
     setNameHasError(isNameEmpty);
 
-    onValidate(isNameEmpty);
+    const isValid = !isNameEmpty;
+    onValidate(isValid);
 
-    if (isNameEmpty) {
+    if (!isValid) {
       return;
     }
 

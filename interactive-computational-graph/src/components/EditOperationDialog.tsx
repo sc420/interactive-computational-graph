@@ -41,7 +41,7 @@ const EditOperationDialog: FunctionComponent<EditOperationDialogProps> = ({
   const [activeTabIndex, setActiveTabIndex] = useState(0);
   const [editingOperation, setEditingOperation] =
     useState<FeatureOperation>(readOperation);
-  const [hasValidationError, setValidationError] = useState(false);
+  const [isValid, setValid] = useState(true);
 
   const getTabProps = useCallback((index: number): Record<string, string> => {
     return {
@@ -96,8 +96,8 @@ const EditOperationDialog: FunctionComponent<EditOperationDialogProps> = ({
     });
   }, []);
 
-  const handleValidate = useCallback((hasError: boolean) => {
-    setValidationError(hasError);
+  const handleValidate = useCallback((isValid: boolean) => {
+    setValid(isValid);
   }, []);
 
   return (
@@ -126,7 +126,7 @@ const EditOperationDialog: FunctionComponent<EditOperationDialogProps> = ({
           {/* Save */}
           <Button
             autoFocus
-            disabled={hasValidationError}
+            disabled={!isValid}
             color="inherit"
             onClick={handleSave}
           >

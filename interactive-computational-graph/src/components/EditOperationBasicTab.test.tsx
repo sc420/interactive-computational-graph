@@ -23,7 +23,7 @@ test("validation should fail when name is empty", () => {
     "Prefix",
     "Help text",
   );
-  expect(handleValidate).lastCalledWith(true);
+  expect(handleValidate).lastCalledWith(false);
 });
 
 test("values should change when inputs are updated", () => {
@@ -63,6 +63,6 @@ test("values should change when inputs are updated", () => {
     "Prefix 2",
     "Help text 2",
   );
-  expect(handleValidate).toHaveBeenCalledWith(false);
-  expect(handleValidate).not.toHaveBeenCalledWith(true);
+  expect(handleValidate).toHaveBeenCalledWith(true);
+  expect(handleValidate).not.toHaveBeenCalledWith(false);
 });

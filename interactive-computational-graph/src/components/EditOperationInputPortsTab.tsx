@@ -50,7 +50,7 @@ interface EditOperationInputPortsTabProps {
   isVisible: boolean;
   inputPorts: Port[];
   onChangeValues: (inputPort: Port[]) => void;
-  onValidate: (hasError: boolean) => void;
+  onValidate: (isValid: boolean) => void;
 }
 
 const EditToolbar: FunctionComponent<EditToolbarProps> = ({
@@ -314,11 +314,11 @@ const EditOperationInputPortsTab: FunctionComponent<
 
     setErrorMessages(errorMessages);
 
-    const hasError = isEditingRow || errorMessages.length > 0;
+    const isValid = !isEditingRow && errorMessages.length === 0;
 
-    onValidate(hasError);
+    onValidate(isValid);
 
-    if (hasError) {
+    if (!isValid) {
       return;
     }
 

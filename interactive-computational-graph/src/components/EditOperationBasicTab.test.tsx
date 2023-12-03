@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import EditOperationBasicTab from "./EditOperationBasicTab";
 
-test("validation should fail when name is empty", () => {
+test("should be invalid when name is empty", () => {
   const handleChangeValues = jest.fn();
   const handleValidate = jest.fn();
   render(

@@ -66,6 +66,9 @@ const EditOperationBasicTab: FunctionComponent<EditOperationBasicTabProps> = ({
           {/* Prefix */}
           <TextField
             id="edit-operation-prefix"
+            inputProps={{
+              "data-testid": "prefixInput",
+            }}
             label="Prefix"
             defaultValue={prefix}
             helperText="Name prefix (LaTeX) for new nodes"
@@ -79,6 +82,9 @@ const EditOperationBasicTab: FunctionComponent<EditOperationBasicTabProps> = ({
         {/* Help text */}
         <TextField
           id="edit-operation-help-text"
+          inputProps={{
+            "data-testid": "helpTextInput",
+          }}
           label="Help Text"
           defaultValue={helpText}
           helperText="Markdown shown when mouse hovers on the item on the side panel"

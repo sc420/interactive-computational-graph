@@ -275,26 +275,33 @@ const EditOperationInputPortsTab: FunctionComponent<
     ],
   );
 
+  const getOldRows = useCallback(() => {
+    return rows.filter((row) => !row.isNew);
+  }, [rows]);
+
   const getEmptyRowsErrorMessages = useCallback((): string[] => {
+    const oldRows = getOldRows();
     const errorMessages: string[] = [];
-    if (rows.length === 0) {
+    if (oldRows.length === 0) {
       errorMessages.push("Please add at least one input port");
     }
     return errorMessages;
-  }, [rows.length]);
+  }, [getOldRows]);
 
   const getInvalidPortIdErrorMessages = useCallback((): string[] => {
+    const oldRows = getOldRows();
     const errorMessages: string[] = [];
-    if (rows.some((row) => !row.isNew && row.portId.trim() === "")) {
+    if (oldRows.some((row) => row.portId.trim() === "")) {
       errorMessages.push("Please enter non-empty input port");
     }
     return errorMessages;
-  }, [rows]);
+  }, [getOldRows]);
 
   const getDuplicatePortIdsErrorMessages = useCallback((): string[] => {
-    const errorMessages: string[] = [];
+    const oldRows = getOldRows();
     const portIdSet = new Set<string>();
-    rows.forEach((row) => {
+    const errorMessages: string[] = [];
+    oldRows.forEach((row) => {
       const portId = row.portId.trim();
       if (portIdSet.has(portId)) {
         errorMessages.push(`Duplicate port ID ${portId}`);
@@ -303,7 +310,7 @@ const EditOperationInputPortsTab: FunctionComponent<
       }
     });
     return errorMessages;
-  }, [rows]);
+  }, [getOldRows]);
 
   // Validate the values when input port changes
   useEffect(() => {

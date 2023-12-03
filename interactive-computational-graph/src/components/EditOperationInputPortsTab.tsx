@@ -57,7 +57,7 @@ const EditToolbar: FunctionComponent<EditToolbarProps> = ({
   setRows,
   setRowModesModel,
 }) => {
-  const handleClick = (): void => {
+  const handleClick = useCallback((): void => {
     const id = randomId();
     const newRow: GridRowModel<GridRowModelProps> = {
       id,
@@ -70,7 +70,7 @@ const EditToolbar: FunctionComponent<EditToolbarProps> = ({
       ...oldModel,
       [id]: { mode: GridRowModes.Edit, fieldToFocus: "portId" },
     }));
-  };
+  }, [setRowModesModel, setRows]);
 
   return (
     <GridToolbarContainer>
@@ -121,134 +121,159 @@ const EditOperationInputPortsTab: FunctionComponent<
     setEditingRow(false);
   }, []);
 
-  const handleRowEditStart: GridEventListener<"rowEditStart"> = (
-    params,
-    event,
-  ) => {
-    updateStatesOnStartEdit();
-  };
+  const handleRowEditStart: GridEventListener<"rowEditStart"> = useCallback(
+    (params, event) => {
+      updateStatesOnStartEdit();
+    },
+    [updateStatesOnStartEdit],
+  );
 
-  const handleRowEditStop: GridEventListener<"rowEditStop"> = (
-    params,
-    event,
-  ) => {
-    updateStatesOnStopEdit();
-  };
+  const handleRowEditStop: GridEventListener<"rowEditStop"> = useCallback(
+    (params, event) => {
+      updateStatesOnStopEdit();
+    },
+    [updateStatesOnStopEdit],
+  );
 
-  const handleEditClick = (id: GridRowId) => () => {
-    updateStatesOnStartEdit();
+  const handleEditClick = useCallback(
+    (id: GridRowId) => () => {
+      updateStatesOnStartEdit();
 
-    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
-  };
+      setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
+    },
+    [rowModesModel, updateStatesOnStartEdit],
+  );
 
-  const handleSaveClick = (id: GridRowId) => () => {
-    updateStatesOnStopEdit();
+  const handleSaveClick = useCallback(
+    (id: GridRowId) => () => {
+      updateStatesOnStopEdit();
 
-    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
-  };
+      setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
+    },
+    [rowModesModel, updateStatesOnStopEdit],
+  );
 
-  const handleDeleteClick = (id: GridRowId) => () => {
-    setRows(rows.filter((row) => row.id !== id));
-  };
-
-  const handleCancelClick = (id: GridRowId) => () => {
-    updateStatesOnStopEdit();
-
-    setRowModesModel({
-      ...rowModesModel,
-      [id]: { mode: GridRowModes.View, ignoreModifications: true },
-    });
-
-    const editedRow = rows.find((row) => row.id === id);
-    const isNew = editedRow?.isNew;
-    if (isNew === true) {
+  const handleDeleteClick = useCallback(
+    (id: GridRowId) => () => {
       setRows(rows.filter((row) => row.id !== id));
-    }
-  };
-
-  const handleRowModesModelChange = (
-    newRowModesModel: GridRowModesModel,
-  ): void => {
-    setRowModesModel(newRowModesModel);
-  };
-
-  const processRowUpdate = (
-    newRow: GridRowModel<GridRowModelProps>,
-  ): GridRowModel<GridRowModelProps> => {
-    const updatedRow = { ...newRow, isNew: false };
-
-    setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
-    return updatedRow;
-  };
-
-  const columns: GridColDef[] = [
-    {
-      field: "portId",
-      headerName: "Port ID",
-      description: "Port ID used in the code",
-      width: 200,
-      editable: true,
     },
-    {
-      field: "allowMultipleEdges",
-      headerName: "Allow Multiple Edges",
-      description: "Whether to allow multiple edges to connect to the port",
-      width: 200,
-      type: "singleSelect",
-      valueOptions: ["Yes", "No"],
-      editable: true,
-    },
-    {
-      field: "actions",
-      type: "actions",
-      headerName: "Actions",
-      width: 100,
-      cellClassName: "actions",
-      getActions: ({ id }) => {
-        const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
+    [rows],
+  );
 
-        if (isInEditMode) {
+  const handleCancelClick = useCallback(
+    (id: GridRowId) => () => {
+      updateStatesOnStopEdit();
+
+      setRowModesModel({
+        ...rowModesModel,
+        [id]: { mode: GridRowModes.View, ignoreModifications: true },
+      });
+
+      const editedRow = rows.find((row) => row.id === id);
+      const isNew = editedRow?.isNew;
+      if (isNew === true) {
+        setRows(rows.filter((row) => row.id !== id));
+      }
+    },
+    [rowModesModel, rows, updateStatesOnStopEdit],
+  );
+
+  const handleRowModesModelChange = useCallback(
+    (newRowModesModel: GridRowModesModel): void => {
+      setRowModesModel(newRowModesModel);
+    },
+    [],
+  );
+
+  const processRowUpdate = useCallback(
+    (
+      newRow: GridRowModel<GridRowModelProps>,
+    ): GridRowModel<GridRowModelProps> => {
+      const updatedRow = { ...newRow, isNew: false };
+
+      setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
+      return updatedRow;
+    },
+    [rows],
+  );
+
+  const columns: GridColDef[] = useMemo(
+    () => [
+      {
+        field: "portId",
+        headerName: "Port ID",
+        description: "Port ID used in the code",
+        width: 200,
+        editable: true,
+      },
+      {
+        field: "allowMultipleEdges",
+        headerName: "Allow Multiple Edges",
+        description: "Whether to allow multiple edges to connect to the port",
+        width: 200,
+        type: "singleSelect",
+        valueOptions: ["Yes", "No"],
+        editable: true,
+      },
+      {
+        field: "actions",
+        type: "actions",
+        headerName: "Actions",
+        width: 100,
+        cellClassName: "actions",
+        getActions: ({ id }) => {
+          const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
+
+          if (isInEditMode) {
+            return [
+              <GridActionsCellItem
+                key="save"
+                icon={<SaveIcon />}
+                label="Save"
+                sx={{
+                  color: "primary.main",
+                }}
+                onClick={handleSaveClick(id)}
+              />,
+              <GridActionsCellItem
+                key="cancel"
+                icon={<CancelIcon />}
+                label="Cancel"
+                className="textPrimary"
+                onClick={handleCancelClick(id)}
+                color="inherit"
+              />,
+            ];
+          }
+
           return [
             <GridActionsCellItem
-              key="save"
-              icon={<SaveIcon />}
-              label="Save"
-              sx={{
-                color: "primary.main",
-              }}
-              onClick={handleSaveClick(id)}
+              key="edit"
+              icon={<EditIcon />}
+              label="Edit"
+              className="textPrimary"
+              onClick={handleEditClick(id)}
+              color="inherit"
             />,
             <GridActionsCellItem
-              key="cancel"
-              icon={<CancelIcon />}
-              label="Cancel"
-              className="textPrimary"
-              onClick={handleCancelClick(id)}
+              key="delete"
+              icon={<DeleteIcon />}
+              label="Delete"
+              onClick={handleDeleteClick(id)}
               color="inherit"
             />,
           ];
-        }
-
-        return [
-          <GridActionsCellItem
-            key="edit"
-            icon={<EditIcon />}
-            label="Edit"
-            className="textPrimary"
-            onClick={handleEditClick(id)}
-            color="inherit"
-          />,
-          <GridActionsCellItem
-            key="delete"
-            icon={<DeleteIcon />}
-            label="Delete"
-            onClick={handleDeleteClick(id)}
-            color="inherit"
-          />,
-        ];
+        },
       },
-    },
-  ];
+    ],
+    [
+      handleCancelClick,
+      handleDeleteClick,
+      handleEditClick,
+      handleSaveClick,
+      rowModesModel,
+    ],
+  );
 
   const getEmptyRowsErrorMessages = useCallback((): string[] => {
     const errorMessages: string[] = [];

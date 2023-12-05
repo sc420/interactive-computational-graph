@@ -15,6 +15,7 @@ interface FeaturePanelProps {
   hasNodes: boolean;
   hasDerivativeTarget: boolean;
   explainDerivativeData: ExplainDerivativeData[];
+  isDarkMode: boolean;
   onAddNode: (featureNodeType: FeatureNodeType) => void;
   onAddOperation: () => void;
   onEditOperation: (updatedOperation: FeatureOperation) => void;
@@ -29,6 +30,7 @@ const FeaturePanel: FunctionComponent<FeaturePanelProps> = ({
   hasNodes,
   hasDerivativeTarget,
   explainDerivativeData,
+  isDarkMode,
   onAddNode,
   onAddOperation,
   onEditOperation,
@@ -42,6 +44,7 @@ const FeaturePanel: FunctionComponent<FeaturePanelProps> = ({
         return (
           <AddNodesPanel
             featureOperations={featureOperations}
+            isDarkMode={isDarkMode}
             onAddNode={onAddNode}
             onAddOperation={onAddOperation}
             onEditOperation={onEditOperation}
@@ -64,6 +67,7 @@ const FeaturePanel: FunctionComponent<FeaturePanelProps> = ({
         return (
           <AddNodesPanel
             featureOperations={featureOperations}
+            isDarkMode={isDarkMode}
             onAddNode={onAddNode}
             onAddOperation={onAddOperation}
             onEditOperation={onEditOperation}

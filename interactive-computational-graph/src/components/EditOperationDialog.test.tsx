@@ -13,6 +13,7 @@ test("should render the tabs", () => {
   render(
     <EditOperationDialog
       open={true}
+      isDarkMode={false}
       readOperation={featureOperation}
       onCancel={handleCancel}
       onSave={handleSave}
@@ -46,6 +47,7 @@ test("should trigger event when clicking save button", () => {
   render(
     <EditOperationDialog
       open={true}
+      isDarkMode={false}
       readOperation={featureOperation}
       onCancel={handleCancel}
       onSave={handleSave}
@@ -68,6 +70,7 @@ test("should trigger necessary event when clicking cancel button after change", 
   render(
     <EditOperationDialog
       open={true}
+      isDarkMode={false}
       readOperation={featureOperation}
       onCancel={handleCancel}
       onSave={handleSave}

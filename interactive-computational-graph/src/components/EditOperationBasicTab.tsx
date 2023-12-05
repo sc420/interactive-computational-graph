@@ -28,7 +28,7 @@ const EditOperationBasicTab: FunctionComponent<EditOperationBasicTabProps> = ({
 
   const [editingHelpText, setEditingHelpText] = useState(helpText);
 
-  // Validate the values when the input values change
+  // Validate and update the values when the input values change
   useEffect(() => {
     const isNameEmpty = editingName === "";
     setNameHasError(isNameEmpty);

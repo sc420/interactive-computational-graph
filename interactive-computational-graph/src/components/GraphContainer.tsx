@@ -606,6 +606,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
               hasNodes={reactFlowNodes.length > 0}
               hasDerivativeTarget={derivativeTarget !== null}
               explainDerivativeData={explainDerivativeData}
+              isDarkMode={isDarkMode}
               onAddNode={handleAddNode}
               onAddOperation={handleAddOperation}
               onEditOperation={handleEditOperation}

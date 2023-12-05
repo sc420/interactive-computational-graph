@@ -15,6 +15,7 @@ test("should trigger event when clicking item", () => {
   render(
     <AddNodesPanel
       featureOperations={featureOperations}
+      isDarkMode={false}
       onAddNode={handleAddNode}
       onAddOperation={handleAddOperation}
       onEditOperation={handleEditOperation}
@@ -40,6 +41,7 @@ test("should trigger event when clicking add operation button", () => {
   render(
     <AddNodesPanel
       featureOperations={featureOperations}
+      isDarkMode={false}
       onAddNode={handleAddNode}
       onAddOperation={handleAddOperation}
       onEditOperation={handleEditOperation}
@@ -61,6 +63,7 @@ test("should not trigger event when canceling editing operation", () => {
   render(
     <AddNodesPanel
       featureOperations={featureOperations}
+      isDarkMode={false}
       onAddNode={handleAddNode}
       onAddOperation={handleAddOperation}
       onEditOperation={handleEditOperation}
@@ -89,6 +92,7 @@ test("should trigger event when clicking edit icon button", () => {
   render(
     <AddNodesPanel
       featureOperations={featureOperations}
+      isDarkMode={false}
       onAddNode={handleAddNode}
       onAddOperation={handleAddOperation}
       onEditOperation={handleEditOperation}

@@ -18,6 +18,7 @@ import EditOperationDialog from "./EditOperationDialog";
 
 interface AddNodesPanelProps {
   featureOperations: FeatureOperation[];
+  isDarkMode: boolean;
   onAddNode: (featureNodeType: FeatureNodeType) => void;
   onAddOperation: () => void;
   onEditOperation: (updatedOperation: FeatureOperation) => void;
@@ -26,6 +27,7 @@ interface AddNodesPanelProps {
 
 const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
   featureOperations,
+  isDarkMode,
   onAddNode,
   onAddOperation,
   onEditOperation,
@@ -185,6 +187,7 @@ const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
         <EditOperationDialog
           open={isEditDialogOpen}
           readOperation={editingOperation}
+          isDarkMode={isDarkMode}
           onCancel={handleCloseEditDialog}
           onSave={handleSaveOperation}
           onDelete={handleDeleteOperation}

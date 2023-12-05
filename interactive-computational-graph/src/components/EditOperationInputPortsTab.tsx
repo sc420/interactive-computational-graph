@@ -312,7 +312,7 @@ const EditOperationInputPortsTab: FunctionComponent<
     return errorMessages;
   }, [getOldRows]);
 
-  // Validate the values when input port changes
+  // Validate and update the values when input port changes
   useEffect(() => {
     const errorMessages: string[] = [];
     errorMessages.push(...getEmptyRowsErrorMessages());

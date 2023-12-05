@@ -4,6 +4,7 @@ import {
   Box,
   Button,
   Dialog,
+  DialogContent,
   IconButton,
   Tab,
   Tabs,
@@ -22,10 +23,12 @@ import EditOperationBasicTab from "./EditOperationBasicTab";
 import EditOperationDialogMenu from "./EditOperationDialogMenu";
 import EditOperationInputPortsTab from "./EditOperationInputPortsTab";
 import EditOperationTabPanel from "./EditOperationTabPanel";
+import EditOperationFCodeTab from "./EditOperationFCodeTab";
 
 interface EditOperationDialogProps {
   open: boolean;
   readOperation: FeatureOperation;
+  isDarkMode: boolean;
   onCancel: () => void;
   onSave: (updatedOperation: FeatureOperation) => void;
   onDelete: (operationId: string) => void;
@@ -34,6 +37,7 @@ interface EditOperationDialogProps {
 const EditOperationDialog: FunctionComponent<EditOperationDialogProps> = ({
   open,
   readOperation,
+  isDarkMode,
   onCancel,
   onSave,
   onDelete,
@@ -96,12 +100,16 @@ const EditOperationDialog: FunctionComponent<EditOperationDialogProps> = ({
     });
   }, []);
 
+  const handleFCodeChangeValues = useCallback((fCode: string) => {
+    // TODO(sc420): Create a new operation
+  }, []);
+
   const handleValidate = useCallback((isValid: boolean) => {
     setValid(isValid);
   }, []);
 
   return (
-    <Dialog fullScreen open={open} onClose={handleClose}>
+    <Dialog fullScreen scroll="paper" open={open} onClose={handleClose}>
       {/* Toolbar */}
       <AppBar sx={{ position: "relative" }}>
         <Toolbar>
@@ -136,7 +144,7 @@ const EditOperationDialog: FunctionComponent<EditOperationDialogProps> = ({
       </AppBar>
 
       {/* Tabs */}
-      <Box>
+      <DialogContent sx={{ p: 0 }}>
         <Box borderBottom={1} borderColor="divider">
           <Tabs
             value={activeTabIndex}
@@ -173,14 +181,18 @@ const EditOperationDialog: FunctionComponent<EditOperationDialogProps> = ({
 
         {/* f code */}
         <EditOperationTabPanel index={2} value={activeTabIndex}>
-          F Code Contents
+          <EditOperationFCodeTab
+            fCode={readOperation.operation.getFCode()}
+            isDarkMode={isDarkMode}
+            onChangeValues={handleFCodeChangeValues}
+          />
         </EditOperationTabPanel>
 
         {/* df/dx code */}
         <EditOperationTabPanel index={3} value={activeTabIndex}>
           DF/DX Code Contents
         </EditOperationTabPanel>
-      </Box>
+      </DialogContent>
     </Dialog>
   );
 };

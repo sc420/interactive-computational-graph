@@ -145,6 +145,7 @@ const EditOperationDialog: FunctionComponent<EditOperationDialogProps> = ({
 
       {/* Tabs */}
       <DialogContent sx={{ p: 0 }}>
+        {/* Tab navigator */}
         <Box borderBottom={1} borderColor="divider">
           <Tabs
             value={activeTabIndex}
@@ -160,32 +161,39 @@ const EditOperationDialog: FunctionComponent<EditOperationDialogProps> = ({
 
         {/* Basic */}
         <EditOperationTabPanel index={0} value={activeTabIndex}>
-          <EditOperationBasicTab
-            name={readOperation.text}
-            prefix={readOperation.namePrefix}
-            helpText={readOperation.helpText}
-            onChangeValues={handleBasicChangeValues}
-            onValidate={handleValidate}
-          />
+          <Box sx={{ p: 3 }}>
+            <EditOperationBasicTab
+              name={editingOperation.text}
+              prefix={editingOperation.namePrefix}
+              helpText={editingOperation.helpText}
+              onChangeValues={handleBasicChangeValues}
+              onValidate={handleValidate}
+            />
+          </Box>
         </EditOperationTabPanel>
 
         {/* Input ports */}
         <EditOperationTabPanel index={1} value={activeTabIndex}>
-          <EditOperationInputPortsTab
-            isVisible={activeTabIndex === 1}
-            inputPorts={readOperation.inputPorts}
-            onChangeValues={handleInputPortsChangeValues}
-            onValidate={handleValidate}
-          />
+          <Box sx={{ p: 3 }}>
+            <EditOperationInputPortsTab
+              isVisible={activeTabIndex === 1}
+              inputPorts={editingOperation.inputPorts}
+              onChangeValues={handleInputPortsChangeValues}
+              onValidate={handleValidate}
+            />
+          </Box>
         </EditOperationTabPanel>
 
         {/* f code */}
         <EditOperationTabPanel index={2} value={activeTabIndex}>
-          <EditOperationFCodeTab
-            fCode={readOperation.operation.getFCode()}
-            isDarkMode={isDarkMode}
-            onChangeValues={handleFCodeChangeValues}
-          />
+          <Box sx={{ p: 3 }}>
+            <EditOperationFCodeTab
+              fCode={editingOperation.operation.getFCode()}
+              inputPorts={editingOperation.inputPorts}
+              isDarkMode={isDarkMode}
+              onChangeValues={handleFCodeChangeValues}
+            />
+          </Box>
         </EditOperationTabPanel>
 
         {/* df/dx code */}

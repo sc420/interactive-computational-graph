@@ -1,4 +1,3 @@
-import { Box } from "@mui/material";
 import { type FunctionComponent } from "react";
 
 interface EditOperationTabPanelProps {
@@ -21,7 +20,7 @@ const EditOperationTabPanel: FunctionComponent<EditOperationTabPanelProps> = ({
       aria-labelledby={`edit-operation-tab-${index}`}
       {...other}
     >
-      <Box sx={{ p: 3 }}>{children}</Box>
+      {children}
     </div>
   );
 };

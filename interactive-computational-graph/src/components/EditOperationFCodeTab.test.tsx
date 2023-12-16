@@ -94,6 +94,8 @@ test("should randomize test data", () => {
 });
 
 test("should show error when code is invalid", () => {
+  const mockConsole = jest.spyOn(console, "error").mockImplementation();
+
   const inputPorts: Port[] = [new Port("a", false), new Port("b", false)];
   const handleChangeValues = jest.fn();
   render(
@@ -133,9 +135,14 @@ test("should show error when code is invalid", () => {
   expect(getTestResult()).toContain("Stack trace:");
   const errorTooltip = screen.getByTestId("errorTooltip");
   expect(errorTooltip).toBeInTheDocument();
+  expect(mockConsole).toHaveBeenCalled();
+
+  jest.restoreAllMocks(); // restores the spy created with spyOn
 });
 
 test("should show error when input port to nodes data is invalid", () => {
+  jest.spyOn(console, "error").mockImplementation();
+
   const inputPorts: Port[] = [new Port("a", false), new Port("b", false)];
   const handleChangeValues = jest.fn();
   render(
@@ -166,9 +173,13 @@ test("should show error when input port to nodes data is invalid", () => {
   );
   const errorTooltip = screen.getByTestId("errorTooltip");
   expect(errorTooltip).toBeInTheDocument();
+
+  jest.restoreAllMocks(); // restores the spy created with spyOn
 });
 
 test("should show error when node to values data is invalid", () => {
+  jest.spyOn(console, "error").mockImplementation();
+
   const inputPorts: Port[] = [new Port("a", false), new Port("b", false)];
   const handleChangeValues = jest.fn();
   render(
@@ -199,6 +210,8 @@ test("should show error when node to values data is invalid", () => {
   );
   const errorTooltip = screen.getByTestId("errorTooltip");
   expect(errorTooltip).toBeInTheDocument();
+
+  jest.restoreAllMocks(); // restores the spy created with spyOn
 });
 
 const setCode = (code: string): void => {

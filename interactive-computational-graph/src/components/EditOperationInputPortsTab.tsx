@@ -204,6 +204,7 @@ const EditOperationInputPortsTab: FunctionComponent<
         headerName: "Port ID",
         description: "Port ID used in the code",
         width: 200,
+        sortable: false,
         editable: true,
       },
       {
@@ -213,6 +214,7 @@ const EditOperationInputPortsTab: FunctionComponent<
         width: 200,
         type: "singleSelect",
         valueOptions: ["Yes", "No"],
+        sortable: false,
         editable: true,
       },
       {

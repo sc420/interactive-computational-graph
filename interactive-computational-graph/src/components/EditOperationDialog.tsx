@@ -17,13 +17,14 @@ import {
   type FunctionComponent,
   type SyntheticEvent,
 } from "react";
+import Operation from "../core/Operation";
 import type Port from "../core/Port";
 import type FeatureOperation from "../features/FeatureOperation";
 import EditOperationBasicTab from "./EditOperationBasicTab";
 import EditOperationDialogMenu from "./EditOperationDialogMenu";
+import EditOperationFCodeTab from "./EditOperationFCodeTab";
 import EditOperationInputPortsTab from "./EditOperationInputPortsTab";
 import EditOperationTabPanel from "./EditOperationTabPanel";
-import EditOperationFCodeTab from "./EditOperationFCodeTab";
 
 interface EditOperationDialogProps {
   open: boolean;
@@ -75,9 +76,9 @@ const EditOperationDialog: FunctionComponent<EditOperationDialogProps> = ({
 
   const handleBasicChangeValues = useCallback(
     (name: string, prefix: string, helpText: string) => {
-      setEditingOperation((operation) => {
+      setEditingOperation((featureOperation) => {
         const newOperation: FeatureOperation = {
-          ...operation,
+          ...featureOperation,
           text: name,
           namePrefix: prefix,
           helpText,
@@ -90,9 +91,9 @@ const EditOperationDialog: FunctionComponent<EditOperationDialogProps> = ({
   );
 
   const handleInputPortsChangeValues = useCallback((inputPorts: Port[]) => {
-    setEditingOperation((operation) => {
+    setEditingOperation((featureOperation) => {
       const newOperation: FeatureOperation = {
-        ...operation,
+        ...featureOperation,
         inputPorts,
       };
 
@@ -101,7 +102,17 @@ const EditOperationDialog: FunctionComponent<EditOperationDialogProps> = ({
   }, []);
 
   const handleFCodeChangeValues = useCallback((fCode: string) => {
-    // TODO(sc420): Create a new operation
+    setEditingOperation((featureOperation) => {
+      const newOperation: FeatureOperation = {
+        ...featureOperation,
+        operation: new Operation(
+          fCode,
+          featureOperation.operation.getDfdxCode(),
+        ),
+      };
+
+      return newOperation;
+    });
   }, []);
 
   const handleValidate = useCallback((isValid: boolean) => {

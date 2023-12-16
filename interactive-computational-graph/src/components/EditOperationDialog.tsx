@@ -25,6 +25,7 @@ import EditOperationDialogMenu from "./EditOperationDialogMenu";
 import EditOperationFCodeTab from "./EditOperationFCodeTab";
 import EditOperationInputPortsTab from "./EditOperationInputPortsTab";
 import EditOperationTabPanel from "./EditOperationTabPanel";
+import EditOperationDfdxCodeTab from "./EditOperationDfdxCodeTab";
 
 interface EditOperationDialogProps {
   open: boolean;
@@ -108,6 +109,20 @@ const EditOperationDialog: FunctionComponent<EditOperationDialogProps> = ({
         operation: new Operation(
           fCode,
           featureOperation.operation.getDfdxCode(),
+        ),
+      };
+
+      return newOperation;
+    });
+  }, []);
+
+  const handleDfdxCodeChangeValues = useCallback((dfdxCode: string) => {
+    setEditingOperation((featureOperation) => {
+      const newOperation: FeatureOperation = {
+        ...featureOperation,
+        operation: new Operation(
+          featureOperation.operation.getFCode(),
+          dfdxCode,
         ),
       };
 
@@ -209,7 +224,14 @@ const EditOperationDialog: FunctionComponent<EditOperationDialogProps> = ({
 
         {/* df/dx code */}
         <EditOperationTabPanel index={3} value={activeTabIndex}>
-          DF/DX Code Contents
+          <Box sx={{ p: 3 }}>
+            <EditOperationDfdxCodeTab
+              dfdxCode={editingOperation.operation.getDfdxCode()}
+              inputPorts={editingOperation.inputPorts}
+              isDarkMode={isDarkMode}
+              onChangeValues={handleDfdxCodeChangeValues}
+            />
+          </Box>
         </EditOperationTabPanel>
       </DialogContent>
     </Dialog>

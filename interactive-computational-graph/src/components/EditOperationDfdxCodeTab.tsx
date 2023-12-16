@@ -398,7 +398,7 @@ Couldn't parse the input node to values data: ${error.message}
                 title={
                   <div>
                     The <Katex latex="x" /> in{" "}
-                    <Katex latex="\displaystyle \partial{f}/\partial{x}" />
+                    <Katex latex="\partial{f}/\partial{x}" />
                   </div>
                 }
                 placement="right"

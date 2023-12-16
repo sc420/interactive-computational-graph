@@ -85,7 +85,9 @@ const EditOperationFCodeTab: FunctionComponent<EditOperationFCodeTabProps> = ({
     const inputPortToNodes: Record<string, string[]> = {};
     let nextId = 0;
     inputPorts.forEach((inputPort) => {
-      const numNodes = randomInteger(1, 3);
+      // Use only one node to avoid showing errors for those operations that
+      // don't allow multiple input nodes
+      const numNodes = 1;
       inputPortToNodes[inputPort.getId()] = buildRandomNodeIds(
         nextId,
         numNodes,

@@ -6,6 +6,8 @@ import type FeatureNodeType from "../features/FeatureNodeType";
 import type FeatureOperation from "../features/FeatureOperation";
 import AddNodesPanel from "./AddNodesPanel";
 
+jest.mock("./EditOperationDialogMenu");
+
 test("should trigger event when clicking item", () => {
   const featureOperations = getFeatureOperations();
   const handleAddNode = jest.fn();
@@ -110,7 +112,31 @@ test("should trigger event when clicking edit icon button", () => {
   expect(handleEditOperation).toHaveBeenCalledWith(expectedUpdatedOperation);
 });
 
-// TODO(sc420): Click delete button to test for handleDeleteOperation
+test("should trigger event when deleting operation", () => {
+  const featureOperations = getFeatureOperations();
+  const handleAddNode = jest.fn();
+  const handleAddOperation = jest.fn();
+  const handleEditOperation = jest.fn();
+  const handleDeleteOperation = jest.fn();
+  render(
+    <AddNodesPanel
+      featureOperations={featureOperations}
+      isDarkMode={false}
+      onAddNode={handleAddNode}
+      onAddOperation={handleAddOperation}
+      onEditOperation={handleEditOperation}
+      onDeleteOperation={handleDeleteOperation}
+    />,
+  );
+
+  const editAddButton = screen.getByLabelText("Edit Add");
+  fireEvent.click(editAddButton);
+
+  const deleteButton = screen.getByLabelText("Delete operation");
+  fireEvent.click(deleteButton);
+
+  expect(handleDeleteOperation).toBeCalledWith("add");
+});
 
 const getFeatureOperations = (): FeatureOperation[] => {
   return [

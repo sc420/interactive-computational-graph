@@ -24,6 +24,9 @@ import { randomInteger } from "../features/RandomUtilities";
 import EditOperationTabPanel from "./EditOperationTabPanel";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import MonacoEditorTestHelper from "../editor/MonacoEditorTestHelper";
+
+const isTest = process.env.NODE_ENV === "test";
 
 interface EditOperationFCodeTabProps {
   fCode: string;
@@ -253,6 +256,13 @@ Couldn't parse the input node to values data: ${error.message}
                 defaultValue={fCode}
                 onChange={handleCodeChange}
               />
+
+              {isTest && (
+                <MonacoEditorTestHelper
+                  testId="code"
+                  onChange={handleCodeChange}
+                />
+              )}
             </Box>
           </Stack>
         </EditOperationTabPanel>
@@ -285,6 +295,14 @@ Couldn't parse the input node to values data: ${error.message}
                 value={testData.inputPortToNodes}
                 onChange={handleInputPortToNodesChange}
               />
+
+              {isTest && (
+                <MonacoEditorTestHelper
+                  testId="inputPortToNodes"
+                  value={testData.inputPortToNodes}
+                  onChange={handleInputPortToNodesChange}
+                />
+              )}
             </Box>
           </Stack>
         </EditOperationTabPanel>
@@ -318,6 +336,14 @@ Couldn't parse the input node to values data: ${error.message}
                 value={testData.inputNodeToValues}
                 onChange={handleInputNodeToValuesChange}
               />
+
+              {isTest && (
+                <MonacoEditorTestHelper
+                  testId="inputNodeToValues"
+                  value={testData.inputNodeToValues}
+                  onChange={handleInputNodeToValuesChange}
+                />
+              )}
             </Box>
           </Stack>
         </EditOperationTabPanel>
@@ -364,6 +390,7 @@ Couldn't parse the input node to values data: ${error.message}
           </Typography>
           {isTestResultError && (
             <Tooltip
+              data-testid="errorTooltip"
               title="An error occurs while running the test"
               placement="right"
             >
@@ -380,6 +407,10 @@ Couldn't parse the input node to values data: ${error.message}
             }}
             value={testResult}
           />
+
+          {isTest && (
+            <MonacoEditorTestHelper testId="testResult" value={testResult} />
+          )}
         </Box>
       </Stack>
     </Container>

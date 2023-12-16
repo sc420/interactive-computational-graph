@@ -31,7 +31,8 @@ test("should render the tabs", () => {
   const fCodeTab = screen.getByText("F Code");
   fireEvent.click(fCodeTab);
 
-  // TODO(sc420): Expect some element to be in the document
+  expect(screen.getByText("Code for calculating f()")).toBeInTheDocument();
+  expect(screen.getByText("Test result")).toBeInTheDocument();
 
   const dfDxCodeTab = screen.getByText("DF/DX Code");
   fireEvent.click(dfDxCodeTab);

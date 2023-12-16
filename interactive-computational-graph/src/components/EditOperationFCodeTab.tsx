@@ -1,4 +1,6 @@
 import { Editor } from "@monaco-editor/react";
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import ShuffleIcon from "@mui/icons-material/Shuffle";
 import {
@@ -20,11 +22,10 @@ import {
 } from "react";
 import Operation from "../core/Operation";
 import type Port from "../core/Port";
-import { randomInteger } from "../features/RandomUtilities";
-import EditOperationTabPanel from "./EditOperationTabPanel";
-import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
-import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import MonacoEditorTestHelper from "../editor/MonacoEditorTestHelper";
+import { randomInteger } from "../features/RandomUtilities";
+import Katex from "../latex/Katex";
+import EditOperationTabPanel from "./EditOperationTabPanel";
 
 const isTest = process.env.NODE_ENV === "test";
 
@@ -246,7 +247,7 @@ Couldn't parse the input node to values data: ${error.message}
         <EditOperationTabPanel index={0} value={activeTabIndex}>
           <Stack py={1} spacing={1}>
             <Typography variant="h6" component="h1">
-              Code for calculating f()
+              Code for calculating <Katex latex="f()" />
             </Typography>
             <Box border={1} borderColor="grey.500">
               <Editor

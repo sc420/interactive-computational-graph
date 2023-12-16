@@ -4,6 +4,7 @@ import { ADD_F_CODE } from "../features/BuiltInCode";
 import EditOperationFCodeTab from "./EditOperationFCodeTab";
 
 jest.mock("../features/RandomUtilities");
+jest.mock("../latex/Katex");
 
 test("should trigger event when the code is updated", () => {
   const inputPorts: Port[] = [new Port("a", false), new Port("b", false)];

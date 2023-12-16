@@ -23,6 +23,7 @@ import type Port from "../core/Port";
 import { randomInteger } from "../features/RandomUtilities";
 import EditOperationTabPanel from "./EditOperationTabPanel";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 
 interface EditOperationFCodeTabProps {
   fCode: string;
@@ -259,9 +260,23 @@ Couldn't parse the input node to values data: ${error.message}
         {/* Test data: Input port to nodes */}
         <EditOperationTabPanel index={1} value={activeTabIndex}>
           <Stack py={1} spacing={1}>
-            <Typography variant="h6" component="h1">
-              Test data: Input port to nodes
-            </Typography>
+            <Stack direction="row" alignItems="center" spacing={1}>
+              <Typography variant="h6" component="h1">
+                Test data: Input port to nodes
+              </Typography>
+              <Tooltip
+                title={
+                  <div>
+                    Key: Input port ID
+                    <br />
+                    Value: List of all connected input node IDs
+                  </div>
+                }
+                placement="right"
+              >
+                <HelpOutlineIcon color="primary" />
+              </Tooltip>
+            </Stack>
             <Box border={1} borderColor="grey.500">
               <Editor
                 height="300px"
@@ -277,9 +292,24 @@ Couldn't parse the input node to values data: ${error.message}
         {/* Test data: Input node to values */}
         <EditOperationTabPanel index={2} value={activeTabIndex}>
           <Stack py={1} spacing={1}>
-            <Typography variant="h6" component="h1">
-              Test data: Input node to values
-            </Typography>
+            <Stack direction="row" alignItems="center" spacing={1}>
+              <Typography variant="h6" component="h1">
+                Test data: Input node to values
+              </Typography>
+              <Tooltip
+                title={
+                  <div>
+                    Key: Input node ID from &quot;PORT TO NODES&quot; data
+                    <br />
+                    Value: Input node value
+                  </div>
+                }
+                placement="right"
+              >
+                <HelpOutlineIcon color="primary" />
+              </Tooltip>
+            </Stack>
+
             <Box border={1} borderColor="grey.500">
               <Editor
                 height="300px"

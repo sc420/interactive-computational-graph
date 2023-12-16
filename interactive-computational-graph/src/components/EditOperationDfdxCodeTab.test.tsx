@@ -1,15 +1,17 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import Port from "../core/Port";
-import { ADD_F_CODE } from "../features/BuiltInCode";
+import { ADD_DFDX_CODE } from "../features/BuiltInCode";
 import {
   getInputNodeToValues,
   getInputPortToNodes,
   getTestResult,
+  getXId,
   setCode,
   setInputNodeToValues,
   setInputPortToNodes,
+  setXId,
 } from "./EditOperationCodeTabTestUtils";
-import EditOperationFCodeTab from "./EditOperationFCodeTab";
+import EditOperationDfdxCodeTab from "./EditOperationDfdxCodeTab";
 
 jest.mock("../features/RandomUtilities");
 jest.mock("../latex/Katex");
@@ -18,8 +20,8 @@ test("should trigger event when the code is updated", () => {
   const inputPorts: Port[] = [new Port("a", false), new Port("b", false)];
   const handleChangeValues = jest.fn();
   render(
-    <EditOperationFCodeTab
-      fCode={ADD_F_CODE}
+    <EditOperationDfdxCodeTab
+      dfdxCode={ADD_DFDX_CODE}
       inputPorts={inputPorts}
       isDarkMode={false}
       onChangeValues={handleChangeValues}
@@ -35,8 +37,8 @@ test("should run test successfully", () => {
   const inputPorts: Port[] = [new Port("a", false), new Port("b", false)];
   const handleChangeValues = jest.fn();
   render(
-    <EditOperationFCodeTab
-      fCode={ADD_F_CODE}
+    <EditOperationDfdxCodeTab
+      dfdxCode={ADD_DFDX_CODE}
       inputPorts={inputPorts}
       isDarkMode={false}
       onChangeValues={handleChangeValues}
@@ -57,8 +59,10 @@ test("should run test successfully", () => {
     }),
   );
 
+  setXId("0");
+
   const runTestButton = screen.getByLabelText(
-    "Run the f() code with the two test data",
+    "Run the df/dx code with the three test data",
   );
   fireEvent.click(runTestButton);
 
@@ -73,8 +77,8 @@ test("should randomize test data", () => {
   const inputPorts: Port[] = [new Port("a", false), new Port("b", false)];
   const handleChangeValues = jest.fn();
   render(
-    <EditOperationFCodeTab
-      fCode={ADD_F_CODE}
+    <EditOperationDfdxCodeTab
+      dfdxCode={ADD_DFDX_CODE}
       inputPorts={inputPorts}
       isDarkMode={false}
       onChangeValues={handleChangeValues}
@@ -90,7 +94,11 @@ test("should randomize test data", () => {
 
   setInputNodeToValues(JSON.stringify({}));
 
-  const randomizeButton = screen.getByLabelText("Randomize the two test data");
+  setXId("");
+
+  const randomizeButton = screen.getByLabelText(
+    "Randomize the three test data",
+  );
   fireEvent.click(randomizeButton);
 
   expect(JSON.parse(getInputPortToNodes())).toEqual({
@@ -101,6 +109,7 @@ test("should randomize test data", () => {
     "0": "10",
     "1": "10",
   });
+  expect(getXId()).toEqual("100");
 });
 
 test("should show error when code is invalid", () => {
@@ -109,8 +118,8 @@ test("should show error when code is invalid", () => {
   const inputPorts: Port[] = [new Port("a", false), new Port("b", false)];
   const handleChangeValues = jest.fn();
   render(
-    <EditOperationFCodeTab
-      fCode="abc"
+    <EditOperationDfdxCodeTab
+      dfdxCode="abc"
       inputPorts={inputPorts}
       isDarkMode={false}
       onChangeValues={handleChangeValues}
@@ -131,8 +140,10 @@ test("should show error when code is invalid", () => {
     }),
   );
 
+  setXId("0");
+
   const runTestButton = screen.getByLabelText(
-    "Run the f() code with the two test data",
+    "Run the df/dx code with the three test data",
   );
   fireEvent.click(runTestButton);
 
@@ -158,8 +169,8 @@ test("should show error when input port to nodes data is invalid", () => {
   const inputPorts: Port[] = [new Port("a", false), new Port("b", false)];
   const handleChangeValues = jest.fn();
   render(
-    <EditOperationFCodeTab
-      fCode={ADD_F_CODE}
+    <EditOperationDfdxCodeTab
+      dfdxCode={ADD_DFDX_CODE}
       inputPorts={inputPorts}
       isDarkMode={false}
       onChangeValues={handleChangeValues}
@@ -175,8 +186,10 @@ test("should show error when input port to nodes data is invalid", () => {
     }),
   );
 
+  setXId("0");
+
   const runTestButton = screen.getByLabelText(
-    "Run the f() code with the two test data",
+    "Run the df/dx code with the three test data",
   );
   fireEvent.click(runTestButton);
 
@@ -197,8 +210,8 @@ test("should show error when node to values data is invalid", () => {
   const inputPorts: Port[] = [new Port("a", false), new Port("b", false)];
   const handleChangeValues = jest.fn();
   render(
-    <EditOperationFCodeTab
-      fCode={ADD_F_CODE}
+    <EditOperationDfdxCodeTab
+      dfdxCode={ADD_DFDX_CODE}
       inputPorts={inputPorts}
       isDarkMode={false}
       onChangeValues={handleChangeValues}
@@ -214,8 +227,10 @@ test("should show error when node to values data is invalid", () => {
 
   setInputNodeToValues("abc");
 
+  setXId("0");
+
   const runTestButton = screen.getByLabelText(
-    "Run the f() code with the two test data",
+    "Run the df/dx code with the three test data",
   );
   fireEvent.click(runTestButton);
 

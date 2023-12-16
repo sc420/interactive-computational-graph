@@ -444,7 +444,7 @@ Couldn't parse the input node to values data: ${error.message}
           py={1}
         >
           <Tooltip
-            title="Run the f() code with the three test data"
+            title="Run the df/dx code with the three test data"
             placement="right"
           >
             <Button

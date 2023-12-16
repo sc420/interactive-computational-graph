@@ -135,8 +135,8 @@ const EditOperationFCodeTab: FunctionComponent<EditOperationFCodeTabProps> = ({
 
   const [testData, setTestData] = useState<TestData>(buildRandomTestData());
   const [testResult, setTestResult] = useState("");
-  const [testResultDate, setTestResultDate] = useState(new Date());
   const [isTestResultUpToDate, setTestResultUpToDate] = useState(false);
+  const [testResultDate, setTestResultDate] = useState(new Date());
   const [isTestResultError, setTestResultError] = useState(false);
 
   const handleInputPortToNodesChange = useCallback(
@@ -217,8 +217,8 @@ Couldn't parse the input node to values data: ${error.message}
 
     try {
       const result = operation.evalF(inputPortToNodes, inputNodeToValues);
-      setTestResultDate(new Date());
       setTestResultUpToDate(true);
+      setTestResultDate(new Date());
       setTestResultError(false);
       setTestResult(result);
     } catch (error: unknown) {

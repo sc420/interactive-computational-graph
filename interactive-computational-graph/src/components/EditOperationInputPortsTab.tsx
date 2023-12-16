@@ -203,7 +203,7 @@ const EditOperationInputPortsTab: FunctionComponent<
         field: "portId",
         headerName: "Port ID",
         description: "Port ID used in the code",
-        width: 200,
+        width: 250,
         sortable: false,
         editable: true,
       },

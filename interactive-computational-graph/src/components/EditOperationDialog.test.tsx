@@ -5,6 +5,8 @@ import { ADD_DFDX_CODE, ADD_F_CODE } from "../features/BuiltInCode";
 import type FeatureOperation from "../features/FeatureOperation";
 import EditOperationDialog from "./EditOperationDialog";
 
+jest.mock("../latex/Katex");
+
 test("should render the tabs", () => {
   const featureOperation = getFeatureOperation();
   const handleCancel = jest.fn();
@@ -31,13 +33,13 @@ test("should render the tabs", () => {
   const fCodeTab = screen.getByText("F Code");
   fireEvent.click(fCodeTab);
 
-  expect(screen.getByText("Code for calculating f()")).toBeInTheDocument();
-  expect(screen.getByText("Test result")).toBeInTheDocument();
+  expect(screen.getByText("f()")).toBeInTheDocument();
 
   const dfDxCodeTab = screen.getByText("DF/DX Code");
   fireEvent.click(dfDxCodeTab);
 
-  // TODO(sc420): Expect some element to be in the document
+  expect(screen.getByText("\\partial{f}/\\partial{x}")).toBeInTheDocument();
+  expect(screen.getByText("Test Data: X ID")).toBeInTheDocument();
 });
 
 test("should trigger event when clicking save button", () => {

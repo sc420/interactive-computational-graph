@@ -1,4 +1,5 @@
 import { Editor } from "@monaco-editor/react";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
@@ -69,6 +70,7 @@ const EditOperationFCodeTab: FunctionComponent<EditOperationFCodeTabProps> = ({
     if (value === undefined) {
       return;
     }
+    setTestResultUpToDate(false);
     setEditingFCode(value);
   }, []);
 
@@ -133,6 +135,8 @@ const EditOperationFCodeTab: FunctionComponent<EditOperationFCodeTabProps> = ({
 
   const [testData, setTestData] = useState<TestData>(buildRandomTestData());
   const [testResult, setTestResult] = useState("");
+  const [testResultDate, setTestResultDate] = useState(new Date());
+  const [isTestResultUpToDate, setTestResultUpToDate] = useState(false);
   const [isTestResultError, setTestResultError] = useState(false);
 
   const handleInputPortToNodesChange = useCallback(
@@ -140,6 +144,7 @@ const EditOperationFCodeTab: FunctionComponent<EditOperationFCodeTabProps> = ({
       if (value === undefined) {
         return;
       }
+      setTestResultUpToDate(false);
       setTestData((testData) => {
         return {
           inputPortToNodes: value,
@@ -155,6 +160,7 @@ const EditOperationFCodeTab: FunctionComponent<EditOperationFCodeTabProps> = ({
       if (value === undefined) {
         return;
       }
+      setTestResultUpToDate(false);
       setTestData((testData) => {
         return {
           inputPortToNodes: testData.inputPortToNodes,
@@ -211,12 +217,15 @@ Couldn't parse the input node to values data: ${error.message}
 
     try {
       const result = operation.evalF(inputPortToNodes, inputNodeToValues);
+      setTestResultDate(new Date());
+      setTestResultUpToDate(true);
       setTestResultError(false);
       setTestResult(result);
     } catch (error: unknown) {
       if (!(error instanceof Error)) {
         throw new Error(`Unknown error type ${typeof error}`);
       }
+      setTestResultUpToDate(false);
       setTestResultError(true);
       setTestResult(error.message);
     }
@@ -389,6 +398,15 @@ Couldn't parse the input node to values data: ${error.message}
           <Typography variant="h6" component="h1">
             Test result
           </Typography>
+          {isTestResultUpToDate && (
+            <Tooltip
+              data-testid="upToDateTooltip"
+              title={`Generated at ${testResultDate.toString()}`}
+              placement="right"
+            >
+              <CheckCircleIcon color="primary" />
+            </Tooltip>
+          )}
           {isTestResultError && (
             <Tooltip
               data-testid="errorTooltip"

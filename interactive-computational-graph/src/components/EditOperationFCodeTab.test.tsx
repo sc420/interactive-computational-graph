@@ -55,8 +55,10 @@ test("should run test successfully", () => {
   fireEvent.click(runTestButton);
 
   expect(getTestResult()).toBe("1");
-  const errorTooltip = screen.queryByRole("errorTooltip");
+  const errorTooltip = screen.queryByTestId("errorTooltip");
   expect(errorTooltip).not.toBeInTheDocument();
+  const upToDateTooltip = screen.getByTestId("upToDateTooltip");
+  expect(upToDateTooltip).toBeInTheDocument();
 });
 
 test("should randomize test data", () => {
@@ -136,6 +138,8 @@ test("should show error when code is invalid", () => {
   const errorTooltip = screen.getByTestId("errorTooltip");
   expect(errorTooltip).toBeInTheDocument();
   expect(mockConsole).toHaveBeenCalled();
+  const upToDateTooltip = screen.queryByTestId("upToDateTooltip");
+  expect(upToDateTooltip).not.toBeInTheDocument();
 
   jest.restoreAllMocks(); // restores the spy created with spyOn
 });
@@ -173,6 +177,8 @@ test("should show error when input port to nodes data is invalid", () => {
   );
   const errorTooltip = screen.getByTestId("errorTooltip");
   expect(errorTooltip).toBeInTheDocument();
+  const upToDateTooltip = screen.queryByTestId("upToDateTooltip");
+  expect(upToDateTooltip).not.toBeInTheDocument();
 
   jest.restoreAllMocks(); // restores the spy created with spyOn
 });
@@ -210,6 +216,8 @@ test("should show error when node to values data is invalid", () => {
   );
   const errorTooltip = screen.getByTestId("errorTooltip");
   expect(errorTooltip).toBeInTheDocument();
+  const upToDateTooltip = screen.queryByTestId("upToDateTooltip");
+  expect(upToDateTooltip).not.toBeInTheDocument();
 
   jest.restoreAllMocks(); // restores the spy created with spyOn
 });

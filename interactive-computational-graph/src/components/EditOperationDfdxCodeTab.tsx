@@ -24,6 +24,11 @@ import {
 import Operation from "../core/Operation";
 import type Port from "../core/Port";
 import MonacoEditorTestHelper from "../editor/MonacoEditorTestHelper";
+import {
+  buildRandomInputNodeToValues,
+  buildRandomInputPortToNodes,
+  getNumNodesInInputPortToNodes,
+} from "../features/RandomTestDataGenerator";
 import { randomInteger } from "../features/RandomUtilities";
 import Katex from "../latex/Katex";
 import EditOperationTabPanel from "./EditOperationTabPanel";
@@ -72,52 +77,6 @@ const EditOperationDfdxCodeTab: FunctionComponent<
     setEditingDfdxCode(value);
   }, []);
 
-  const buildRandomNodeIds = useCallback(
-    (nextId: number, numNodes: number): string[] => {
-      const nodeIds = Array.from(
-        { length: numNodes },
-        (_, index) => nextId + index,
-      );
-      return nodeIds.map((nodeId) => `${nodeId}`);
-    },
-    [],
-  );
-
-  const buildRandomInputPortToNodes = useCallback((): Record<
-    string,
-    string[]
-  > => {
-    const inputPortToNodes: Record<string, string[]> = {};
-    let nextId = 0;
-    inputPorts.forEach((inputPort) => {
-      // Use only one node to avoid showing errors for those operations that
-      // don't allow multiple input nodes
-      const numNodes = 1;
-      inputPortToNodes[inputPort.getId()] = buildRandomNodeIds(
-        nextId,
-        numNodes,
-      );
-      nextId += numNodes;
-    });
-    return inputPortToNodes;
-  }, [buildRandomNodeIds, inputPorts]);
-
-  const buildRandomInputNodeToValues = useCallback(
-    (numNodes: number): Record<string, string> => {
-      const inputNodeToValues: Record<string, string> = {};
-      const nodeIds = Array.from(
-        { length: numNodes },
-        (_, index) => `${index}`,
-      );
-      nodeIds.forEach((nodeId) => {
-        const value = randomInteger(-10, 10) / 10;
-        inputNodeToValues[nodeId] = `${value}`;
-      });
-      return inputNodeToValues;
-    },
-    [],
-  );
-
   const buildRandomXId = useCallback((numNodes: number): string => {
     if (numNodes <= 0) {
       return "0";
@@ -128,11 +87,8 @@ const EditOperationDfdxCodeTab: FunctionComponent<
   }, []);
 
   const buildRandomTestData = useCallback((): TestData => {
-    const inputPortToNodes = buildRandomInputPortToNodes();
-    const numNodes = Object.values(inputPortToNodes).reduce(
-      (count, nodes) => count + nodes.length,
-      0,
-    );
+    const inputPortToNodes = buildRandomInputPortToNodes(inputPorts);
+    const numNodes = getNumNodesInInputPortToNodes(inputPortToNodes);
     const inputNodeToValues = buildRandomInputNodeToValues(numNodes);
     const xId = buildRandomXId(numNodes);
     return {
@@ -140,11 +96,7 @@ const EditOperationDfdxCodeTab: FunctionComponent<
       inputNodeToValues: JSON.stringify(inputNodeToValues, null, 4),
       xId,
     };
-  }, [
-    buildRandomInputNodeToValues,
-    buildRandomInputPortToNodes,
-    buildRandomXId,
-  ]);
+  }, [buildRandomXId, inputPorts]);
 
   const [testData, setTestData] = useState<TestData>(buildRandomTestData());
   const [testResult, setTestResult] = useState("");

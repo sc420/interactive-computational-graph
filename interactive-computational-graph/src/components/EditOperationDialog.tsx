@@ -1,5 +1,6 @@
 import CloseIcon from "@mui/icons-material/Close";
 import {
+  Alert,
   AppBar,
   Box,
   Button,
@@ -184,7 +185,6 @@ const EditOperationDialog: FunctionComponent<EditOperationDialogProps> = ({
             <Tab label="DF/DX Code" {...getTabProps(3)} />
           </Tabs>
         </Box>
-
         {/* Basic */}
         <EditOperationTabPanel index={0} value={activeTabIndex}>
           <Box sx={{ p: 3 }}>
@@ -197,7 +197,6 @@ const EditOperationDialog: FunctionComponent<EditOperationDialogProps> = ({
             />
           </Box>
         </EditOperationTabPanel>
-
         {/* Input ports */}
         <EditOperationTabPanel index={1} value={activeTabIndex}>
           <Box sx={{ p: 3 }}>
@@ -209,7 +208,6 @@ const EditOperationDialog: FunctionComponent<EditOperationDialogProps> = ({
             />
           </Box>
         </EditOperationTabPanel>
-
         {/* f code */}
         <EditOperationTabPanel index={2} value={activeTabIndex}>
           <Box sx={{ p: 3 }}>
@@ -221,7 +219,6 @@ const EditOperationDialog: FunctionComponent<EditOperationDialogProps> = ({
             />
           </Box>
         </EditOperationTabPanel>
-
         {/* df/dx code */}
         <EditOperationTabPanel index={3} value={activeTabIndex}>
           <Box sx={{ p: 3 }}>
@@ -233,6 +230,12 @@ const EditOperationDialog: FunctionComponent<EditOperationDialogProps> = ({
             />
           </Box>
         </EditOperationTabPanel>
+
+        <Box sx={{ p: 3 }}>
+          <Alert variant="outlined" severity="info">
+            Changes will be lost after reloading the page
+          </Alert>
+        </Box>
       </DialogContent>
     </Dialog>
   );

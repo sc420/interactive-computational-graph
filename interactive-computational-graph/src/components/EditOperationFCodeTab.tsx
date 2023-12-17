@@ -183,6 +183,11 @@ Couldn't parse the input node to values data: ${error.message}
     }
   }, [editingFCode, tryParseInputNodeToValues, tryParseInputPortToNodes]);
 
+  const handleRandomizeTestData = useCallback(() => {
+    setTestResultUpToDate(false);
+    setTestData(buildRandomTestData());
+  }, [buildRandomTestData]);
+
   // Update values when the code changes
   useEffect(() => {
     onChangeValues(editingFCode);
@@ -294,9 +299,7 @@ Couldn't parse the input node to values data: ${error.message}
             <Button
               variant="contained"
               startIcon={<PlayArrowIcon />}
-              onClick={() => {
-                runTest();
-              }}
+              onClick={runTest}
             >
               Run Test
             </Button>
@@ -306,9 +309,7 @@ Couldn't parse the input node to values data: ${error.message}
             <Button
               variant="outlined"
               startIcon={<ShuffleIcon />}
-              onClick={() => {
-                setTestData(buildRandomTestData());
-              }}
+              onClick={handleRandomizeTestData}
             >
               Randomize Test Data
             </Button>

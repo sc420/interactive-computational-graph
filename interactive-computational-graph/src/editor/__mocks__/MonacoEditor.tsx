@@ -1,15 +1,12 @@
 import { Box, TextField } from "@mui/material";
 import { type FunctionComponent } from "react";
+import type MonacoEditorProps from "../MonacoEditorProps";
 
-interface MonacoEditorTestHelperProps {
-  testId: string;
-  value?: string;
-  onChange?: (value: string | undefined) => void;
-}
-
-const MonacoEditorTestHelper: FunctionComponent<
-  MonacoEditorTestHelperProps
-> = ({ testId, value, onChange }) => {
+const MockMonacoEditor: FunctionComponent<MonacoEditorProps> = ({
+  testId,
+  value,
+  onChange,
+}) => {
   return (
     <Box border={1}>
       <TextField
@@ -26,4 +23,4 @@ const MonacoEditorTestHelper: FunctionComponent<
   );
 };
 
-export default MonacoEditorTestHelper;
+export default MockMonacoEditor;

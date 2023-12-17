@@ -1,49 +1,74 @@
 import { fireEvent, screen } from "@testing-library/react";
 
 const setCode = (code: string): void => {
-  const codeInput = screen.getByTestId("code");
+  const codeInput = getCodeInput();
   fireEvent.change(codeInput, { target: { value: code } });
 };
 
 const setInputPortToNodes = (inputPortToNodesJson: string): void => {
-  const inputPortToNodesInput = screen.getByTestId("inputPortToNodes");
+  const inputPortToNodesInput = getInputPortToNodesInput();
   fireEvent.change(inputPortToNodesInput, {
     target: { value: inputPortToNodesJson },
   });
 };
 
 const setInputNodeToValues = (inputNodeToValuesJson: string): void => {
-  const inputNodeToValuesInput = screen.getByTestId("inputNodeToValues");
+  const inputNodeToValuesInput = getInputNodeToValuesInput();
   fireEvent.change(inputNodeToValuesInput, {
     target: { value: inputNodeToValuesJson },
   });
 };
 
 const setXId = (xId: string): void => {
-  const xIdInput = screen.getByTestId("xId");
+  const xIdInput = getXIdInput();
   fireEvent.change(xIdInput, {
     target: { value: xId },
   });
 };
 
 const getInputPortToNodes = (): string => {
-  const testResultInput = screen.getByTestId("inputPortToNodes");
-  return (testResultInput as HTMLInputElement).value;
+  const testResultInput = getInputPortToNodesInput();
+  return testResultInput.value;
 };
 
 const getInputNodeToValues = (): string => {
-  const testResultInput = screen.getByTestId("inputNodeToValues");
-  return (testResultInput as HTMLInputElement).value;
+  const testResultInput = getInputNodeToValuesInput();
+  return testResultInput.value;
 };
 
 const getXId = (): string => {
-  const testResultInput = screen.getByTestId("xId");
-  return (testResultInput as HTMLInputElement).value;
+  const xIdInput = getXIdInput();
+  return xIdInput.value;
 };
 
 const getTestResult = (): string => {
-  const testResultInput = screen.getByTestId("testResult");
-  return (testResultInput as HTMLInputElement).value;
+  const testResultInput = getTestResultInput();
+  return testResultInput.value;
+};
+
+const getCodeInput = (): HTMLInputElement => {
+  const input = screen.getByTestId("code");
+  return input as HTMLInputElement;
+};
+
+const getInputPortToNodesInput = (): HTMLInputElement => {
+  const input = screen.getByTestId("inputPortToNodes");
+  return input as HTMLInputElement;
+};
+
+const getInputNodeToValuesInput = (): HTMLInputElement => {
+  const input = screen.getByTestId("inputNodeToValues");
+  return input as HTMLInputElement;
+};
+
+const getXIdInput = (): HTMLInputElement => {
+  const input = screen.getByTestId("xId");
+  return input as HTMLInputElement;
+};
+
+const getTestResultInput = (): HTMLInputElement => {
+  const input = screen.getByTestId("testResult");
+  return input as HTMLInputElement;
 };
 
 export {

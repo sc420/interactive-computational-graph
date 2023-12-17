@@ -13,6 +13,7 @@ import {
 } from "./EditOperationCodeTabTestUtils";
 import EditOperationDfdxCodeTab from "./EditOperationDfdxCodeTab";
 
+jest.mock("../editor/MonacoEditor");
 jest.mock("../features/RandomUtilities");
 jest.mock("../latex/Katex");
 

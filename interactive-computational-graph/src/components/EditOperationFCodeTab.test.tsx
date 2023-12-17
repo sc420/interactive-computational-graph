@@ -11,6 +11,7 @@ import {
 } from "./EditOperationCodeTabTestUtils";
 import EditOperationFCodeTab from "./EditOperationFCodeTab";
 
+jest.mock("../editor/MonacoEditor");
 jest.mock("../features/RandomUtilities");
 jest.mock("../latex/Katex");
 

@@ -1,4 +1,3 @@
-import { Editor } from "@monaco-editor/react";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
@@ -23,7 +22,7 @@ import {
 } from "react";
 import Operation from "../core/Operation";
 import type Port from "../core/Port";
-import MonacoEditorTestHelper from "../editor/MonacoEditorTestHelper";
+import MonacoEditor from "../editor/MonacoEditor";
 import {
   buildRandomInputNodeToValues,
   buildRandomInputPortToNodes,
@@ -32,8 +31,6 @@ import {
 import { randomInteger } from "../features/RandomUtilities";
 import Katex from "../latex/Katex";
 import EditOperationTabPanel from "./EditOperationTabPanel";
-
-const isTest = process.env.NODE_ENV === "test";
 
 interface EditOperationDfdxCodeTabProps {
   dfdxCode: string;
@@ -249,22 +246,13 @@ Couldn't parse the input node to values data: ${error.message}
             <Typography variant="h6" component="h1">
               Code for calculating <Katex latex="\partial{f}/\partial{x}" />
             </Typography>
-            <Box border={1} borderColor="grey.500">
-              <Editor
-                height="300px"
-                theme={isDarkMode ? "vs-dark" : "light"}
-                defaultLanguage="javascript"
-                defaultValue={dfdxCode}
-                onChange={handleCodeChange}
-              />
-
-              {isTest && (
-                <MonacoEditorTestHelper
-                  testId="code"
-                  onChange={handleCodeChange}
-                />
-              )}
-            </Box>
+            <MonacoEditor
+              testId="code"
+              defaultLanguage="javascript"
+              defaultValue={dfdxCode}
+              isDarkMode={isDarkMode}
+              onChange={handleCodeChange}
+            />
           </Stack>
         </EditOperationTabPanel>
 
@@ -288,23 +276,13 @@ Couldn't parse the input node to values data: ${error.message}
                 <HelpOutlineIcon color="primary" />
               </Tooltip>
             </Stack>
-            <Box border={1} borderColor="grey.500">
-              <Editor
-                height="300px"
-                theme={isDarkMode ? "vs-dark" : "light"}
-                defaultLanguage="json"
-                value={testData.inputPortToNodes}
-                onChange={handleInputPortToNodesChange}
-              />
-
-              {isTest && (
-                <MonacoEditorTestHelper
-                  testId="inputPortToNodes"
-                  value={testData.inputPortToNodes}
-                  onChange={handleInputPortToNodesChange}
-                />
-              )}
-            </Box>
+            <MonacoEditor
+              testId="inputPortToNodes"
+              defaultLanguage="json"
+              value={testData.inputPortToNodes}
+              isDarkMode={isDarkMode}
+              onChange={handleInputPortToNodesChange}
+            />
           </Stack>
         </EditOperationTabPanel>
 
@@ -328,24 +306,13 @@ Couldn't parse the input node to values data: ${error.message}
                 <HelpOutlineIcon color="primary" />
               </Tooltip>
             </Stack>
-
-            <Box border={1} borderColor="grey.500">
-              <Editor
-                height="300px"
-                theme={isDarkMode ? "vs-dark" : "light"}
-                defaultLanguage="json"
-                value={testData.inputNodeToValues}
-                onChange={handleInputNodeToValuesChange}
-              />
-
-              {isTest && (
-                <MonacoEditorTestHelper
-                  testId="inputNodeToValues"
-                  value={testData.inputNodeToValues}
-                  onChange={handleInputNodeToValuesChange}
-                />
-              )}
-            </Box>
+            <MonacoEditor
+              testId="inputNodeToValues"
+              defaultLanguage="json"
+              value={testData.inputNodeToValues}
+              isDarkMode={isDarkMode}
+              onChange={handleInputNodeToValuesChange}
+            />
           </Stack>
         </EditOperationTabPanel>
 
@@ -368,23 +335,12 @@ Couldn't parse the input node to values data: ${error.message}
                 <HelpOutlineIcon color="primary" />
               </Tooltip>
             </Stack>
-
-            <Box border={1} borderColor="grey.500">
-              <Editor
-                height="300px"
-                theme={isDarkMode ? "vs-dark" : "light"}
-                value={testData.xId}
-                onChange={handleXIdChange}
-              />
-
-              {isTest && (
-                <MonacoEditorTestHelper
-                  testId="xId"
-                  value={testData.xId}
-                  onChange={handleXIdChange}
-                />
-              )}
-            </Box>
+            <MonacoEditor
+              testId="xId"
+              value={testData.xId}
+              isDarkMode={isDarkMode}
+              onChange={handleXIdChange}
+            />
           </Stack>
         </EditOperationTabPanel>
 
@@ -447,20 +403,12 @@ Couldn't parse the input node to values data: ${error.message}
             </Tooltip>
           )}
         </Stack>
-        <Box border={1} borderColor="grey.500">
-          <Editor
-            height="200px"
-            theme={isDarkMode ? "vs-dark" : "light"}
-            options={{
-              readOnly: true,
-            }}
-            value={testResult}
-          />
-
-          {isTest && (
-            <MonacoEditorTestHelper testId="testResult" value={testResult} />
-          )}
-        </Box>
+        <MonacoEditor
+          testId="testResult"
+          value={testResult}
+          isDarkMode={isDarkMode}
+          readOnly
+        />
       </Stack>
     </Container>
   );

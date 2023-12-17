@@ -12,6 +12,14 @@ class Operation {
     this.dfdxCode = dfdxCode;
   }
 
+  getFCode(): string {
+    return this.fCode;
+  }
+
+  getDfdxCode(): string {
+    return this.dfdxCode;
+  }
+
   evalF(
     fInputPortToNodes: Record<string, string[]>,
     fInputNodeToValues: Record<string, string>,

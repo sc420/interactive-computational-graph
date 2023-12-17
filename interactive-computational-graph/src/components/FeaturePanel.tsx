@@ -15,8 +15,11 @@ interface FeaturePanelProps {
   hasNodes: boolean;
   hasDerivativeTarget: boolean;
   explainDerivativeData: ExplainDerivativeData[];
+  isDarkMode: boolean;
   onAddNode: (featureNodeType: FeatureNodeType) => void;
   onAddOperation: () => void;
+  onEditOperation: (updatedOperation: FeatureOperation) => void;
+  onDeleteOperation: (operationId: string) => void;
   onClearSelection: () => void;
   onSelectNode: (nodeId: string) => void;
 }
@@ -27,8 +30,11 @@ const FeaturePanel: FunctionComponent<FeaturePanelProps> = ({
   hasNodes,
   hasDerivativeTarget,
   explainDerivativeData,
+  isDarkMode,
   onAddNode,
   onAddOperation,
+  onEditOperation,
+  onDeleteOperation,
   onClearSelection,
   onSelectNode,
 }) => {
@@ -38,8 +44,11 @@ const FeaturePanel: FunctionComponent<FeaturePanelProps> = ({
         return (
           <AddNodesPanel
             featureOperations={featureOperations}
+            isDarkMode={isDarkMode}
             onAddNode={onAddNode}
             onAddOperation={onAddOperation}
+            onEditOperation={onEditOperation}
+            onDeleteOperation={onDeleteOperation}
           />
         );
       case "view-nodes":
@@ -58,8 +67,11 @@ const FeaturePanel: FunctionComponent<FeaturePanelProps> = ({
         return (
           <AddNodesPanel
             featureOperations={featureOperations}
+            isDarkMode={isDarkMode}
             onAddNode={onAddNode}
             onAddOperation={onAddOperation}
+            onEditOperation={onEditOperation}
+            onDeleteOperation={onDeleteOperation}
           />
         );
       case "examples":

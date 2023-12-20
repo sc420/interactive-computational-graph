@@ -324,6 +324,7 @@ const buildReactFlowNodeData = (addNodeData: AddNodeData): NodeData => {
     featureOperation,
     nodeId,
     nodeName,
+    initialOutputValue,
     isReverseMode,
     derivativeTargetName,
     onNameChange,
@@ -423,7 +424,7 @@ const buildReactFlowNodeData = (addNodeData: AddNodeData): NodeData => {
                 latex: "=",
               },
             ],
-            value: "0",
+            value: initialOutputValue,
           },
           {
             type: "DERIVATIVE",

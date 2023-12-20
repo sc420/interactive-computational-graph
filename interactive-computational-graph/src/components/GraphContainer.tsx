@@ -27,6 +27,8 @@ import type AddNodeData from "../features/AddNodeData";
 import {
   ADD_DFDX_CODE,
   ADD_F_CODE,
+  COS_DFDX_CODE,
+  COS_F_CODE,
   MULTIPLY_DFDX_CODE,
   MULTIPLY_F_CODE,
   PRODUCT_DFDX_CODE,
@@ -134,13 +136,22 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       helpText: "Multiply all inputs $ \\prod_i x_{i} $",
     },
     {
+      id: "cos",
+      text: "Cos",
+      type: "SIMPLE",
+      namePrefix: "c",
+      operation: new Operation(COS_F_CODE, COS_DFDX_CODE),
+      inputPorts: [new Port("x", true)],
+      helpText: "Calculate $ \\cos(x) $",
+    },
+    {
       id: "squared_error",
       text: "Squared Error",
       type: "SIMPLE",
       namePrefix: "s",
       operation: new Operation(SQUARED_ERROR_F_CODE, SQUARED_ERROR_DFDX_CODE),
       inputPorts: [new Port("y_t", false), new Port("y_e", false)],
-      helpText: "Calculates squared error $ (y_t - y_e)^2 $",
+      helpText: "Calculate squared error $ (y_t - y_e)^2 $",
     },
   ]);
   const [nextNodeId, setNextNodeId] = useState<number>(1);
@@ -220,6 +231,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
         nodeName,
       );
 
+      const initialOutputValue = coreGraphAdapter.getNodeValueById(nodeId);
       const derivativeTargetName =
         derivativeTarget === null
           ? null
@@ -229,6 +241,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
         featureOperation,
         nodeId,
         nodeName,
+        initialOutputValue,
         isReverseMode,
         derivativeTargetName,
         onNameChange: handleNameChange,
@@ -412,6 +425,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
         nodeName,
       );
 
+      const initialOutputValue = coreGraphAdapter.getNodeValueById(nodeId);
       const derivativeTargetName =
         derivativeTarget === null
           ? null
@@ -421,6 +435,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
         featureOperation,
         nodeId,
         nodeName,
+        initialOutputValue,
         isReverseMode,
         derivativeTargetName,
         onNameChange: handleNameChange,

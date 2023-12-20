@@ -289,6 +289,20 @@ it("derivative target name should update when the node name is updated", () => {
   expect(getDerivativeTarget()).toBe("s_1");
 });
 
+it("outputs should be set correctly after adding the nodes", () => {
+  renderGraphContainer();
+
+  // Add the nodes
+  const addItem = screen.getByText("Add");
+  const cosItem = screen.getByText("Cos");
+  fireEvent.click(addItem); // id=1
+  fireEvent.click(cosItem); // id=2
+
+  // Check the output values
+  expect(getOutputItemValue("1", "VALUE")).toBe("0");
+  expect(getOutputItemValue("2", "VALUE")).toBe("1");
+});
+
 // It uses example from https://colah.github.io/posts/2015-08-Backprop/
 it("outputs should change when derivative mode/target is changed", () => {
   renderGraphContainer();

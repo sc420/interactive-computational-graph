@@ -12,6 +12,7 @@ interface AddNodeData {
   featureOperation: FeatureOperation | null;
   nodeId: string;
   nodeName: string;
+  initialOutputValue: string;
   isReverseMode: boolean;
   derivativeTargetName: string | null;
   onNameChange: NameChangeCallback;

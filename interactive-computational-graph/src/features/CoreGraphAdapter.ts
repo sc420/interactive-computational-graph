@@ -541,6 +541,10 @@ cycle`;
     return nodeName;
   }
 
+  getNodeValueById(nodeId: string): string {
+    return this.graph.getNodeValue(nodeId);
+  }
+
   private connectDummyInputNode(nodeId: string, portId: string): void {
     const dummyInputNodeId = this.getDummyInputNodeId(nodeId, portId);
     this.graph.connect(dummyInputNodeId, nodeId, portId);

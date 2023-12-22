@@ -13,7 +13,7 @@
  * Example data for product:
  * ```json
  * {
- *   "x_i": ["1", "2", "3"]
+ *   "x_i": ["0", "1", "2"]
  * }
  * ```
  * @param {Record<string, string>} fInputNodeToValues An object where the keys
@@ -21,14 +21,14 @@
  * Example data for product:
  * ```json
  * {
- *   "1": "1",
- *   "2": "2",
- *   "3": "3"
+ *   "0": "1",
+ *   "1": "2",
+ *   "2": "3"
  * }
  * ```
  * @returns {string} Evaluated f value. For example: if we consider
  * the above example data, then the value is "6" because
- * f([v1, v2, v3]) = v1 * v2 * v3 = 1 * 2 * 3 = 6.
+ * f(x_i) = x_0 * x_1 * x_2 = 1 * 2 * 3 = 6.
  */
 function f(fInputPortToNodes, fInputNodeToValues) {
   // Write the logic here
@@ -42,7 +42,7 @@ function f(fInputPortToNodes, fInputNodeToValues) {
  * Example data for product:
  * ```json
  * {
- *   "x_i": ["1", "2", "3"]
+ *   "x_i": ["0", "1", "2"]
  * }
  * ```
  * @param {Record<string, string>} fInputNodeToValues An object where the keys
@@ -50,9 +50,9 @@ function f(fInputPortToNodes, fInputNodeToValues) {
  * Example data for product:
  * ```json
  * {
- *   "1": "1",
- *   "2": "2",
- *   "3": "3"
+ *   "0": "1",
+ *   "1": "2",
+ *   "2": "3"
  * }
  * ```
  * @param {string} xId Node ID of x. Note that the framework will not call this
@@ -62,8 +62,9 @@ function f(fInputPortToNodes, fInputNodeToValues) {
  * - x is not on the forward/reverse differentiation path (i.e., gradient of x
  *   doesn't flow through f node)
  * @returns {string} Evaluated derivative df/dy. For example, if we consider
- * the above example data and assume xId is "v2", then the value is "3"
- * since f = v1 * v2 * v3 and df/dx = v1 * v3 = 3.
+ * the above example data and assume xId is "1", then the value is "3"
+ * since f(x_i) = x_0 * x_1 * x_2 and df/dx = df/d(x_1) = x_0 * x_2 = 1 * 3 =
+ * 3.
  */
 function dfdx(fInputPortToNodes, fInputNodeToValues, xId) {
   // Write the logic here

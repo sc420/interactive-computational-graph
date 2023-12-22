@@ -154,9 +154,9 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       helpText: "Calculate squared error $ (y_t - y_e)^2 $",
     },
   ]);
-  const [nextNodeId, setNextNodeId] = useState<number>(1);
+  const [nextNodeId, setNextNodeId] = useState<number>(0);
   const [nodeNameBuilder] = useState<NodeNameBuilder>(new NodeNameBuilder());
-  const [nextOperationId, setNextOperationId] = useState<number>(1);
+  const [nextOperationId, setNextOperationId] = useState<number>(0);
 
   // Feature panel states
   const [explainDerivativeData, setExplainDerivativeData] = useState<

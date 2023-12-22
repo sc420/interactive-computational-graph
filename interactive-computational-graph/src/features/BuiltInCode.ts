@@ -5,24 +5,24 @@ const TEMPLATE_F_CODE = `\
  * @param {Record<string, string[]>} fInputPortToNodes An object where the keys
  * are port IDs and the values are node IDs of the connected input nodes.
  * Example data for product:
- * \`javascript
+ * \`\`\`json
  * {
- *   x_i: ["v1", "v3", "v2"]
+ *   "x_i": ["1", "2", "3"]
  * }
- * \`
+ * \`\`\`
  * @param {Record<string, string>} fInputNodeToValues An object where the keys
  * are node IDs and the values are node values of the connected input nodes.
  * Example data for product:
- * \`javascript
+ * \`\`\`json
  * {
- *   v1: "1",
- *   v3: "3",
- *   v2: "2",
+ *   "1": "1",
+ *   "2": "2",
+ *   "3": "3"
  * }
- * \`
+ * \`\`\`
  * @returns {string} Evaluated f value. For example: if we consider
  * the above example data, then the value is "6" because
- * \`f({v1, v3, v2}) = v1 * v3 * v2 = 1 * 3 * 2 = 6\`.
+ * f([v1, v2, v3]) = v1 * v2 * v3 = 1 * 2 * 3 = 6.
  */
 function f(fInputPortToNodes, fInputNodeToValues) {
   // Write the logic here
@@ -37,28 +37,30 @@ const TEMPLATE_DFDX_CODE = `\
  * @param {Record<string, string[]>} fInputPortToNodes An object where the keys
  * are port IDs and the values are node IDs of the connected input nodes.
  * Example data for product:
- * \`javascript
+ * \`\`\`json
  * {
- *   x_i: ["v1", "v3", "v2"]
+ *   "x_i": ["1", "2", "3"]
  * }
- * \`
+ * \`\`\`
  * @param {Record<string, string>} fInputNodeToValues An object where the keys
  * are node IDs and the values are node values of the connected input nodes.
  * Example data for product:
- * \`javascript
+ * \`\`\`json
  * {
- *   v1: "1",
- *   v3: "3",
- *   v2: "2",
+ *   "1": "1",
+ *   "2": "2",
+ *   "3": "3"
  * }
- * \`
+ * \`\`\`
  * @param {string} xId Node ID of x. Note that the framework will not call this
  * function for the following cases:
  * - x is a constant node (i.e., x will always be a variable)
  * - x is the node of f (i.e., the derivative is always 1)
+ * - x is not on the forward/reverse differentiation path (i.e., gradient of x
+ *   doesn't flow through f node)
  * @returns {string} Evaluated derivative df/dy. For example, if we consider
- * the above example data and assume \`xId\` is "v2", then the value is "3"
- * since \`f = v1 * v3 * v2\` and \`df/dx = v1 * v3 = 3\`.
+ * the above example data and assume xId is "v2", then the value is "3"
+ * since f = v1 * v2 * v3 and df/dx = v1 * v3 = 3.
  */
 function dfdx(fInputPortToNodes, fInputNodeToValues, xId) {
   // Write the logic here
@@ -72,24 +74,24 @@ const ADD_F_CODE = `\
  * @param {Record<string, string[]>} fInputPortToNodes An object where the keys
  * are port IDs and the values are node IDs of the connected input nodes.
  * Example data for product:
- * \`javascript
+ * \`\`\`json
  * {
- *   x_i: ["v1", "v3", "v2"]
+ *   "x_i": ["1", "2", "3"]
  * }
- * \`
+ * \`\`\`
  * @param {Record<string, string>} fInputNodeToValues An object where the keys
  * are node IDs and the values are node values of the connected input nodes.
  * Example data for product:
- * \`javascript
+ * \`\`\`json
  * {
- *   v1: "1",
- *   v3: "3",
- *   v2: "2",
+ *   "1": "1",
+ *   "2": "2",
+ *   "3": "3"
  * }
- * \`
+ * \`\`\`
  * @returns {string} Evaluated f value. For example: if we consider
  * the above example data, then the value is "6" because
- * \`f({v1, v3, v2}) = v1 * v3 * v2 = 1 * 3 * 2 = 6\`.
+ * f([v1, v2, v3]) = v1 * v2 * v3 = 1 * 2 * 3 = 6.
  */
 function f(fInputPortToNodes, fInputNodeToValues) {
   if (fInputPortToNodes.a.length !== 1) {
@@ -110,31 +112,33 @@ function f(fInputPortToNodes, fInputNodeToValues) {
 const ADD_DFDX_CODE = `\
 /**
  * Calculates df/dx.
- * @param {Record<string, string[]>} fInputPortToNodes An object where the
- * keys are port IDs and the values are node IDs of the connected input nodes.
+ * @param {Record<string, string[]>} fInputPortToNodes An object where the keys
+ * are port IDs and the values are node IDs of the connected input nodes.
  * Example data for product:
- * \`\`\`javascript
+ * \`\`\`json
  * {
- *   x_i: ["v1", "v3", "v2"]
+ *   "x_i": ["1", "2", "3"]
  * }
  * \`\`\`
- * @param {Record<string, string>} fInputNodeToValues An object where the
- * keys are node IDs and the values are node values of the connected input
- * nodes. Example data for product:
- * \`\`\`javascript
+ * @param {Record<string, string>} fInputNodeToValues An object where the keys
+ * are node IDs and the values are node values of the connected input nodes.
+ * Example data for product:
+ * \`\`\`json
  * {
- *   v1: "1",
- *   v3: "3",
- *   v2: "2",
+ *   "1": "1",
+ *   "2": "2",
+ *   "3": "3"
  * }
  * \`\`\`
  * @param {string} xId Node ID of x. Note that the framework will not call this
  * function for the following cases:
  * - x is a constant node (i.e., x will always be a variable)
  * - x is the node of f (i.e., the derivative is always 1)
+ * - x is not on the forward/reverse differentiation path (i.e., gradient of x
+ *   doesn't flow through f node)
  * @returns {string} Evaluated derivative df/dy. For example, if we consider
- * the above example data and assume \`xId\` is "v2", then the value is "3"
- * since \`f = v1 * v3 * v2\` and \`df/dx = v1 * v3 = 3\`.
+ * the above example data and assume xId is "v2", then the value is "3"
+ * since f = v1 * v2 * v3 and df/dx = v1 * v3 = 3.
  */
 function dfdx(fInputPortToNodes, fInputNodeToValues, xId) {
   const hasXInA = fInputPortToNodes.a.includes(xId);
@@ -152,24 +156,24 @@ const MULTIPLY_F_CODE = `\
  * @param {Record<string, string[]>} fInputPortToNodes An object where the keys
  * are port IDs and the values are node IDs of the connected input nodes.
  * Example data for product:
- * \`javascript
+ * \`\`\`json
  * {
- *   x_i: ["v1", "v3", "v2"]
+ *   "x_i": ["1", "2", "3"]
  * }
- * \`
+ * \`\`\`
  * @param {Record<string, string>} fInputNodeToValues An object where the keys
  * are node IDs and the values are node values of the connected input nodes.
  * Example data for product:
- * \`javascript
+ * \`\`\`json
  * {
- *   v1: "1",
- *   v3: "3",
- *   v2: "2",
+ *   "1": "1",
+ *   "2": "2",
+ *   "3": "3"
  * }
- * \`
+ * \`\`\`
  * @returns {string} Evaluated f value. For example: if we consider
  * the above example data, then the value is "6" because
- * \`f({v1, v3, v2}) = v1 * v3 * v2 = 1 * 3 * 2 = 6\`.
+ * f([v1, v2, v3]) = v1 * v2 * v3 = 1 * 2 * 3 = 6.
  */
 function f(fInputPortToNodes, fInputNodeToValues) {
   if (fInputPortToNodes.a.length !== 1) {
@@ -190,31 +194,33 @@ function f(fInputPortToNodes, fInputNodeToValues) {
 const MULTIPLY_DFDX_CODE = `\
 /**
  * Calculates df/dx.
- * @param {Record<string, string[]>} fInputPortToNodes An object where the
- * keys are port IDs and the values are node IDs of the connected input nodes.
+ * @param {Record<string, string[]>} fInputPortToNodes An object where the keys
+ * are port IDs and the values are node IDs of the connected input nodes.
  * Example data for product:
- * \`\`\`javascript
+ * \`\`\`json
  * {
- *   x_i: ["v1", "v3", "v2"]
+ *   "x_i": ["1", "2", "3"]
  * }
  * \`\`\`
- * @param {Record<string, string>} fInputNodeToValues An object where the
- * keys are node IDs and the values are node values of the connected input
- * nodes. Example data for product:
- * \`\`\`javascript
+ * @param {Record<string, string>} fInputNodeToValues An object where the keys
+ * are node IDs and the values are node values of the connected input nodes.
+ * Example data for product:
+ * \`\`\`json
  * {
- *   v1: "1",
- *   v3: "3",
- *   v2: "2",
+ *   "1": "1",
+ *   "2": "2",
+ *   "3": "3"
  * }
  * \`\`\`
  * @param {string} xId Node ID of x. Note that the framework will not call this
  * function for the following cases:
  * - x is a constant node (i.e., x will always be a variable)
  * - x is the node of f (i.e., the derivative is always 1)
+ * - x is not on the forward/reverse differentiation path (i.e., gradient of x
+ *   doesn't flow through f node)
  * @returns {string} Evaluated derivative df/dy. For example, if we consider
- * the above example data and assume \`xId\` is "v2", then the value is "3"
- * since \`f = v1 * v3 * v2\` and \`df/dx = v1 * v3 = 3\`.
+ * the above example data and assume xId is "v2", then the value is "3"
+ * since f = v1 * v2 * v3 and df/dx = v1 * v3 = 3.
  */
 function dfdx(fInputPortToNodes, fInputNodeToValues, xId) {
   const hasXInA = fInputPortToNodes.a.includes(xId);
@@ -236,24 +242,24 @@ const SUM_F_CODE = `\
  * @param {Record<string, string[]>} fInputPortToNodes An object where the keys
  * are port IDs and the values are node IDs of the connected input nodes.
  * Example data for product:
- * \`javascript
+ * \`\`\`json
  * {
- *   x_i: ["v1", "v3", "v2"]
+ *   "x_i": ["1", "2", "3"]
  * }
- * \`
+ * \`\`\`
  * @param {Record<string, string>} fInputNodeToValues An object where the keys
  * are node IDs and the values are node values of the connected input nodes.
  * Example data for product:
- * \`javascript
+ * \`\`\`json
  * {
- *   v1: "1",
- *   v3: "3",
- *   v2: "2",
+ *   "1": "1",
+ *   "2": "2",
+ *   "3": "3"
  * }
- * \`
+ * \`\`\`
  * @returns {string} Evaluated f value. For example: if we consider
  * the above example data, then the value is "6" because
- * \`f({v1, v3, v2}) = v1 * v3 * v2 = 1 * 3 * 2 = 6\`.
+ * f([v1, v2, v3]) = v1 * v2 * v3 = 1 * 2 * 3 = 6.
  */
 function f(fInputPortToNodes, fInputNodeToValues) {
   let sum = 0;
@@ -268,31 +274,33 @@ function f(fInputPortToNodes, fInputNodeToValues) {
 const SUM_DFDX_CODE = `\
 /**
  * Calculates df/dx.
- * @param {Record<string, string[]>} fInputPortToNodes An object where the
- * keys are port IDs and the values are node IDs of the connected input nodes.
+ * @param {Record<string, string[]>} fInputPortToNodes An object where the keys
+ * are port IDs and the values are node IDs of the connected input nodes.
  * Example data for product:
- * \`\`\`javascript
+ * \`\`\`json
  * {
- *   x_i: ["v1", "v3", "v2"]
+ *   "x_i": ["1", "2", "3"]
  * }
  * \`\`\`
- * @param {Record<string, string>} fInputNodeToValues An object where the
- * keys are node IDs and the values are node values of the connected input
- * nodes. Example data for product:
- * \`\`\`javascript
+ * @param {Record<string, string>} fInputNodeToValues An object where the keys
+ * are node IDs and the values are node values of the connected input nodes.
+ * Example data for product:
+ * \`\`\`json
  * {
- *   v1: "1",
- *   v3: "3",
- *   v2: "2",
+ *   "1": "1",
+ *   "2": "2",
+ *   "3": "3"
  * }
  * \`\`\`
  * @param {string} xId Node ID of x. Note that the framework will not call this
  * function for the following cases:
  * - x is a constant node (i.e., x will always be a variable)
  * - x is the node of f (i.e., the derivative is always 1)
+ * - x is not on the forward/reverse differentiation path (i.e., gradient of x
+ *   doesn't flow through f node)
  * @returns {string} Evaluated derivative df/dy. For example, if we consider
- * the above example data and assume \`xId\` is "v2", then the value is "3"
- * since \`f = v1 * v3 * v2\` and \`df/dx = v1 * v3 = 3\`.
+ * the above example data and assume xId is "v2", then the value is "3"
+ * since f = v1 * v2 * v3 and df/dx = v1 * v3 = 3.
  */
 function dfdx(fInputPortToNodes, fInputNodeToValues, xId) {
   if (!fInputPortToNodes.x_i.includes(xId)) {
@@ -308,24 +316,24 @@ const PRODUCT_F_CODE = `\
  * @param {Record<string, string[]>} fInputPortToNodes An object where the keys
  * are port IDs and the values are node IDs of the connected input nodes.
  * Example data for product:
- * \`javascript
+ * \`\`\`json
  * {
- *   x_i: ["v1", "v3", "v2"]
+ *   "x_i": ["1", "2", "3"]
  * }
- * \`
+ * \`\`\`
  * @param {Record<string, string>} fInputNodeToValues An object where the keys
  * are node IDs and the values are node values of the connected input nodes.
  * Example data for product:
- * \`javascript
+ * \`\`\`json
  * {
- *   v1: "1",
- *   v3: "3",
- *   v2: "2",
+ *   "1": "1",
+ *   "2": "2",
+ *   "3": "3"
  * }
- * \`
+ * \`\`\`
  * @returns {string} Evaluated f value. For example: if we consider
  * the above example data, then the value is "6" because
- * \`f({v1, v3, v2}) = v1 * v3 * v2 = 1 * 3 * 2 = 6\`.
+ * f([v1, v2, v3]) = v1 * v2 * v3 = 1 * 2 * 3 = 6.
  */
 function f(fInputPortToNodes, fInputNodeToValues) {
   let product = 1;
@@ -340,31 +348,33 @@ function f(fInputPortToNodes, fInputNodeToValues) {
 const PRODUCT_DFDX_CODE = `\
 /**
  * Calculates df/dx.
- * @param {Record<string, string[]>} fInputPortToNodes An object where the
- * keys are port IDs and the values are node IDs of the connected input nodes.
+ * @param {Record<string, string[]>} fInputPortToNodes An object where the keys
+ * are port IDs and the values are node IDs of the connected input nodes.
  * Example data for product:
- * \`\`\`javascript
+ * \`\`\`json
  * {
- *   x_i: ["v1", "v3", "v2"]
+ *   "x_i": ["1", "2", "3"]
  * }
  * \`\`\`
- * @param {Record<string, string>} fInputNodeToValues An object where the
- * keys are node IDs and the values are node values of the connected input
- * nodes. Example data for product:
- * \`\`\`javascript
+ * @param {Record<string, string>} fInputNodeToValues An object where the keys
+ * are node IDs and the values are node values of the connected input nodes.
+ * Example data for product:
+ * \`\`\`json
  * {
- *   v1: "1",
- *   v3: "3",
- *   v2: "2",
+ *   "1": "1",
+ *   "2": "2",
+ *   "3": "3"
  * }
  * \`\`\`
  * @param {string} xId Node ID of x. Note that the framework will not call this
  * function for the following cases:
  * - x is a constant node (i.e., x will always be a variable)
  * - x is the node of f (i.e., the derivative is always 1)
+ * - x is not on the forward/reverse differentiation path (i.e., gradient of x
+ *   doesn't flow through f node)
  * @returns {string} Evaluated derivative df/dy. For example, if we consider
- * the above example data and assume \`xId\` is "v2", then the value is "3"
- * since \`f = v1 * v3 * v2\` and \`df/dx = v1 * v3 = 3\`.
+ * the above example data and assume xId is "v2", then the value is "3"
+ * since f = v1 * v2 * v3 and df/dx = v1 * v3 = 3.
  */
 function dfdx(fInputPortToNodes, fInputNodeToValues, xId) {
   if (!fInputPortToNodes.x_i.includes(xId)) {
@@ -387,24 +397,24 @@ const COS_F_CODE = `\
  * @param {Record<string, string[]>} fInputPortToNodes An object where the keys
  * are port IDs and the values are node IDs of the connected input nodes.
  * Example data for product:
- * \`javascript
+ * \`\`\`json
  * {
- *   x_i: ["v1", "v3", "v2"]
+ *   "x_i": ["1", "2", "3"]
  * }
- * \`
+ * \`\`\`
  * @param {Record<string, string>} fInputNodeToValues An object where the keys
  * are node IDs and the values are node values of the connected input nodes.
  * Example data for product:
- * \`javascript
+ * \`\`\`json
  * {
- *   v1: "1",
- *   v3: "3",
- *   v2: "2",
+ *   "1": "1",
+ *   "2": "2",
+ *   "3": "3"
  * }
- * \`
+ * \`\`\`
  * @returns {string} Evaluated f value. For example: if we consider
  * the above example data, then the value is "6" because
- * \`f({v1, v3, v2}) = v1 * v3 * v2 = 1 * 3 * 2 = 6\`.
+ * f([v1, v2, v3]) = v1 * v2 * v3 = 1 * 2 * 3 = 6.
  */
 function f(fInputPortToNodes, fInputNodeToValues) {
   if (fInputPortToNodes.x.length !== 1) {
@@ -420,31 +430,33 @@ function f(fInputPortToNodes, fInputNodeToValues) {
 const COS_DFDX_CODE = `\
 /**
  * Calculates df/dx.
- * @param {Record<string, string[]>} fInputPortToNodes An object where the
- * keys are port IDs and the values are node IDs of the connected input nodes.
+ * @param {Record<string, string[]>} fInputPortToNodes An object where the keys
+ * are port IDs and the values are node IDs of the connected input nodes.
  * Example data for product:
- * \`\`\`javascript
+ * \`\`\`json
  * {
- *   x_i: ["v1", "v3", "v2"]
+ *   "x_i": ["1", "2", "3"]
  * }
  * \`\`\`
- * @param {Record<string, string>} fInputNodeToValues An object where the
- * keys are node IDs and the values are node values of the connected input
- * nodes. Example data for product:
- * \`\`\`javascript
+ * @param {Record<string, string>} fInputNodeToValues An object where the keys
+ * are node IDs and the values are node values of the connected input nodes.
+ * Example data for product:
+ * \`\`\`json
  * {
- *   v1: "1",
- *   v3: "3",
- *   v2: "2",
+ *   "1": "1",
+ *   "2": "2",
+ *   "3": "3"
  * }
  * \`\`\`
  * @param {string} xId Node ID of x. Note that the framework will not call this
  * function for the following cases:
  * - x is a constant node (i.e., x will always be a variable)
  * - x is the node of f (i.e., the derivative is always 1)
+ * - x is not on the forward/reverse differentiation path (i.e., gradient of x
+ *   doesn't flow through f node)
  * @returns {string} Evaluated derivative df/dy. For example, if we consider
- * the above example data and assume \`xId\` is "v2", then the value is "3"
- * since \`f = v1 * v3 * v2\` and \`df/dx = v1 * v3 = 3\`.
+ * the above example data and assume xId is "v2", then the value is "3"
+ * since f = v1 * v2 * v3 and df/dx = v1 * v3 = 3.
  */
 function dfdx(fInputPortToNodes, fInputNodeToValues, xId) {
   if (!fInputPortToNodes.x.includes(xId)) {
@@ -466,24 +478,24 @@ const IDENTITY_F_CODE = `\
  * @param {Record<string, string[]>} fInputPortToNodes An object where the keys
  * are port IDs and the values are node IDs of the connected input nodes.
  * Example data for product:
- * \`javascript
+ * \`\`\`json
  * {
- *   x_i: ["v1", "v3", "v2"]
+ *   "x_i": ["1", "2", "3"]
  * }
- * \`
+ * \`\`\`
  * @param {Record<string, string>} fInputNodeToValues An object where the keys
  * are node IDs and the values are node values of the connected input nodes.
  * Example data for product:
- * \`javascript
+ * \`\`\`json
  * {
- *   v1: "1",
- *   v3: "3",
- *   v2: "2",
+ *   "1": "1",
+ *   "2": "2",
+ *   "3": "3"
  * }
- * \`
+ * \`\`\`
  * @returns {string} Evaluated f value. For example: if we consider
  * the above example data, then the value is "6" because
- * \`f({v1, v3, v2}) = v1 * v3 * v2 = 1 * 3 * 2 = 6\`.
+ * f([v1, v2, v3]) = v1 * v2 * v3 = 1 * 2 * 3 = 6.
  */
 function f(fInputPortToNodes, fInputNodeToValues) {
   if (fInputPortToNodes.x.length !== 1) {
@@ -498,31 +510,33 @@ function f(fInputPortToNodes, fInputNodeToValues) {
 const IDENTITY_DFDX_CODE = `\
 /**
  * Calculates df/dx.
- * @param {Record<string, string[]>} fInputPortToNodes An object where the
- * keys are port IDs and the values are node IDs of the connected input nodes.
+ * @param {Record<string, string[]>} fInputPortToNodes An object where the keys
+ * are port IDs and the values are node IDs of the connected input nodes.
  * Example data for product:
- * \`\`\`javascript
+ * \`\`\`json
  * {
- *   x_i: ["v1", "v3", "v2"]
+ *   "x_i": ["1", "2", "3"]
  * }
  * \`\`\`
- * @param {Record<string, string>} fInputNodeToValues An object where the
- * keys are node IDs and the values are node values of the connected input
- * nodes. Example data for product:
- * \`\`\`javascript
+ * @param {Record<string, string>} fInputNodeToValues An object where the keys
+ * are node IDs and the values are node values of the connected input nodes.
+ * Example data for product:
+ * \`\`\`json
  * {
- *   v1: "1",
- *   v3: "3",
- *   v2: "2",
+ *   "1": "1",
+ *   "2": "2",
+ *   "3": "3"
  * }
  * \`\`\`
  * @param {string} xId Node ID of x. Note that the framework will not call this
  * function for the following cases:
  * - x is a constant node (i.e., x will always be a variable)
  * - x is the node of f (i.e., the derivative is always 1)
+ * - x is not on the forward/reverse differentiation path (i.e., gradient of x
+ *   doesn't flow through f node)
  * @returns {string} Evaluated derivative df/dy. For example, if we consider
- * the above example data and assume \`xId\` is "v2", then the value is "3"
- * since \`f = v1 * v3 * v2\` and \`df/dx = v1 * v3 = 3\`.
+ * the above example data and assume xId is "v2", then the value is "3"
+ * since f = v1 * v2 * v3 and df/dx = v1 * v3 = 3.
  */
 function dfdx(fInputPortToNodes, fInputNodeToValues, xId) {
   if (!fInputPortToNodes.x.includes(xId)) {
@@ -538,24 +552,24 @@ const RELU_F_CODE = `\
  * @param {Record<string, string[]>} fInputPortToNodes An object where the keys
  * are port IDs and the values are node IDs of the connected input nodes.
  * Example data for product:
- * \`javascript
+ * \`\`\`json
  * {
- *   x_i: ["v1", "v3", "v2"]
+ *   "x_i": ["1", "2", "3"]
  * }
- * \`
+ * \`\`\`
  * @param {Record<string, string>} fInputNodeToValues An object where the keys
  * are node IDs and the values are node values of the connected input nodes.
  * Example data for product:
- * \`javascript
+ * \`\`\`json
  * {
- *   v1: "1",
- *   v3: "3",
- *   v2: "2",
+ *   "1": "1",
+ *   "2": "2",
+ *   "3": "3"
  * }
- * \`
+ * \`\`\`
  * @returns {string} Evaluated f value. For example: if we consider
  * the above example data, then the value is "6" because
- * \`f({v1, v3, v2}) = v1 * v3 * v2 = 1 * 3 * 2 = 6\`.
+ * f([v1, v2, v3]) = v1 * v2 * v3 = 1 * 2 * 3 = 6.
  */
 function f(fInputPortToNodes, fInputNodeToValues) {
   if (fInputPortToNodes.x.length !== 1) {
@@ -571,31 +585,33 @@ function f(fInputPortToNodes, fInputNodeToValues) {
 const RELU_DFDX_CODE = `\
 /**
  * Calculates df/dx.
- * @param {Record<string, string[]>} fInputPortToNodes An object where the
- * keys are port IDs and the values are node IDs of the connected input nodes.
+ * @param {Record<string, string[]>} fInputPortToNodes An object where the keys
+ * are port IDs and the values are node IDs of the connected input nodes.
  * Example data for product:
- * \`\`\`javascript
+ * \`\`\`json
  * {
- *   x_i: ["v1", "v3", "v2"]
+ *   "x_i": ["1", "2", "3"]
  * }
  * \`\`\`
- * @param {Record<string, string>} fInputNodeToValues An object where the
- * keys are node IDs and the values are node values of the connected input
- * nodes. Example data for product:
- * \`\`\`javascript
+ * @param {Record<string, string>} fInputNodeToValues An object where the keys
+ * are node IDs and the values are node values of the connected input nodes.
+ * Example data for product:
+ * \`\`\`json
  * {
- *   v1: "1",
- *   v3: "3",
- *   v2: "2",
+ *   "1": "1",
+ *   "2": "2",
+ *   "3": "3"
  * }
  * \`\`\`
  * @param {string} xId Node ID of x. Note that the framework will not call this
  * function for the following cases:
  * - x is a constant node (i.e., x will always be a variable)
  * - x is the node of f (i.e., the derivative is always 1)
+ * - x is not on the forward/reverse differentiation path (i.e., gradient of x
+ *   doesn't flow through f node)
  * @returns {string} Evaluated derivative df/dy. For example, if we consider
- * the above example data and assume \`xId\` is "v2", then the value is "3"
- * since \`f = v1 * v3 * v2\` and \`df/dx = v1 * v3 = 3\`.
+ * the above example data and assume xId is "v2", then the value is "3"
+ * since f = v1 * v2 * v3 and df/dx = v1 * v3 = 3.
  */
 function dfdx(fInputPortToNodes, fInputNodeToValues, xId) {
   if (!fInputPortToNodes.x.includes(xId)) {
@@ -617,24 +633,24 @@ const SIGMOID_F_CODE = `\
  * @param {Record<string, string[]>} fInputPortToNodes An object where the keys
  * are port IDs and the values are node IDs of the connected input nodes.
  * Example data for product:
- * \`javascript
+ * \`\`\`json
  * {
- *   x_i: ["v1", "v3", "v2"]
+ *   "x_i": ["1", "2", "3"]
  * }
- * \`
+ * \`\`\`
  * @param {Record<string, string>} fInputNodeToValues An object where the keys
  * are node IDs and the values are node values of the connected input nodes.
  * Example data for product:
- * \`javascript
+ * \`\`\`json
  * {
- *   v1: "1",
- *   v3: "3",
- *   v2: "2",
+ *   "1": "1",
+ *   "2": "2",
+ *   "3": "3"
  * }
- * \`
+ * \`\`\`
  * @returns {string} Evaluated f value. For example: if we consider
  * the above example data, then the value is "6" because
- * \`f({v1, v3, v2}) = v1 * v3 * v2 = 1 * 3 * 2 = 6\`.
+ * f([v1, v2, v3]) = v1 * v2 * v3 = 1 * 2 * 3 = 6.
  */
 function f(fInputPortToNodes, fInputNodeToValues) {
   if (fInputPortToNodes.x.length !== 1) {
@@ -650,31 +666,33 @@ function f(fInputPortToNodes, fInputNodeToValues) {
 const SIGMOID_DFDX_CODE = `\
 /**
  * Calculates df/dx.
- * @param {Record<string, string[]>} fInputPortToNodes An object where the
- * keys are port IDs and the values are node IDs of the connected input nodes.
+ * @param {Record<string, string[]>} fInputPortToNodes An object where the keys
+ * are port IDs and the values are node IDs of the connected input nodes.
  * Example data for product:
- * \`\`\`javascript
+ * \`\`\`json
  * {
- *   x_i: ["v1", "v3", "v2"]
+ *   "x_i": ["1", "2", "3"]
  * }
  * \`\`\`
- * @param {Record<string, string>} fInputNodeToValues An object where the
- * keys are node IDs and the values are node values of the connected input
- * nodes. Example data for product:
- * \`\`\`javascript
+ * @param {Record<string, string>} fInputNodeToValues An object where the keys
+ * are node IDs and the values are node values of the connected input nodes.
+ * Example data for product:
+ * \`\`\`json
  * {
- *   v1: "1",
- *   v3: "3",
- *   v2: "2",
+ *   "1": "1",
+ *   "2": "2",
+ *   "3": "3"
  * }
  * \`\`\`
  * @param {string} xId Node ID of x. Note that the framework will not call this
  * function for the following cases:
  * - x is a constant node (i.e., x will always be a variable)
  * - x is the node of f (i.e., the derivative is always 1)
+ * - x is not on the forward/reverse differentiation path (i.e., gradient of x
+ *   doesn't flow through f node)
  * @returns {string} Evaluated derivative df/dy. For example, if we consider
- * the above example data and assume \`xId\` is "v2", then the value is "3"
- * since \`f = v1 * v3 * v2\` and \`df/dx = v1 * v3 = 3\`.
+ * the above example data and assume xId is "v2", then the value is "3"
+ * since f = v1 * v2 * v3 and df/dx = v1 * v3 = 3.
  */
 function dfdx(fInputPortToNodes, fInputNodeToValues, xId) {
   if (!fInputPortToNodes.x.includes(xId)) {
@@ -697,24 +715,24 @@ const SQUARED_ERROR_F_CODE = `\
  * @param {Record<string, string[]>} fInputPortToNodes An object where the keys
  * are port IDs and the values are node IDs of the connected input nodes.
  * Example data for product:
- * \`javascript
+ * \`\`\`json
  * {
- *   x_i: ["v1", "v3", "v2"]
+ *   "x_i": ["1", "2", "3"]
  * }
- * \`
+ * \`\`\`
  * @param {Record<string, string>} fInputNodeToValues An object where the keys
  * are node IDs and the values are node values of the connected input nodes.
  * Example data for product:
- * \`javascript
+ * \`\`\`json
  * {
- *   v1: "1",
- *   v3: "3",
- *   v2: "2",
+ *   "1": "1",
+ *   "2": "2",
+ *   "3": "3"
  * }
- * \`
+ * \`\`\`
  * @returns {string} Evaluated f value. For example: if we consider
  * the above example data, then the value is "6" because
- * \`f({v1, v3, v2}) = v1 * v3 * v2 = 1 * 3 * 2 = 6\`.
+ * f([v1, v2, v3]) = v1 * v2 * v3 = 1 * 2 * 3 = 6.
  */
 function f(fInputPortToNodes, fInputNodeToValues) {
   if (fInputPortToNodes.y_t.length !== 1) {
@@ -735,31 +753,33 @@ function f(fInputPortToNodes, fInputNodeToValues) {
 const SQUARED_ERROR_DFDX_CODE = `\
 /**
  * Calculates df/dx.
- * @param {Record<string, string[]>} fInputPortToNodes An object where the
- * keys are port IDs and the values are node IDs of the connected input nodes.
+ * @param {Record<string, string[]>} fInputPortToNodes An object where the keys
+ * are port IDs and the values are node IDs of the connected input nodes.
  * Example data for product:
- * \`\`\`javascript
+ * \`\`\`json
  * {
- *   x_i: ["v1", "v3", "v2"]
+ *   "x_i": ["1", "2", "3"]
  * }
  * \`\`\`
- * @param {Record<string, string>} fInputNodeToValues An object where the
- * keys are node IDs and the values are node values of the connected input
- * nodes. Example data for product:
- * \`\`\`javascript
+ * @param {Record<string, string>} fInputNodeToValues An object where the keys
+ * are node IDs and the values are node values of the connected input nodes.
+ * Example data for product:
+ * \`\`\`json
  * {
- *   v1: "1",
- *   v3: "3",
- *   v2: "2",
+ *   "1": "1",
+ *   "2": "2",
+ *   "3": "3"
  * }
  * \`\`\`
  * @param {string} xId Node ID of x. Note that the framework will not call this
  * function for the following cases:
  * - x is a constant node (i.e., x will always be a variable)
  * - x is the node of f (i.e., the derivative is always 1)
+ * - x is not on the forward/reverse differentiation path (i.e., gradient of x
+ *   doesn't flow through f node)
  * @returns {string} Evaluated derivative df/dy. For example, if we consider
- * the above example data and assume \`xId\` is "v2", then the value is "3"
- * since \`f = v1 * v3 * v2\` and \`df/dx = v1 * v3 = 3\`.
+ * the above example data and assume xId is "v2", then the value is "3"
+ * since f = v1 * v2 * v3 and df/dx = v1 * v3 = 3.
  */
 function dfdx(fInputPortToNodes, fInputNodeToValues, xId) {
   const hasXInYTrue = fInputPortToNodes.y_t.includes(xId);

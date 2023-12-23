@@ -151,6 +151,89 @@ function dfdx(fInputPortToNodes, fInputNodeToValues, xId) {
 }
 `;
 
+const SUBTRACT_F_CODE = `\
+/**
+ * Calculates f().
+ * @param {Record<string, string[]>} fInputPortToNodes An object where the keys
+ * are port IDs and the values are node IDs of the connected input nodes.
+ * Example data for add:
+ * \`\`\`json
+ * {
+ *   "a": ["0"],
+ *   "b": ["1"]
+ * }
+ * \`\`\`
+ * @param {Record<string, string>} fInputNodeToValues An object where the keys
+ * are node IDs and the values are node values of the connected input nodes.
+ * Example data for add:
+ * \`\`\`json
+ * {
+ *   "0": "0.2",
+ *   "1": "0.4"
+ * }
+ * \`\`\`
+ * @returns {string} Evaluated f value. For example: if we consider
+ * the above example data, then the value is "-0.2" because
+ * f(a, b) = a - b = 0.2 - 0.4 = -0.2.
+ */
+function f(fInputPortToNodes, fInputNodeToValues) {
+  if (fInputPortToNodes.a.length !== 1) {
+    throw new Error("Should have exactly 1 input node for port a");
+  }
+  if (fInputPortToNodes.b.length !== 1) {
+    throw new Error("Should have exactly 1 input node for port b");
+  }
+  const aInputNodeId = fInputPortToNodes.a[0];
+  const bInputNodeId = fInputPortToNodes.b[0];
+  const a = parseFloat(fInputNodeToValues[aInputNodeId]);
+  const b = parseFloat(fInputNodeToValues[bInputNodeId]);
+  const y = a - b;
+  return \`\${y}\`;
+}
+`;
+
+const SUBTRACT_DFDX_CODE = `\
+/**
+ * Calculates df/dx.
+ * @param {Record<string, string[]>} fInputPortToNodes An object where the keys
+ * are port IDs and the values are node IDs of the connected input nodes.
+ * Example data for add:
+ * \`\`\`json
+ * {
+ *   "a": ["0"],
+ *   "b": ["1"]
+ * }
+ * \`\`\`
+ * @param {Record<string, string>} fInputNodeToValues An object where the keys
+ * are node IDs and the values are node values of the connected input nodes.
+ * Example data for add:
+ * \`\`\`json
+ * {
+ *   "0": "0.2",
+ *   "1": "0.4"
+ * }
+ * \`\`\`
+ * @param {string} xId Node ID of x. Note that the framework will not call this
+ * function for the following cases:
+ * - x is a constant node (i.e., x will always be a variable)
+ * - x is the node of f (i.e., the derivative is always 1)
+ * - x is not on the forward/reverse differentiation path (i.e., gradient of x
+ *   doesn't flow through f node)
+ * @returns {string} Evaluated derivative df/dy. For example, if we consider
+ * the above example data and assume xId is "1", then the value is "-1"
+ * since f(a, b) = a - b and df/dx = df/db = -1.
+ */
+function dfdx(fInputPortToNodes, fInputNodeToValues, xId) {
+  const hasXInA = fInputPortToNodes.a.includes(xId);
+  const hasXInB = fInputPortToNodes.b.includes(xId);
+  if (!hasXInA && !hasXInB) {
+    return "0";
+  }
+  const df = hasXInA ? 1 : -1;
+  return \`\${df}\`;
+}
+`;
+
 const MULTIPLY_F_CODE = `\
 /**
  * Calculates f().
@@ -806,6 +889,8 @@ export {
   SIGMOID_F_CODE,
   SQUARED_ERROR_DFDX_CODE,
   SQUARED_ERROR_F_CODE,
+  SUBTRACT_DFDX_CODE,
+  SUBTRACT_F_CODE,
   SUM_DFDX_CODE,
   SUM_F_CODE,
   TEMPLATE_DFDX_CODE,

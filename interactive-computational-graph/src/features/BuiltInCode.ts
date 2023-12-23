@@ -156,7 +156,7 @@ const SUBTRACT_F_CODE = `\
  * Calculates f().
  * @param {Record<string, string[]>} fInputPortToNodes An object where the keys
  * are port IDs and the values are node IDs of the connected input nodes.
- * Example data for add:
+ * Example data for subtract:
  * \`\`\`json
  * {
  *   "a": ["0"],
@@ -165,7 +165,7 @@ const SUBTRACT_F_CODE = `\
  * \`\`\`
  * @param {Record<string, string>} fInputNodeToValues An object where the keys
  * are node IDs and the values are node values of the connected input nodes.
- * Example data for add:
+ * Example data for subtract:
  * \`\`\`json
  * {
  *   "0": "0.2",
@@ -197,7 +197,7 @@ const SUBTRACT_DFDX_CODE = `\
  * Calculates df/dx.
  * @param {Record<string, string[]>} fInputPortToNodes An object where the keys
  * are port IDs and the values are node IDs of the connected input nodes.
- * Example data for add:
+ * Example data for subtract:
  * \`\`\`json
  * {
  *   "a": ["0"],
@@ -206,7 +206,7 @@ const SUBTRACT_DFDX_CODE = `\
  * \`\`\`
  * @param {Record<string, string>} fInputNodeToValues An object where the keys
  * are node IDs and the values are node values of the connected input nodes.
- * Example data for add:
+ * Example data for subtract:
  * \`\`\`json
  * {
  *   "0": "0.2",
@@ -317,6 +317,93 @@ function dfdx(fInputPortToNodes, fInputNodeToValues, xId) {
   const a = parseFloat(fInputNodeToValues[aInputNodeId]);
   const b = parseFloat(fInputNodeToValues[bInputNodeId]);
   return hasXInA ? \`\${b}\` : \`\${a}\`;
+}
+`;
+
+const DIVIDE_F_CODE = `\
+/**
+ * Calculates f().
+ * @param {Record<string, string[]>} fInputPortToNodes An object where the keys
+ * are port IDs and the values are node IDs of the connected input nodes.
+ * Example data for divide:
+ * \`\`\`json
+ * {
+ *   "a": ["0"],
+ *   "b": ["1"]
+ * }
+ * \`\`\`
+ * @param {Record<string, string>} fInputNodeToValues An object where the keys
+ * are node IDs and the values are node values of the connected input nodes.
+ * Example data for divide:
+ * \`\`\`json
+ * {
+ *   "0": "0.2",
+ *   "1": "0.4"
+ * }
+ * \`\`\`
+ * @returns {string} Evaluated f value. For example: if we consider
+ * the above example data, then the value is "0.5" because
+ * f(a, b) = a / b = 0.2 / 0.4 = 0.5.
+ */
+function f(fInputPortToNodes, fInputNodeToValues) {
+  if (fInputPortToNodes.a.length !== 1) {
+    throw new Error("Should have exactly 1 input node for port a");
+  }
+  if (fInputPortToNodes.b.length !== 1) {
+    throw new Error("Should have exactly 1 input node for port b");
+  }
+  const aInputNodeId = fInputPortToNodes.a[0];
+  const bInputNodeId = fInputPortToNodes.b[0];
+  const a = parseFloat(fInputNodeToValues[aInputNodeId]);
+  const b = parseFloat(fInputNodeToValues[bInputNodeId]);
+  const y = a / b;
+  return \`\${y}\`;
+}
+`;
+
+const DIVIDE_DFDX_CODE = `\
+/**
+ * Calculates df/dx.
+ * @param {Record<string, string[]>} fInputPortToNodes An object where the keys
+ * are port IDs and the values are node IDs of the connected input nodes.
+ * Example data for divide:
+ * \`\`\`json
+ * {
+ *   "a": ["0"],
+ *   "b": ["1"]
+ * }
+ * \`\`\`
+ * @param {Record<string, string>} fInputNodeToValues An object where the keys
+ * are node IDs and the values are node values of the connected input nodes.
+ * Example data for divide:
+ * \`\`\`json
+ * {
+ *   "0": "0.2",
+ *   "1": "0.4"
+ * }
+ * \`\`\`
+ * @param {string} xId Node ID of x. Note that the framework will not call this
+ * function for the following cases:
+ * - x is a constant node (i.e., x will always be a variable)
+ * - x is the node of f (i.e., the derivative is always 1)
+ * - x is not on the forward/reverse differentiation path (i.e., gradient of x
+ *   doesn't flow through f node)
+ * @returns {string} Evaluated derivative df/dy. For example, if we consider
+ * the above example data and assume xId is "1", then the value is "-1.25"
+ * since f(a, b) = a / b and df/dx = df/db = -(a / b^2) = -1.25.
+ */
+function dfdx(fInputPortToNodes, fInputNodeToValues, xId) {
+  const hasXInA = fInputPortToNodes.a.includes(xId);
+  const hasXInB = fInputPortToNodes.b.includes(xId);
+  if (!hasXInA && !hasXInB) {
+    return "0";
+  }
+  const aInputNodeId = fInputPortToNodes.a[0];
+  const bInputNodeId = fInputPortToNodes.b[0];
+  const a = parseFloat(fInputNodeToValues[aInputNodeId]);
+  const b = parseFloat(fInputNodeToValues[bInputNodeId]);
+  const df = hasXInA ? 1 / b : -(a / Math.pow(b, 2));
+  return \`\${df}\`;
 }
 `;
 
@@ -877,6 +964,8 @@ export {
   ADD_F_CODE,
   COS_DFDX_CODE,
   COS_F_CODE,
+  DIVIDE_DFDX_CODE,
+  DIVIDE_F_CODE,
   IDENTITY_DFDX_CODE,
   IDENTITY_F_CODE,
   MULTIPLY_DFDX_CODE,

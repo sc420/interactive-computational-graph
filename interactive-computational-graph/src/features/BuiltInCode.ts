@@ -1139,83 +1139,6 @@ function dfdx(fInputPortToNodes, fInputNodeToValues, xId) {
 }
 `;
 
-const RELU_F_CODE = `\
-/**
- * Calculates f().
- * @param {Record<string, string[]>} fInputPortToNodes An object where the keys
- * are port IDs and the values are node IDs of the connected input nodes.
- * Example data for ReLU:
- * \`\`\`json
- * {
- *   "x": ["0"]
- * }
- * \`\`\`
- * @param {Record<string, string>} fInputNodeToValues An object where the keys
- * are node IDs and the values are node values of the connected input nodes.
- * Example data for ReLU:
- * \`\`\`json
- * {
- *   "0": "0.5"
- * }
- * \`\`\`
- * @returns {string} Evaluated f value. For example: if we consider
- * the above example data, then the value is "0.5" because
- * f(x) = max(0, x) = max(0, 0.5) = 0.5.
- */
-function f(fInputPortToNodes, fInputNodeToValues) {
-  if (fInputPortToNodes.x.length !== 1) {
-    throw new Error("Should have exactly 1 input node for port x");
-  }
-  const xInputNodeId = fInputPortToNodes.x[0];
-  const x = parseFloat(fInputNodeToValues[xInputNodeId]);
-  const y = Math.max(0, x);
-  return \`\${y}\`;
-}
-`;
-
-const RELU_DFDX_CODE = `\
-/**
- * Calculates df/dx.
- * @param {Record<string, string[]>} fInputPortToNodes An object where the keys
- * are port IDs and the values are node IDs of the connected input nodes.
- * Example data for ReLU:
- * \`\`\`json
- * {
- *   "x": ["0"]
- * }
- * \`\`\`
- * @param {Record<string, string>} fInputNodeToValues An object where the keys
- * are node IDs and the values are node values of the connected input nodes.
- * Example data for ReLU:
- * \`\`\`json
- * {
- *   "0": "0.5"
- * }
- * \`\`\`
- * @param {string} xId Node ID of x. Note that the framework will not call this
- * function for the following cases:
- * - x is a constant node (i.e., x will always be a variable)
- * - x is the node of f (i.e., the derivative is always 1)
- * - x is not on the forward/reverse differentiation path (i.e., gradient of x
- *   doesn't flow through f node)
- * @returns {string} Evaluated derivative df/dy. For example, if we consider
- * the above example data and assume xId is "0", then the value is "1"
- * since f(x) = max(0, x) and df/dx = 1 (x > 0).
- */
-function dfdx(fInputPortToNodes, fInputNodeToValues, xId) {
-  if (fInputPortToNodes.x.length !== 1) {
-    throw new Error("Should have exactly 1 input node for port x");
-  }
-  if (!fInputPortToNodes.x.includes(xId)) {
-    return "0";
-  }
-  const xInputNodeId = fInputPortToNodes.x[0];
-  const x = parseFloat(fInputNodeToValues[xInputNodeId]);
-  const df = x > 0 ? 1 : 0;
-  return \`\${df}\`;
-}
-`;
-
 const SIGMOID_F_CODE = `\
 /**
  * Calculates f().
@@ -1291,6 +1214,83 @@ function dfdx(fInputPortToNodes, fInputNodeToValues, xId) {
   const x = parseFloat(fInputNodeToValues[xInputNodeId]);
   const sigmoid = 1 / (1 + Math.exp(-x));
   const df = sigmoid * (1 - sigmoid);
+  return \`\${df}\`;
+}
+`;
+
+const RELU_F_CODE = `\
+/**
+ * Calculates f().
+ * @param {Record<string, string[]>} fInputPortToNodes An object where the keys
+ * are port IDs and the values are node IDs of the connected input nodes.
+ * Example data for ReLU:
+ * \`\`\`json
+ * {
+ *   "x": ["0"]
+ * }
+ * \`\`\`
+ * @param {Record<string, string>} fInputNodeToValues An object where the keys
+ * are node IDs and the values are node values of the connected input nodes.
+ * Example data for ReLU:
+ * \`\`\`json
+ * {
+ *   "0": "0.5"
+ * }
+ * \`\`\`
+ * @returns {string} Evaluated f value. For example: if we consider
+ * the above example data, then the value is "0.5" because
+ * f(x) = max(0, x) = max(0, 0.5) = 0.5.
+ */
+function f(fInputPortToNodes, fInputNodeToValues) {
+  if (fInputPortToNodes.x.length !== 1) {
+    throw new Error("Should have exactly 1 input node for port x");
+  }
+  const xInputNodeId = fInputPortToNodes.x[0];
+  const x = parseFloat(fInputNodeToValues[xInputNodeId]);
+  const y = Math.max(0, x);
+  return \`\${y}\`;
+}
+`;
+
+const RELU_DFDX_CODE = `\
+/**
+ * Calculates df/dx.
+ * @param {Record<string, string[]>} fInputPortToNodes An object where the keys
+ * are port IDs and the values are node IDs of the connected input nodes.
+ * Example data for ReLU:
+ * \`\`\`json
+ * {
+ *   "x": ["0"]
+ * }
+ * \`\`\`
+ * @param {Record<string, string>} fInputNodeToValues An object where the keys
+ * are node IDs and the values are node values of the connected input nodes.
+ * Example data for ReLU:
+ * \`\`\`json
+ * {
+ *   "0": "0.5"
+ * }
+ * \`\`\`
+ * @param {string} xId Node ID of x. Note that the framework will not call this
+ * function for the following cases:
+ * - x is a constant node (i.e., x will always be a variable)
+ * - x is the node of f (i.e., the derivative is always 1)
+ * - x is not on the forward/reverse differentiation path (i.e., gradient of x
+ *   doesn't flow through f node)
+ * @returns {string} Evaluated derivative df/dy. For example, if we consider
+ * the above example data and assume xId is "0", then the value is "1"
+ * since f(x) = max(0, x) and df/dx = 1 (x > 0).
+ */
+function dfdx(fInputPortToNodes, fInputNodeToValues, xId) {
+  if (fInputPortToNodes.x.length !== 1) {
+    throw new Error("Should have exactly 1 input node for port x");
+  }
+  if (!fInputPortToNodes.x.includes(xId)) {
+    return "0";
+  }
+  const xInputNodeId = fInputPortToNodes.x[0];
+  const x = parseFloat(fInputNodeToValues[xInputNodeId]);
+  const df = x > 0 ? 1 : 0;
   return \`\${df}\`;
 }
 `;

@@ -27,6 +27,8 @@ import type AddNodeData from "../features/AddNodeData";
 import {
   ADD_DFDX_CODE,
   ADD_F_CODE,
+  BINARY_CROSS_ENTROPY_DFDX_CODE,
+  BINARY_CROSS_ENTROPY_F_CODE,
   COS_DFDX_CODE,
   COS_F_CODE,
   DIVIDE_DFDX_CODE,
@@ -274,6 +276,19 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       operation: new Operation(SQUARED_ERROR_F_CODE, SQUARED_ERROR_DFDX_CODE),
       inputPorts: [new Port("y_t", false), new Port("y_e", false)],
       helpText: "Calculate squared error $ (y_t - y_e)^2 $",
+    },
+    {
+      id: "binary_cross_entropy",
+      text: "Binary Cross-Entropy",
+      type: "SIMPLE",
+      namePrefix: "b",
+      operation: new Operation(
+        BINARY_CROSS_ENTROPY_F_CODE,
+        BINARY_CROSS_ENTROPY_DFDX_CODE,
+      ),
+      inputPorts: [new Port("y_t", false), new Port("y_e", false)],
+      helpText:
+        "Calculate binary cross-entropy $ y_t * \\log(y_e) + (1 - y_t) * \\log(1 - y_e) $",
     },
   ]);
   const [nextNodeId, setNextNodeId] = useState<number>(0);

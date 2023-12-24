@@ -835,6 +835,83 @@ function dfdx(fInputPortToNodes, fInputNodeToValues, xId) {
 }
 `;
 
+const SIN_F_CODE = `\
+/**
+ * Calculates f().
+ * @param {Record<string, string[]>} fInputPortToNodes An object where the keys
+ * are port IDs and the values are node IDs of the connected input nodes.
+ * Example data for sin:
+ * \`\`\`json
+ * {
+ *   "x": ["0"]
+ * }
+ * \`\`\`
+ * @param {Record<string, string>} fInputNodeToValues An object where the keys
+ * are node IDs and the values are node values of the connected input nodes.
+ * Example data for sin:
+ * \`\`\`json
+ * {
+ *   "0": "0"
+ * }
+ * \`\`\`
+ * @returns {string} Evaluated f value. For example: if we consider
+ * the above example data, then the value is "0" because
+ * f(x) = sin(x) = sin(0) = 0.
+ */
+function f(fInputPortToNodes, fInputNodeToValues) {
+  if (fInputPortToNodes.x.length !== 1) {
+    throw new Error("Should have exactly 1 input node for port x");
+  }
+  const xInputNodeId = fInputPortToNodes.x[0];
+  const x = parseFloat(fInputNodeToValues[xInputNodeId]);
+  const y = Math.sin(x);
+  return \`\${y}\`;
+}
+`;
+
+const SIN_DFDX_CODE = `\
+/**
+ * Calculates df/dx.
+ * @param {Record<string, string[]>} fInputPortToNodes An object where the keys
+ * are port IDs and the values are node IDs of the connected input nodes.
+ * Example data for sin:
+ * \`\`\`json
+ * {
+ *   "x": ["0"]
+ * }
+ * \`\`\`
+ * @param {Record<string, string>} fInputNodeToValues An object where the keys
+ * are node IDs and the values are node values of the connected input nodes.
+ * Example data for sin:
+ * \`\`\`json
+ * {
+ *   "0": "0"
+ * }
+ * \`\`\`
+ * @param {string} xId Node ID of x. Note that the framework will not call this
+ * function for the following cases:
+ * - x is a constant node (i.e., x will always be a variable)
+ * - x is the node of f (i.e., the derivative is always 1)
+ * - x is not on the forward/reverse differentiation path (i.e., gradient of x
+ *   doesn't flow through f node)
+ * @returns {string} Evaluated derivative df/dy. For example, if we consider
+ * the above example data and assume xId is "0", then the value is "1"
+ * since f(x) = sin(x) and df/dx = cos(x) = 1.
+ */
+function dfdx(fInputPortToNodes, fInputNodeToValues, xId) {
+  if (fInputPortToNodes.x.length !== 1) {
+    throw new Error("Should have exactly 1 input node for port x");
+  }
+  if (!fInputPortToNodes.x.includes(xId)) {
+    return "0";
+  }
+  const xInputNodeId = fInputPortToNodes.x[0];
+  const x = parseFloat(fInputNodeToValues[xInputNodeId]);
+  const df = Math.cos(x);
+  return \`\${df}\`;
+}
+`;
+
 const COS_F_CODE = `\
 /**
  * Calculates f().
@@ -908,6 +985,83 @@ function dfdx(fInputPortToNodes, fInputNodeToValues, xId) {
   const xInputNodeId = fInputPortToNodes.x[0];
   const x = parseFloat(fInputNodeToValues[xInputNodeId]);
   const df = -Math.sin(x);
+  return \`\${df}\`;
+}
+`;
+
+const TAN_F_CODE = `\
+/**
+ * Calculates f().
+ * @param {Record<string, string[]>} fInputPortToNodes An object where the keys
+ * are port IDs and the values are node IDs of the connected input nodes.
+ * Example data for tan:
+ * \`\`\`json
+ * {
+ *   "x": ["0"]
+ * }
+ * \`\`\`
+ * @param {Record<string, string>} fInputNodeToValues An object where the keys
+ * are node IDs and the values are node values of the connected input nodes.
+ * Example data for tan:
+ * \`\`\`json
+ * {
+ *   "0": "0"
+ * }
+ * \`\`\`
+ * @returns {string} Evaluated f value. For example: if we consider
+ * the above example data, then the value is "0" because
+ * f(x) = tan(x) = tan(0) = 0.
+ */
+function f(fInputPortToNodes, fInputNodeToValues) {
+  if (fInputPortToNodes.x.length !== 1) {
+    throw new Error("Should have exactly 1 input node for port x");
+  }
+  const xInputNodeId = fInputPortToNodes.x[0];
+  const x = parseFloat(fInputNodeToValues[xInputNodeId]);
+  const y = Math.tan(x);
+  return \`\${y}\`;
+}
+`;
+
+const TAN_DFDX_CODE = `\
+/**
+ * Calculates df/dx.
+ * @param {Record<string, string[]>} fInputPortToNodes An object where the keys
+ * are port IDs and the values are node IDs of the connected input nodes.
+ * Example data for tan:
+ * \`\`\`json
+ * {
+ *   "x": ["0"]
+ * }
+ * \`\`\`
+ * @param {Record<string, string>} fInputNodeToValues An object where the keys
+ * are node IDs and the values are node values of the connected input nodes.
+ * Example data for tan:
+ * \`\`\`json
+ * {
+ *   "0": "0"
+ * }
+ * \`\`\`
+ * @param {string} xId Node ID of x. Note that the framework will not call this
+ * function for the following cases:
+ * - x is a constant node (i.e., x will always be a variable)
+ * - x is the node of f (i.e., the derivative is always 1)
+ * - x is not on the forward/reverse differentiation path (i.e., gradient of x
+ *   doesn't flow through f node)
+ * @returns {string} Evaluated derivative df/dy. For example, if we consider
+ * the above example data and assume xId is "0", then the value is "1"
+ * since f(x) = tan(x) and df/dx = 1 / cos(x)^2 = 1.
+ */
+function dfdx(fInputPortToNodes, fInputNodeToValues, xId) {
+  if (fInputPortToNodes.x.length !== 1) {
+    throw new Error("Should have exactly 1 input node for port x");
+  }
+  if (!fInputPortToNodes.x.includes(xId)) {
+    return "0";
+  }
+  const xInputNodeId = fInputPortToNodes.x[0];
+  const x = parseFloat(fInputNodeToValues[xInputNodeId]);
+  const df = 1 / Math.pow(Math.cos(x), 2);
   return \`\${df}\`;
 }
 `;
@@ -1263,12 +1417,16 @@ export {
   RELU_F_CODE,
   SIGMOID_DFDX_CODE,
   SIGMOID_F_CODE,
+  SIN_DFDX_CODE,
+  SIN_F_CODE,
   SQUARED_ERROR_DFDX_CODE,
   SQUARED_ERROR_F_CODE,
   SUBTRACT_DFDX_CODE,
   SUBTRACT_F_CODE,
   SUM_DFDX_CODE,
   SUM_F_CODE,
+  TAN_DFDX_CODE,
+  TAN_F_CODE,
   TEMPLATE_DFDX_CODE,
   TEMPLATE_F_CODE,
 };

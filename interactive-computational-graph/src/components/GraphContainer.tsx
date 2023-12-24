@@ -43,6 +43,8 @@ import {
   POWER_F_CODE,
   PRODUCT_DFDX_CODE,
   PRODUCT_F_CODE,
+  RELU_DFDX_CODE,
+  RELU_F_CODE,
   SIGMOID_DFDX_CODE,
   SIGMOID_F_CODE,
   SIN_DFDX_CODE,
@@ -254,6 +256,15 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       inputPorts: [new Port("x", true)],
       helpText:
         "Tanh activation function $ \\frac{e^x - e^{-x}}{e^x + e^{-x}} $",
+    },
+    {
+      id: "relu",
+      text: "ReLU",
+      type: "SIMPLE",
+      namePrefix: "r",
+      operation: new Operation(RELU_F_CODE, RELU_DFDX_CODE),
+      inputPorts: [new Port("x", true)],
+      helpText: "ReLU activation function $ \\max(0, x) $",
     },
     {
       id: "squared_error",

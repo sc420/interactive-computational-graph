@@ -407,6 +407,94 @@ function dfdx(fInputPortToNodes, fInputNodeToValues, xId) {
 }
 `;
 
+const POWER_F_CODE = `\
+/**
+ * Calculates f().
+ * @param {Record<string, string[]>} fInputPortToNodes An object where the keys
+ * are port IDs and the values are node IDs of the connected input nodes.
+ * Example data for power:
+ * \`\`\`json
+ * {
+ *   "x": ["0"],
+ *   "n": ["1"]
+ * }
+ * \`\`\`
+ * @param {Record<string, string>} fInputNodeToValues An object where the keys
+ * are node IDs and the values are node values of the connected input nodes.
+ * Example data for power:
+ * \`\`\`json
+ * {
+ *   "0": "2",
+ *   "1": "3"
+ * }
+ * \`\`\`
+ * @returns {string} Evaluated f value. For example: if we consider
+ * the above example data, then the value is "8" because
+ * f(x, n) = x ^ n = 2 ^ 3 = 8.
+ */
+function f(fInputPortToNodes, fInputNodeToValues) {
+  if (fInputPortToNodes.x.length !== 1) {
+    throw new Error("Should have exactly 1 input node for port a");
+  }
+  if (fInputPortToNodes.n.length !== 1) {
+    throw new Error("Should have exactly 1 input node for port b");
+  }
+  const xInputNodeId = fInputPortToNodes.x[0];
+  const nInputNodeId = fInputPortToNodes.n[0];
+  const x = parseFloat(fInputNodeToValues[xInputNodeId]);
+  const n = parseFloat(fInputNodeToValues[nInputNodeId]);
+  const y = Math.pow(x, n);
+  return \`\${y}\`;
+}
+`;
+
+const POWER_DFDX_CODE = `\
+/**
+ * Calculates df/dx.
+ * @param {Record<string, string[]>} fInputPortToNodes An object where the keys
+ * are port IDs and the values are node IDs of the connected input nodes.
+ * Example data for power:
+ * \`\`\`json
+ * {
+ *   "x": ["0"],
+ *   "n": ["1"]
+ * }
+ * \`\`\`
+ * @param {Record<string, string>} fInputNodeToValues An object where the keys
+ * are node IDs and the values are node values of the connected input nodes.
+ * Example data for power:
+ * \`\`\`json
+ * {
+ *   "0": "2",
+ *   "1": "3"
+ * }
+ * \`\`\`
+ * @param {string} xId Node ID of x. Note that the framework will not call this
+ * function for the following cases:
+ * - x is a constant node (i.e., x will always be a variable)
+ * - x is the node of f (i.e., the derivative is always 1)
+ * - x is not on the forward/reverse differentiation path (i.e., gradient of x
+ *   doesn't flow through f node)
+ * @returns {string} Evaluated derivative df/dy. For example, if we consider
+ * the above example data and assume xId is "0", then the value is "-1.25"
+ * since f(x, n) = x ^ n and df/dx = n * (x ^ (n - 1)) = 3 * (2 ^ (3 - 1)) =
+ * 12.
+ */
+function dfdx(fInputPortToNodes, fInputNodeToValues, xId) {
+  const hasXInX = fInputPortToNodes.x.includes(xId);
+  const hasXInN = fInputPortToNodes.n.includes(xId);
+  if (!hasXInX && !hasXInN) {
+    return "0";
+  }
+  const xInputNodeId = fInputPortToNodes.x[0];
+  const nInputNodeId = fInputPortToNodes.n[0];
+  const x = parseFloat(fInputNodeToValues[xInputNodeId]);
+  const n = parseFloat(fInputNodeToValues[nInputNodeId]);
+  const df = hasXInX ? n * Math.pow(x, n - 1) : Math.pow(x, n) * Math.log(x);
+  return \`\${df}\`;
+}
+`;
+
 const SUM_F_CODE = `\
 /**
  * Calculates f().
@@ -970,6 +1058,8 @@ export {
   IDENTITY_F_CODE,
   MULTIPLY_DFDX_CODE,
   MULTIPLY_F_CODE,
+  POWER_DFDX_CODE,
+  POWER_F_CODE,
   PRODUCT_DFDX_CODE,
   PRODUCT_F_CODE,
   RELU_DFDX_CODE,

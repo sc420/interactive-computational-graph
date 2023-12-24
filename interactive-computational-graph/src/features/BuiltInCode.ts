@@ -142,6 +142,12 @@ const ADD_DFDX_CODE = `\
  * since f(a, b) = a + b and df/dx = df/db = 1.
  */
 function dfdx(fInputPortToNodes, fInputNodeToValues, xId) {
+  if (fInputPortToNodes.a.length !== 1) {
+    throw new Error("Should have exactly 1 input node for port a");
+  }
+  if (fInputPortToNodes.b.length !== 1) {
+    throw new Error("Should have exactly 1 input node for port b");
+  }
   const hasXInA = fInputPortToNodes.a.includes(xId);
   const hasXInB = fInputPortToNodes.b.includes(xId);
   if (!hasXInA && !hasXInB) {
@@ -224,6 +230,12 @@ const SUBTRACT_DFDX_CODE = `\
  * since f(a, b) = a - b and df/dx = df/db = -1.
  */
 function dfdx(fInputPortToNodes, fInputNodeToValues, xId) {
+  if (fInputPortToNodes.a.length !== 1) {
+    throw new Error("Should have exactly 1 input node for port a");
+  }
+  if (fInputPortToNodes.b.length !== 1) {
+    throw new Error("Should have exactly 1 input node for port b");
+  }
   const hasXInA = fInputPortToNodes.a.includes(xId);
   const hasXInB = fInputPortToNodes.b.includes(xId);
   if (!hasXInA && !hasXInB) {
@@ -307,6 +319,12 @@ const MULTIPLY_DFDX_CODE = `\
  * since f(a, b) = a * b and df/dx = df/db = a = 0.2.
  */
 function dfdx(fInputPortToNodes, fInputNodeToValues, xId) {
+  if (fInputPortToNodes.a.length !== 1) {
+    throw new Error("Should have exactly 1 input node for port a");
+  }
+  if (fInputPortToNodes.b.length !== 1) {
+    throw new Error("Should have exactly 1 input node for port b");
+  }
   const hasXInA = fInputPortToNodes.a.includes(xId);
   const hasXInB = fInputPortToNodes.b.includes(xId);
   if (!hasXInA && !hasXInB) {
@@ -393,6 +411,12 @@ const DIVIDE_DFDX_CODE = `\
  * since f(a, b) = a / b and df/dx = df/db = -(a / b^2) = -1.25.
  */
 function dfdx(fInputPortToNodes, fInputNodeToValues, xId) {
+  if (fInputPortToNodes.a.length !== 1) {
+    throw new Error("Should have exactly 1 input node for port a");
+  }
+  if (fInputPortToNodes.b.length !== 1) {
+    throw new Error("Should have exactly 1 input node for port b");
+  }
   const hasXInA = fInputPortToNodes.a.includes(xId);
   const hasXInB = fInputPortToNodes.b.includes(xId);
   if (!hasXInA && !hasXInB) {
@@ -434,10 +458,10 @@ const POWER_F_CODE = `\
  */
 function f(fInputPortToNodes, fInputNodeToValues) {
   if (fInputPortToNodes.x.length !== 1) {
-    throw new Error("Should have exactly 1 input node for port a");
+    throw new Error("Should have exactly 1 input node for port x");
   }
   if (fInputPortToNodes.n.length !== 1) {
-    throw new Error("Should have exactly 1 input node for port b");
+    throw new Error("Should have exactly 1 input node for port n");
   }
   const xInputNodeId = fInputPortToNodes.x[0];
   const nInputNodeId = fInputPortToNodes.n[0];
@@ -481,6 +505,12 @@ const POWER_DFDX_CODE = `\
  * 12.
  */
 function dfdx(fInputPortToNodes, fInputNodeToValues, xId) {
+  if (fInputPortToNodes.x.length !== 1) {
+    throw new Error("Should have exactly 1 input node for port x");
+  }
+  if (fInputPortToNodes.n.length !== 1) {
+    throw new Error("Should have exactly 1 input node for port n");
+  }
   const hasXInX = fInputPortToNodes.x.includes(xId);
   const hasXInN = fInputPortToNodes.n.includes(xId);
   if (!hasXInX && !hasXInN) {
@@ -715,11 +745,11 @@ const COS_DFDX_CODE = `\
  * since f(x) = cos(x) and df/dx = -sin(x) = 0.
  */
 function dfdx(fInputPortToNodes, fInputNodeToValues, xId) {
-  if (!fInputPortToNodes.x.includes(xId)) {
-    return "0";
-  }
   if (fInputPortToNodes.x.length !== 1) {
     throw new Error("Should have exactly 1 input node for port x");
+  }
+  if (!fInputPortToNodes.x.includes(xId)) {
+    return "0";
   }
   const xInputNodeId = fInputPortToNodes.x[0];
   const x = parseFloat(fInputNodeToValues[xInputNodeId]);
@@ -791,6 +821,9 @@ const IDENTITY_DFDX_CODE = `\
  * since f(x) = x and df/dx = 1.
  */
 function dfdx(fInputPortToNodes, fInputNodeToValues, xId) {
+  if (fInputPortToNodes.x.length !== 1) {
+    throw new Error("Should have exactly 1 input node for port x");
+  }
   if (!fInputPortToNodes.x.includes(xId)) {
     return "0";
   }
@@ -862,11 +895,11 @@ const RELU_DFDX_CODE = `\
  * since f(x) = max(0, x) and df/dx = 1 (x > 0).
  */
 function dfdx(fInputPortToNodes, fInputNodeToValues, xId) {
-  if (!fInputPortToNodes.x.includes(xId)) {
-    return "0";
-  }
   if (fInputPortToNodes.x.length !== 1) {
     throw new Error("Should have exactly 1 input node for port x");
+  }
+  if (!fInputPortToNodes.x.includes(xId)) {
+    return "0";
   }
   const xInputNodeId = fInputPortToNodes.x[0];
   const x = parseFloat(fInputNodeToValues[xInputNodeId]);
@@ -940,11 +973,11 @@ const SIGMOID_DFDX_CODE = `\
  * 0.5 * (1 - 0.5) = 0.25.
  */
 function dfdx(fInputPortToNodes, fInputNodeToValues, xId) {
-  if (!fInputPortToNodes.x.includes(xId)) {
-    return "0";
-  }
   if (fInputPortToNodes.x.length !== 1) {
     throw new Error("Should have exactly 1 input node for port x");
+  }
+  if (!fInputPortToNodes.x.includes(xId)) {
+    return "0";
   }
   const xInputNodeId = fInputPortToNodes.x[0];
   const x = parseFloat(fInputNodeToValues[xInputNodeId]);
@@ -1028,6 +1061,12 @@ const SQUARED_ERROR_DFDX_CODE = `\
  * 2 * (0 - 0.5) = -1.
  */
 function dfdx(fInputPortToNodes, fInputNodeToValues, xId) {
+  if (fInputPortToNodes.y_t.length !== 1) {
+    throw new Error("Should have exactly 1 input node for port y_t");
+  }
+  if (fInputPortToNodes.y_e.length !== 1) {
+    throw new Error("Should have exactly 1 input node for port y_e");
+  }
   const hasXInYTrue = fInputPortToNodes.y_t.includes(xId);
   const hasXInYEstimate = fInputPortToNodes.y_e.includes(xId);
   if (!hasXInYTrue && !hasXInYEstimate) {

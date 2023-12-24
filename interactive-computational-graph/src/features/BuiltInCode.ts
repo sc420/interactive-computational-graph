@@ -525,6 +525,160 @@ function dfdx(fInputPortToNodes, fInputNodeToValues, xId) {
 }
 `;
 
+const EXP_F_CODE = `\
+/**
+ * Calculates f().
+ * @param {Record<string, string[]>} fInputPortToNodes An object where the keys
+ * are port IDs and the values are node IDs of the connected input nodes.
+ * Example data for exp:
+ * \`\`\`json
+ * {
+ *   "x": ["0"]
+ * }
+ * \`\`\`
+ * @param {Record<string, string>} fInputNodeToValues An object where the keys
+ * are node IDs and the values are node values of the connected input nodes.
+ * Example data for exp:
+ * \`\`\`json
+ * {
+ *   "0": "0"
+ * }
+ * \`\`\`
+ * @returns {string} Evaluated f value. For example: if we consider
+ * the above example data, then the value is "1" because
+ * f(x) = e^x = e^0 = 1.
+ */
+function f(fInputPortToNodes, fInputNodeToValues) {
+  if (fInputPortToNodes.x.length !== 1) {
+    throw new Error("Should have exactly 1 input node for port x");
+  }
+  const xInputNodeId = fInputPortToNodes.x[0];
+  const x = parseFloat(fInputNodeToValues[xInputNodeId]);
+  const y = Math.exp(x);
+  return \`\${y}\`;
+}
+`;
+
+const EXP_DFDX_CODE = `\
+/**
+ * Calculates df/dx.
+ * @param {Record<string, string[]>} fInputPortToNodes An object where the keys
+ * are port IDs and the values are node IDs of the connected input nodes.
+ * Example data for exp:
+ * \`\`\`json
+ * {
+ *   "x": ["0"]
+ * }
+ * \`\`\`
+ * @param {Record<string, string>} fInputNodeToValues An object where the keys
+ * are node IDs and the values are node values of the connected input nodes.
+ * Example data for exp:
+ * \`\`\`json
+ * {
+ *   "0": "0"
+ * }
+ * \`\`\`
+ * @param {string} xId Node ID of x. Note that the framework will not call this
+ * function for the following cases:
+ * - x is a constant node (i.e., x will always be a variable)
+ * - x is the node of f (i.e., the derivative is always 1)
+ * - x is not on the forward/reverse differentiation path (i.e., gradient of x
+ *   doesn't flow through f node)
+ * @returns {string} Evaluated derivative df/dy. For example, if we consider
+ * the above example data and assume xId is "0", then the value is "1"
+ * since f(x) = e^x and df/dx = e^x = e^0 = 1
+ */
+function dfdx(fInputPortToNodes, fInputNodeToValues, xId) {
+  if (fInputPortToNodes.x.length !== 1) {
+    throw new Error("Should have exactly 1 input node for port x");
+  }
+  if (!fInputPortToNodes.x.includes(xId)) {
+    return "0";
+  }
+  const xInputNodeId = fInputPortToNodes.x[0];
+  const x = parseFloat(fInputNodeToValues[xInputNodeId]);
+  const df = Math.exp(x);
+  return \`\${df}\`;
+}
+`;
+
+const LN_F_CODE = `\
+/**
+ * Calculates f().
+ * @param {Record<string, string[]>} fInputPortToNodes An object where the keys
+ * are port IDs and the values are node IDs of the connected input nodes.
+ * Example data for ln:
+ * \`\`\`json
+ * {
+ *   "x": ["0"]
+ * }
+ * \`\`\`
+ * @param {Record<string, string>} fInputNodeToValues An object where the keys
+ * are node IDs and the values are node values of the connected input nodes.
+ * Example data for ln:
+ * \`\`\`json
+ * {
+ *   "0": "1"
+ * }
+ * \`\`\`
+ * @returns {string} Evaluated f value. For example: if we consider
+ * the above example data, then the value is "0" because
+ * f(x) = ln(x) = ln(1) = 0.
+ */
+function f(fInputPortToNodes, fInputNodeToValues) {
+  if (fInputPortToNodes.x.length !== 1) {
+    throw new Error("Should have exactly 1 input node for port x");
+  }
+  const xInputNodeId = fInputPortToNodes.x[0];
+  const x = parseFloat(fInputNodeToValues[xInputNodeId]);
+  const y = Math.log(x);
+  return \`\${y}\`;
+}
+`;
+
+const LN_DFDX_CODE = `\
+/**
+ * Calculates df/dx.
+ * @param {Record<string, string[]>} fInputPortToNodes An object where the keys
+ * are port IDs and the values are node IDs of the connected input nodes.
+ * Example data for ln:
+ * \`\`\`json
+ * {
+ *   "x": ["0"]
+ * }
+ * \`\`\`
+ * @param {Record<string, string>} fInputNodeToValues An object where the keys
+ * are node IDs and the values are node values of the connected input nodes.
+ * Example data for ln:
+ * \`\`\`json
+ * {
+ *   "0": "1"
+ * }
+ * \`\`\`
+ * @param {string} xId Node ID of x. Note that the framework will not call this
+ * function for the following cases:
+ * - x is a constant node (i.e., x will always be a variable)
+ * - x is the node of f (i.e., the derivative is always 1)
+ * - x is not on the forward/reverse differentiation path (i.e., gradient of x
+ *   doesn't flow through f node)
+ * @returns {string} Evaluated derivative df/dy. For example, if we consider
+ * the above example data and assume xId is "0", then the value is "1"
+ * since f(x) = ln(x) and df/dx = 1 / x = 1 / 1 = 1
+ */
+function dfdx(fInputPortToNodes, fInputNodeToValues, xId) {
+  if (fInputPortToNodes.x.length !== 1) {
+    throw new Error("Should have exactly 1 input node for port x");
+  }
+  if (!fInputPortToNodes.x.includes(xId)) {
+    return "0";
+  }
+  const xInputNodeId = fInputPortToNodes.x[0];
+  const x = parseFloat(fInputNodeToValues[xInputNodeId]);
+  const df = 1 / x;
+  return \`\${df}\`;
+}
+`;
+
 const SUM_F_CODE = `\
 /**
  * Calculates f().
@@ -1093,8 +1247,12 @@ export {
   COS_F_CODE,
   DIVIDE_DFDX_CODE,
   DIVIDE_F_CODE,
+  EXP_DFDX_CODE,
+  EXP_F_CODE,
   IDENTITY_DFDX_CODE,
   IDENTITY_F_CODE,
+  LN_DFDX_CODE,
+  LN_F_CODE,
   MULTIPLY_DFDX_CODE,
   MULTIPLY_F_CODE,
   POWER_DFDX_CODE,

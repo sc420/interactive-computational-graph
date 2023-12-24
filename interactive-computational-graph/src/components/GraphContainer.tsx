@@ -53,6 +53,8 @@ import {
   SUBTRACT_F_CODE,
   SUM_DFDX_CODE,
   SUM_F_CODE,
+  TANH_DFDX_CODE,
+  TANH_F_CODE,
   TAN_DFDX_CODE,
   TAN_F_CODE,
   TEMPLATE_DFDX_CODE,
@@ -242,6 +244,16 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       operation: new Operation(SIGMOID_F_CODE, SIGMOID_DFDX_CODE),
       inputPorts: [new Port("x", true)],
       helpText: "Sigmoid activation function $ \\frac{1}{1 + e^{-x}} $",
+    },
+    {
+      id: "tanh",
+      text: "Tanh",
+      type: "SIMPLE",
+      namePrefix: "s",
+      operation: new Operation(TANH_F_CODE, TANH_DFDX_CODE),
+      inputPorts: [new Port("x", true)],
+      helpText:
+        "Tanh activation function $ \\frac{e^x - e^{-x}}{e^x + e^{-x}} $",
     },
     {
       id: "squared_error",

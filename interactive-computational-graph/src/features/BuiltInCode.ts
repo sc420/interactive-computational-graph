@@ -1199,7 +1199,7 @@ const SIGMOID_DFDX_CODE = `\
  * - x is not on the forward/reverse differentiation path (i.e., gradient of x
  *   doesn't flow through f node)
  * @returns {string} Evaluated derivative df/dy. For example, if we consider
- * the above example data and assume xId is "v2", then the value is "3"
+ * the above example data and assume xId is "0", then the value is "3"
  * since f(x) = sigmoid(x) and df/dx = sigmoid(x) * (1 - sigmoid(x)) =
  * 0.5 * (1 - 0.5) = 0.25.
  */
@@ -1214,6 +1214,85 @@ function dfdx(fInputPortToNodes, fInputNodeToValues, xId) {
   const x = parseFloat(fInputNodeToValues[xInputNodeId]);
   const sigmoid = 1 / (1 + Math.exp(-x));
   const df = sigmoid * (1 - sigmoid);
+  return \`\${df}\`;
+}
+`;
+
+const TANH_F_CODE = `\
+/**
+ * Calculates f().
+ * @param {Record<string, string[]>} fInputPortToNodes An object where the keys
+ * are port IDs and the values are node IDs of the connected input nodes.
+ * Example data for tanh:
+ * \`\`\`json
+ * {
+ *   "x": ["0"]
+ * }
+ * \`\`\`
+ * @param {Record<string, string>} fInputNodeToValues An object where the keys
+ * are node IDs and the values are node values of the connected input nodes.
+ * Example data for tanh:
+ * \`\`\`json
+ * {
+ *   "0": "0"
+ * }
+ * \`\`\`
+ * @returns {string} Evaluated f value. For example: if we consider
+ * the above example data, then the value is "0" because
+ * f(x) = (e^x - e^(-x)) / (e^x + e^(-x)) = (e^0 - e^0) / (e^0 + e^0) = 0 / 2 =
+ * 0.
+ */
+function f(fInputPortToNodes, fInputNodeToValues) {
+  if (fInputPortToNodes.x.length !== 1) {
+    throw new Error("Should have exactly 1 input node for port x");
+  }
+  const xInputNodeId = fInputPortToNodes.x[0];
+  const x = parseFloat(fInputNodeToValues[xInputNodeId]);
+  const y = (Math.exp(x) - Math.exp(-x)) / (Math.exp(x) + Math.exp(-x));
+  return \`\${y}\`;
+}
+`;
+
+const TANH_DFDX_CODE = `\
+/**
+ * Calculates df/dx.
+ * @param {Record<string, string[]>} fInputPortToNodes An object where the keys
+ * are port IDs and the values are node IDs of the connected input nodes.
+ * Example data for tanh:
+ * \`\`\`json
+ * {
+ *   "x": ["0"]
+ * }
+ * \`\`\`
+ * @param {Record<string, string>} fInputNodeToValues An object where the keys
+ * are node IDs and the values are node values of the connected input nodes.
+ * Example data for tanh:
+ * \`\`\`json
+ * {
+ *   "0": "0"
+ * }
+ * \`\`\`
+ * @param {string} xId Node ID of x. Note that the framework will not call this
+ * function for the following cases:
+ * - x is a constant node (i.e., x will always be a variable)
+ * - x is the node of f (i.e., the derivative is always 1)
+ * - x is not on the forward/reverse differentiation path (i.e., gradient of x
+ *   doesn't flow through f node)
+ * @returns {string} Evaluated derivative df/dy. For example, if we consider
+ * the above example data and assume xId is "0", then the value is "1"
+ * since f(x) = tanh(x) and df/dx = 1 - tanh(x)^2 = 1 - 0^2 = 1
+ */
+function dfdx(fInputPortToNodes, fInputNodeToValues, xId) {
+  if (fInputPortToNodes.x.length !== 1) {
+    throw new Error("Should have exactly 1 input node for port x");
+  }
+  if (!fInputPortToNodes.x.includes(xId)) {
+    return "0";
+  }
+  const xInputNodeId = fInputPortToNodes.x[0];
+  const x = parseFloat(fInputNodeToValues[xInputNodeId]);
+  const tanh = (Math.exp(x) - Math.exp(-x)) / (Math.exp(x) + Math.exp(-x));
+  const df = 1 - Math.pow(tanh, 2);
   return \`\${df}\`;
 }
 `;
@@ -1425,6 +1504,8 @@ export {
   SUBTRACT_F_CODE,
   SUM_DFDX_CODE,
   SUM_F_CODE,
+  TANH_DFDX_CODE,
+  TANH_F_CODE,
   TAN_DFDX_CODE,
   TAN_F_CODE,
   TEMPLATE_DFDX_CODE,

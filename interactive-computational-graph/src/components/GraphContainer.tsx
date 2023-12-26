@@ -416,7 +416,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
 
     const newFeatureOperation: FeatureOperation = {
       id,
-      text: `Operation ${nextOperationId}`,
+      text: `Operation ${nextOperationId + 1}`,
       type: "custom",
       namePrefix: "f",
       operation: new Operation(TEMPLATE_F_CODE, TEMPLATE_DFDX_CODE),

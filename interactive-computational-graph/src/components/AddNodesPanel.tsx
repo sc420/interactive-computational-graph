@@ -34,10 +34,10 @@ const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
   onDeleteOperation,
 }) => {
   const simpleOperations = featureOperations.filter(
-    (operation) => operation.type === "SIMPLE",
+    (operation) => operation.type === "basic",
   );
   const customOperations = featureOperations.filter(
-    (operation) => operation.type === "CUSTOM",
+    (operation) => operation.type === "custom",
   );
 
   const [isEditDialogOpen, setEditDialogOpen] = useState(false);

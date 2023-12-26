@@ -143,7 +143,7 @@ const getFeatureOperations = (): FeatureOperation[] => {
     {
       id: "add",
       text: "Add",
-      type: "SIMPLE",
+      type: "basic",
       namePrefix: "a",
       operation: new Operation(ADD_F_CODE, ADD_DFDX_CODE),
       inputPorts: [new Port("a", false), new Port("b", false)],

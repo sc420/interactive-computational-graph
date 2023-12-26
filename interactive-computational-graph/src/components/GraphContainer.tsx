@@ -126,7 +126,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     {
       id: "add",
       text: "Add",
-      type: "SIMPLE",
+      type: "basic",
       namePrefix: "a",
       operation: new Operation(ADD_F_CODE, ADD_DFDX_CODE),
       inputPorts: [new Port("a", false), new Port("b", false)],
@@ -135,7 +135,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     {
       id: "subtract",
       text: "Subtract",
-      type: "SIMPLE",
+      type: "basic",
       namePrefix: "s",
       operation: new Operation(SUBTRACT_F_CODE, SUBTRACT_DFDX_CODE),
       inputPorts: [new Port("a", false), new Port("b", false)],
@@ -144,7 +144,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     {
       id: "multiply",
       text: "Multiply",
-      type: "SIMPLE",
+      type: "basic",
       namePrefix: "m",
       operation: new Operation(MULTIPLY_F_CODE, MULTIPLY_DFDX_CODE),
       inputPorts: [new Port("a", false), new Port("b", false)],
@@ -153,7 +153,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     {
       id: "divide",
       text: "Divide",
-      type: "SIMPLE",
+      type: "basic",
       namePrefix: "d",
       operation: new Operation(DIVIDE_F_CODE, DIVIDE_DFDX_CODE),
       inputPorts: [new Port("a", false), new Port("b", false)],
@@ -162,7 +162,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     {
       id: "power",
       text: "Power",
-      type: "SIMPLE",
+      type: "basic",
       namePrefix: "p",
       operation: new Operation(POWER_F_CODE, POWER_DFDX_CODE),
       inputPorts: [new Port("x", false), new Port("n", false)],
@@ -171,7 +171,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     {
       id: "exp",
       text: "Exp",
-      type: "SIMPLE",
+      type: "basic",
       namePrefix: "e",
       operation: new Operation(EXP_F_CODE, EXP_DFDX_CODE),
       inputPorts: [new Port("x", false)],
@@ -180,7 +180,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     {
       id: "ln",
       text: "Ln",
-      type: "SIMPLE",
+      type: "basic",
       namePrefix: "l",
       operation: new Operation(LN_F_CODE, LN_DFDX_CODE),
       inputPorts: [new Port("x", false)],
@@ -189,7 +189,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     {
       id: "sum",
       text: "Sum",
-      type: "SIMPLE",
+      type: "aggregate",
       namePrefix: "s",
       operation: new Operation(SUM_F_CODE, SUM_DFDX_CODE),
       inputPorts: [new Port("x_i", true)],
@@ -198,7 +198,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     {
       id: "product",
       text: "Product",
-      type: "SIMPLE",
+      type: "aggregate",
       namePrefix: "p",
       operation: new Operation(PRODUCT_F_CODE, PRODUCT_DFDX_CODE),
       inputPorts: [new Port("x_i", true)],
@@ -207,7 +207,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     {
       id: "sin",
       text: "Sin",
-      type: "SIMPLE",
+      type: "trigonometric",
       namePrefix: "s",
       operation: new Operation(SIN_F_CODE, SIN_DFDX_CODE),
       inputPorts: [new Port("x", true)],
@@ -216,7 +216,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     {
       id: "cos",
       text: "Cos",
-      type: "SIMPLE",
+      type: "trigonometric",
       namePrefix: "c",
       operation: new Operation(COS_F_CODE, COS_DFDX_CODE),
       inputPorts: [new Port("x", true)],
@@ -225,7 +225,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     {
       id: "tan",
       text: "Tan",
-      type: "SIMPLE",
+      type: "trigonometric",
       namePrefix: "t",
       operation: new Operation(TAN_F_CODE, TAN_DFDX_CODE),
       inputPorts: [new Port("x", true)],
@@ -234,7 +234,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     {
       id: "linear",
       text: "Linear",
-      type: "SIMPLE",
+      type: "activation",
       namePrefix: "l",
       operation: new Operation(IDENTITY_F_CODE, IDENTITY_DFDX_CODE),
       inputPorts: [new Port("x", true)],
@@ -243,7 +243,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     {
       id: "sigmoid",
       text: "Sigmoid",
-      type: "SIMPLE",
+      type: "activation",
       namePrefix: "s",
       operation: new Operation(SIGMOID_F_CODE, SIGMOID_DFDX_CODE),
       inputPorts: [new Port("x", true)],
@@ -252,7 +252,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     {
       id: "tanh",
       text: "Tanh",
-      type: "SIMPLE",
+      type: "activation",
       namePrefix: "s",
       operation: new Operation(TANH_F_CODE, TANH_DFDX_CODE),
       inputPorts: [new Port("x", true)],
@@ -262,7 +262,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     {
       id: "relu",
       text: "ReLU",
-      type: "SIMPLE",
+      type: "activation",
       namePrefix: "r",
       operation: new Operation(RELU_F_CODE, RELU_DFDX_CODE),
       inputPorts: [new Port("x", true)],
@@ -271,7 +271,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     {
       id: "squared_error",
       text: "Squared Error",
-      type: "SIMPLE",
+      type: "loss",
       namePrefix: "s",
       operation: new Operation(SQUARED_ERROR_F_CODE, SQUARED_ERROR_DFDX_CODE),
       inputPorts: [new Port("y_t", false), new Port("y_e", false)],
@@ -280,7 +280,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     {
       id: "binary_cross_entropy",
       text: "Binary Cross-Entropy",
-      type: "SIMPLE",
+      type: "loss",
       namePrefix: "b",
       operation: new Operation(
         BINARY_CROSS_ENTROPY_F_CODE,
@@ -417,7 +417,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     const newFeatureOperation: FeatureOperation = {
       id,
       text: `Operation ${nextOperationId}`,
-      type: "CUSTOM",
+      type: "custom",
       namePrefix: "f",
       operation: new Operation(TEMPLATE_F_CODE, TEMPLATE_DFDX_CODE),
       inputPorts: [],

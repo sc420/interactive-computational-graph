@@ -10,7 +10,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { useState, type FunctionComponent, useCallback } from "react";
+import { useState, type FunctionComponent, useCallback, useMemo } from "react";
 import type FeatureNodeType from "../features/FeatureNodeType";
 import type FeatureOperation from "../features/FeatureOperation";
 import DraggableItem from "./DraggableItem";
@@ -33,16 +33,23 @@ const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
   onEditOperation,
   onDeleteOperation,
 }) => {
-  const simpleOperations = featureOperations.filter(
-    (operation) => operation.type === "basic",
+  const builtInOperationTypes: string[] = useMemo(
+    () => ["basic", "aggregate", "trigonometric", "activation", "loss"],
+    [],
   );
-  const customOperations = featureOperations.filter(
-    (operation) => operation.type === "custom",
+
+  const customOperations = useMemo(
+    () => featureOperations.filter((operation) => operation.type === "custom"),
+    [featureOperations],
   );
 
   const [isEditDialogOpen, setEditDialogOpen] = useState(false);
   const [editingOperation, setEditingOperation] =
     useState<FeatureOperation | null>(null);
+
+  const capitalizeFirstLetter = useCallback((word: string): string => {
+    return word[0].toUpperCase() + word.slice(1);
+  }, []);
 
   const handleOpenEditDialog = useCallback(
     (featureOperation: FeatureOperation) => {
@@ -114,35 +121,54 @@ const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
         </AccordionDetails>
       </Accordion>
 
-      {/* Simple operations */}
-      <Accordion defaultExpanded disableGutters square sx={{ width: "100%" }}>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="simple-content"
-          id="simple-header"
-        >
-          <Typography variant="subtitle2">Simple</Typography>
-        </AccordionSummary>
-        <AccordionDetails id="simple-content" sx={{ p: 0 }}>
-          <List>
-            {simpleOperations.map((operation) => (
-              <DraggableItem
-                key={operation.id}
-                featureNodeType={{
-                  nodeType: "OPERATION",
-                  operationId: operation.id,
-                }}
-                text={operation.text}
-                editable
-                onClickItem={onAddNode}
-                onClickEditIcon={() => {
-                  handleOpenEditDialog(operation);
-                }}
-              />
-            ))}
-          </List>
-        </AccordionDetails>
-      </Accordion>
+      {/* Built-in operations */}
+      {builtInOperationTypes.map((builtInOperationType) => {
+        const filteredOperations = featureOperations.filter(
+          (operation) => operation.type === builtInOperationType,
+        );
+
+        return (
+          <Accordion
+            key={builtInOperationType}
+            defaultExpanded
+            disableGutters
+            square
+            sx={{ width: "100%" }}
+          >
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls={`${builtInOperationType}-content`}
+              id={`${builtInOperationType}-header`}
+            >
+              <Typography variant="subtitle2">
+                {capitalizeFirstLetter(builtInOperationType)}
+              </Typography>
+            </AccordionSummary>
+            <AccordionDetails
+              id={`${builtInOperationType}-content`}
+              sx={{ p: 0 }}
+            >
+              <List>
+                {filteredOperations.map((operation) => (
+                  <DraggableItem
+                    key={operation.id}
+                    featureNodeType={{
+                      nodeType: "OPERATION",
+                      operationId: operation.id,
+                    }}
+                    text={operation.text}
+                    editable
+                    onClickItem={onAddNode}
+                    onClickEditIcon={() => {
+                      handleOpenEditDialog(operation);
+                    }}
+                  />
+                ))}
+              </List>
+            </AccordionDetails>
+          </Accordion>
+        );
+      })}
 
       {/* Custom operations */}
       <Accordion defaultExpanded disableGutters square sx={{ width: "100%" }}>

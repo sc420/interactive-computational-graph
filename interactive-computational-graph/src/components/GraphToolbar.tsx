@@ -87,7 +87,10 @@ const GraphToolbar: FunctionComponent<GraphToolbarProps> = ({
                   backgroundColor: "black",
                 },
               }}
-              inputProps={{ "aria-label": "toggle-differentiation-mode" }}
+              inputProps={{
+                "aria-label": "toggle-differentiation-mode",
+                name: "toggle-differentiation-mode",
+              }}
             />
           }
           label={

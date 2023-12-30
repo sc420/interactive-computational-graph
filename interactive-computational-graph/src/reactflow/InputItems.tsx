@@ -1,4 +1,10 @@
-import { Box, Grid, InputLabel, OutlinedInput } from "@mui/material";
+import {
+  Box,
+  Grid,
+  InputLabel,
+  OutlinedInput,
+  Typography,
+} from "@mui/material";
 import { useCallback, type FunctionComponent } from "react";
 import { Handle, Position } from "reactflow";
 import type NodeData from "../features/NodeData";
@@ -84,9 +90,16 @@ const InputItems: FunctionComponent<InputItemProps> = ({
             )}
 
             {/* Label */}
-            <InputLabel htmlFor={getInputId(item.id)}>
-              <Katex latex={item.label} />
-            </InputLabel>
+            {item.showInputField ? (
+              <InputLabel htmlFor={getInputId(item.id)}>
+                <Katex latex={item.label} />
+              </InputLabel>
+            ) : (
+              // Don't use <input> because otherwise the `htmlFor` is invalid
+              <Typography color="text.secondary">
+                <Katex latex={item.label} />
+              </Typography>
+            )}
           </Box>
         ))}
       </Grid>

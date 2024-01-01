@@ -53,7 +53,12 @@ const Sidebar: FunctionComponent<SidebarProps> = ({
           px: [1],
         }}
       >
-        <IconButton onClick={onToggleSidebar}>
+        <IconButton
+          aria-label="Toggle Sidebar"
+          onClick={() => {
+            onToggleSidebar();
+          }}
+        >
           <ChevronLeftIcon />
         </IconButton>
       </Toolbar>

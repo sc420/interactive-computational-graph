@@ -1,9 +1,9 @@
 import {
-  OnSelectionChangeParams,
   type Connection,
   type Edge,
   type EdgeChange,
   type Node,
+  type OnSelectionChangeParams,
   type XYPosition,
 } from "reactflow";
 import type AddNodeData from "./AddNodeData";

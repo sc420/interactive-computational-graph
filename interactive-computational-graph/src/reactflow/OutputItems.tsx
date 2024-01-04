@@ -4,14 +4,14 @@ import MathLabel from "../components/MathLabel";
 import type NodeData from "../features/NodeData";
 import type OutputItemType from "../features/OutputItemType";
 
-interface InputItemProps {
+interface OutputItemProps {
   id: string;
   data: NodeData;
   itemHeight: number;
   inputWidth: number;
 }
 
-const InputItems: FunctionComponent<InputItemProps> = ({
+const OutputItems: FunctionComponent<OutputItemProps> = ({
   id,
   data,
   itemHeight,
@@ -82,4 +82,4 @@ const InputItems: FunctionComponent<InputItemProps> = ({
   );
 };
 
-export default InputItems;
+export default OutputItems;

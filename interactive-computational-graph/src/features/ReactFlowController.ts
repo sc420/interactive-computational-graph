@@ -3,6 +3,7 @@ import {
   type Edge,
   type EdgeChange,
   type Node,
+  type OnSelectionChangeParams,
   type XYPosition,
 } from "reactflow";
 import type AddNodeData from "./AddNodeData";
@@ -291,8 +292,10 @@ const updateReactFlowNodeHighlighted = (
   });
 };
 
-const getLastSelectedNodeId = (nodes: Node[]): string | null => {
-  const firstNode = nodes.find((node) => "id" in node) ?? null;
+const getLastSelectedNodeId = (
+  params: OnSelectionChangeParams,
+): string | null => {
+  const firstNode = params.nodes.find((node) => "id" in node) ?? null;
   if (firstNode === null) {
     return null;
   }

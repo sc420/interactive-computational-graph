@@ -62,8 +62,10 @@ const Title: FunctionComponent<TitleProps> = ({
         <IconButton
           edge="start"
           color="inherit"
-          aria-label="open drawer"
-          onClick={onToggleSidebar}
+          aria-label="Open menu"
+          onClick={() => {
+            onToggleSidebar();
+          }}
           sx={{
             marginRight: "36px",
             ...(isSidebarOpen && { display: "none" }),
@@ -84,8 +86,18 @@ const Title: FunctionComponent<TitleProps> = ({
         <Stack direction="row" spacing={1}>
           {/* Theme icon */}
           <Tooltip title="Switch light/dark mode">
-            <IconButton onClick={onToggleDarkMode} color="inherit">
-              {isDarkMode ? <DarkModeIcon /> : <LightModeIcon />}
+            <IconButton
+              aria-label="Switch light/dark mode"
+              onClick={() => {
+                onToggleDarkMode();
+              }}
+              color="inherit"
+            >
+              {isDarkMode ? (
+                <DarkModeIcon aria-label="Dark mode" />
+              ) : (
+                <LightModeIcon aria-label="Light mode" />
+              )}
             </IconButton>
           </Tooltip>
 

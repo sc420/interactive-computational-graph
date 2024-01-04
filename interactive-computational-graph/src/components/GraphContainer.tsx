@@ -508,7 +508,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
 
   const handleSelectionChange = useCallback(
     (params: OnSelectionChangeParams): void => {
-      setLastSelectedNodeId(getLastSelectedNodeId(params.nodes));
+      setLastSelectedNodeId(getLastSelectedNodeId(params));
 
       const selectedNodeIds = params.nodes.map((node) => node.id);
 

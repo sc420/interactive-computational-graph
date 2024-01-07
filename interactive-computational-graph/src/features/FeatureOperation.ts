@@ -12,7 +12,7 @@ interface FeatureOperation {
   operation: Operation;
   // List of input ports
   inputPorts: Port[];
-  // Help text written in Markdown
+  // What does this operation do
   helpText: string;
 }
 

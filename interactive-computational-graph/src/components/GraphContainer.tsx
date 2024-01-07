@@ -423,7 +423,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       namePrefix: "f",
       operation: new Operation(TEMPLATE_F_CODE, TEMPLATE_DFDX_CODE),
       inputPorts: [],
-      helpText: "Write some Markdown and LaTeX here",
+      helpText: "What does this operation do",
     };
 
     setFeatureOperations((featureOperations) =>

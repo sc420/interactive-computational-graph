@@ -130,7 +130,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       namePrefix: "a",
       operation: new Operation(ADD_F_CODE, ADD_DFDX_CODE),
       inputPorts: [new Port("a", false), new Port("b", false)],
-      helpText: "Add two numbers $ a + b $",
+      helpText: "Add two numbers, i.e., a + b",
     },
     {
       id: "subtract",
@@ -139,7 +139,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       namePrefix: "s",
       operation: new Operation(SUBTRACT_F_CODE, SUBTRACT_DFDX_CODE),
       inputPorts: [new Port("a", false), new Port("b", false)],
-      helpText: "Subtract two numbers $ a - b $",
+      helpText: "Subtract two numbers, i.e., a - b",
     },
     {
       id: "multiply",
@@ -148,7 +148,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       namePrefix: "m",
       operation: new Operation(MULTIPLY_F_CODE, MULTIPLY_DFDX_CODE),
       inputPorts: [new Port("a", false), new Port("b", false)],
-      helpText: "Multiply two numbers $ a * b $",
+      helpText: "Multiply two numbers, i.e., a * b",
     },
     {
       id: "divide",
@@ -157,7 +157,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       namePrefix: "d",
       operation: new Operation(DIVIDE_F_CODE, DIVIDE_DFDX_CODE),
       inputPorts: [new Port("a", false), new Port("b", false)],
-      helpText: "Divide two numbers $ a / b $",
+      helpText: "Divide two numbers, i.e., a / b",
     },
     {
       id: "power",
@@ -166,7 +166,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       namePrefix: "p",
       operation: new Operation(POWER_F_CODE, POWER_DFDX_CODE),
       inputPorts: [new Port("x", false), new Port("n", false)],
-      helpText: "Calculate the power $ x ^ n $",
+      helpText: "Calculate the power, i.e., x^n",
     },
     {
       id: "exp",
@@ -175,7 +175,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       namePrefix: "e",
       operation: new Operation(EXP_F_CODE, EXP_DFDX_CODE),
       inputPorts: [new Port("x", false)],
-      helpText: "Calculate the exp $ e ^ x $",
+      helpText: "Calculate the exponential function, i.e., e^x",
     },
     {
       id: "ln",
@@ -184,7 +184,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       namePrefix: "l",
       operation: new Operation(LN_F_CODE, LN_DFDX_CODE),
       inputPorts: [new Port("x", false)],
-      helpText: "Calculate the log $ \\ln(x) $",
+      helpText: "Calculate the log: ln(x)",
     },
     {
       id: "sum",
@@ -193,7 +193,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       namePrefix: "s",
       operation: new Operation(SUM_F_CODE, SUM_DFDX_CODE),
       inputPorts: [new Port("x_i", true)],
-      helpText: "Add all inputs $ \\sum_i x_{i} $",
+      helpText: "Add all inputs: sum_i x_i, i.e., x_0 + x_1 + ...",
     },
     {
       id: "product",
@@ -202,7 +202,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       namePrefix: "p",
       operation: new Operation(PRODUCT_F_CODE, PRODUCT_DFDX_CODE),
       inputPorts: [new Port("x_i", true)],
-      helpText: "Multiply all inputs $ \\prod_i x_{i} $",
+      helpText: "Multiply all inputs: prod_i x_i, i.e., x_0 * x_1 * ...",
     },
     {
       id: "sin",
@@ -211,7 +211,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       namePrefix: "s",
       operation: new Operation(SIN_F_CODE, SIN_DFDX_CODE),
       inputPorts: [new Port("x", true)],
-      helpText: "Calculate $ \\sin(x) $",
+      helpText: "Calculate sin(x)",
     },
     {
       id: "cos",
@@ -220,7 +220,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       namePrefix: "c",
       operation: new Operation(COS_F_CODE, COS_DFDX_CODE),
       inputPorts: [new Port("x", true)],
-      helpText: "Calculate $ \\cos(x) $",
+      helpText: "Calculate cos(x)",
     },
     {
       id: "tan",
@@ -229,7 +229,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       namePrefix: "t",
       operation: new Operation(TAN_F_CODE, TAN_DFDX_CODE),
       inputPorts: [new Port("x", true)],
-      helpText: "Calculate $ \\tan(x) $",
+      helpText: "Calculate tan(x)",
     },
     {
       id: "linear",
@@ -238,7 +238,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       namePrefix: "l",
       operation: new Operation(IDENTITY_F_CODE, IDENTITY_DFDX_CODE),
       inputPorts: [new Port("x", true)],
-      helpText: "Linear activation function $ x $",
+      helpText: "Linear activation function, i.e., y=x",
     },
     {
       id: "sigmoid",
@@ -247,7 +247,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       namePrefix: "s",
       operation: new Operation(SIGMOID_F_CODE, SIGMOID_DFDX_CODE),
       inputPorts: [new Port("x", true)],
-      helpText: "Sigmoid activation function $ \\frac{1}{1 + e^{-x}} $",
+      helpText: "Sigmoid activation function, i.e., y=1/(1 + e^(-x))",
     },
     {
       id: "tanh",
@@ -257,7 +257,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       operation: new Operation(TANH_F_CODE, TANH_DFDX_CODE),
       inputPorts: [new Port("x", true)],
       helpText:
-        "Tanh activation function $ \\frac{e^x - e^{-x}}{e^x + e^{-x}} $",
+        "Tanh activation function, i.e., y=(e^x - e^(-x))(e^x + e^(-x))",
     },
     {
       id: "relu",
@@ -266,7 +266,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       namePrefix: "r",
       operation: new Operation(RELU_F_CODE, RELU_DFDX_CODE),
       inputPorts: [new Port("x", true)],
-      helpText: "ReLU activation function $ \\max(0, x) $",
+      helpText: "ReLU activation function, i.e., y=max(0, x)",
     },
     {
       id: "squared_error",
@@ -275,7 +275,8 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       namePrefix: "s",
       operation: new Operation(SQUARED_ERROR_F_CODE, SQUARED_ERROR_DFDX_CODE),
       inputPorts: [new Port("y_t", false), new Port("y_e", false)],
-      helpText: "Calculate squared error $ (y_t - y_e)^2 $",
+      helpText: `Calculate the squared error, i.e., (y_t - y_e)^2
+ (y_t: true value, y_e: estimated value)`,
     },
     {
       id: "binary_cross_entropy",
@@ -287,8 +288,9 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
         BINARY_CROSS_ENTROPY_DFDX_CODE,
       ),
       inputPorts: [new Port("y_t", false), new Port("y_e", false)],
-      helpText:
-        "Calculate binary cross-entropy $ y_t * \\log(y_e) + (1 - y_t) * \\log(1 - y_e) $",
+      helpText: `Calculate the binary cross-entropy,
+ i.e., y_t * log(y_e) + (1 - y_t) * log(1 - y_e)
+ (y_t: true value, y_e: estimated value)`,
     },
   ]);
   const [nextNodeId, setNextNodeId] = useState<number>(0);

@@ -88,7 +88,7 @@ const EditOperationBasicTab: FunctionComponent<EditOperationBasicTabProps> = ({
           }}
           label="Help Text"
           defaultValue={helpText}
-          helperText="Markdown shown when mouse hovers on the item on the side panel"
+          helperText="Tooltip displayed when mouse hovers over items in the side panel and over the operation names on the nodes"
           fullWidth
           onChange={(event: ChangeEvent<HTMLInputElement>) => {
             setEditingHelpText(event.target.value.trim());

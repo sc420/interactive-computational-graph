@@ -21,6 +21,7 @@ Object {
         "isDarkMode": false,
         "isHighlighted": false,
         "name": "c_1",
+        "operationData": null,
         "outputItems": Array [],
       },
       "dragHandle": ".drag-handle",
@@ -51,6 +52,7 @@ Object {
         "isDarkMode": false,
         "isHighlighted": false,
         "name": "c_2",
+        "operationData": null,
         "outputItems": Array [],
       },
       "dragHandle": ".drag-handle",
@@ -89,6 +91,7 @@ Object {
         "isDarkMode": false,
         "isHighlighted": false,
         "name": "c_1",
+        "operationData": null,
         "outputItems": Array [],
       },
       "dragHandle": ".drag-handle",
@@ -119,6 +122,7 @@ Object {
         "isDarkMode": false,
         "isHighlighted": false,
         "name": "c_2",
+        "operationData": null,
         "outputItems": Array [],
       },
       "dragHandle": ".drag-handle",
@@ -157,6 +161,7 @@ Object {
         "isDarkMode": false,
         "isHighlighted": false,
         "name": "c_1",
+        "operationData": null,
         "outputItems": Array [],
       },
       "dragHandle": ".drag-handle",
@@ -187,6 +192,7 @@ Object {
         "isDarkMode": false,
         "isHighlighted": false,
         "name": "v_1",
+        "operationData": null,
         "outputItems": Array [
           Object {
             "labelParts": Array [
@@ -236,6 +242,10 @@ Object {
         "isDarkMode": false,
         "isHighlighted": false,
         "name": "s_1",
+        "operationData": Object {
+          "helpText": "Add all inputs: sum_i x_i, i.e., x_0 + x_1 + ...",
+          "text": "Sum",
+        },
         "outputItems": Array [
           Object {
             "labelParts": Array [
@@ -303,6 +313,7 @@ Object {
         "isDarkMode": false,
         "isHighlighted": false,
         "name": "c_1",
+        "operationData": null,
         "outputItems": Array [],
       },
       "dragHandle": ".drag-handle",
@@ -333,6 +344,7 @@ Object {
         "isDarkMode": false,
         "isHighlighted": false,
         "name": "c_2",
+        "operationData": null,
         "outputItems": Array [],
       },
       "dragHandle": ".drag-handle",

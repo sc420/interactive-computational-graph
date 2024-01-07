@@ -60,6 +60,10 @@ test("should trigger event when clicking the node body", () => {
 const getFakeData = (): NodeData => {
   return {
     name: "a_1",
+    operationData: {
+      text: "Add",
+      helpText: "Add two numbers $ a + b $",
+    },
     featureNodeType: { nodeType: "OPERATION", operationId: "op1" },
     inputItems: [
       {

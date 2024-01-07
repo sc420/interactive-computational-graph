@@ -1,20 +1,29 @@
 import EditIcon from "@mui/icons-material/Edit";
-import { IconButton, Stack, TextField } from "@mui/material";
+import {
+  IconButton,
+  Stack,
+  TextField,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import {
   useCallback,
   useState,
   type FunctionComponent,
   type KeyboardEvent,
 } from "react";
+import type OperationNodeData from "../features/OperationNodeData";
 import Katex from "../latex/Katex";
 
 interface EditableNameProps {
   name: string;
+  operationData: OperationNodeData | null;
   onNameChange: (name: string) => void;
 }
 
 const EditableName: FunctionComponent<EditableNameProps> = ({
   name,
+  operationData,
   onNameChange,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -62,8 +71,23 @@ const EditableName: FunctionComponent<EditableNameProps> = ({
         />
       ) : (
         <>
-          {/* Name */}
-          <Katex latex={name} />
+          <Stack direction="row" spacing={1}>
+            {/* Name */}
+            <Katex latex={name} />
+
+            {/* Operation data */}
+            {operationData !== null && (
+              <Tooltip
+                title={operationData.helpText}
+                placement="top"
+                enterDelay={500}
+                arrow
+              >
+                <Typography>({operationData.text})</Typography>
+              </Tooltip>
+            )}
+          </Stack>
+
           {/* Edit button */}
           <IconButton
             aria-label="edit"

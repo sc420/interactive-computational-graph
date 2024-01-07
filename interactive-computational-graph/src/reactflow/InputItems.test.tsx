@@ -12,6 +12,10 @@ jest.mock("reactflow", () => ({
 test("should trigger event when changing the input value", () => {
   const data: NodeData = {
     name: "a_1",
+    operationData: {
+      text: "Add",
+      helpText: "Add two numbers $ a + b $",
+    },
     featureNodeType: { nodeType: "OPERATION", operationId: "op1" },
     inputItems: [
       {

@@ -116,6 +116,7 @@ const CustomNode: FunctionComponent<CustomNodeProps> = ({
           <NodeTitle
             id={id}
             name={data.name}
+            operationData={data.operationData}
             backgroundColor={titleColor}
             isDarkMode={data.isDarkMode}
             isHighlighted={data.isHighlighted}

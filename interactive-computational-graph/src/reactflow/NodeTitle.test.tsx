@@ -1,14 +1,17 @@
 import { render, screen } from "@testing-library/react";
+import type OperationNodeData from "../features/OperationNodeData";
 import NodeTitle from "./NodeTitle";
 
 jest.mock("../latex/Katex");
 
 test("should render the name", () => {
+  const operationData = getOperationData();
   const handleNameChange = jest.fn();
   render(
     <NodeTitle
       id="1"
       name="abc"
+      operationData={operationData}
       backgroundColor="white"
       isDarkMode={false}
       isHighlighted={false}
@@ -20,11 +23,13 @@ test("should render the name", () => {
 });
 
 test("should not have striped animation when not highlighted", () => {
+  const operationData = getOperationData();
   const handleNameChange = jest.fn();
   render(
     <NodeTitle
       id="1"
       name="abc"
+      operationData={operationData}
       backgroundColor="white"
       isDarkMode={false}
       isHighlighted={false}
@@ -38,11 +43,13 @@ test("should not have striped animation when not highlighted", () => {
 });
 
 test("should have light striped animation when highlighted in light mode", () => {
+  const operationData = getOperationData();
   const handleNameChange = jest.fn();
   render(
     <NodeTitle
       id="1"
       name="abc"
+      operationData={operationData}
       backgroundColor="white"
       isDarkMode={false}
       isHighlighted={true}
@@ -56,11 +63,13 @@ test("should have light striped animation when highlighted in light mode", () =>
 });
 
 test("should have dark striped animation when highlighted in dark mode", () => {
+  const operationData = getOperationData();
   const handleNameChange = jest.fn();
   render(
     <NodeTitle
       id="1"
       name="abc"
+      operationData={operationData}
       backgroundColor="white"
       isDarkMode={true}
       isHighlighted={true}
@@ -72,3 +81,10 @@ test("should have dark striped animation when highlighted in dark mode", () => {
   expect(nodeTitle).not.toHaveClass("striped-animation-light");
   expect(nodeTitle).toHaveClass("striped-animation-dark");
 });
+
+const getOperationData = (): OperationNodeData | null => {
+  return {
+    text: "Operation 1",
+    helpText: "Do something",
+  };
+};

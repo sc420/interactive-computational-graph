@@ -1,12 +1,14 @@
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import { Box, Stack } from "@mui/material";
 import { useMemo, type FunctionComponent } from "react";
-import "./NodeTitle.css";
+import type OperationNodeData from "../features/OperationNodeData";
 import EditableName from "./EditableName";
+import "./NodeTitle.css";
 
 interface NodeTitleProps {
   id: string;
   name: string;
+  operationData: OperationNodeData | null;
   backgroundColor: string;
   isDarkMode: boolean;
   isHighlighted: boolean;
@@ -16,6 +18,7 @@ interface NodeTitleProps {
 const NodeTitle: FunctionComponent<NodeTitleProps> = ({
   id,
   name,
+  operationData,
   backgroundColor,
   isDarkMode,
   isHighlighted,
@@ -42,7 +45,11 @@ const NodeTitle: FunctionComponent<NodeTitleProps> = ({
         <DragIndicatorIcon fontSize="small" />
         {/* Editable name */}
         <Box flexGrow={1}>
-          <EditableName name={name} onNameChange={onNameChange} />
+          <EditableName
+            name={name}
+            operationData={operationData}
+            onNameChange={onNameChange}
+          />
         </Box>
       </Stack>
     </Box>

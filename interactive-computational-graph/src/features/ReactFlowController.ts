@@ -342,6 +342,7 @@ const buildReactFlowNodeData = (addNodeData: AddNodeData): NodeData => {
     case "CONSTANT": {
       return {
         name: nodeName,
+        operationData: null,
         featureNodeType,
         inputItems: [
           {
@@ -370,6 +371,7 @@ const buildReactFlowNodeData = (addNodeData: AddNodeData): NodeData => {
       );
       return {
         name: nodeName,
+        operationData: null,
         featureNodeType,
         inputItems: [
           {
@@ -407,6 +409,10 @@ const buildReactFlowNodeData = (addNodeData: AddNodeData): NodeData => {
       }
       return {
         name: nodeName,
+        operationData: {
+          text: featureOperation.text,
+          helpText: featureOperation.helpText,
+        },
         featureNodeType,
         inputItems: featureOperation.inputPorts.map((inputPort) => {
           return {

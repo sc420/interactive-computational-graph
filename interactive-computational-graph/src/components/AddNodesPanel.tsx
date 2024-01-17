@@ -106,6 +106,7 @@ const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
             <DraggableItem
               featureNodeType={{ nodeType: "CONSTANT" }}
               text="Constant"
+              helpText="Set a constant value"
               editable={false}
               onClickItem={onAddNode}
               onClickEditIcon={null}
@@ -113,6 +114,7 @@ const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
             <DraggableItem
               featureNodeType={{ nodeType: "VARIABLE" }}
               text="Variable"
+              helpText="Set a variable"
               editable={false}
               onClickItem={onAddNode}
               onClickEditIcon={null}
@@ -157,6 +159,7 @@ const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
                       operationId: operation.id,
                     }}
                     text={operation.text}
+                    helpText={operation.helpText}
                     editable
                     onClickItem={onAddNode}
                     onClickEditIcon={() => {
@@ -189,6 +192,7 @@ const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
                   operationId: operation.id,
                 }}
                 text={operation.text}
+                helpText={operation.helpText}
                 editable
                 onClickItem={onAddNode}
                 onClickEditIcon={() => {

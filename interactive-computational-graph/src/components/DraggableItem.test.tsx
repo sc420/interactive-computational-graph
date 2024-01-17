@@ -10,6 +10,7 @@ test("should trigger event when clicking item", () => {
     <DraggableItem
       featureNodeType={featureNodeType}
       text="Constant"
+      helpText="Set a constant value"
       editable={false}
       onClickItem={handleClickItem}
       onClickEditIcon={handleClickEditIcon}
@@ -29,6 +30,7 @@ test("should trigger event when clicking the edit icon", () => {
     <DraggableItem
       featureNodeType={featureNodeType}
       text="Constant"
+      helpText="Set a constant value"
       editable
       onClickItem={handleClickItem}
       onClickEditIcon={handleClickEditIcon}

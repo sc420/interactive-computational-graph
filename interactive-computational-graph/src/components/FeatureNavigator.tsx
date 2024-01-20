@@ -9,11 +9,13 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Tooltip,
 } from "@mui/material";
-import { type FunctionComponent } from "react";
+import { useCallback, type FunctionComponent } from "react";
 import type SelectedFeature from "../features/SelectedFeature";
 
 interface FeatureNavigatorProps {
+  isSidebarOpen: boolean;
   selectedItem: string | null;
   onItemClick: (item: SelectedFeature | null) => void;
 }
@@ -25,6 +27,7 @@ interface FeatureItem {
 }
 
 const FeatureNavigator: FunctionComponent<FeatureNavigatorProps> = ({
+  isSidebarOpen,
   selectedItem,
   onItemClick,
 }) => {
@@ -61,25 +64,42 @@ const FeatureNavigator: FunctionComponent<FeatureNavigatorProps> = ({
     },
   ];
 
-  const handleItemClick = (id: SelectedFeature): void => {
-    const newSelectedItem = id !== selectedItem ? id : null;
-    onItemClick(newSelectedItem);
-  };
+  const handleItemClick = useCallback(
+    (id: SelectedFeature): void => {
+      const newSelectedItem = id !== selectedItem ? id : null;
+      onItemClick(newSelectedItem);
+    },
+    [onItemClick, selectedItem],
+  );
 
   return (
     <List component="nav">
-      {featureItems.map((item) => (
-        <ListItemButton
-          key={item.id}
-          selected={selectedItem === item.id}
-          onClick={() => {
-            handleItemClick(item.id);
-          }}
-        >
-          <ListItemIcon>{item.icon}</ListItemIcon>
-          <ListItemText primary={item.text} />
-        </ListItemButton>
-      ))}
+      {featureItems.map((item) =>
+        isSidebarOpen ? (
+          <ListItemButton
+            key={item.id}
+            selected={selectedItem === item.id}
+            onClick={() => {
+              handleItemClick(item.id);
+            }}
+          >
+            <ListItemIcon>{item.icon}</ListItemIcon>
+            <ListItemText primary={item.text} />
+          </ListItemButton>
+        ) : (
+          <Tooltip key={item.id} title={item.text} placement="right">
+            <ListItemButton
+              selected={selectedItem === item.id}
+              onClick={() => {
+                handleItemClick(item.id);
+              }}
+            >
+              <ListItemIcon>{item.icon}</ListItemIcon>
+              <ListItemText primary={item.text} />
+            </ListItemButton>
+          </Tooltip>
+        ),
+      )}
     </List>
   );
 };

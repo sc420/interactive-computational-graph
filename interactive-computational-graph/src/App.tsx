@@ -102,6 +102,7 @@ const App: FunctionComponent = () => {
         {/* Sidebar */}
         <Sidebar isSidebarOpen={isSidebarOpen} onToggleSidebar={toggleSidebar}>
           <FeatureNavigator
+            isSidebarOpen={isSidebarOpen}
             selectedItem={selectedFeature}
             onItemClick={toggleFeature}
           />

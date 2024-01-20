@@ -10,7 +10,6 @@ import {
   GridRowModes,
   GridToolbarContainer,
   type GridColDef,
-  type GridEventListener,
   type GridRowId,
   type GridRowModel,
   type GridRowModesModel,
@@ -100,7 +99,6 @@ const EditOperationInputPortsTab: FunctionComponent<
     return inputPorts.map((inputPort) => inputPortToRowModel(inputPort));
   }, [inputPortToRowModel, inputPorts]);
 
-  const [isEditingRow, setEditingRow] = useState(false);
   const [errorMessages, setErrorMessages] = useState<string[]>([]);
 
   const [rows, setRows] =
@@ -113,44 +111,18 @@ const EditOperationInputPortsTab: FunctionComponent<
     });
   }, [rows]);
 
-  const updateStatesOnStartEdit = useCallback(() => {
-    setEditingRow(true);
-  }, []);
-
-  const updateStatesOnStopEdit = useCallback(() => {
-    setEditingRow(false);
-  }, []);
-
-  const handleRowEditStart: GridEventListener<"rowEditStart"> = useCallback(
-    (params, event) => {
-      updateStatesOnStartEdit();
-    },
-    [updateStatesOnStartEdit],
-  );
-
-  const handleRowEditStop: GridEventListener<"rowEditStop"> = useCallback(
-    (params, event) => {
-      updateStatesOnStopEdit();
-    },
-    [updateStatesOnStopEdit],
-  );
-
   const handleEditClick = useCallback(
     (id: GridRowId) => () => {
-      updateStatesOnStartEdit();
-
       setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
     },
-    [rowModesModel, updateStatesOnStartEdit],
+    [rowModesModel],
   );
 
   const handleSaveClick = useCallback(
     (id: GridRowId) => () => {
-      updateStatesOnStopEdit();
-
       setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
     },
-    [rowModesModel, updateStatesOnStopEdit],
+    [rowModesModel],
   );
 
   const handleDeleteClick = useCallback(
@@ -162,8 +134,6 @@ const EditOperationInputPortsTab: FunctionComponent<
 
   const handleCancelClick = useCallback(
     (id: GridRowId) => () => {
-      updateStatesOnStopEdit();
-
       setRowModesModel({
         ...rowModesModel,
         [id]: { mode: GridRowModes.View, ignoreModifications: true },
@@ -175,7 +145,7 @@ const EditOperationInputPortsTab: FunctionComponent<
         setRows(rows.filter((row) => row.id !== id));
       }
     },
-    [rowModesModel, rows, updateStatesOnStopEdit],
+    [rowModesModel, rows],
   );
 
   const handleRowModesModelChange = useCallback(
@@ -323,7 +293,7 @@ const EditOperationInputPortsTab: FunctionComponent<
 
     setErrorMessages(errorMessages);
 
-    const isValid = !isEditingRow && errorMessages.length === 0;
+    const isValid = errorMessages.length === 0;
 
     onValidate(isValid);
 
@@ -337,7 +307,6 @@ const EditOperationInputPortsTab: FunctionComponent<
     getDuplicatePortIdsErrorMessages,
     getEmptyRowsErrorMessages,
     getInvalidPortIdErrorMessages,
-    isEditingRow,
     onChangeValues,
     onValidate,
     rowsToInputPorts,
@@ -353,8 +322,6 @@ const EditOperationInputPortsTab: FunctionComponent<
             editMode="row"
             rowModesModel={rowModesModel}
             onRowModesModelChange={handleRowModesModelChange}
-            onRowEditStart={handleRowEditStart}
-            onRowEditStop={handleRowEditStop}
             processRowUpdate={processRowUpdate}
             slots={{
               toolbar: EditToolbar,
@@ -364,12 +331,11 @@ const EditOperationInputPortsTab: FunctionComponent<
             }}
             disableColumnMenu
           />
-          {!isEditingRow &&
-            errorMessages.map((errorMessage, index) => (
-              <Alert key={index} severity="error" sx={{ width: "100%" }}>
-                {errorMessage}
-              </Alert>
-            ))}
+          {errorMessages.map((errorMessage, index) => (
+            <Alert key={index} severity="error" sx={{ width: "100%" }}>
+              {errorMessage}
+            </Alert>
+          ))}
         </Stack>
       </Container>
     )

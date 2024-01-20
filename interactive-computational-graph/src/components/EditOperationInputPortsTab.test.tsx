@@ -48,7 +48,7 @@ test("should trigger value change when deleting a row", () => {
   expect(handleChangeValues).toHaveBeenCalledWith([new Port("b", true)]);
 });
 
-test("validation result should change when entering/leaving edit mode", () => {
+test("should be valid when editing the row", () => {
   const inputPorts: Port[] = [new Port("a", false), new Port("b", true)];
   const handleChangeValues = jest.fn();
   const handleValidate = jest.fn();
@@ -63,11 +63,6 @@ test("validation result should change when entering/leaving edit mode", () => {
 
   const editIconButton = screen.getAllByLabelText("Edit");
   fireEvent.click(editIconButton[0]);
-
-  expect(handleValidate).lastCalledWith(false);
-
-  const cancelIconButton = screen.getAllByLabelText("Cancel");
-  fireEvent.click(cancelIconButton[0]);
 
   expect(handleValidate).lastCalledWith(true);
 });

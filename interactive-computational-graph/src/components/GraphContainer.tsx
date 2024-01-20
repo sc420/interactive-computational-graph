@@ -298,6 +298,8 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
   const [nextOperationId, setNextOperationId] = useState<number>(0);
 
   // Feature panel states
+  const [operationIdsAddedAtLeastOnce, setOperationIdsAddedAtLeastOnce] =
+    useState(new Set<string>());
   const [explainDerivativeData, setExplainDerivativeData] = useState<
     ExplainDerivativeData[]
   >([]);
@@ -350,8 +352,8 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     [onSelectFeature],
   );
 
-  const handleAddNode = useCallback(
-    (featureNodeType: FeatureNodeType) => {
+  const addNode = useCallback(
+    (featureNodeType: FeatureNodeType, position: XYPosition | null) => {
       const featureOperation = findFeatureOperation(
         featureNodeType,
         featureOperations,
@@ -363,6 +365,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
         featureOperation,
       );
 
+      // Add the core node
       coreGraphAdapter.addNode(
         featureNodeType,
         featureOperation,
@@ -370,6 +373,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
         nodeName,
       );
 
+      // Add the ReactFlow node
       const initialOutputValue = coreGraphAdapter.getNodeValueById(nodeId);
       const derivativeTargetName =
         derivativeTarget === null
@@ -391,9 +395,18 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       };
       setReactFlowNodes((nodes) => {
         nodes = deselectAllNodes(nodes);
-        const position = getNewReactFlowNodePosition(nodes, lastSelectedNodeId);
-        return addReactFlowNode(addNodeData, position, nodes);
+        const finalPosition =
+          position ?? getNewReactFlowNodePosition(nodes, lastSelectedNodeId);
+        return addReactFlowNode(addNodeData, finalPosition, nodes);
       });
+
+      // Add the operation ID to the set for operation nodes
+      if (featureOperation !== null) {
+        setOperationIdsAddedAtLeastOnce(
+          (oldOperationIds) =>
+            new Set([...oldOperationIds, featureOperation.id]),
+        );
+      }
 
       setNextNodeId((nextNodeId) => nextNodeId + 1);
     },
@@ -411,6 +424,13 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       nextNodeId,
       nodeNameBuilder,
     ],
+  );
+
+  const handleAddNode = useCallback(
+    (featureNodeType: FeatureNodeType) => {
+      addNode(featureNodeType, null);
+    },
+    [addNode],
   );
 
   const handleAddOperation = useCallback(() => {
@@ -546,63 +566,9 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
 
   const handleDropNode = useCallback(
     (featureNodeType: FeatureNodeType, position: XYPosition) => {
-      const featureOperation = findFeatureOperation(
-        featureNodeType,
-        featureOperations,
-      );
-
-      const nodeId = `${nextNodeId}`;
-      const nodeName = nodeNameBuilder.buildName(
-        featureNodeType,
-        featureOperation,
-      );
-
-      coreGraphAdapter.addNode(
-        featureNodeType,
-        featureOperation,
-        nodeId,
-        nodeName,
-      );
-
-      const initialOutputValue = coreGraphAdapter.getNodeValueById(nodeId);
-      const derivativeTargetName =
-        derivativeTarget === null
-          ? null
-          : coreGraphAdapter.getNodeNameById(derivativeTarget);
-      const addNodeData: AddNodeData = {
-        featureNodeType,
-        featureOperation,
-        nodeId,
-        nodeName,
-        initialOutputValue,
-        isReverseMode,
-        derivativeTargetName,
-        onNameChange: handleNameChange,
-        onInputChange: handleInputChange,
-        onBodyClick: handleBodyClick,
-        onDerivativeClick: handleDerivativeClick,
-        isDarkMode,
-      };
-      setReactFlowNodes((nodes) => {
-        nodes = deselectAllNodes(nodes);
-        return addReactFlowNode(addNodeData, position, nodes);
-      });
-
-      setNextNodeId((nextNodeId) => nextNodeId + 1);
+      addNode(featureNodeType, position);
     },
-    [
-      coreGraphAdapter,
-      derivativeTarget,
-      featureOperations,
-      handleBodyClick,
-      handleDerivativeClick,
-      handleInputChange,
-      handleNameChange,
-      isDarkMode,
-      isReverseMode,
-      nextNodeId,
-      nodeNameBuilder,
-    ],
+    [addNode],
   );
 
   const handleSnackbarClose = useCallback(
@@ -757,6 +723,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
             <FeaturePanel
               feature={selectedFeature}
               featureOperations={featureOperations}
+              operationIdsAddedAtLeastOnce={operationIdsAddedAtLeastOnce}
               hasNodes={reactFlowNodes.length > 0}
               hasDerivativeTarget={derivativeTarget !== null}
               explainDerivativeData={explainDerivativeData}

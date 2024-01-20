@@ -17,6 +17,7 @@ test("should render the tabs", () => {
       open={true}
       isDarkMode={false}
       readOperation={featureOperation}
+      operationIdsAddedAtLeastOnce={new Set()}
       onCancel={handleCancel}
       onSave={handleSave}
       onDelete={handleDelete}
@@ -42,6 +43,28 @@ test("should render the tabs", () => {
   expect(screen.getByText("Test Data: X ID")).toBeInTheDocument();
 });
 
+test("should render the operation added warning when the operation ID has been added at least once", () => {
+  const featureOperation = getFeatureOperation();
+  const handleCancel = jest.fn();
+  const handleSave = jest.fn();
+  const handleDelete = jest.fn();
+  render(
+    <EditOperationDialog
+      open={true}
+      isDarkMode={false}
+      readOperation={featureOperation}
+      operationIdsAddedAtLeastOnce={new Set(["add", "multiply"])}
+      onCancel={handleCancel}
+      onSave={handleSave}
+      onDelete={handleDelete}
+    />,
+  );
+
+  const message = `This operation has already been added to the graph once. \
+Editing it may cause inconsistent results.`;
+  expect(screen.getByText(message)).toBeInTheDocument();
+});
+
 test("should trigger event when clicking save button", () => {
   const featureOperation = getFeatureOperation();
   const handleCancel = jest.fn();
@@ -52,6 +75,7 @@ test("should trigger event when clicking save button", () => {
       open={true}
       isDarkMode={false}
       readOperation={featureOperation}
+      operationIdsAddedAtLeastOnce={new Set()}
       onCancel={handleCancel}
       onSave={handleSave}
       onDelete={handleDelete}
@@ -75,6 +99,7 @@ test("should trigger necessary event when clicking cancel button after change", 
       open={true}
       isDarkMode={false}
       readOperation={featureOperation}
+      operationIdsAddedAtLeastOnce={new Set()}
       onCancel={handleCancel}
       onSave={handleSave}
       onDelete={handleDelete}

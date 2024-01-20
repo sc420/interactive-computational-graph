@@ -7,6 +7,7 @@ import {
   Dialog,
   DialogContent,
   IconButton,
+  Stack,
   Tab,
   Tabs,
   Toolbar,
@@ -22,15 +23,16 @@ import Operation from "../core/Operation";
 import type Port from "../core/Port";
 import type FeatureOperation from "../features/FeatureOperation";
 import EditOperationBasicTab from "./EditOperationBasicTab";
+import EditOperationDfdxCodeTab from "./EditOperationDfdxCodeTab";
 import EditOperationDialogMenu from "./EditOperationDialogMenu";
 import EditOperationFCodeTab from "./EditOperationFCodeTab";
 import EditOperationInputPortsTab from "./EditOperationInputPortsTab";
 import EditOperationTabPanel from "./EditOperationTabPanel";
-import EditOperationDfdxCodeTab from "./EditOperationDfdxCodeTab";
 
 interface EditOperationDialogProps {
   open: boolean;
   readOperation: FeatureOperation;
+  operationIdsAddedAtLeastOnce: Set<string>;
   isDarkMode: boolean;
   onCancel: () => void;
   onSave: (updatedOperation: FeatureOperation) => void;
@@ -40,6 +42,7 @@ interface EditOperationDialogProps {
 const EditOperationDialog: FunctionComponent<EditOperationDialogProps> = ({
   open,
   readOperation,
+  operationIdsAddedAtLeastOnce,
   isDarkMode,
   onCancel,
   onSave,
@@ -231,11 +234,18 @@ const EditOperationDialog: FunctionComponent<EditOperationDialogProps> = ({
           </Box>
         </EditOperationTabPanel>
 
-        <Box sx={{ p: 3 }}>
+        <Stack p={3} spacing={3}>
+          {operationIdsAddedAtLeastOnce.has(editingOperation.id) && (
+            <Alert variant="outlined" severity="warning">
+              This operation has already been added to the graph once. Editing
+              it may cause inconsistent results.
+            </Alert>
+          )}
+
           <Alert variant="outlined" severity="info">
-            Changes will be lost after reloading the page
+            Changes will be lost after reloading the page.
           </Alert>
-        </Box>
+        </Stack>
       </DialogContent>
     </Dialog>
   );

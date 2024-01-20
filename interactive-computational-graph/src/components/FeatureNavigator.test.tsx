@@ -4,7 +4,11 @@ import FeatureNavigator from "./FeatureNavigator";
 test("should render the selected item", () => {
   const handleItemClick = jest.fn();
   render(
-    <FeatureNavigator selectedItem="add-nodes" onItemClick={handleItemClick} />,
+    <FeatureNavigator
+      isSidebarOpen={true}
+      selectedItem="add-nodes"
+      onItemClick={handleItemClick}
+    />,
   );
 
   const addNodesItem = screen.getByText("Add Nodes");
@@ -14,7 +18,11 @@ test("should render the selected item", () => {
 test("should trigger event when clicking the non-selected item", () => {
   const handleItemClick = jest.fn();
   render(
-    <FeatureNavigator selectedItem={null} onItemClick={handleItemClick} />,
+    <FeatureNavigator
+      isSidebarOpen={true}
+      selectedItem={null}
+      onItemClick={handleItemClick}
+    />,
   );
 
   const addNodesItem = screen.getByText("Add Nodes");
@@ -25,7 +33,11 @@ test("should trigger event when clicking the non-selected item", () => {
 test("should trigger event when clicking the selected item", () => {
   const handleItemClick = jest.fn();
   render(
-    <FeatureNavigator selectedItem="add-nodes" onItemClick={handleItemClick} />,
+    <FeatureNavigator
+      isSidebarOpen={true}
+      selectedItem="add-nodes"
+      onItemClick={handleItemClick}
+    />,
   );
 
   const addNodesItem = screen.getByText("Add Nodes");

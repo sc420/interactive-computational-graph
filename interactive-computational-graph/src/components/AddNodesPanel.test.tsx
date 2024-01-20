@@ -24,6 +24,7 @@ test("should render operation types as headers", () => {
   render(
     <AddNodesPanel
       featureOperations={featureOperations}
+      operationIdsAddedAtLeastOnce={new Set()}
       isDarkMode={false}
       onAddNode={handleAddNode}
       onAddOperation={handleAddOperation}
@@ -49,6 +50,7 @@ test("should trigger event when clicking item", () => {
   render(
     <AddNodesPanel
       featureOperations={featureOperations}
+      operationIdsAddedAtLeastOnce={new Set()}
       isDarkMode={false}
       onAddNode={handleAddNode}
       onAddOperation={handleAddOperation}
@@ -75,6 +77,7 @@ test("should trigger event when clicking add operation button", () => {
   render(
     <AddNodesPanel
       featureOperations={featureOperations}
+      operationIdsAddedAtLeastOnce={new Set()}
       isDarkMode={false}
       onAddNode={handleAddNode}
       onAddOperation={handleAddOperation}
@@ -97,6 +100,7 @@ test("should not trigger event when canceling editing operation", () => {
   render(
     <AddNodesPanel
       featureOperations={featureOperations}
+      operationIdsAddedAtLeastOnce={new Set()}
       isDarkMode={false}
       onAddNode={handleAddNode}
       onAddOperation={handleAddOperation}
@@ -126,6 +130,7 @@ test("should trigger event when clicking edit icon button", () => {
   render(
     <AddNodesPanel
       featureOperations={featureOperations}
+      operationIdsAddedAtLeastOnce={new Set()}
       isDarkMode={false}
       onAddNode={handleAddNode}
       onAddOperation={handleAddOperation}
@@ -153,6 +158,7 @@ test("should trigger event when deleting operation", () => {
   render(
     <AddNodesPanel
       featureOperations={featureOperations}
+      operationIdsAddedAtLeastOnce={new Set()}
       isDarkMode={false}
       onAddNode={handleAddNode}
       onAddOperation={handleAddOperation}

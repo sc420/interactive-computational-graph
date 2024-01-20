@@ -2,8 +2,8 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import Operation from "../core/Operation";
 import Port from "../core/Port";
 import { ADD_DFDX_CODE, ADD_F_CODE } from "../features/BuiltInCode";
-import FeatureNodeType from "../features/FeatureNodeType";
-import FeatureOperation from "../features/FeatureOperation";
+import type FeatureNodeType from "../features/FeatureNodeType";
+import type FeatureOperation from "../features/FeatureOperation";
 import FeaturePanel from "./FeaturePanel";
 
 /**
@@ -24,6 +24,7 @@ test("should trigger event when adding a node", () => {
     <FeaturePanel
       feature="add-nodes"
       featureOperations={featureOperations}
+      operationIdsAddedAtLeastOnce={new Set()}
       hasNodes={false}
       hasDerivativeTarget={false}
       explainDerivativeData={[]}

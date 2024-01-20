@@ -12,6 +12,7 @@ import ExplainDerivativesPanel from "./ExplainDerivativesPanel";
 interface FeaturePanelProps {
   feature: SelectedFeature;
   featureOperations: FeatureOperation[];
+  operationIdsAddedAtLeastOnce: Set<string>;
   hasNodes: boolean;
   hasDerivativeTarget: boolean;
   explainDerivativeData: ExplainDerivativeData[];
@@ -27,6 +28,7 @@ interface FeaturePanelProps {
 const FeaturePanel: FunctionComponent<FeaturePanelProps> = ({
   feature,
   featureOperations,
+  operationIdsAddedAtLeastOnce,
   hasNodes,
   hasDerivativeTarget,
   explainDerivativeData,
@@ -44,6 +46,7 @@ const FeaturePanel: FunctionComponent<FeaturePanelProps> = ({
         return (
           <AddNodesPanel
             featureOperations={featureOperations}
+            operationIdsAddedAtLeastOnce={operationIdsAddedAtLeastOnce}
             isDarkMode={isDarkMode}
             onAddNode={onAddNode}
             onAddOperation={onAddOperation}
@@ -67,6 +70,7 @@ const FeaturePanel: FunctionComponent<FeaturePanelProps> = ({
         return (
           <AddNodesPanel
             featureOperations={featureOperations}
+            operationIdsAddedAtLeastOnce={operationIdsAddedAtLeastOnce}
             isDarkMode={isDarkMode}
             onAddNode={onAddNode}
             onAddOperation={onAddOperation}

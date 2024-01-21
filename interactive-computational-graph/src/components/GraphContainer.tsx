@@ -210,7 +210,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       type: "trigonometric",
       namePrefix: "s",
       operation: new Operation(SIN_F_CODE, SIN_DFDX_CODE),
-      inputPorts: [new Port("x", true)],
+      inputPorts: [new Port("x", false)],
       helpText: "Calculate sin(x)",
     },
     {
@@ -219,7 +219,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       type: "trigonometric",
       namePrefix: "c",
       operation: new Operation(COS_F_CODE, COS_DFDX_CODE),
-      inputPorts: [new Port("x", true)],
+      inputPorts: [new Port("x", false)],
       helpText: "Calculate cos(x)",
     },
     {
@@ -228,7 +228,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       type: "trigonometric",
       namePrefix: "t",
       operation: new Operation(TAN_F_CODE, TAN_DFDX_CODE),
-      inputPorts: [new Port("x", true)],
+      inputPorts: [new Port("x", false)],
       helpText: "Calculate tan(x)",
     },
     {
@@ -237,7 +237,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       type: "activation",
       namePrefix: "l",
       operation: new Operation(IDENTITY_F_CODE, IDENTITY_DFDX_CODE),
-      inputPorts: [new Port("x", true)],
+      inputPorts: [new Port("x", false)],
       helpText: "Linear activation function, i.e., y=x",
     },
     {
@@ -246,7 +246,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       type: "activation",
       namePrefix: "s",
       operation: new Operation(SIGMOID_F_CODE, SIGMOID_DFDX_CODE),
-      inputPorts: [new Port("x", true)],
+      inputPorts: [new Port("x", false)],
       helpText: "Sigmoid activation function, i.e., y=1/(1 + e^(-x))",
     },
     {
@@ -255,7 +255,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       type: "activation",
       namePrefix: "s",
       operation: new Operation(TANH_F_CODE, TANH_DFDX_CODE),
-      inputPorts: [new Port("x", true)],
+      inputPorts: [new Port("x", false)],
       helpText:
         "Tanh activation function, i.e., y=(e^x - e^(-x))(e^x + e^(-x))",
     },
@@ -265,7 +265,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       type: "activation",
       namePrefix: "r",
       operation: new Operation(RELU_F_CODE, RELU_DFDX_CODE),
-      inputPorts: [new Port("x", true)],
+      inputPorts: [new Port("x", false)],
       helpText: "ReLU activation function, i.e., y=max(0, x)",
     },
     {

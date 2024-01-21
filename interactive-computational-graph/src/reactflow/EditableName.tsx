@@ -68,7 +68,9 @@ const EditableName: FunctionComponent<EditableNameProps> = ({
     <Stack direction="row" alignItems="center" justifyContent="space-between">
       {isEditing ? (
         <TextField
-          aria-label="editingName"
+          inputProps={{
+            "aria-label": "editingName",
+          }}
           size="small"
           value={editingName}
           onChange={(event) => {

@@ -38,10 +38,19 @@ const GraphToolbar: FunctionComponent<GraphToolbarProps> = ({
   onDerivativeTargetChange,
 }) => {
   const options: AutocompleteOption[] = useMemo(() => {
-    return nodeIds.map((nodeId, index) => ({
-      label: nodeNames[index],
-      id: nodeId,
-    }));
+    const seenNodeNames = new Set<string>();
+    return nodeIds.map((nodeId, index) => {
+      const nodeName = nodeNames[index];
+      const label = seenNodeNames.has(nodeName)
+        ? `${nodeName} (${nodeId})`
+        : nodeName;
+
+      seenNodeNames.add(nodeName);
+      return {
+        label,
+        id: nodeId,
+      };
+    });
   }, [nodeIds, nodeNames]);
 
   const selectedValue: AutocompleteOption | null = useMemo(() => {

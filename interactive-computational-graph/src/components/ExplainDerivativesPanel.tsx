@@ -40,6 +40,8 @@ const ExplainDerivativesPanel: FunctionComponent<
   onClearSelection,
   onClickLatexLink,
 }) => {
+  const hasExplainDerivativeData = explainDerivativeData.length > 0;
+
   const [isSnackbarOpen, setSnackbarOpen] = useState<boolean>(false);
   const [alertSeverity, setAlertSeverity] = useState<AlertColor>("success");
   const [alertMessage, setAlertMessage] = useState<string>("");
@@ -85,17 +87,22 @@ const ExplainDerivativesPanel: FunctionComponent<
         px={2}
         py={0.5}
       >
+        {/* Title */}
         <Typography variant="subtitle1">Explain Derivatives</Typography>
-        <Button startIcon={<ClearIcon />} onClick={onClearSelection}>
-          Clear
-        </Button>
+
+        {/* Clear button */}
+        {hasExplainDerivativeData && (
+          <Button startIcon={<ClearIcon />} onClick={onClearSelection}>
+            Clear
+          </Button>
+        )}
       </Stack>
 
       {/* Hint */}
       <ExplainDerivativesHint
         hasNodes={hasNodes}
         hasDerivativeTarget={hasDerivativeTarget}
-        hasExplainDerivativeData={explainDerivativeData.length > 0}
+        hasExplainDerivativeData={hasExplainDerivativeData}
       />
 
       {/* Explanations */}

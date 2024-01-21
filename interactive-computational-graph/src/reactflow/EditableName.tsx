@@ -18,16 +18,26 @@ import Katex from "../latex/Katex";
 interface EditableNameProps {
   name: string;
   operationData: OperationNodeData | null;
+  onEditingChange: (isEditing: boolean) => void;
   onNameChange: (name: string) => void;
 }
 
 const EditableName: FunctionComponent<EditableNameProps> = ({
   name,
   operationData,
+  onEditingChange,
   onNameChange,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editingName, setEditingName] = useState(name);
+
+  const updateEditing = useCallback(
+    (isEditing: boolean) => {
+      setIsEditing(isEditing);
+      onEditingChange(isEditing);
+    },
+    [onEditingChange],
+  );
 
   const handleChange = useCallback((name: string) => {
     setEditingName(name);
@@ -36,28 +46,31 @@ const EditableName: FunctionComponent<EditableNameProps> = ({
   const handleSaveName = useCallback(
     (name: string) => {
       onNameChange(name);
-      setIsEditing(false);
+      updateEditing(false);
     },
-    [onNameChange],
+    [onNameChange, updateEditing],
   );
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === "Enter") {
         onNameChange(editingName);
-        setIsEditing(false);
+        updateEditing(false);
       } else if (e.key === "Escape") {
         setEditingName(name);
-        setIsEditing(false);
+        updateEditing(false);
       }
     },
-    [editingName, name, onNameChange],
+    [editingName, name, onNameChange, updateEditing],
   );
 
   return (
     <Stack direction="row" alignItems="center" justifyContent="space-between">
       {isEditing ? (
         <TextField
+          inputProps={{
+            "aria-label": "editingName",
+          }}
           size="small"
           value={editingName}
           onChange={(event) => {
@@ -93,7 +106,7 @@ const EditableName: FunctionComponent<EditableNameProps> = ({
             aria-label="edit"
             size="small"
             onClick={() => {
-              setIsEditing(true);
+              updateEditing(true);
             }}
           >
             <EditIcon fontSize="small" />

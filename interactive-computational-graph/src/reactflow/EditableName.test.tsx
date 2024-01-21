@@ -6,10 +6,12 @@ jest.mock("../latex/Katex");
 
 test("should render the name only", () => {
   const handleNameChange = jest.fn();
+  const handleEditingChange = jest.fn();
   render(
     <EditableName
       name="abc"
       operationData={null}
+      onEditingChange={handleEditingChange}
       onNameChange={handleNameChange}
     />,
   );
@@ -19,11 +21,13 @@ test("should render the name only", () => {
 
 test("should render the name and operation text", () => {
   const operationData = getOperationData();
+  const handleEditingChange = jest.fn();
   const handleNameChange = jest.fn();
   render(
     <EditableName
       name="abc"
       operationData={operationData}
+      onEditingChange={handleEditingChange}
       onNameChange={handleNameChange}
     />,
   );
@@ -32,57 +36,72 @@ test("should render the name and operation text", () => {
   expect(screen.getByText("(Operation 1)")).toBeInTheDocument();
 });
 
-test("should trigger event with updated name when blurred", () => {
+test("should trigger events when blurred", () => {
+  const handleEditingChange = jest.fn();
   const handleNameChange = jest.fn();
   render(
     <EditableName
       name="abc"
       operationData={null}
+      onEditingChange={handleEditingChange}
       onNameChange={handleNameChange}
     />,
   );
 
   clickEditIcon();
+  expect(handleEditingChange).toBeCalledWith(true);
+
   changeName("123");
   const input = getEditingTextbox();
   fireEvent.blur(input);
 
+  expect(handleEditingChange).toBeCalledWith(false);
   expect(handleNameChange).toBeCalledWith("123");
 });
 
-test("should trigger event with updated name when Enter is pressed", () => {
+test("should trigger events when Enter is pressed", () => {
+  const handleEditingChange = jest.fn();
   const handleNameChange = jest.fn();
   render(
     <EditableName
       name="abc"
       operationData={null}
+      onEditingChange={handleEditingChange}
       onNameChange={handleNameChange}
     />,
   );
 
   clickEditIcon();
+  expect(handleEditingChange).toBeCalledWith(true);
+
   changeName("123");
   const input = getEditingTextbox();
   fireEvent.keyDown(input, { key: "Enter" });
 
+  expect(handleEditingChange).toBeCalledWith(false);
   expect(handleNameChange).toBeCalledWith("123");
 });
 
-test("should not trigger event with old name when Escape is pressed", () => {
+test("should trigger events when Escape is pressed", () => {
+  const handleEditingChange = jest.fn();
   const handleNameChange = jest.fn();
   render(
     <EditableName
       name="abc"
       operationData={null}
+      onEditingChange={handleEditingChange}
       onNameChange={handleNameChange}
     />,
   );
 
   clickEditIcon();
+  expect(handleEditingChange).toBeCalledWith(true);
+
   changeName("123");
   const input = getEditingTextbox();
   fireEvent.keyDown(input, { key: "Escape" });
 
+  expect(handleEditingChange).toBeCalledWith(false);
   expect(handleNameChange).not.toBeCalled();
 });
 

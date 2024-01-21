@@ -4,6 +4,23 @@ import ExplainDerivativesPanel from "./ExplainDerivativesPanel";
 
 jest.mock("../latex/Katex");
 
+test("should not render the clear button when the data is empty", () => {
+  const handleClearSelection = jest.fn();
+  const handleClickLatexLink = jest.fn();
+  render(
+    <ExplainDerivativesPanel
+      hasNodes={true}
+      hasDerivativeTarget={true}
+      explainDerivativeData={[]}
+      onClearSelection={handleClearSelection}
+      onClickLatexLink={handleClickLatexLink}
+    />,
+  );
+
+  const copyIcon = screen.queryByRole("button", { name: "Clear" });
+  expect(copyIcon).not.toBeInTheDocument();
+});
+
 test("should trigger event when clicking the clear button", () => {
   const data = getExplainDerivativeData();
   const handleClearSelection = jest.fn();

@@ -39,29 +39,37 @@ const EditableName: FunctionComponent<EditableNameProps> = ({
     [onEditingChange],
   );
 
+  const updateName = useCallback(
+    (name: string) => {
+      setEditingName(name.trim());
+      onNameChange(name.trim());
+    },
+    [onNameChange],
+  );
+
   const handleChange = useCallback((name: string) => {
     setEditingName(name);
   }, []);
 
   const handleSaveName = useCallback(
     (name: string) => {
-      onNameChange(name);
       updateEditing(false);
+      updateName(name);
     },
-    [onNameChange, updateEditing],
+    [updateEditing, updateName],
   );
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === "Enter") {
-        onNameChange(editingName);
+        updateName(editingName);
         updateEditing(false);
       } else if (e.key === "Escape") {
         setEditingName(name);
         updateEditing(false);
       }
     },
-    [editingName, name, onNameChange, updateEditing],
+    [editingName, name, updateEditing, updateName],
   );
 
   return (

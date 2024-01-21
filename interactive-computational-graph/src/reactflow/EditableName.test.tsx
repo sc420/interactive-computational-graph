@@ -105,6 +105,46 @@ test("should trigger events when Escape is pressed", () => {
   expect(handleNameChange).not.toBeCalled();
 });
 
+test("should trim name when blurred", () => {
+  const handleEditingChange = jest.fn();
+  const handleNameChange = jest.fn();
+  render(
+    <EditableName
+      name="abc"
+      operationData={null}
+      onEditingChange={handleEditingChange}
+      onNameChange={handleNameChange}
+    />,
+  );
+
+  clickEditIcon();
+  changeName("  123  ");
+  const input = getEditingTextbox();
+  fireEvent.blur(input);
+
+  expect(handleNameChange).toBeCalledWith("123");
+});
+
+test("should trim name when Enter is pressed", () => {
+  const handleEditingChange = jest.fn();
+  const handleNameChange = jest.fn();
+  render(
+    <EditableName
+      name="abc"
+      operationData={null}
+      onEditingChange={handleEditingChange}
+      onNameChange={handleNameChange}
+    />,
+  );
+
+  clickEditIcon();
+  changeName("  123  ");
+  const input = getEditingTextbox();
+  fireEvent.keyDown(input, { key: "Enter" });
+
+  expect(handleNameChange).toBeCalledWith("123");
+});
+
 const getOperationData = (): OperationNodeData | null => {
   return {
     text: "Operation 1",

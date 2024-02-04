@@ -1,8 +1,9 @@
-import { Button, Stack, Typography } from "@mui/material";
+import { Alert, Button, Stack, Typography } from "@mui/material";
 import { saveAs } from "file-saver";
 import {
   useCallback,
   useRef,
+  useState,
   type ChangeEvent,
   type FunctionComponent,
 } from "react";
@@ -18,6 +19,8 @@ const SaveLoadPanel: FunctionComponent<SaveLoadPanelProps> = ({
   onLoad,
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const [hasReadingError, setReadingError] = useState(false);
 
   const handleSave = useCallback(() => {
     const data = onSave();
@@ -46,16 +49,16 @@ const SaveLoadPanel: FunctionComponent<SaveLoadPanelProps> = ({
 
         try {
           const data = JSON.parse(serializedData) as GraphContainerState;
-          console.log(data);
+          setReadingError(false);
           onLoad(data);
         } catch (error) {
           console.error(error);
-          // TODO(sc420): Show an alert
+          setReadingError(true);
         }
       };
       reader.onerror = () => {
         console.error(reader.error);
-        // TODO(sc420): Show an alert
+        setReadingError(true);
       };
       reader.readAsText(file);
     },
@@ -87,8 +90,9 @@ const SaveLoadPanel: FunctionComponent<SaveLoadPanelProps> = ({
         <Typography variant="subtitle1">Save/Load</Typography>
       </Stack>
 
-      {/* Buttons */}
+      {/* Contents */}
       <Stack px={2} py={1} spacing={3}>
+        {/* Buttons */}
         <Button
           variant="contained"
           onClick={() => {
@@ -105,6 +109,14 @@ const SaveLoadPanel: FunctionComponent<SaveLoadPanelProps> = ({
         >
           Load
         </Button>
+
+        {/* Error message for reading error */}
+        {hasReadingError && (
+          <Alert severity="error">
+            An error has occurred while reading the file. See the developer
+            console for details.
+          </Alert>
+        )}
       </Stack>
 
       {/* Input to load file */}

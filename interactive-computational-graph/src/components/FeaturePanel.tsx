@@ -5,40 +5,46 @@ import type ExplainDerivativeData from "../features/ExplainDerivativeData";
 import type FeatureNodeType from "../features/FeatureNodeType";
 import type FeatureOperation from "../features/FeatureOperation";
 import type SelectedFeature from "../features/SelectedFeature";
+import type GraphContainerState from "../states/GraphContainerState";
 import AddNodesPanel from "./AddNodesPanel";
 import EditNodesPanel from "./EditNodesPanel";
 import ExplainDerivativesPanel from "./ExplainDerivativesPanel";
+import SaveLoadPanel from "./SaveLoadPanel";
 
 interface FeaturePanelProps {
   feature: SelectedFeature;
   featureOperations: FeatureOperation[];
   operationIdsAddedAtLeastOnce: Set<string>;
+  isDarkMode: boolean;
   hasNodes: boolean;
   hasDerivativeTarget: boolean;
   explainDerivativeData: ExplainDerivativeData[];
-  isDarkMode: boolean;
   onAddNode: (featureNodeType: FeatureNodeType) => void;
   onAddOperation: () => void;
   onEditOperation: (updatedOperation: FeatureOperation) => void;
   onDeleteOperation: (operationId: string) => void;
   onClearSelection: () => void;
   onSelectNode: (nodeId: string) => void;
+  onSave: () => GraphContainerState;
+  onLoad: (graphContainerState: GraphContainerState) => void;
 }
 
 const FeaturePanel: FunctionComponent<FeaturePanelProps> = ({
   feature,
   featureOperations,
   operationIdsAddedAtLeastOnce,
+  isDarkMode,
   hasNodes,
   hasDerivativeTarget,
   explainDerivativeData,
-  isDarkMode,
   onAddNode,
   onAddOperation,
   onEditOperation,
   onDeleteOperation,
   onClearSelection,
   onSelectNode,
+  onSave,
+  onLoad,
 }) => {
   const renderSelectedPanel = (): ReactElement => {
     switch (feature) {
@@ -81,7 +87,7 @@ const FeaturePanel: FunctionComponent<FeaturePanelProps> = ({
       case "examples":
         return <EditNodesPanel />;
       case "load-save":
-        return <EditNodesPanel />;
+        return <SaveLoadPanel onSave={onSave} onLoad={onLoad} />;
     }
   };
   return (

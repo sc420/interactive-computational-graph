@@ -88,6 +88,7 @@ import {
 import type SelectedFeature from "../features/SelectedFeature";
 import ReactFlowGraph from "../reactflow/ReactFlowGraph";
 import ReactFlowGraphTestHelper from "../reactflow/ReactFlowGraphTestHelper";
+import type GraphContainerState from "../states/GraphContainerState";
 import FeaturePanel from "./FeaturePanel";
 import GraphToolbar from "./GraphToolbar";
 import Title from "./Title";
@@ -490,6 +491,18 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     [coreGraphAdapter],
   );
 
+  const handleSave = useCallback((): GraphContainerState => {
+    return {
+      isReverseMode,
+      derivativeTarget,
+    };
+  }, [derivativeTarget, isReverseMode]);
+
+  const handleLoad = useCallback((graphContainerState: GraphContainerState) => {
+    setReverseMode(graphContainerState.isReverseMode);
+    setDerivativeTarget(graphContainerState.derivativeTarget);
+  }, []);
+
   const handleReverseModeChange = useCallback(
     (isReverseMode: boolean) => {
       coreGraphAdapter.setDifferentiationMode(
@@ -724,16 +737,18 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
               feature={selectedFeature}
               featureOperations={featureOperations}
               operationIdsAddedAtLeastOnce={operationIdsAddedAtLeastOnce}
+              isDarkMode={isDarkMode}
               hasNodes={reactFlowNodes.length > 0}
               hasDerivativeTarget={derivativeTarget !== null}
               explainDerivativeData={explainDerivativeData}
-              isDarkMode={isDarkMode}
               onAddNode={handleAddNode}
               onAddOperation={handleAddOperation}
               onEditOperation={handleEditOperation}
               onDeleteOperation={handleDeleteOperation}
               onClearSelection={handleClearSelection}
               onSelectNode={handleSelectNode}
+              onSave={handleSave}
+              onLoad={handleLoad}
             />
           </Grid>
         )}

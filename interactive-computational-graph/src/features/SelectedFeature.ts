@@ -4,6 +4,6 @@ type SelectedFeature =
   | "explain-derivatives"
   | "network-builder"
   | "examples"
-  | "load-save";
+  | "save-load";
 
 export default SelectedFeature;

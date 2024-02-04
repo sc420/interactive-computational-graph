@@ -58,8 +58,8 @@ const FeatureNavigator: FunctionComponent<FeatureNavigatorProps> = ({
       icon: <EmojiObjectsIcon />,
     },
     {
-      id: "load-save",
-      text: "Load/Save",
+      id: "save-load",
+      text: "Save/Load",
       icon: <ImportExportIcon />,
     },
   ];

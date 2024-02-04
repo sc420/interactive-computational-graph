@@ -86,7 +86,7 @@ const FeaturePanel: FunctionComponent<FeaturePanelProps> = ({
         );
       case "examples":
         return <EditNodesPanel />;
-      case "load-save":
+      case "save-load":
         return <SaveLoadPanel onSave={onSave} onLoad={onLoad} />;
     }
   };

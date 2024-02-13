@@ -20,7 +20,8 @@ const SaveLoadPanel: FunctionComponent<SaveLoadPanelProps> = ({
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const [hasReadingError, setReadingError] = useState(false);
+  const [isLoadingSuccess, setLoadingSuccess] = useState(false);
+  const [isLoadingError, setLoadingError] = useState(false);
 
   const handleSave = useCallback(() => {
     const data = onSave();
@@ -41,6 +42,7 @@ const SaveLoadPanel: FunctionComponent<SaveLoadPanelProps> = ({
   const loadFile = useCallback(
     (file: File) => {
       const reader = new FileReader();
+
       reader.onload = () => {
         const serializedData = reader.result;
         if (typeof serializedData !== "string") {
@@ -49,17 +51,22 @@ const SaveLoadPanel: FunctionComponent<SaveLoadPanelProps> = ({
 
         try {
           const data = JSON.parse(serializedData) as GraphContainerState;
-          setReadingError(false);
+          setLoadingSuccess(true);
+          setLoadingError(false);
           onLoad(data);
         } catch (error) {
           console.error(error);
-          setReadingError(true);
+          setLoadingSuccess(false);
+          setLoadingError(true);
         }
       };
+
       reader.onerror = () => {
         console.error(reader.error);
-        setReadingError(true);
+        setLoadingSuccess(false);
+        setLoadingError(true);
       };
+
       reader.readAsText(file);
     },
     [onLoad],
@@ -110,10 +117,17 @@ const SaveLoadPanel: FunctionComponent<SaveLoadPanelProps> = ({
           Load
         </Button>
 
-        {/* Error message for reading error */}
-        {hasReadingError && (
+        {/* Successful message for loading */}
+        {isLoadingSuccess && (
+          <Alert severity="success">
+            The file has been loaded successfully.
+          </Alert>
+        )}
+
+        {/* Error message for loading */}
+        {isLoadingError && (
           <Alert severity="error">
-            An error has occurred while reading the file. See the developer
+            An error has occurred while loading the file. See the developer
             console for details.
           </Alert>
         )}
@@ -121,6 +135,7 @@ const SaveLoadPanel: FunctionComponent<SaveLoadPanelProps> = ({
 
       {/* Input to load file */}
       <input
+        aria-label="Load file"
         style={{ display: "none" }}
         ref={inputRef}
         type="file"

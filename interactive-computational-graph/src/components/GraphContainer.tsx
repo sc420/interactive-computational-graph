@@ -492,16 +492,22 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
   );
 
   const handleSave = useCallback((): GraphContainerState => {
+    const coreGraphAdapterState = coreGraphAdapter.save();
     return {
+      coreGraphAdapterState,
       isReverseMode,
       derivativeTarget,
     };
-  }, [derivativeTarget, isReverseMode]);
+  }, [coreGraphAdapter, derivativeTarget, isReverseMode]);
 
-  const handleLoad = useCallback((graphContainerState: GraphContainerState) => {
-    setReverseMode(graphContainerState.isReverseMode);
-    setDerivativeTarget(graphContainerState.derivativeTarget);
-  }, []);
+  const handleLoad = useCallback(
+    (graphContainerState: GraphContainerState) => {
+      coreGraphAdapter.load(graphContainerState.coreGraphAdapterState);
+      setReverseMode(graphContainerState.isReverseMode);
+      setDerivativeTarget(graphContainerState.derivativeTarget);
+    },
+    [coreGraphAdapter],
+  );
 
   const handleReverseModeChange = useCallback(
     (isReverseMode: boolean) => {

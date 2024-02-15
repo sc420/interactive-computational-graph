@@ -16,12 +16,13 @@ import type DifferentiationMode from "../core/DifferentiationMode";
 import Graph from "../core/Graph";
 import OperationNode from "../core/OperationNode";
 import VariableNode from "../core/VariableNode";
+import type CoreGraphAdapterState from "../states/CoreGraphAdapterState";
+import type ExplainDerivativeBuildOptions from "./ExplainDerivativeBuildOptions";
 import { buildExplainDerivativeItems } from "./ExplainDerivativeController";
 import type ExplainDerivativeData from "./ExplainDerivativeData";
 import type ExplainDerivativeType from "./ExplainDerivativeType";
 import type FeatureNodeType from "./FeatureNodeType";
 import type FeatureOperation from "./FeatureOperation";
-import type ExplainDerivativeBuildOptions from "./ExplainDerivativeBuildOptions";
 
 type ConnectionAddedCallback = (connection: Connection) => void;
 
@@ -51,8 +52,8 @@ type ExplainDerivativeDataUpdatedCallback = (
 class CoreGraphAdapter {
   private readonly graph = new Graph();
 
-  private readonly nodeIdToNames = new Map<string, string>();
-  private readonly dummyInputNodeIdToNodeIds = new Map<string, string>();
+  private nodeIdToNames = new Map<string, string>();
+  private dummyInputNodeIdToNodeIds = new Map<string, string>();
   private selectedNodeIds: string[] = [];
 
   private connectionAddedCallbacks: ConnectionAddedCallback[] = [];
@@ -543,6 +544,22 @@ cycle`;
 
   getNodeValueById(nodeId: string): string {
     return this.graph.getNodeValue(nodeId);
+  }
+
+  save(): CoreGraphAdapterState {
+    return {
+      nodeIdToNames: Object.fromEntries(this.nodeIdToNames),
+      dummyInputNodeIdToNodeIds: Object.fromEntries(
+        this.dummyInputNodeIdToNodeIds,
+      ),
+    };
+  }
+
+  load(state: CoreGraphAdapterState): void {
+    this.nodeIdToNames = new Map(Object.entries(state.nodeIdToNames));
+    this.dummyInputNodeIdToNodeIds = new Map(
+      Object.entries(state.dummyInputNodeIdToNodeIds),
+    );
   }
 
   private connectDummyInputNode(nodeId: string, portId: string): void {

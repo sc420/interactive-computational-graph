@@ -1,11 +1,11 @@
 // import type FeatureOperation from "../features/FeatureOperation";
-// import type CoreGraphAdapterState from "./CoreGraphAdapterState";
+import type CoreGraphAdapterState from "./CoreGraphAdapterState";
 // import type NodeNameBuilderState from "./NodeNameBuilderState";
 
 interface GraphContainerState {
   // TODO(sc420): Uncomment other states
   // Core graph
-  // coreGraphAdapterState: CoreGraphAdapterState;
+  coreGraphAdapterState: CoreGraphAdapterState;
 
   // Graph state
   isReverseMode: boolean;

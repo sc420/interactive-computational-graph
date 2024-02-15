@@ -1,9 +1,10 @@
-import type CoreGraphState from "./CoreGraphState";
+// import type CoreGraphState from "./CoreGraphState";
 
 interface CoreGraphAdapterState {
-  coreGraphState: CoreGraphState;
-  nodeIdToNames: Map<string, string>;
-  dummyInputNodeIdToNodeIds: Map<string, string>;
+  // TODO(sc420): Uncomment
+  // coreGraphState: CoreGraphState;
+  nodeIdToNames: Record<string, string>;
+  dummyInputNodeIdToNodeIds: Record<string, string>;
 }
 
 export default CoreGraphAdapterState;

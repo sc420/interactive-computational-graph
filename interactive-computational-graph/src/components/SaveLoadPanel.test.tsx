@@ -25,8 +25,12 @@ test("should trigger the event when clicking the load button", async () => {
 
   const contents = `\
 {
-  "isReverseMode": true,
-  "derivativeTarget": null
+    "coreGraphAdapterState": {
+        "nodeIdToNames": {},
+        "dummyInputNodeIdToNodeIds": {}
+    },
+    "isReverseMode": true,
+    "derivativeTarget": null
 }
 `;
   const file = new File([contents], "graph.json", { type: "text/plain" });

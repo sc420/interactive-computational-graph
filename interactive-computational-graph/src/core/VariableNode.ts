@@ -56,6 +56,7 @@ class VariableNode implements CoreNode {
     return {
       nodeType: "VARIABLE",
       value: this.value,
+      relationship: this.nodeRelationship.save(),
     };
   }
 }

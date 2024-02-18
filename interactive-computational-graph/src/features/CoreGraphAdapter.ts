@@ -17,12 +17,15 @@ import Graph from "../core/Graph";
 import OperationNode from "../core/OperationNode";
 import VariableNode from "../core/VariableNode";
 import type CoreGraphAdapterState from "../states/CoreGraphAdapterState";
+import type CoreGraphState from "../states/CoreGraphState";
+import type CoreNodeState from "../states/CoreNodeState";
 import type ExplainDerivativeBuildOptions from "./ExplainDerivativeBuildOptions";
 import { buildExplainDerivativeItems } from "./ExplainDerivativeController";
 import type ExplainDerivativeData from "./ExplainDerivativeData";
 import type ExplainDerivativeType from "./ExplainDerivativeType";
 import type FeatureNodeType from "./FeatureNodeType";
 import type FeatureOperation from "./FeatureOperation";
+import { findFeatureOperation } from "./FeatureOperationFinder";
 
 type ConnectionAddedCallback = (connection: Connection) => void;
 
@@ -105,6 +108,7 @@ class CoreGraphAdapter {
         return new OperationNode(
           nodeId,
           featureOperation.inputPorts,
+          featureOperation.id,
           featureOperation.operation,
         );
       }
@@ -556,8 +560,11 @@ cycle`;
     };
   }
 
-  load(state: CoreGraphAdapterState): void {
-    this.graph.load(state.coreGraphState);
+  load(
+    state: CoreGraphAdapterState,
+    featureOperations: FeatureOperation[],
+  ): void {
+    this.loadGraphState(state.coreGraphState, featureOperations);
     this.nodeIdToNames = new Map(Object.entries(state.nodeIdToNames));
     this.dummyInputNodeIdToNodeIds = new Map(
       Object.entries(state.dummyInputNodeIdToNodeIds),
@@ -705,6 +712,86 @@ cycle`;
     this.explainDerivativeDataUpdatedCallbacks.forEach((callback) => {
       callback(data);
     });
+  }
+
+  private loadGraphState(
+    state: CoreGraphState,
+    featureOperations: FeatureOperation[],
+  ): void {
+    this.graph.clear();
+    this.loadGraphNodes(state.nodeIdToNodes, featureOperations);
+    this.loadGraphConnections(state.nodeIdToNodes);
+    this.graph.setDifferentiationMode(state.differentiationMode);
+    this.graph.setTargetNode(state.targetNodeId);
+
+    this.graph.updateFValues();
+    this.graph.updateDerivatives();
+    this.updateExplainDerivativeData();
+  }
+
+  private loadGraphNodes(
+    nodeIdToNodes: Record<string, CoreNodeState>,
+    featureOperations: FeatureOperation[],
+  ): void {
+    Object.entries(nodeIdToNodes).forEach(([nodeId, coreNodeState]) => {
+      const featureNodeType =
+        this.getFeatureNodeTypeFromCoreNodeState(coreNodeState);
+      const featureOperation = findFeatureOperation(
+        featureNodeType,
+        featureOperations,
+      );
+
+      const node = this.buildCoreNode(
+        featureNodeType,
+        featureOperation,
+        nodeId,
+      );
+      if (
+        coreNodeState.nodeType === "CONSTANT" ||
+        coreNodeState.nodeType === "VARIABLE"
+      ) {
+        node.setValue(coreNodeState.value);
+      }
+
+      this.graph.addNode(node);
+    });
+  }
+
+  private loadGraphConnections(
+    nodeIdToNodes: Record<string, CoreNodeState>,
+  ): void {
+    Object.entries(nodeIdToNodes).forEach(([nodeId, coreNodeState]) => {
+      Object.entries(coreNodeState.relationship.inputPortIdToNodeIds).forEach(
+        ([inputPortId, inputNodeIds]) => {
+          inputNodeIds.forEach((inputNodeId) => {
+            this.graph.connect(inputNodeId, nodeId, inputPortId);
+          });
+        },
+      );
+    });
+  }
+
+  private getFeatureNodeTypeFromCoreNodeState(
+    state: CoreNodeState,
+  ): FeatureNodeType {
+    switch (state.nodeType) {
+      case "CONSTANT": {
+        return {
+          nodeType: "CONSTANT",
+        };
+      }
+      case "VARIABLE": {
+        return {
+          nodeType: "VARIABLE",
+        };
+      }
+      case "OPERATION": {
+        return {
+          nodeType: "OPERATION",
+          operationId: state.operationId,
+        };
+      }
+    }
   }
 }
 

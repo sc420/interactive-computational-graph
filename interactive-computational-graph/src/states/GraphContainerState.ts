@@ -1,5 +1,5 @@
-// import type FeatureOperation from "../features/FeatureOperation";
 import type CoreGraphAdapterState from "./CoreGraphAdapterState";
+import type FeatureOperationState from "./FeatureOperationState";
 // import type NodeNameBuilderState from "./NodeNameBuilderState";
 
 interface GraphContainerState {
@@ -10,7 +10,7 @@ interface GraphContainerState {
   // Graph state
   isReverseMode: boolean;
   derivativeTarget: string | null;
-  // featureOperations: FeatureOperation[];
+  featureOperations: FeatureOperationState[];
   // nextNodeId: number;
   // nodeNameBuilderState: NodeNameBuilderState;
   // nextOperationId: number;

@@ -1,18 +1,21 @@
-// TODO(sc420): Add nodeRelationship states
+import type NodeRelationshipState from "./NodeRelationshipState";
 
 interface ConstantNodeState {
   nodeType: "CONSTANT";
+  value: string;
+  relationship: NodeRelationshipState;
 }
 
 interface VariableNodeState {
   nodeType: "VARIABLE";
   value: string;
+  relationship: NodeRelationshipState;
 }
 
 interface OperationNodeState {
   nodeType: "OPERATION";
-  value: string;
   operationId: string;
+  relationship: NodeRelationshipState;
 }
 
 type CoreNodeState = ConstantNodeState | VariableNodeState | OperationNodeState;

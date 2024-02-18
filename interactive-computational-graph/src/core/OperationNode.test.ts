@@ -60,5 +60,5 @@ test("can get relationship", () => {
 function buildSumNode(): OperationNode {
   const ports: Port[] = [new Port("x_i", true)];
   const operation = new Operation(SUM_F_CODE, SUM_DFDX_CODE);
-  return new OperationNode("op1", ports, operation);
+  return new OperationNode("op1", ports, "sum", operation);
 }

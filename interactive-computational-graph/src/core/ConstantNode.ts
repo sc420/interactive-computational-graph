@@ -49,6 +49,8 @@ class ConstantNode implements CoreNode {
   save(): CoreNodeState {
     return {
       nodeType: "CONSTANT",
+      value: this.value,
+      relationship: this.nodeRelationship.save(),
     };
   }
 }

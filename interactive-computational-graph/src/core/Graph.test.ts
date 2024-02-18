@@ -1249,31 +1249,31 @@ function buildNeuralNetworkGraph(): Graph {
 function buildSumNode(id: string): CoreNode {
   const ports: Port[] = [new Port("x_i", true)];
   const operation = new Operation(SUM_F_CODE, SUM_DFDX_CODE);
-  return new OperationNode(id, ports, operation);
+  return new OperationNode(id, ports, "sum", operation);
 }
 
 function buildProductNode(id: string): CoreNode {
   const ports: Port[] = [new Port("x_i", true)];
   const operation = new Operation(PRODUCT_F_CODE, PRODUCT_DFDX_CODE);
-  return new OperationNode(id, ports, operation);
+  return new OperationNode(id, ports, "product", operation);
 }
 
 function buildIdentityNode(id: string): CoreNode {
   const ports: Port[] = [new Port("x", false)];
   const operation = new Operation(IDENTITY_F_CODE, IDENTITY_DFDX_CODE);
-  return new OperationNode(id, ports, operation);
+  return new OperationNode(id, ports, "identity", operation);
 }
 
 function buildReluNode(id: string): CoreNode {
   const ports: Port[] = [new Port("x", false)];
   const operation = new Operation(RELU_F_CODE, RELU_DFDX_CODE);
-  return new OperationNode(id, ports, operation);
+  return new OperationNode(id, ports, "relu", operation);
 }
 
 function buildSigmoidNode(id: string): CoreNode {
   const ports: Port[] = [new Port("x", false)];
   const operation = new Operation(SIGMOID_F_CODE, SIGMOID_DFDX_CODE);
-  return new OperationNode(id, ports, operation);
+  return new OperationNode(id, ports, "sigmoid", operation);
 }
 
 function buildSquaredErrorNode(id: string): CoreNode {
@@ -1282,5 +1282,5 @@ function buildSquaredErrorNode(id: string): CoreNode {
     SQUARED_ERROR_F_CODE,
     SQUARED_ERROR_DFDX_CODE,
   );
-  return new OperationNode(id, ports, operation);
+  return new OperationNode(id, ports, "squared_error", operation);
 }

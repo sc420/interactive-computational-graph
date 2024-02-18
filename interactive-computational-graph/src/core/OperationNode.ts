@@ -12,14 +12,22 @@ class OperationNode implements CoreNode {
 
   private readonly nodeRelationship: NodeRelationship;
 
+  private readonly operationId: string;
+
   private readonly operation: Operation;
 
   private value: string = "0";
 
-  constructor(id: string, inputPorts: Port[], operation: Operation) {
+  constructor(
+    id: string,
+    inputPorts: Port[],
+    operationId: string,
+    operation: Operation,
+  ) {
     this.id = id;
     this.inputPorts = inputPorts;
     this.nodeRelationship = new NodeRelationship(this.inputPorts);
+    this.operationId = operationId;
     this.operation = operation;
   }
 
@@ -95,8 +103,8 @@ class OperationNode implements CoreNode {
   save(): CoreNodeState {
     return {
       nodeType: "OPERATION",
-      value: this.value,
-      operationId: "", // TODO(sc420): Return operation ID
+      operationId: this.operationId,
+      relationship: this.nodeRelationship.save(),
     };
   }
 }

@@ -242,7 +242,7 @@ describe("output behavior", () => {
 
   function getDummyOperationNode(id: string): OperationNode {
     const op = new Operation("", "");
-    return new OperationNode(id, [new Port("in1", false)], op);
+    return new OperationNode(id, [new Port("in1", false)], "dummy", op);
   }
 });
 

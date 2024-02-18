@@ -29,7 +29,7 @@ class Graph {
    * the current target node. For forward mode, it propagates from left to
    * right. For reverse mode, it propagates from right to left.
    */
-  private nodeIdToDerivatives = new Map<string, string>();
+  private readonly nodeIdToDerivatives = new Map<string, string>();
 
   getNodes(): CoreNode[] {
     return Array.from(this.nodeIdToNodes.values());
@@ -318,18 +318,12 @@ multiple edges`,
       nodeIdToNodes,
       differentiationMode: this.differentiationMode,
       targetNodeId: this.targetNodeId,
-      nodeIdToDerivatives: Object.fromEntries(this.nodeIdToDerivatives),
     };
   }
 
-  load(state: CoreGraphState): void {
-    // TODO(sc420): Build the core nodes
-
-    this.differentiationMode = state.differentiationMode;
-    this.targetNodeId = state.targetNodeId;
-    this.nodeIdToDerivatives = new Map(
-      Object.entries(state.nodeIdToDerivatives),
-    );
+  clear(): void {
+    this.nodeIdToNodes.clear();
+    this.nodeIdToDerivatives.clear();
   }
 
   /**

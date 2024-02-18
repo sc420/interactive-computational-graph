@@ -68,6 +68,7 @@ import CoreGraphAdapter from "../features/CoreGraphAdapter";
 import type ExplainDerivativeData from "../features/ExplainDerivativeData";
 import type FeatureNodeType from "../features/FeatureNodeType";
 import type FeatureOperation from "../features/FeatureOperation";
+import { findFeatureOperation } from "../features/FeatureOperationFinder";
 import NodeNameBuilder from "../features/NodeNameBuilder";
 import {
   addReactFlowNode,
@@ -88,7 +89,10 @@ import {
 import type SelectedFeature from "../features/SelectedFeature";
 import ReactFlowGraph from "../reactflow/ReactFlowGraph";
 import ReactFlowGraphTestHelper from "../reactflow/ReactFlowGraphTestHelper";
+import type CoreOperationState from "../states/CoreOperationState";
+import type FeatureOperationState from "../states/FeatureOperationState";
 import type GraphContainerState from "../states/GraphContainerState";
+import type PortState from "../states/PortState";
 import FeaturePanel from "./FeaturePanel";
 import GraphToolbar from "./GraphToolbar";
 import Title from "./Title";
@@ -491,22 +495,85 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     [coreGraphAdapter],
   );
 
+  const saveFeatureOperations = useCallback((): FeatureOperationState[] => {
+    return featureOperations.map((featureOperation) => {
+      const operationState: CoreOperationState = {
+        fCode: featureOperation.operation.getFCode(),
+        dfdxCode: featureOperation.operation.getDfdxCode(),
+      };
+      const inputPortStates: PortState[] = featureOperation.inputPorts.map(
+        (inputPort) => {
+          return {
+            id: inputPort.getId(),
+            allowMultiEdges: inputPort.isAllowMultiEdges(),
+          };
+        },
+      );
+      return {
+        id: featureOperation.id,
+        text: featureOperation.text,
+        type: featureOperation.type,
+        namePrefix: featureOperation.namePrefix,
+        operation: operationState,
+        inputPorts: inputPortStates,
+        helpText: featureOperation.helpText,
+      };
+    });
+  }, [featureOperations]);
+
   const handleSave = useCallback((): GraphContainerState => {
     const coreGraphAdapterState = coreGraphAdapter.save();
     return {
       coreGraphAdapterState,
       isReverseMode,
       derivativeTarget,
+      featureOperations: saveFeatureOperations(),
     };
-  }, [coreGraphAdapter, derivativeTarget, isReverseMode]);
+  }, [
+    coreGraphAdapter,
+    derivativeTarget,
+    isReverseMode,
+    saveFeatureOperations,
+  ]);
+
+  const loadFeatureOperations = useCallback(
+    (featureOperationStates: FeatureOperationState[]): FeatureOperation[] => {
+      return featureOperationStates.map((featureOperationState) => {
+        return {
+          id: featureOperationState.id,
+          text: featureOperationState.text,
+          type: featureOperationState.type,
+          namePrefix: featureOperationState.namePrefix,
+          operation: new Operation(
+            featureOperationState.operation.fCode,
+            featureOperationState.operation.dfdxCode,
+          ),
+          inputPorts: featureOperationState.inputPorts.map(
+            (inputPortState) =>
+              new Port(inputPortState.id, inputPortState.allowMultiEdges),
+          ),
+          helpText: featureOperationState.helpText,
+        };
+      });
+    },
+    [],
+  );
 
   const handleLoad = useCallback(
     (graphContainerState: GraphContainerState) => {
-      coreGraphAdapter.load(graphContainerState.coreGraphAdapterState);
+      const loadedFeatureOperations = loadFeatureOperations(
+        graphContainerState.featureOperations,
+      );
+
+      coreGraphAdapter.load(
+        graphContainerState.coreGraphAdapterState,
+        loadedFeatureOperations,
+      );
       setReverseMode(graphContainerState.isReverseMode);
       setDerivativeTarget(graphContainerState.derivativeTarget);
+      setFeatureOperations(loadedFeatureOperations);
     },
-    [coreGraphAdapter],
+    [coreGraphAdapter, loadFeatureOperations],
   );
 
   const handleReverseModeChange = useCallback(
@@ -690,22 +757,6 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
   useEffect(() => {
     updateNodeDarkMode();
   }, [isDarkMode, updateNodeDarkMode]);
-
-  const findFeatureOperation = (
-    featureNodeType: FeatureNodeType,
-    featureOperations: FeatureOperation[],
-  ): FeatureOperation | null => {
-    if (featureNodeType.nodeType !== "OPERATION") {
-      return null;
-    }
-
-    const operationId = featureNodeType.operationId;
-    const operation = featureOperations.find((op) => op.id === operationId);
-    if (operation === undefined) {
-      throw new Error(`Couldn't find the feature operation ${operationId}`);
-    }
-    return operation;
-  };
 
   return (
     <>

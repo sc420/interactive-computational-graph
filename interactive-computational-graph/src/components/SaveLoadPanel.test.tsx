@@ -26,6 +26,12 @@ test("should trigger the event when clicking the load button", async () => {
   const contents = `\
 {
     "coreGraphAdapterState": {
+        "coreGraphState": {
+            "nodeIdToNodes": {},
+            "differentiationMode": "REVERSE",
+            "targetNodeId": null,
+            "nodeIdToDerivatives": {}
+        },
         "nodeIdToNames": {},
         "dummyInputNodeIdToNodeIds": {}
     },

@@ -1,10 +1,11 @@
 import type DifferentiationMode from "../core/DifferentiationMode";
+import type CoreNodeState from "./CoreNodeState";
 
 interface CoreGraphState {
-  // TODO(sc420): Add nodeIdToNodes state
+  nodeIdToNodes: Record<string, CoreNodeState>;
   differentiationMode: DifferentiationMode;
   targetNodeId: string | null;
-  nodeIdToDerivatives: Map<string, string>;
+  nodeIdToDerivatives: Record<string, string>;
 }
 
 export default CoreGraphState;

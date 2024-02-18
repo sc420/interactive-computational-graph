@@ -1,3 +1,5 @@
+import type CoreGraphState from "../states/CoreGraphState";
+import type CoreNodeState from "../states/CoreNodeState";
 import type ChainRuleTerm from "./ChainRuleTerm";
 import {
   CycleError,
@@ -27,7 +29,7 @@ class Graph {
    * the current target node. For forward mode, it propagates from left to
    * right. For reverse mode, it propagates from right to left.
    */
-  private readonly nodeIdToDerivatives = new Map<string, string>();
+  private nodeIdToDerivatives = new Map<string, string>();
 
   getNodes(): CoreNode[] {
     return Array.from(this.nodeIdToNodes.values());
@@ -304,6 +306,30 @@ multiple edges`,
         derivativeRegardingCurrent,
       };
     });
+  }
+
+  save(): CoreGraphState {
+    const nodeIdToNodes: Record<string, CoreNodeState> = {};
+    this.nodeIdToNodes.forEach((node, nodeId) => {
+      nodeIdToNodes[nodeId] = node.save();
+    });
+
+    return {
+      nodeIdToNodes,
+      differentiationMode: this.differentiationMode,
+      targetNodeId: this.targetNodeId,
+      nodeIdToDerivatives: Object.fromEntries(this.nodeIdToDerivatives),
+    };
+  }
+
+  load(state: CoreGraphState): void {
+    // TODO(sc420): Build the core nodes
+
+    this.differentiationMode = state.differentiationMode;
+    this.targetNodeId = state.targetNodeId;
+    this.nodeIdToDerivatives = new Map(
+      Object.entries(state.nodeIdToDerivatives),
+    );
   }
 
   /**

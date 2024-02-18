@@ -548,6 +548,7 @@ cycle`;
 
   save(): CoreGraphAdapterState {
     return {
+      coreGraphState: this.graph.save(),
       nodeIdToNames: Object.fromEntries(this.nodeIdToNames),
       dummyInputNodeIdToNodeIds: Object.fromEntries(
         this.dummyInputNodeIdToNodeIds,
@@ -556,6 +557,7 @@ cycle`;
   }
 
   load(state: CoreGraphAdapterState): void {
+    this.graph.load(state.coreGraphState);
     this.nodeIdToNames = new Map(Object.entries(state.nodeIdToNames));
     this.dummyInputNodeIdToNodeIds = new Map(
       Object.entries(state.dummyInputNodeIdToNodeIds),

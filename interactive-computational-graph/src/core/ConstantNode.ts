@@ -1,3 +1,4 @@
+import type CoreNodeState from "../states/CoreNodeState";
 import type CoreNode from "./CoreNode";
 import NodeRelationship from "./NodeRelationship";
 import type NodeType from "./NodeType";
@@ -43,6 +44,12 @@ class ConstantNode implements CoreNode {
 
   getRelationship(): NodeRelationship {
     return this.nodeRelationship;
+  }
+
+  save(): CoreNodeState {
+    return {
+      nodeType: "CONSTANT",
+    };
   }
 }
 

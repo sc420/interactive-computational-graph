@@ -1,3 +1,4 @@
+import type CoreNodeState from "../states/CoreNodeState";
 import type NodeRelationship from "./NodeRelationship";
 import type NodeType from "./NodeType";
 
@@ -25,6 +26,8 @@ interface CoreNode {
   calculateDfdx: (x: CoreNode) => string;
 
   getRelationship: () => NodeRelationship;
+
+  save: () => CoreNodeState;
 }
 
 export default CoreNode;

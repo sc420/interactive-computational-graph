@@ -1,3 +1,4 @@
+import type CoreNodeState from "../states/CoreNodeState";
 import type CoreNode from "./CoreNode";
 import NodeRelationship from "./NodeRelationship";
 import type NodeType from "./NodeType";
@@ -49,6 +50,13 @@ class VariableNode implements CoreNode {
 
   getRelationship(): NodeRelationship {
     return this.nodeRelationship;
+  }
+
+  save(): CoreNodeState {
+    return {
+      nodeType: "VARIABLE",
+      value: this.value,
+    };
   }
 }
 

@@ -1,3 +1,4 @@
+import type CoreNodeState from "../states/CoreNodeState";
 import type CoreNode from "./CoreNode";
 import NodeRelationship from "./NodeRelationship";
 import type NodeType from "./NodeType";
@@ -89,6 +90,14 @@ class OperationNode implements CoreNode {
       });
     });
     return fInputNodeToValues;
+  }
+
+  save(): CoreNodeState {
+    return {
+      nodeType: "OPERATION",
+      value: this.value,
+      operationId: "", // TODO(sc420): Return operation ID
+    };
   }
 }
 

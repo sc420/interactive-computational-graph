@@ -15,8 +15,10 @@ import {
   type Node,
   type OnConnect,
   type OnEdgesChange,
+  type OnInit,
   type OnNodesChange,
   type OnSelectionChangeParams,
+  type ReactFlowInstance,
   type XYPosition,
 } from "reactflow";
 import { TITLE_HEIGHT } from "../constants";
@@ -69,6 +71,7 @@ import type ExplainDerivativeData from "../features/ExplainDerivativeData";
 import type FeatureNodeType from "../features/FeatureNodeType";
 import type FeatureOperation from "../features/FeatureOperation";
 import { findFeatureOperation } from "../features/FeatureOperationFinder";
+import type NodeData from "../features/NodeData";
 import NodeNameBuilder from "../features/NodeNameBuilder";
 import {
   addReactFlowNode,
@@ -310,6 +313,8 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
   >([]);
 
   // React Flow states
+  const [reactFlowInstance, setReactFlowInstance] =
+    useState<ReactFlowInstance | null>(null);
   const [reactFlowNodes, setReactFlowNodes] = useState<Node[]>([]);
   const [reactFlowEdges, setReactFlowEdges] = useState<Edge[]>([]);
   const [lastSelectedNodeId, setLastSelectedNodeId] = useState<string | null>(
@@ -522,17 +527,23 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
   }, [featureOperations]);
 
   const handleSave = useCallback((): GraphContainerState => {
+    if (reactFlowInstance === null) {
+      throw new Error("React flow instance should not be null");
+    }
+
     const coreGraphAdapterState = coreGraphAdapter.save();
     return {
       coreGraphAdapterState,
       isReverseMode,
       derivativeTarget,
       featureOperations: saveFeatureOperations(),
+      reactFlowState: reactFlowInstance.toObject(),
     };
   }, [
     coreGraphAdapter,
     derivativeTarget,
     isReverseMode,
+    reactFlowInstance,
     saveFeatureOperations,
   ]);
 
@@ -559,6 +570,43 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     [],
   );
 
+  const loadReactFlowNode = useCallback(
+    (nodes: Node[]) => {
+      return nodes.map((node) => {
+        const data = node.data as NodeData;
+        // Set the new data to notify React Flow about the change
+        const newData: NodeData = {
+          ...data,
+          // Set the callbacks because the json file doesn't have these
+          onNameChange: handleNameChange,
+          onInputChange: handleInputChange,
+          onBodyClick: handleBodyClick,
+          onDerivativeClick: handleDerivativeClick,
+        };
+
+        node.data = newData;
+        return node;
+      });
+    },
+    [
+      handleBodyClick,
+      handleDerivativeClick,
+      handleInputChange,
+      handleNameChange,
+    ],
+  );
+
+  const loadReactFlow = useCallback(
+    (reactFlowState: any) => {
+      // Reference: https://reactflow.dev/examples/interaction/save-and-restore
+      const { x = 0, y = 0, zoom = 1 } = reactFlowState.viewport;
+      setReactFlowNodes(loadReactFlowNode(reactFlowState.nodes));
+      setReactFlowEdges(reactFlowState.edges);
+      reactFlowInstance?.setViewport({ x, y, zoom });
+    },
+    [loadReactFlowNode, reactFlowInstance],
+  );
+
   const handleLoad = useCallback(
     (graphContainerState: GraphContainerState) => {
       const loadedFeatureOperations = loadFeatureOperations(
@@ -572,8 +620,9 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       setReverseMode(graphContainerState.isReverseMode);
       setDerivativeTarget(graphContainerState.derivativeTarget);
       setFeatureOperations(loadedFeatureOperations);
+      loadReactFlow(graphContainerState.reactFlowState);
     },
-    [coreGraphAdapter, loadFeatureOperations],
+    [coreGraphAdapter, loadFeatureOperations, loadReactFlow],
   );
 
   const handleReverseModeChange = useCallback(
@@ -595,6 +644,10 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     },
     [coreGraphAdapter],
   );
+
+  const handleReactFlowInit: OnInit = useCallback((reactFlowInstance) => {
+    setReactFlowInstance(reactFlowInstance);
+  }, []);
 
   const handleNodesChange: OnNodesChange = useCallback(
     (changes) => {
@@ -832,6 +885,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
               <ReactFlowGraph
                 nodes={reactFlowNodes}
                 edges={reactFlowEdges}
+                onInit={handleReactFlowInit}
                 onNodesChange={handleNodesChange}
                 onEdgesChange={handleEdgesChange}
                 onSelectionChange={handleSelectionChange}

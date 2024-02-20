@@ -19,7 +19,7 @@ interface GraphContainerState {
   // operationIdsAddedAtLeastOnce: Set<string>;
 
   // React Flow states
-  // reactFlowState: object;
+  reactFlowState: object;
 }
 
 export default GraphContainerState;

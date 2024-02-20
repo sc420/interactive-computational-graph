@@ -119,7 +119,7 @@ const InputItems: FunctionComponent<InputItemProps> = ({
               <OutlinedInput
                 id={getInputId(item.id)}
                 data-testid={getInputId(item.id)}
-                defaultValue={item.value}
+                value={item.value}
                 size="small"
                 inputProps={{
                   style: {

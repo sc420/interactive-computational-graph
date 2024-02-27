@@ -111,6 +111,15 @@ test("should trigger the event when clicking the load button", async () => {
             "helpText": "Add two numbers, i.e., a + b"
         }
     ],
+    "nextNodeId": 3,
+    "nodeNameBuilderState": {
+        "constantCounter": 2,
+        "variableCounter": 2,
+        "operationIdToCounter": {
+            "add": 2
+        }
+    },
+    "nextOperationId": 0,
     "reactFlowState": {
         "nodes": [
             {
@@ -175,7 +184,7 @@ test("should trigger the event when clicking the load button", async () => {
                                 {
                                     "type": "latexLink",
                                     "id": "derivative",
-                                    "latex": "\\\\displaystyle \\\\frac{\\\\partial{?}}{\\\\partial{v_1}}",
+                                    "latex": "\\displaystyle \\frac{\\partial{?}}{\\partial{v_1}}",
                                     "href": "1"
                                 },
                                 {
@@ -251,7 +260,7 @@ test("should trigger the event when clicking the load button", async () => {
                                 {
                                     "type": "latexLink",
                                     "id": "derivative",
-                                    "latex": "\\\\displaystyle \\\\frac{\\\\partial{?}}{\\\\partial{a_1}}",
+                                    "latex": "\\displaystyle \\frac{\\partial{?}}{\\partial{a_1}}",
                                     "href": "2"
                                 },
                                 {

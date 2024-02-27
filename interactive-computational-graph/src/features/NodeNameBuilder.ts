@@ -1,10 +1,11 @@
+import type NodeNameBuilderState from "../states/NodeNameBuilderState";
 import type FeatureNodeType from "./FeatureNodeType";
 import type FeatureOperation from "./FeatureOperation";
 
 class NodeNameBuilder {
   private constantCounter = 1;
   private variableCounter = 1;
-  private readonly operationIdToCounter = new Map<string, number>();
+  private operationIdToCounter = new Map<string, number>();
 
   buildName(
     featureNodeType: FeatureNodeType,
@@ -31,6 +32,22 @@ class NodeNameBuilder {
       this.operationIdToCounter.set(operationId, counter + 1);
     }
     return `${prefix}_${counter}`;
+  }
+
+  save(): NodeNameBuilderState {
+    return {
+      constantCounter: this.constantCounter,
+      variableCounter: this.variableCounter,
+      operationIdToCounter: Object.fromEntries(this.operationIdToCounter),
+    };
+  }
+
+  load(state: NodeNameBuilderState): void {
+    this.constantCounter = state.constantCounter;
+    this.variableCounter = state.variableCounter;
+    this.operationIdToCounter = new Map(
+      Object.entries(state.operationIdToCounter),
+    );
   }
 }
 

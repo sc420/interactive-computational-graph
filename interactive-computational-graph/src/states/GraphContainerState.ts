@@ -1,6 +1,6 @@
 import type CoreGraphAdapterState from "./CoreGraphAdapterState";
 import type FeatureOperationState from "./FeatureOperationState";
-// import type NodeNameBuilderState from "./NodeNameBuilderState";
+import type NodeNameBuilderState from "./NodeNameBuilderState";
 
 interface GraphContainerState {
   // TODO(sc420): Uncomment other states
@@ -11,9 +11,9 @@ interface GraphContainerState {
   isReverseMode: boolean;
   derivativeTarget: string | null;
   featureOperations: FeatureOperationState[];
-  // nextNodeId: number;
-  // nodeNameBuilderState: NodeNameBuilderState;
-  // nextOperationId: number;
+  nextNodeId: number;
+  nodeNameBuilderState: NodeNameBuilderState;
+  nextOperationId: number;
 
   // Feature panel states
   // operationIdsAddedAtLeastOnce: Set<string>;

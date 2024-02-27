@@ -532,17 +532,24 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     }
 
     const coreGraphAdapterState = coreGraphAdapter.save();
+    const nodeNameBuilderState = nodeNameBuilder.save();
     return {
       coreGraphAdapterState,
       isReverseMode,
       derivativeTarget,
       featureOperations: saveFeatureOperations(),
+      nextNodeId,
+      nodeNameBuilderState,
+      nextOperationId,
       reactFlowState: reactFlowInstance.toObject(),
     };
   }, [
     coreGraphAdapter,
     derivativeTarget,
     isReverseMode,
+    nextNodeId,
+    nextOperationId,
+    nodeNameBuilder,
     reactFlowInstance,
     saveFeatureOperations,
   ]);
@@ -620,9 +627,12 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       setReverseMode(graphContainerState.isReverseMode);
       setDerivativeTarget(graphContainerState.derivativeTarget);
       setFeatureOperations(loadedFeatureOperations);
+      setNextNodeId(graphContainerState.nextNodeId);
+      nodeNameBuilder.load(graphContainerState.nodeNameBuilderState);
+      setNextOperationId(graphContainerState.nextOperationId);
       loadReactFlow(graphContainerState.reactFlowState);
     },
-    [coreGraphAdapter, loadFeatureOperations, loadReactFlow],
+    [coreGraphAdapter, loadFeatureOperations, loadReactFlow, nodeNameBuilder],
   );
 
   const handleReverseModeChange = useCallback(

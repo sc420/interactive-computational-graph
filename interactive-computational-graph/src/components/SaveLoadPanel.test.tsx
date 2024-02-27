@@ -120,6 +120,9 @@ test("should trigger the event when clicking the load button", async () => {
         }
     },
     "nextOperationId": 0,
+    "operationIdsAddedAtLeastOnce": [
+        "add"
+    ],
     "reactFlowState": {
         "nodes": [
             {

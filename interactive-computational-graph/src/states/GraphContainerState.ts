@@ -3,7 +3,6 @@ import type FeatureOperationState from "./FeatureOperationState";
 import type NodeNameBuilderState from "./NodeNameBuilderState";
 
 interface GraphContainerState {
-  // TODO(sc420): Uncomment other states
   // Core graph
   coreGraphAdapterState: CoreGraphAdapterState;
 
@@ -16,7 +15,7 @@ interface GraphContainerState {
   nextOperationId: number;
 
   // Feature panel states
-  // operationIdsAddedAtLeastOnce: Set<string>;
+  operationIdsAddedAtLeastOnce: string[];
 
   // React Flow states
   reactFlowState: object;

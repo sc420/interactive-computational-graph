@@ -541,6 +541,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       nextNodeId,
       nodeNameBuilderState,
       nextOperationId,
+      operationIdsAddedAtLeastOnce: Array.from(operationIdsAddedAtLeastOnce),
       reactFlowState: reactFlowInstance.toObject(),
     };
   }, [
@@ -550,6 +551,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     nextNodeId,
     nextOperationId,
     nodeNameBuilder,
+    operationIdsAddedAtLeastOnce,
     reactFlowInstance,
     saveFeatureOperations,
   ]);
@@ -630,6 +632,9 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       setNextNodeId(graphContainerState.nextNodeId);
       nodeNameBuilder.load(graphContainerState.nodeNameBuilderState);
       setNextOperationId(graphContainerState.nextOperationId);
+      setOperationIdsAddedAtLeastOnce(
+        new Set(graphContainerState.operationIdsAddedAtLeastOnce),
+      );
       loadReactFlow(graphContainerState.reactFlowState);
     },
     [coreGraphAdapter, loadFeatureOperations, loadReactFlow, nodeNameBuilder],

@@ -187,7 +187,7 @@ test("should trigger the event when clicking the load button", async () => {
                                 {
                                     "type": "latexLink",
                                     "id": "derivative",
-                                    "latex": "\\displaystyle \\frac{\\partial{?}}{\\partial{v_1}}",
+                                    "latex": "...",
                                     "href": "1"
                                 },
                                 {
@@ -263,7 +263,7 @@ test("should trigger the event when clicking the load button", async () => {
                                 {
                                     "type": "latexLink",
                                     "id": "derivative",
-                                    "latex": "\\displaystyle \\frac{\\partial{?}}{\\partial{a_1}}",
+                                    "latex": "...",
                                     "href": "2"
                                 },
                                 {

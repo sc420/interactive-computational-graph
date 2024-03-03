@@ -1,5 +1,6 @@
 import Operation from "../core/Operation";
 import Port from "../core/Port";
+import type NodeNameBuilderState from "../states/NodeNameBuilderState";
 import { ADD_DFDX_CODE, ADD_F_CODE } from "./BuiltInCode";
 import type FeatureNodeType from "./FeatureNodeType";
 import type FeatureOperation from "./FeatureOperation";
@@ -18,6 +19,39 @@ test("should build names with interleaving node types", () => {
   expect(builder.buildName(getAddNodeType(), getAddOperation())).toBe("a_3");
   expect(builder.buildName(getVariableNodeType(), null)).toBe("v_3");
   expect(builder.buildName(getVariableNodeType(), null)).toBe("v_4");
+});
+
+test("should save the state", () => {
+  const builder = new NodeNameBuilder();
+
+  builder.buildName(getConstantNodeType(), null);
+  builder.buildName(getAddNodeType(), getAddOperation());
+  builder.buildName(getVariableNodeType(), null);
+
+  expect(builder.save()).toEqual({
+    constantCounter: 2,
+    variableCounter: 2,
+    operationIdToCounter: {
+      add: 2,
+    },
+  });
+});
+
+test("should have correct state after loading", () => {
+  const builder = new NodeNameBuilder();
+  const state: NodeNameBuilderState = {
+    constantCounter: 2,
+    variableCounter: 2,
+    operationIdToCounter: {
+      add: 2,
+    },
+  };
+
+  builder.load(state);
+
+  expect(builder.buildName(getConstantNodeType(), null)).toBe("c_2");
+  expect(builder.buildName(getAddNodeType(), getAddOperation())).toBe("a_2");
+  expect(builder.buildName(getVariableNodeType(), null)).toBe("v_2");
 });
 
 const getConstantNodeType = (): FeatureNodeType => {

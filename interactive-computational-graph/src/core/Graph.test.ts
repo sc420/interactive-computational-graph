@@ -968,6 +968,69 @@ describe("explaining chain rule", () => {
   });
 });
 
+describe("saving graph state", () => {
+  test("should save the empty graph", () => {
+    const graph = new Graph();
+
+    const state = graph.save();
+    expect(state).toEqual({
+      nodeIdToNodes: {},
+      differentiationMode: "REVERSE",
+      targetNodeId: null,
+    });
+  });
+
+  test("should save the small graph", () => {
+    const graph = buildSmallGraph();
+    graph.setDifferentiationMode("FORWARD");
+    graph.setTargetNode("sum1");
+
+    const state = graph.save();
+    expect(state).toEqual({
+      nodeIdToNodes: {
+        v1: {
+          nodeType: "VARIABLE",
+          value: "2",
+          relationship: {
+            inputPortIdToNodeIds: {},
+          },
+        },
+        v2: {
+          nodeType: "VARIABLE",
+          value: "1",
+          relationship: {
+            inputPortIdToNodeIds: {},
+          },
+        },
+        sum1: {
+          nodeType: "OPERATION",
+          operationId: "sum",
+          relationship: {
+            inputPortIdToNodeIds: {
+              x_i: ["v1", "v2"],
+            },
+          },
+        },
+      },
+      differentiationMode: "FORWARD",
+      targetNodeId: "sum1",
+    });
+  });
+});
+
+describe("clearing graph state", () => {
+  test("should clear the small graph", () => {
+    const graph = buildSmallGraph();
+    graph.updateFValues();
+    graph.setDifferentiationMode("REVERSE");
+    graph.setTargetNode("v1");
+    graph.clear();
+
+    expect(graph.getNodes()).toHaveLength(0);
+    expect(parseFloat(graph.getNodeDerivative("v1"))).toBeCloseTo(0);
+  });
+});
+
 function buildSmallGraph(): Graph {
   const graph = new Graph();
 

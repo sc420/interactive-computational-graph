@@ -562,6 +562,44 @@ describe("behavior", () => {
       adapter.getNodeNameById("1");
     }).toThrow();
   });
+
+  test("should save the state", () => {
+    const adapter = new CoreGraphAdapter();
+
+    addConstantNode(adapter, "1", "c_1");
+    addAddNode(adapter, "2", "a_1");
+    addConnection(adapter, "1", "2", "a");
+
+    const state = adapter.save();
+    expect(state).toEqual(
+      expect.objectContaining({
+        nodeIdToNames: {
+          "1": "c_1",
+          "2": "a_1",
+          "dummy-input-node-2-a": "a_1.a",
+          "dummy-input-node-2-b": "a_1.b",
+        },
+        dummyInputNodeIdToNodeIds: {
+          "dummy-input-node-2-a": "2",
+          "dummy-input-node-2-b": "2",
+        },
+      }),
+    );
+  });
+
+  test("should load from the saved state correctly", () => {
+    const adapter = new CoreGraphAdapter();
+
+    addConstantNode(adapter, "1", "c_1");
+    addAddNode(adapter, "2", "a_1");
+    addConnection(adapter, "1", "2", "a");
+
+    const state = adapter.save();
+    adapter.load(state, [featureOperation]);
+
+    expect(adapter.getNodeNameById("1")).toBe("c_1");
+    expect(adapter.getNodeNameById("2")).toBe("a_1");
+  });
 });
 
 const featureOperation: FeatureOperation = {

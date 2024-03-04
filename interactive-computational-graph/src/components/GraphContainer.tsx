@@ -15,8 +15,10 @@ import {
   type Node,
   type OnConnect,
   type OnEdgesChange,
+  type OnInit,
   type OnNodesChange,
   type OnSelectionChangeParams,
+  type ReactFlowInstance,
   type XYPosition,
 } from "reactflow";
 import { TITLE_HEIGHT } from "../constants";
@@ -68,6 +70,8 @@ import CoreGraphAdapter from "../features/CoreGraphAdapter";
 import type ExplainDerivativeData from "../features/ExplainDerivativeData";
 import type FeatureNodeType from "../features/FeatureNodeType";
 import type FeatureOperation from "../features/FeatureOperation";
+import { findFeatureOperation } from "../features/FeatureOperationFinder";
+import type NodeData from "../features/NodeData";
 import NodeNameBuilder from "../features/NodeNameBuilder";
 import {
   addReactFlowNode,
@@ -88,6 +92,10 @@ import {
 import type SelectedFeature from "../features/SelectedFeature";
 import ReactFlowGraph from "../reactflow/ReactFlowGraph";
 import ReactFlowGraphTestHelper from "../reactflow/ReactFlowGraphTestHelper";
+import type CoreOperationState from "../states/CoreOperationState";
+import type FeatureOperationState from "../states/FeatureOperationState";
+import type GraphContainerState from "../states/GraphContainerState";
+import type PortState from "../states/PortState";
 import FeaturePanel from "./FeaturePanel";
 import GraphToolbar from "./GraphToolbar";
 import Title from "./Title";
@@ -305,6 +313,8 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
   >([]);
 
   // React Flow states
+  const [reactFlowInstance, setReactFlowInstance] =
+    useState<ReactFlowInstance | null>(null);
   const [reactFlowNodes, setReactFlowNodes] = useState<Node[]>([]);
   const [reactFlowEdges, setReactFlowEdges] = useState<Edge[]>([]);
   const [lastSelectedNodeId, setLastSelectedNodeId] = useState<string | null>(
@@ -490,6 +500,146 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     [coreGraphAdapter],
   );
 
+  const saveFeatureOperations = useCallback((): FeatureOperationState[] => {
+    return featureOperations.map((featureOperation) => {
+      const operationState: CoreOperationState = {
+        fCode: featureOperation.operation.getFCode(),
+        dfdxCode: featureOperation.operation.getDfdxCode(),
+      };
+      const inputPortStates: PortState[] = featureOperation.inputPorts.map(
+        (inputPort) => {
+          return {
+            id: inputPort.getId(),
+            allowMultiEdges: inputPort.isAllowMultiEdges(),
+          };
+        },
+      );
+      return {
+        id: featureOperation.id,
+        text: featureOperation.text,
+        type: featureOperation.type,
+        namePrefix: featureOperation.namePrefix,
+        operation: operationState,
+        inputPorts: inputPortStates,
+        helpText: featureOperation.helpText,
+      };
+    });
+  }, [featureOperations]);
+
+  const handleSave = useCallback((): GraphContainerState => {
+    if (reactFlowInstance === null) {
+      throw new Error("React flow instance should not be null");
+    }
+
+    const coreGraphAdapterState = coreGraphAdapter.save();
+    const nodeNameBuilderState = nodeNameBuilder.save();
+    return {
+      coreGraphAdapterState,
+      isReverseMode,
+      derivativeTarget,
+      featureOperations: saveFeatureOperations(),
+      nextNodeId,
+      nodeNameBuilderState,
+      nextOperationId,
+      operationIdsAddedAtLeastOnce: Array.from(operationIdsAddedAtLeastOnce),
+      reactFlowState: reactFlowInstance.toObject(),
+    };
+  }, [
+    coreGraphAdapter,
+    derivativeTarget,
+    isReverseMode,
+    nextNodeId,
+    nextOperationId,
+    nodeNameBuilder,
+    operationIdsAddedAtLeastOnce,
+    reactFlowInstance,
+    saveFeatureOperations,
+  ]);
+
+  const loadFeatureOperations = useCallback(
+    (featureOperationStates: FeatureOperationState[]): FeatureOperation[] => {
+      return featureOperationStates.map((featureOperationState) => {
+        return {
+          id: featureOperationState.id,
+          text: featureOperationState.text,
+          type: featureOperationState.type,
+          namePrefix: featureOperationState.namePrefix,
+          operation: new Operation(
+            featureOperationState.operation.fCode,
+            featureOperationState.operation.dfdxCode,
+          ),
+          inputPorts: featureOperationState.inputPorts.map(
+            (inputPortState) =>
+              new Port(inputPortState.id, inputPortState.allowMultiEdges),
+          ),
+          helpText: featureOperationState.helpText,
+        };
+      });
+    },
+    [],
+  );
+
+  const loadReactFlowNode = useCallback(
+    (nodes: Node[]) => {
+      return nodes.map((node) => {
+        const data = node.data as NodeData;
+        // Set the new data to notify React Flow about the change
+        const newData: NodeData = {
+          ...data,
+          // Set the callbacks because the json file doesn't have these
+          onNameChange: handleNameChange,
+          onInputChange: handleInputChange,
+          onBodyClick: handleBodyClick,
+          onDerivativeClick: handleDerivativeClick,
+        };
+
+        node.data = newData;
+        return node;
+      });
+    },
+    [
+      handleBodyClick,
+      handleDerivativeClick,
+      handleInputChange,
+      handleNameChange,
+    ],
+  );
+
+  const loadReactFlow = useCallback(
+    (reactFlowState: any) => {
+      // Reference: https://reactflow.dev/examples/interaction/save-and-restore
+      const { x = 0, y = 0, zoom = 1 } = reactFlowState.viewport;
+      setReactFlowNodes(loadReactFlowNode(reactFlowState.nodes));
+      setReactFlowEdges(reactFlowState.edges);
+      reactFlowInstance?.setViewport({ x, y, zoom });
+    },
+    [loadReactFlowNode, reactFlowInstance],
+  );
+
+  const handleLoad = useCallback(
+    (graphContainerState: GraphContainerState) => {
+      const loadedFeatureOperations = loadFeatureOperations(
+        graphContainerState.featureOperations,
+      );
+
+      coreGraphAdapter.load(
+        graphContainerState.coreGraphAdapterState,
+        loadedFeatureOperations,
+      );
+      setReverseMode(graphContainerState.isReverseMode);
+      setDerivativeTarget(graphContainerState.derivativeTarget);
+      setFeatureOperations(loadedFeatureOperations);
+      setNextNodeId(graphContainerState.nextNodeId);
+      nodeNameBuilder.load(graphContainerState.nodeNameBuilderState);
+      setNextOperationId(graphContainerState.nextOperationId);
+      setOperationIdsAddedAtLeastOnce(
+        new Set(graphContainerState.operationIdsAddedAtLeastOnce),
+      );
+      loadReactFlow(graphContainerState.reactFlowState);
+    },
+    [coreGraphAdapter, loadFeatureOperations, loadReactFlow, nodeNameBuilder],
+  );
+
   const handleReverseModeChange = useCallback(
     (isReverseMode: boolean) => {
       coreGraphAdapter.setDifferentiationMode(
@@ -509,6 +659,10 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     },
     [coreGraphAdapter],
   );
+
+  const handleReactFlowInit: OnInit = useCallback((reactFlowInstance) => {
+    setReactFlowInstance(reactFlowInstance);
+  }, []);
 
   const handleNodesChange: OnNodesChange = useCallback(
     (changes) => {
@@ -534,7 +688,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
 
       const selectedNodeIds = params.nodes.map((node) => node.id);
 
-      coreGraphAdapter.updateSelectedNodes(selectedNodeIds);
+      coreGraphAdapter.updateSelectedNodeIds(selectedNodeIds);
 
       setReactFlowNodes((nodes) =>
         updateReactFlowNodeHighlighted(
@@ -672,22 +826,6 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     updateNodeDarkMode();
   }, [isDarkMode, updateNodeDarkMode]);
 
-  const findFeatureOperation = (
-    featureNodeType: FeatureNodeType,
-    featureOperations: FeatureOperation[],
-  ): FeatureOperation | null => {
-    if (featureNodeType.nodeType !== "OPERATION") {
-      return null;
-    }
-
-    const operationId = featureNodeType.operationId;
-    const operation = featureOperations.find((op) => op.id === operationId);
-    if (operation === undefined) {
-      throw new Error(`Couldn't find the feature operation ${operationId}`);
-    }
-    return operation;
-  };
-
   return (
     <>
       {/* Toolbar padding */}
@@ -724,16 +862,18 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
               feature={selectedFeature}
               featureOperations={featureOperations}
               operationIdsAddedAtLeastOnce={operationIdsAddedAtLeastOnce}
+              isDarkMode={isDarkMode}
               hasNodes={reactFlowNodes.length > 0}
               hasDerivativeTarget={derivativeTarget !== null}
               explainDerivativeData={explainDerivativeData}
-              isDarkMode={isDarkMode}
               onAddNode={handleAddNode}
               onAddOperation={handleAddOperation}
               onEditOperation={handleEditOperation}
               onDeleteOperation={handleDeleteOperation}
               onClearSelection={handleClearSelection}
               onSelectNode={handleSelectNode}
+              onSave={handleSave}
+              onLoad={handleLoad}
             />
           </Grid>
         )}
@@ -760,6 +900,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
               <ReactFlowGraph
                 nodes={reactFlowNodes}
                 edges={reactFlowEdges}
+                onInit={handleReactFlowInit}
                 onNodesChange={handleNodesChange}
                 onEdgesChange={handleEdgesChange}
                 onSelectionChange={handleSelectionChange}

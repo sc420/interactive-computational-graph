@@ -239,14 +239,29 @@ describe("output behavior", () => {
 
     expect(nodeRelationship.getOutputNodes()).toEqual([]);
   });
+});
 
-  function getDummyOperationNode(id: string): OperationNode {
-    const op = new Operation("", "");
-    return new OperationNode(id, [new Port("in1", false)], op);
-  }
+describe("state behavior", () => {
+  test("should save the relationship", () => {
+    const nodeRelationship = buildTwoPortsNodeRelationship();
+    const opNode1 = getDummyOperationNode("op1");
+    nodeRelationship.addInputNodeByPort("a", opNode1);
+
+    expect(nodeRelationship.save()).toEqual({
+      inputPortIdToNodeIds: {
+        a: ["op1"],
+        b: [],
+      },
+    });
+  });
 });
 
 function buildTwoPortsNodeRelationship(): NodeRelationship {
   const ports = [new Port("a", false), new Port("b", true)];
   return new NodeRelationship(ports);
+}
+
+function getDummyOperationNode(id: string): OperationNode {
+  const op = new Operation("", "");
+  return new OperationNode(id, [new Port("in1", false)], "dummy", op);
 }

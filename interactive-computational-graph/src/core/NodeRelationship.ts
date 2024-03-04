@@ -1,3 +1,4 @@
+import type NodeRelationshipState from "../states/NodeRelationshipState";
 import {
   InputNodeAlreadyConnectedError,
   InputPortFullError,
@@ -134,6 +135,17 @@ class NodeRelationship {
       outputPortData.connectedNodes,
       nodeId,
     );
+  }
+
+  save(): NodeRelationshipState {
+    const inputPortIdToNodeIds: Record<string, string[]> = {};
+    this.inputPortIdToPortData.forEach((portData, inputPortId) => {
+      const nodeIds = portData.connectedNodes.map((node) => node.getId());
+      inputPortIdToNodeIds[inputPortId] = nodeIds;
+    });
+    return {
+      inputPortIdToNodeIds,
+    };
   }
 
   private initInputPortIdToPortData(): void {

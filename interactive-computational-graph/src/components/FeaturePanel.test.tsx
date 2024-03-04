@@ -20,6 +20,8 @@ test("should trigger event when adding a node", () => {
   const handleDeleteOperation = jest.fn();
   const handleClearSelection = jest.fn();
   const handleSelectNode = jest.fn();
+  const handleSave = jest.fn();
+  const handleLoad = jest.fn();
   render(
     <FeaturePanel
       feature="add-nodes"
@@ -35,6 +37,8 @@ test("should trigger event when adding a node", () => {
       onDeleteOperation={handleDeleteOperation}
       onClearSelection={handleClearSelection}
       onSelectNode={handleSelectNode}
+      onSave={handleSave}
+      onLoad={handleLoad}
     />,
   );
 

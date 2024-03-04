@@ -1,3 +1,4 @@
+import type CoreNodeState from "../states/CoreNodeState";
 import type CoreNode from "./CoreNode";
 import NodeRelationship from "./NodeRelationship";
 import type NodeType from "./NodeType";
@@ -11,14 +12,22 @@ class OperationNode implements CoreNode {
 
   private readonly nodeRelationship: NodeRelationship;
 
+  private readonly operationId: string;
+
   private readonly operation: Operation;
 
   private value: string = "0";
 
-  constructor(id: string, inputPorts: Port[], operation: Operation) {
+  constructor(
+    id: string,
+    inputPorts: Port[],
+    operationId: string,
+    operation: Operation,
+  ) {
     this.id = id;
     this.inputPorts = inputPorts;
     this.nodeRelationship = new NodeRelationship(this.inputPorts);
+    this.operationId = operationId;
     this.operation = operation;
   }
 
@@ -89,6 +98,14 @@ class OperationNode implements CoreNode {
       });
     });
     return fInputNodeToValues;
+  }
+
+  save(): CoreNodeState {
+    return {
+      nodeType: "OPERATION",
+      operationId: this.operationId,
+      relationship: this.nodeRelationship.save(),
+    };
   }
 }
 

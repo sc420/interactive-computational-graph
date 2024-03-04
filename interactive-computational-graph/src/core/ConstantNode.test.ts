@@ -36,3 +36,15 @@ test("can get relationship", () => {
   const constNode = new ConstantNode("c1");
   expect(constNode.getRelationship()).toBeInstanceOf(NodeRelationship);
 });
+
+test("can save the state", () => {
+  const constNode = new ConstantNode("c1");
+  constNode.setValue("3");
+  const state = constNode.save();
+  expect(state).toEqual(
+    expect.objectContaining({
+      nodeType: "CONSTANT",
+      value: "3",
+    }),
+  );
+});

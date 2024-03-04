@@ -1,3 +1,5 @@
+import type CoreGraphState from "../states/CoreGraphState";
+import type CoreNodeState from "../states/CoreNodeState";
 import type ChainRuleTerm from "./ChainRuleTerm";
 import {
   CycleError,
@@ -304,6 +306,24 @@ multiple edges`,
         derivativeRegardingCurrent,
       };
     });
+  }
+
+  save(): CoreGraphState {
+    const nodeIdToNodes: Record<string, CoreNodeState> = {};
+    this.nodeIdToNodes.forEach((node, nodeId) => {
+      nodeIdToNodes[nodeId] = node.save();
+    });
+
+    return {
+      nodeIdToNodes,
+      differentiationMode: this.differentiationMode,
+      targetNodeId: this.targetNodeId,
+    };
+  }
+
+  clear(): void {
+    this.nodeIdToNodes.clear();
+    this.nodeIdToDerivatives.clear();
   }
 
   /**

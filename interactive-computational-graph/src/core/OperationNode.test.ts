@@ -57,8 +57,19 @@ test("can get relationship", () => {
   expect(sumNode.getRelationship()).toBeInstanceOf(NodeRelationship);
 });
 
+test("can save the state", () => {
+  const sumNode = buildSumNode();
+  const state = sumNode.save();
+  expect(state).toEqual(
+    expect.objectContaining({
+      nodeType: "OPERATION",
+      operationId: "sum",
+    }),
+  );
+});
+
 function buildSumNode(): OperationNode {
   const ports: Port[] = [new Port("x_i", true)];
   const operation = new Operation(SUM_F_CODE, SUM_DFDX_CODE);
-  return new OperationNode("op1", ports, operation);
+  return new OperationNode("op1", ports, "sum", operation);
 }

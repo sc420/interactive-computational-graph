@@ -28,3 +28,15 @@ test("can get relationship", () => {
   const varNode = new VariableNode("v1");
   expect(varNode.getRelationship()).toBeInstanceOf(NodeRelationship);
 });
+
+test("can save the state", () => {
+  const varNode = new VariableNode("v1");
+  varNode.setValue("3");
+  const state = varNode.save();
+  expect(state).toEqual(
+    expect.objectContaining({
+      nodeType: "VARIABLE",
+      value: "3",
+    }),
+  );
+});

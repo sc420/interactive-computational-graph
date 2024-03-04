@@ -29,6 +29,7 @@ import "./ReactFlowGraph.css";
 interface ReactFlowGraphProps {
   nodes: Node[];
   edges: Edge[];
+  onInit: OnInit;
   onNodesChange: OnNodesChange;
   onEdgesChange: OnEdgesChange;
   onSelectionChange: (params: OnSelectionChangeParams) => void;
@@ -40,6 +41,7 @@ interface ReactFlowGraphProps {
 const ReactFlowGraph: FunctionComponent<ReactFlowGraphProps> = ({
   nodes,
   edges,
+  onInit,
   onNodesChange,
   onEdgesChange,
   onSelectionChange,
@@ -62,9 +64,11 @@ const ReactFlowGraph: FunctionComponent<ReactFlowGraphProps> = ({
 
   const handleInit: OnInit = useCallback(
     (reactFlowInstance: ReactFlowInstance) => {
+      onInit(reactFlowInstance);
+
       setReactFlowInstance(reactFlowInstance);
     },
-    [],
+    [onInit],
   );
 
   const handleDragOver = useCallback((event: DragEvent) => {

@@ -968,6 +968,69 @@ describe("explaining chain rule", () => {
   });
 });
 
+describe("saving graph state", () => {
+  test("should save the empty graph", () => {
+    const graph = new Graph();
+
+    const state = graph.save();
+    expect(state).toEqual({
+      nodeIdToNodes: {},
+      differentiationMode: "REVERSE",
+      targetNodeId: null,
+    });
+  });
+
+  test("should save the small graph", () => {
+    const graph = buildSmallGraph();
+    graph.setDifferentiationMode("FORWARD");
+    graph.setTargetNode("sum1");
+
+    const state = graph.save();
+    expect(state).toEqual({
+      nodeIdToNodes: {
+        v1: {
+          nodeType: "VARIABLE",
+          value: "2",
+          relationship: {
+            inputPortIdToNodeIds: {},
+          },
+        },
+        v2: {
+          nodeType: "VARIABLE",
+          value: "1",
+          relationship: {
+            inputPortIdToNodeIds: {},
+          },
+        },
+        sum1: {
+          nodeType: "OPERATION",
+          operationId: "sum",
+          relationship: {
+            inputPortIdToNodeIds: {
+              x_i: ["v1", "v2"],
+            },
+          },
+        },
+      },
+      differentiationMode: "FORWARD",
+      targetNodeId: "sum1",
+    });
+  });
+});
+
+describe("clearing graph state", () => {
+  test("should clear the small graph", () => {
+    const graph = buildSmallGraph();
+    graph.updateFValues();
+    graph.setDifferentiationMode("REVERSE");
+    graph.setTargetNode("v1");
+    graph.clear();
+
+    expect(graph.getNodes()).toHaveLength(0);
+    expect(parseFloat(graph.getNodeDerivative("v1"))).toBeCloseTo(0);
+  });
+});
+
 function buildSmallGraph(): Graph {
   const graph = new Graph();
 
@@ -1249,31 +1312,31 @@ function buildNeuralNetworkGraph(): Graph {
 function buildSumNode(id: string): CoreNode {
   const ports: Port[] = [new Port("x_i", true)];
   const operation = new Operation(SUM_F_CODE, SUM_DFDX_CODE);
-  return new OperationNode(id, ports, operation);
+  return new OperationNode(id, ports, "sum", operation);
 }
 
 function buildProductNode(id: string): CoreNode {
   const ports: Port[] = [new Port("x_i", true)];
   const operation = new Operation(PRODUCT_F_CODE, PRODUCT_DFDX_CODE);
-  return new OperationNode(id, ports, operation);
+  return new OperationNode(id, ports, "product", operation);
 }
 
 function buildIdentityNode(id: string): CoreNode {
   const ports: Port[] = [new Port("x", false)];
   const operation = new Operation(IDENTITY_F_CODE, IDENTITY_DFDX_CODE);
-  return new OperationNode(id, ports, operation);
+  return new OperationNode(id, ports, "identity", operation);
 }
 
 function buildReluNode(id: string): CoreNode {
   const ports: Port[] = [new Port("x", false)];
   const operation = new Operation(RELU_F_CODE, RELU_DFDX_CODE);
-  return new OperationNode(id, ports, operation);
+  return new OperationNode(id, ports, "relu", operation);
 }
 
 function buildSigmoidNode(id: string): CoreNode {
   const ports: Port[] = [new Port("x", false)];
   const operation = new Operation(SIGMOID_F_CODE, SIGMOID_DFDX_CODE);
-  return new OperationNode(id, ports, operation);
+  return new OperationNode(id, ports, "sigmoid", operation);
 }
 
 function buildSquaredErrorNode(id: string): CoreNode {
@@ -1282,5 +1345,5 @@ function buildSquaredErrorNode(id: string): CoreNode {
     SQUARED_ERROR_F_CODE,
     SQUARED_ERROR_DFDX_CODE,
   );
-  return new OperationNode(id, ports, operation);
+  return new OperationNode(id, ports, "squared_error", operation);
 }

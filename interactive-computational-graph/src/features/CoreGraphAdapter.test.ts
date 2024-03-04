@@ -419,7 +419,7 @@ describe("events", () => {
 
     adapter.onExplainDerivativeDataUpdated(explainDerivativeDataUpdated);
 
-    adapter.updateSelectedNodes(["1"]);
+    adapter.updateSelectedNodeIds(["1"]);
 
     const firstCallArgs = explainDerivativeDataUpdated.mock.calls[0];
     const data = firstCallArgs[0];
@@ -435,7 +435,7 @@ describe("events", () => {
 
     adapter.onExplainDerivativeDataUpdated(explainDerivativeDataUpdated);
 
-    adapter.updateSelectedNodes(["1"]);
+    adapter.updateSelectedNodeIds(["1"]);
 
     const expectedData: ExplainDerivativeData[] = [];
     expect(explainDerivativeDataUpdated).toHaveBeenCalledWith(expectedData);
@@ -451,7 +451,7 @@ describe("behavior", () => {
     addConnection(adapter, "1", "2", "a");
 
     adapter.setTargetNode("1");
-    adapter.updateSelectedNodes(["1"]);
+    adapter.updateSelectedNodeIds(["1"]);
 
     const edges = buildReactFlowEdges([["1", "2", "a"]]);
     // Should remove edge first

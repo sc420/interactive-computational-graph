@@ -688,7 +688,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
 
       const selectedNodeIds = params.nodes.map((node) => node.id);
 
-      coreGraphAdapter.updateSelectedNodes(selectedNodeIds);
+      coreGraphAdapter.updateSelectedNodeIds(selectedNodeIds);
 
       setReactFlowNodes((nodes) =>
         updateReactFlowNodeHighlighted(

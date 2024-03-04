@@ -290,7 +290,7 @@ cycle`;
 
     if (hasRemovedNodes) {
       this.updateTargetNode();
-      this.updateSelectedNodeIds();
+      this.selectedNodeIds = this.getExistingSelectedNodeIdsByGraph();
 
       this.updateOutputs();
     }
@@ -332,12 +332,6 @@ cycle`;
     this.graph.setTargetNode(null);
 
     this.emitTargetNodeUpdated();
-  }
-
-  private updateSelectedNodeIds(): void {
-    this.selectedNodeIds = this.selectedNodeIds.filter((selectedNodeId) =>
-      this.graph.hasNode(selectedNodeId),
-    );
   }
 
   changeEdges(changes: EdgeChange[], edges: Edge[]): void {
@@ -447,7 +441,7 @@ cycle`;
     );
   }
 
-  updateSelectedNodes(selectedNodeIds: string[]): void {
+  updateSelectedNodeIds(selectedNodeIds: string[]): void {
     this.selectedNodeIds = selectedNodeIds;
 
     this.updateExplainDerivativeData();
@@ -459,7 +453,8 @@ cycle`;
     if (targetNodeId === null) {
       explainDerivativeData = [];
     } else {
-      explainDerivativeData = this.selectedNodeIds.map(
+      const existingSelectedNodeIds = this.getExistingSelectedNodeIdsByGraph();
+      explainDerivativeData = existingSelectedNodeIds.map(
         (nodeId): ExplainDerivativeData => {
           const nodeName = this.getNodeNameById(nodeId);
           const explainDerivativeType = this.getExplainDerivativeType(nodeId);
@@ -509,6 +504,12 @@ cycle`;
     }
 
     return "someValueBecauseChainRule";
+  }
+
+  private getExistingSelectedNodeIdsByGraph(): string[] {
+    return this.selectedNodeIds.filter((selectedNodeId) =>
+      this.graph.hasNode(selectedNodeId),
+    );
   }
 
   getVisibleNodeNames(): string[] {
@@ -569,6 +570,7 @@ cycle`;
     this.dummyInputNodeIdToNodeIds = new Map(
       Object.entries(state.dummyInputNodeIdToNodeIds),
     );
+    this.selectedNodeIds = [];
   }
 
   private connectDummyInputNode(nodeId: string, portId: string): void {
@@ -726,7 +728,6 @@ cycle`;
 
     this.graph.updateFValues();
     this.graph.updateDerivatives();
-    this.updateExplainDerivativeData();
   }
 
   private loadGraphNodes(

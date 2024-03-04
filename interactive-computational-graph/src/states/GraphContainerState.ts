@@ -1,3 +1,4 @@
+import { type ReactFlowJsonObject } from "reactflow";
 import type CoreGraphAdapterState from "./CoreGraphAdapterState";
 import type FeatureOperationState from "./FeatureOperationState";
 import type NodeNameBuilderState from "./NodeNameBuilderState";
@@ -18,7 +19,7 @@ interface GraphContainerState {
   operationIdsAddedAtLeastOnce: string[];
 
   // React Flow states
-  reactFlowState: object;
+  reactFlowState: ReactFlowJsonObject;
 }
 
 export default GraphContainerState;

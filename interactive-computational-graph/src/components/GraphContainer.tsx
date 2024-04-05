@@ -830,7 +830,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
   return (
     <>
       {/* Welcome dialog */}
-      <WelcomeDialog onLoad={handleLoad} />
+      {!isTest && <WelcomeDialog onLoad={handleLoad} />}
 
       {/* Toolbar padding */}
       <Toolbar />
@@ -851,7 +851,6 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
           onDerivativeTargetChange={handleDerivativeTargetChange}
         />
       </Title>
-
       {/* Graph content */}
       <Grid
         container
@@ -916,7 +915,6 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
           </Grid>
         </Grid>
       </Grid>
-
       {/* Error message */}
       <Snackbar
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}

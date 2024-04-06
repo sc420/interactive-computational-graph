@@ -3,9 +3,9 @@ class Operation {
 
   static readonly dfdxFnName = "dfdx";
 
-  private readonly fCode: string;
+  private fCode: string;
 
-  private readonly dfdxCode: string;
+  private dfdxCode: string;
 
   constructor(fCode: string, dfdxCode: string) {
     this.fCode = fCode;
@@ -18,6 +18,14 @@ class Operation {
 
   getDfdxCode(): string {
     return this.dfdxCode;
+  }
+
+  setFCode(fCode: string): void {
+    this.fCode = fCode;
+  }
+
+  setDfdxCode(dfdxCode: string): void {
+    this.dfdxCode = dfdxCode;
   }
 
   evalF(

@@ -15,12 +15,13 @@ import {
 } from "react";
 
 interface EditOperationDialogMenuProps {
+  deletable: boolean;
   onDelete: () => void;
 }
 
 const EditOperationDialogMenu: FunctionComponent<
   EditOperationDialogMenuProps
-> = ({ onDelete }) => {
+> = ({ deletable, onDelete }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const open = Boolean(anchorEl);
@@ -59,6 +60,8 @@ const EditOperationDialogMenu: FunctionComponent<
         }}
       >
         <MenuItem
+          data-testid="delete-operation"
+          disabled={!deletable}
           onClick={() => {
             onDelete();
           }}

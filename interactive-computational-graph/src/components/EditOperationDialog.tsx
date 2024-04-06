@@ -159,7 +159,10 @@ const EditOperationDialog: FunctionComponent<EditOperationDialogProps> = ({
           </Typography>
 
           {/* Menu */}
-          <EditOperationDialogMenu onDelete={handleDelete} />
+          <EditOperationDialogMenu
+            deletable={!operationIdsAddedAtLeastOnce.has(editingOperation.id)}
+            onDelete={handleDelete}
+          />
 
           {/* Save */}
           <Button
@@ -235,13 +238,6 @@ const EditOperationDialog: FunctionComponent<EditOperationDialogProps> = ({
         </EditOperationTabPanel>
 
         <Stack p={3} spacing={3}>
-          {operationIdsAddedAtLeastOnce.has(editingOperation.id) && (
-            <Alert variant="outlined" severity="warning">
-              This operation has already been added to the graph once. Editing
-              it may cause inconsistent results.
-            </Alert>
-          )}
-
           <Alert variant="outlined" severity="info">
             Changes will be lost after reloading the page.
           </Alert>

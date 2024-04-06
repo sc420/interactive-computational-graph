@@ -2,7 +2,17 @@
 
 A small educational React website to understand how computational graph and derivatives work. I created this tool because I couldn't fully understand how back-propagation works in neural networks.
 
-![screenshot](./interactive-computational-graph/public/get_started.gif "Get Started")
+Classic derivative problem $\frac{\sin{x}}{x}$:
+
+![screenshot 1](./screenshots/screenshot1.png "Screenshot 1")
+
+2-1 fully connected neural network:
+
+![screenshot 2](./screenshots/screenshot2.png "Screenshot 2")
+
+## Demo
+
+[Interactive Computational Graph](https://sc420.github.io/interactive-computational-graph/)
 
 ## Development
 

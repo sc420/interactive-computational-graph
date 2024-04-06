@@ -39,7 +39,9 @@ type ShowInputFieldsCallback = (emptyPortEdges: Edge[]) => void;
 
 type HideInputFieldCallback = (nonEmptyPortConnection: Connection) => void;
 
-type FValuesUpdatedCallback = (nodeIdToFValues: Map<string, string>) => void;
+type FValuesUpdatedCallback = (
+  nodeIdToFValues: ReadonlyMap<string, string>,
+) => void;
 
 type DerivativeValuesUpdatedCallback = (
   differentiationMode: DifferentiationMode,
@@ -687,15 +689,17 @@ cycle`;
     });
   }
 
-  private emitFValuesUpdated(nodeIdToFValues: Map<string, string>): void {
+  private emitFValuesUpdated(
+    nodeIdToFValues: ReadonlyMap<string, string>,
+  ): void {
     this.fValuesUpdatedCallbacks.forEach((callback) => {
       callback(nodeIdToFValues);
     });
   }
 
   private emitDerivativeValuesUpdated(
-    nodeIdToDerivatives: Map<string, string>,
-    nodeIdToNames: Map<string, string>,
+    nodeIdToDerivatives: ReadonlyMap<string, string>,
+    nodeIdToNames: ReadonlyMap<string, string>,
   ): void {
     const targetNode = this.graph.getTargetNode();
     this.derivativesUpdatedCallbacks.forEach((callback) => {

@@ -14,7 +14,7 @@ import TutorialPanel from "./TutorialPanel";
 interface FeaturePanelProps {
   feature: SelectedFeature;
   featureOperations: FeatureOperation[];
-  operationIdsAddedAtLeastOnce: Set<string>;
+  operationIdsAddedAtLeastOnce: ReadonlySet<string>;
   isDarkMode: boolean;
   hasNodes: boolean;
   hasDerivativeTarget: boolean;

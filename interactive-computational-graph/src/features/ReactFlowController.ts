@@ -196,7 +196,7 @@ const updateEdgeAnimations = (
 };
 
 const updateReactFlowNodeFValues = (
-  updatedNodeIdToValues: Map<string, string>,
+  updatedNodeIdToValues: ReadonlyMap<string, string>,
   nodes: Node[],
 ): Node[] => {
   return nodes.map((node) => {

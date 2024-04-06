@@ -167,7 +167,7 @@ class NodeRelationship {
   }
 
   private getPortDataByPort(
-    portIdToPortData: Map<string, PortData>,
+    portIdToPortData: ReadonlyMap<string, PortData>,
     portId: string,
   ): PortData {
     const portData = portIdToPortData.get(portId);

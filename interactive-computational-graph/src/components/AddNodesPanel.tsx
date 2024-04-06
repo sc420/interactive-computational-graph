@@ -18,7 +18,7 @@ import EditOperationDialog from "./EditOperationDialog";
 
 interface AddNodesPanelProps {
   featureOperations: FeatureOperation[];
-  operationIdsAddedAtLeastOnce: Set<string>;
+  operationIdsAddedAtLeastOnce: ReadonlySet<string>;
   isDarkMode: boolean;
   onAddNode: (featureNodeType: FeatureNodeType) => void;
   onAddOperation: () => void;

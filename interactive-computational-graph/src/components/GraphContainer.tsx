@@ -801,7 +801,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
   );
 
   const handleFValuesUpdated = useCallback(
-    (nodeIdToFValues: Map<string, string>) => {
+    (nodeIdToFValues: ReadonlyMap<string, string>) => {
       setReactFlowNodes((nodes) =>
         updateReactFlowNodeFValues(nodeIdToFValues, nodes),
       );

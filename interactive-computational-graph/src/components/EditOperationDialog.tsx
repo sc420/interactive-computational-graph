@@ -32,7 +32,7 @@ import EditOperationTabPanel from "./EditOperationTabPanel";
 interface EditOperationDialogProps {
   open: boolean;
   readOperation: FeatureOperation;
-  operationIdsAddedAtLeastOnce: Set<string>;
+  operationIdsAddedAtLeastOnce: ReadonlySet<string>;
   isDarkMode: boolean;
   onCancel: () => void;
   onSave: (updatedOperation: FeatureOperation) => void;

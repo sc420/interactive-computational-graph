@@ -1,5 +1,6 @@
 import AddIcon from "@mui/icons-material/Add";
 import EmojiObjectsIcon from "@mui/icons-material/EmojiObjects";
+import HelpIcon from "@mui/icons-material/Help";
 import ImportExportIcon from "@mui/icons-material/ImportExport";
 import ListIcon from "@mui/icons-material/List";
 import SchoolIcon from "@mui/icons-material/School";
@@ -61,6 +62,11 @@ const FeatureNavigator: FunctionComponent<FeatureNavigatorProps> = ({
       id: "save-load",
       text: "Save/Load",
       icon: <ImportExportIcon />,
+    },
+    {
+      id: "tutorial",
+      text: "Tutorial",
+      icon: <HelpIcon />,
     },
   ];
 

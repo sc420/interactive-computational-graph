@@ -48,30 +48,34 @@ const CustomNode: FunctionComponent<CustomNodeProps> = ({
     return data.isDarkMode ? grey[800] : theme.palette.background.default;
   }, [data.isDarkMode, theme.palette.background.default]);
 
+  const getBorder = useCallback((): number => {
+    return selected ? 2 : 1;
+  }, [selected]);
+
   const getBorderColor = useCallback((): string => {
     const colorTheme = getColorTheme();
     if (data.isDarkMode) {
-      return selected ? colorTheme[200] : colorTheme[800];
+      return selected ? colorTheme[100] : colorTheme[800];
     } else {
-      return selected ? colorTheme[800] : colorTheme[200];
+      return selected ? colorTheme[900] : colorTheme[200];
     }
   }, [data.isDarkMode, getColorTheme, selected]);
 
   const getTitleColor = useCallback((): string => {
     const colorTheme = getColorTheme();
     if (data.isDarkMode) {
-      return selected ? colorTheme[700] : colorTheme[800];
+      return selected ? colorTheme[400] : colorTheme[800];
     } else {
-      return selected ? colorTheme[300] : colorTheme[200];
+      return selected ? colorTheme[400] : colorTheme[200];
     }
   }, [data.isDarkMode, getColorTheme, selected]);
 
   const getHandleHoverColor = useCallback((): string => {
     const colorTheme = getColorTheme();
     if (data.isDarkMode) {
-      return selected ? colorTheme[500] : colorTheme[600];
+      return selected ? colorTheme[300] : colorTheme[600];
     } else {
-      return selected ? colorTheme[200] : colorTheme[100];
+      return selected ? colorTheme[300] : colorTheme[100];
     }
   }, [data.isDarkMode, getColorTheme, selected]);
 
@@ -96,6 +100,7 @@ const CustomNode: FunctionComponent<CustomNodeProps> = ({
   // Get colors
   const darkenCoefficient = getDarkenCoefficient();
   const backgroundColor = getBackgroundColor();
+  const border = getBorder();
   const borderColor = darken(getBorderColor(), darkenCoefficient);
   const titleColor = darken(getTitleColor(), darkenCoefficient);
   const handleColor = titleColor;
@@ -107,7 +112,7 @@ const CustomNode: FunctionComponent<CustomNodeProps> = ({
       {/* Node frame */}
       <Box
         bgcolor={backgroundColor}
-        border={1}
+        border={border}
         borderColor={borderColor}
         borderRadius={1}
       >

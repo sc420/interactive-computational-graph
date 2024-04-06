@@ -77,7 +77,7 @@ const InputItems: FunctionComponent<InputItemProps> = ({
                     position: "absolute", // needs position="relative" on parent
                     background: handleColor,
                     borderColor: handleBorderColor,
-                    borderRadius: "10px 0px 0px 10px",
+                    borderRadius: "15px 0px 0px 15px",
                     top: 20, // manual offset
                     left: getInputHandleLeft(),
                     width: handleSize,

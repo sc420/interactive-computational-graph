@@ -29,7 +29,7 @@ const OutputHandle: FunctionComponent<OutputHandleProps> = ({
         style={{
           background: handleColor,
           borderColor: handleBorderColor,
-          borderRadius: "0px 10px 10px 0px",
+          borderRadius: "0px 15px 15px 0px",
           top: "50%", // centers the handle
           // adds 1 to hide the tiny gap between the node body and the handle
           right: -handleSize + 1,

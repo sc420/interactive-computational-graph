@@ -277,14 +277,12 @@ const updateReactFlowNodeDarkMode = (
 };
 
 const updateReactFlowNodeHighlighted = (
-  selectedFeature: SelectedFeature | null,
   derivativeTarget: string | null,
   nodes: Node[],
 ): Node[] => {
   return nodes.map((node) => {
     const data = node.data as NodeData;
-    data.isHighlighted =
-      selectedFeature === "explain-derivatives" && node.id === derivativeTarget;
+    data.isHighlighted = node.id === derivativeTarget;
     // Set the new data to notify React Flow about the change
     const newData: NodeData = { ...node.data };
     node.data = newData;

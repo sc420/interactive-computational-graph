@@ -3,7 +3,7 @@ import EditOperationDialogMenu from "./EditOperationDialogMenu";
 
 test("should trigger event when clicking delete menu item", () => {
   const handleDelete = jest.fn();
-  render(<EditOperationDialogMenu onDelete={handleDelete} />);
+  render(<EditOperationDialogMenu deletable onDelete={handleDelete} />);
 
   const menuButton = screen.getByLabelText("more");
   fireEvent.click(menuButton);

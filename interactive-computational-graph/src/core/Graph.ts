@@ -36,11 +36,11 @@ class Graph {
   }
 
   getNodeType(nodeId: string): NodeType {
-    const node = this.getOneNode(nodeId);
+    const node = this.getNodeById(nodeId);
     return node.getType();
   }
 
-  getOneNode(nodeId: string): CoreNode {
+  getNodeById(nodeId: string): CoreNode {
     const node = this.nodeIdToNodes.get(nodeId);
     if (node === undefined) {
       throw new Error(`Node ${nodeId} doesn't exist`);
@@ -61,7 +61,7 @@ class Graph {
   }
 
   removeNode(nodeId: string): void {
-    const node = this.getOneNode(nodeId);
+    const node = this.getNodeById(nodeId);
     this.removeNodeConnections(node);
 
     const success = this.nodeIdToNodes.delete(nodeId);
@@ -71,7 +71,7 @@ class Graph {
   }
 
   validateConnect(node1Id: string, node2Id: string, node2PortId: string): void {
-    const node2 = this.getOneNode(node2Id);
+    const node2 = this.getNodeById(node2Id);
 
     try {
       node2.getRelationship().validateAddInputNodeByPort(node2PortId, node1Id);
@@ -106,8 +106,8 @@ multiple edges`,
   }
 
   connect(node1Id: string, node2Id: string, node2PortId: string): void {
-    const node1 = this.getOneNode(node1Id);
-    const node2 = this.getOneNode(node2Id);
+    const node1 = this.getNodeById(node1Id);
+    const node2 = this.getNodeById(node2Id);
 
     this.validateConnect(node1Id, node2Id, node2PortId);
 
@@ -118,8 +118,8 @@ multiple edges`,
   }
 
   disconnect(node1Id: string, node2Id: string, node2PortId: string): void {
-    const node1 = this.getOneNode(node1Id);
-    const node2 = this.getOneNode(node2Id);
+    const node1 = this.getNodeById(node1Id);
+    const node2 = this.getNodeById(node2Id);
     node1.getRelationship().removeOutputNode(node2Id);
     node2.getRelationship().removeInputNodeByPort(node2PortId, node1Id);
   }
@@ -134,7 +134,7 @@ multiple edges`,
   }
 
   getNodeValue(nodeId: string): string {
-    const node = this.getOneNode(nodeId);
+    const node = this.getNodeById(nodeId);
     return node.getValue();
   }
 
@@ -151,7 +151,7 @@ multiple edges`,
   }
 
   setNodeValue(nodeId: string, value: string): void {
-    const node = this.getOneNode(nodeId);
+    const node = this.getNodeById(nodeId);
     node.setValue(value);
   }
 
@@ -161,7 +161,7 @@ multiple edges`,
 
   setTargetNode(nodeId: string | null): void {
     if (nodeId !== null) {
-      this.getOneNode(nodeId); // checks if the node exists
+      this.getNodeById(nodeId); // checks if the node exists
     }
 
     this.nodeIdToDerivatives.clear();
@@ -201,7 +201,7 @@ multiple edges`,
     // Step 3
     const updatedNodeIds: string[] = [];
     topologicalOrderedNodeIds.forEach((nodeId) => {
-      const node = this.getOneNode(nodeId);
+      const node = this.getNodeById(nodeId);
       node.updateF();
       updatedNodeIds.push(nodeId);
     });
@@ -256,7 +256,7 @@ multiple edges`,
     const updatedNodeIds: string[] = [];
     for (let i = topologicalOrderedNodeIds.length - 1; i >= 0; i--) {
       const nodeId = topologicalOrderedNodeIds[i];
-      const node = this.getOneNode(nodeId);
+      const node = this.getNodeById(nodeId);
       const derivative = this.calculateNodeDerivative(node);
       this.nodeIdToDerivatives.set(node.getId(), derivative);
       updatedNodeIds.push(nodeId);
@@ -289,13 +289,13 @@ multiple edges`,
    * d(neighbor)/d(current) * d(target)/d(neighbor) for reverse mode.
    */
   explainChainRule(currentNodeId: string): ChainRuleTerm[] {
-    const currentNode = this.getOneNode(currentNodeId);
+    const currentNode = this.getNodeById(currentNodeId);
     const direction: NeighborDirection =
       this.differentiationMode === "FORWARD" ? "TO_INPUT" : "TO_OUTPUT";
     const neighborNodeIds = this.getNeighborNodeIds(currentNode, direction);
     return neighborNodeIds.map((neighborNodeId) => {
       const derivativeRegardingTarget = this.getNodeDerivative(neighborNodeId);
-      const neighborNode = this.getOneNode(neighborNodeId);
+      const neighborNode = this.getNodeById(neighborNodeId);
       const derivativeRegardingCurrent =
         this.differentiationMode === "FORWARD"
           ? currentNode.calculateDfdx(neighborNode)
@@ -350,7 +350,7 @@ multiple edges`,
       if (nodeId === undefined) {
         throw new Error(`The stack shouldn't be empty`);
       }
-      const node = this.getOneNode(nodeId);
+      const node = this.getNodeById(nodeId);
       const outputNodes = node.getRelationship().getOutputNodes();
       for (let i = 0; i < outputNodes.length; i++) {
         const outputNode = outputNodes[i];
@@ -455,7 +455,8 @@ multiple edges`,
           const derivative2 = node.calculateDfdx(inputNode);
           // d(node)/d(targetNode) = d(inputNode)/d(targetNode) *
           // d(node)/d(inputNode) (chain rule)
-          // TODO(sc420): Allow customization of product
+
+          // NOTE: You can customize the operation if the data are not numeric
           totalDerivative += parseFloat(derivative1) * parseFloat(derivative2);
         });
     } else {
@@ -470,7 +471,8 @@ multiple edges`,
           const derivative2 = this.getNodeDerivative(outputNode.getId());
           // d(targetNode)/d(node) = d(outputNode)/d(node) *
           // d(targetNode)/d(outputNode)
-          // TODO(sc420): Allow customization of product
+
+          // NOTE: You can customize the operation if the data are not numeric
           totalDerivative += parseFloat(derivative1) * parseFloat(derivative2);
         });
     }
@@ -581,7 +583,7 @@ multiple edges`,
           });
 
           // Call visit() for each dependent node (4)
-          const node = this.getOneNode(callStackElem.nodeId);
+          const node = this.getNodeById(callStackElem.nodeId);
           const dependentNodeIds = this.getNeighborNodeIds(node, direction);
           dependentNodeIds.forEach((dependentNodeId) => {
             callStack.push({

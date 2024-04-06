@@ -4,7 +4,7 @@ import type PortState from "./PortState";
 
 interface FeatureOperation {
   id: string;
-  text: string;
+  name: string;
   type: OperationType;
   namePrefix: string;
   operation: CoreOperationState;

@@ -7,7 +7,7 @@ import VariableNode from "./VariableNode";
 
 test("should have correct properties", () => {
   const sumNode = buildSumNode();
-  expect(sumNode.getType()).toBe("OPERATION");
+  expect(sumNode.getType()).toBe("operation");
   expect(sumNode.getId()).toBe("op1");
   expect(sumNode.isConstant()).toBe(false);
   expect(sumNode.getValue()).toBe("0");
@@ -62,7 +62,7 @@ test("can save the state", () => {
   const state = sumNode.save();
   expect(state).toEqual(
     expect.objectContaining({
-      nodeType: "OPERATION",
+      nodeType: "operation",
       operationId: "sum",
     }),
   );

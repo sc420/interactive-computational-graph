@@ -17,7 +17,7 @@ class VariableNode implements CoreNode {
   }
 
   getType(): NodeType {
-    return "VARIABLE";
+    return "variable";
   }
 
   getId(): string {
@@ -54,7 +54,7 @@ class VariableNode implements CoreNode {
 
   save(): CoreNodeState {
     return {
-      nodeType: "VARIABLE",
+      nodeType: "variable",
       value: this.value,
       relationship: this.nodeRelationship.save(),
     };

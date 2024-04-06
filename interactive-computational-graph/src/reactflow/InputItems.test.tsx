@@ -13,10 +13,10 @@ test("should trigger event when changing the input value", () => {
   const data: NodeData = {
     name: "a_1",
     operationData: {
-      text: "Add",
+      name: "Add",
       helpText: "Add two numbers $ a + b $",
     },
-    featureNodeType: { nodeType: "OPERATION", operationId: "op1" },
+    featureNodeType: { nodeType: "operation", operationId: "op1" },
     inputItems: [
       {
         id: "a",
@@ -28,7 +28,7 @@ test("should trigger event when changing the input value", () => {
     ],
     outputItems: [
       {
-        type: "VALUE",
+        type: "value",
         labelParts: [{ type: "text", id: "equal", text: "=" }],
         value: "0",
       },

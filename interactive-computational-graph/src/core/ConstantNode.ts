@@ -17,7 +17,7 @@ class ConstantNode implements CoreNode {
   }
 
   getType(): NodeType {
-    return "CONSTANT";
+    return "constant";
   }
 
   getId(): string {
@@ -48,7 +48,7 @@ class ConstantNode implements CoreNode {
 
   save(): CoreNodeState {
     return {
-      nodeType: "CONSTANT",
+      nodeType: "constant",
       value: this.value,
       relationship: this.nodeRelationship.save(),
     };

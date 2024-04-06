@@ -3,7 +3,7 @@ import type FeatureNodeType from "../features/FeatureNodeType";
 import DraggableItem from "./DraggableItem";
 
 test("should trigger event when clicking item", () => {
-  const featureNodeType: FeatureNodeType = { nodeType: "CONSTANT" };
+  const featureNodeType: FeatureNodeType = { nodeType: "constant" };
   const handleClickItem = jest.fn();
   const handleClickEditIcon = jest.fn();
   render(
@@ -23,7 +23,7 @@ test("should trigger event when clicking item", () => {
 });
 
 test("should trigger event when clicking the edit icon", () => {
-  const featureNodeType: FeatureNodeType = { nodeType: "CONSTANT" };
+  const featureNodeType: FeatureNodeType = { nodeType: "constant" };
   const handleClickItem = jest.fn();
   const handleClickEditIcon = jest.fn();
   render(

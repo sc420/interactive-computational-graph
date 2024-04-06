@@ -134,7 +134,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
   >([
     {
       id: "add",
-      text: "Add",
+      name: "Add",
       type: "basic",
       namePrefix: "a",
       operation: new Operation(ADD_F_CODE, ADD_DFDX_CODE),
@@ -143,7 +143,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     },
     {
       id: "subtract",
-      text: "Subtract",
+      name: "Subtract",
       type: "basic",
       namePrefix: "s",
       operation: new Operation(SUBTRACT_F_CODE, SUBTRACT_DFDX_CODE),
@@ -152,7 +152,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     },
     {
       id: "multiply",
-      text: "Multiply",
+      name: "Multiply",
       type: "basic",
       namePrefix: "m",
       operation: new Operation(MULTIPLY_F_CODE, MULTIPLY_DFDX_CODE),
@@ -161,7 +161,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     },
     {
       id: "divide",
-      text: "Divide",
+      name: "Divide",
       type: "basic",
       namePrefix: "d",
       operation: new Operation(DIVIDE_F_CODE, DIVIDE_DFDX_CODE),
@@ -170,7 +170,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     },
     {
       id: "power",
-      text: "Power",
+      name: "Power",
       type: "basic",
       namePrefix: "p",
       operation: new Operation(POWER_F_CODE, POWER_DFDX_CODE),
@@ -179,7 +179,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     },
     {
       id: "exp",
-      text: "Exp",
+      name: "Exp",
       type: "basic",
       namePrefix: "e",
       operation: new Operation(EXP_F_CODE, EXP_DFDX_CODE),
@@ -188,7 +188,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     },
     {
       id: "ln",
-      text: "Ln",
+      name: "Ln",
       type: "basic",
       namePrefix: "l",
       operation: new Operation(LN_F_CODE, LN_DFDX_CODE),
@@ -197,7 +197,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     },
     {
       id: "sum",
-      text: "Sum",
+      name: "Sum",
       type: "aggregate",
       namePrefix: "s",
       operation: new Operation(SUM_F_CODE, SUM_DFDX_CODE),
@@ -206,7 +206,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     },
     {
       id: "product",
-      text: "Product",
+      name: "Product",
       type: "aggregate",
       namePrefix: "p",
       operation: new Operation(PRODUCT_F_CODE, PRODUCT_DFDX_CODE),
@@ -215,7 +215,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     },
     {
       id: "sin",
-      text: "Sin",
+      name: "Sin",
       type: "trigonometric",
       namePrefix: "s",
       operation: new Operation(SIN_F_CODE, SIN_DFDX_CODE),
@@ -224,7 +224,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     },
     {
       id: "cos",
-      text: "Cos",
+      name: "Cos",
       type: "trigonometric",
       namePrefix: "c",
       operation: new Operation(COS_F_CODE, COS_DFDX_CODE),
@@ -233,7 +233,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     },
     {
       id: "tan",
-      text: "Tan",
+      name: "Tan",
       type: "trigonometric",
       namePrefix: "t",
       operation: new Operation(TAN_F_CODE, TAN_DFDX_CODE),
@@ -242,7 +242,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     },
     {
       id: "linear",
-      text: "Linear",
+      name: "Linear",
       type: "activation",
       namePrefix: "l",
       operation: new Operation(IDENTITY_F_CODE, IDENTITY_DFDX_CODE),
@@ -251,7 +251,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     },
     {
       id: "sigmoid",
-      text: "Sigmoid",
+      name: "Sigmoid",
       type: "activation",
       namePrefix: "s",
       operation: new Operation(SIGMOID_F_CODE, SIGMOID_DFDX_CODE),
@@ -260,7 +260,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     },
     {
       id: "tanh",
-      text: "Tanh",
+      name: "Tanh",
       type: "activation",
       namePrefix: "s",
       operation: new Operation(TANH_F_CODE, TANH_DFDX_CODE),
@@ -270,7 +270,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     },
     {
       id: "relu",
-      text: "ReLU",
+      name: "ReLU",
       type: "activation",
       namePrefix: "r",
       operation: new Operation(RELU_F_CODE, RELU_DFDX_CODE),
@@ -279,7 +279,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     },
     {
       id: "squared_error",
-      text: "Squared Error",
+      name: "Squared Error",
       type: "loss",
       namePrefix: "s",
       operation: new Operation(SQUARED_ERROR_F_CODE, SQUARED_ERROR_DFDX_CODE),
@@ -289,7 +289,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
     },
     {
       id: "binary_cross_entropy",
-      text: "Binary Cross-Entropy",
+      name: "Binary Cross-Entropy",
       type: "loss",
       namePrefix: "b",
       operation: new Operation(
@@ -449,7 +449,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
 
     const newFeatureOperation: FeatureOperation = {
       id,
-      text: `Operation ${nextOperationId + 1}`,
+      name: `Operation ${nextOperationId + 1}`,
       type: "custom",
       namePrefix: "f",
       operation: new Operation(TEMPLATE_F_CODE, TEMPLATE_DFDX_CODE),
@@ -529,7 +529,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       );
       return {
         id: featureOperation.id,
-        text: featureOperation.text,
+        name: featureOperation.name,
         type: featureOperation.type,
         namePrefix: featureOperation.namePrefix,
         operation: operationState,
@@ -574,7 +574,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       return featureOperationStates.map((featureOperationState) => {
         return {
           id: featureOperationState.id,
-          text: featureOperationState.text,
+          name: featureOperationState.name,
           type: featureOperationState.type,
           namePrefix: featureOperationState.namePrefix,
           operation: new Operation(
@@ -801,7 +801,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
   );
 
   const handleFValuesUpdated = useCallback(
-    (nodeIdToFValues: Map<string, string>) => {
+    (nodeIdToFValues: ReadonlyMap<string, string>) => {
       setReactFlowNodes((nodes) =>
         updateReactFlowNodeFValues(nodeIdToFValues, nodes),
       );

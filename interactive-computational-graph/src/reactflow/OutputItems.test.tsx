@@ -13,10 +13,10 @@ test("should render the output input box as readonly", () => {
   const data: NodeData = {
     name: "a_1",
     operationData: {
-      text: "Add",
+      name: "Add",
       helpText: "Add two numbers $ a + b $",
     },
-    featureNodeType: { nodeType: "OPERATION", operationId: "op1" },
+    featureNodeType: { nodeType: "operation", operationId: "op1" },
     inputItems: [
       {
         id: "a",
@@ -28,7 +28,7 @@ test("should render the output input box as readonly", () => {
     ],
     outputItems: [
       {
-        type: "VALUE",
+        type: "value",
         labelParts: [{ type: "text", id: "equal", text: "=" }],
         value: "0",
       },
@@ -42,7 +42,7 @@ test("should render the output input box as readonly", () => {
   };
   render(<OutputItems id="0" data={data} itemHeight={10} inputWidth={10} />);
 
-  const inputField = screen.getByTestId("output-item-0-VALUE");
+  const inputField = screen.getByTestId("output-item-0-value");
   const input = within(inputField).getByRole("textbox");
   expect(input).toHaveAttribute("readonly");
 });

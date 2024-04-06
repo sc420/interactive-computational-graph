@@ -604,7 +604,7 @@ describe("behavior", () => {
 
 const featureOperation: FeatureOperation = {
   id: "add",
-  text: "Add",
+  name: "Add",
   type: "basic",
   namePrefix: "a",
   operation: new Operation(ADD_F_CODE, ADD_DFDX_CODE),
@@ -617,7 +617,7 @@ const addConstantNode = (
   nodeId: string,
   nodeName: string,
 ): void => {
-  const featureType: FeatureNodeType = { nodeType: "CONSTANT" };
+  const featureType: FeatureNodeType = { nodeType: "constant" };
   adapter.addNode(featureType, featureOperation, nodeId, nodeName);
 };
 
@@ -627,7 +627,7 @@ const addAddNode = (
   nodeName: string,
 ): void => {
   const featureType: FeatureNodeType = {
-    nodeType: "OPERATION",
+    nodeType: "operation",
     operationId: "add",
   };
   adapter.addNode(featureType, featureOperation, nodeId, nodeName);

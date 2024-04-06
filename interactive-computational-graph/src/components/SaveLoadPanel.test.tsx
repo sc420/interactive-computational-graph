@@ -29,21 +29,21 @@ test("should trigger the event when clicking the load button", async () => {
         "coreGraphState": {
             "nodeIdToNodes": {
                 "0": {
-                    "nodeType": "CONSTANT",
+                    "nodeType": "constant",
                     "value": "1",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
                     }
                 },
                 "1": {
-                    "nodeType": "VARIABLE",
+                    "nodeType": "variable",
                     "value": "2",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
                     }
                 },
                 "2": {
-                    "nodeType": "OPERATION",
+                    "nodeType": "operation",
                     "operationId": "add",
                     "relationship": {
                         "inputPortIdToNodeIds": {
@@ -57,14 +57,14 @@ test("should trigger the event when clicking the load button", async () => {
                     }
                 },
                 "dummy-input-node-2-a": {
-                    "nodeType": "CONSTANT",
+                    "nodeType": "constant",
                     "value": "0",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
                     }
                 },
                 "dummy-input-node-2-b": {
-                    "nodeType": "CONSTANT",
+                    "nodeType": "constant",
                     "value": "0",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
@@ -91,7 +91,7 @@ test("should trigger the event when clicking the load button", async () => {
     "featureOperations": [
         {
             "id": "add",
-            "text": "Add",
+            "name": "Add",
             "type": "basic",
             "namePrefix": "a",
             "operation": {
@@ -134,7 +134,7 @@ test("should trigger the event when clicking the load button", async () => {
                     "name": "c_1",
                     "operationData": null,
                     "featureNodeType": {
-                        "nodeType": "CONSTANT"
+                        "nodeType": "constant"
                     },
                     "inputItems": [
                         {
@@ -169,7 +169,7 @@ test("should trigger the event when clicking the load button", async () => {
                     "name": "v_1",
                     "operationData": null,
                     "featureNodeType": {
-                        "nodeType": "VARIABLE"
+                        "nodeType": "variable"
                     },
                     "inputItems": [
                         {
@@ -182,7 +182,7 @@ test("should trigger the event when clicking the load button", async () => {
                     ],
                     "outputItems": [
                         {
-                            "type": "DERIVATIVE",
+                            "type": "derivative",
                             "labelParts": [
                                 {
                                     "type": "latexLink",
@@ -222,11 +222,11 @@ test("should trigger the event when clicking the load button", async () => {
                 "data": {
                     "name": "a_1",
                     "operationData": {
-                        "text": "Add",
+                        "name": "Add",
                         "helpText": "Add two numbers, i.e., a + b"
                     },
                     "featureNodeType": {
-                        "nodeType": "OPERATION",
+                        "nodeType": "operation",
                         "operationId": "add"
                     },
                     "inputItems": [
@@ -247,7 +247,7 @@ test("should trigger the event when clicking the load button", async () => {
                     ],
                     "outputItems": [
                         {
-                            "type": "VALUE",
+                            "type": "value",
                             "labelParts": [
                                 {
                                     "type": "latex",
@@ -258,7 +258,7 @@ test("should trigger the event when clicking the load button", async () => {
                             "value": "3"
                         },
                         {
-                            "type": "DERIVATIVE",
+                            "type": "derivative",
                             "labelParts": [
                                 {
                                     "type": "latexLink",

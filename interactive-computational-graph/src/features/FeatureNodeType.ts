@@ -1,13 +1,13 @@
 interface ConstantType {
-  nodeType: "CONSTANT";
+  nodeType: "constant";
 }
 
 interface VariableType {
-  nodeType: "VARIABLE";
+  nodeType: "variable";
 }
 
 interface OperationType {
-  nodeType: "OPERATION";
+  nodeType: "operation";
   operationId: string;
 }
 

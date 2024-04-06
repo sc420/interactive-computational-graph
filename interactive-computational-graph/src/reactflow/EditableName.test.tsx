@@ -147,7 +147,7 @@ test("should trim name when Enter is pressed", () => {
 
 const getOperationData = (): OperationNodeData | null => {
   return {
-    text: "Operation 1",
+    name: "Operation 1",
     helpText: "Do something",
   };
 };

@@ -39,7 +39,9 @@ type ShowInputFieldsCallback = (emptyPortEdges: Edge[]) => void;
 
 type HideInputFieldCallback = (nonEmptyPortConnection: Connection) => void;
 
-type FValuesUpdatedCallback = (nodeIdToFValues: Map<string, string>) => void;
+type FValuesUpdatedCallback = (
+  nodeIdToFValues: ReadonlyMap<string, string>,
+) => void;
 
 type DerivativeValuesUpdatedCallback = (
   differentiationMode: DifferentiationMode,
@@ -95,13 +97,13 @@ class CoreGraphAdapter {
     nodeId: string,
   ): CoreNode {
     switch (featureNodeType.nodeType) {
-      case "CONSTANT": {
+      case "constant": {
         return new ConstantNode(nodeId);
       }
-      case "VARIABLE": {
+      case "variable": {
         return new VariableNode(nodeId);
       }
-      case "OPERATION": {
+      case "operation": {
         if (featureOperation === null) {
           throw new Error("Should provide the operation");
         }
@@ -227,7 +229,7 @@ cycle`;
 
   updateNodeNameById(nodeId: string, name: string): void {
     this.nodeIdToNames.set(nodeId, name);
-    const node = this.graph.getOneNode(nodeId);
+    const node = this.graph.getNodeById(nodeId);
     const nodeName = this.getNodeNameById(nodeId);
     this.renameDummyInputNodes(node, nodeName);
 
@@ -253,15 +255,15 @@ cycle`;
   ): void {
     const nodeType = this.graph.getNodeType(nodeId);
     switch (nodeType) {
-      case "CONSTANT": {
+      case "constant": {
         this.graph.setNodeValue(nodeId, value);
         break;
       }
-      case "VARIABLE": {
+      case "variable": {
         this.graph.setNodeValue(nodeId, value);
         break;
       }
-      case "OPERATION": {
+      case "operation": {
         const dummyInputNodeId = this.getDummyInputNodeId(nodeId, inputPortId);
         this.graph.setNodeValue(dummyInputNodeId, value);
         break;
@@ -277,7 +279,7 @@ cycle`;
       switch (change.type) {
         case "remove": {
           const nodeId = change.id;
-          const coreNode = this.graph.getOneNode(nodeId);
+          const coreNode = this.graph.getNodeById(nodeId);
           this.removeDummyInputNodes(coreNode);
 
           this.graph.removeNode(nodeId);
@@ -402,7 +404,7 @@ cycle`;
       if (typeof removeEdge.targetHandle !== "string") {
         return false;
       }
-      const node = this.graph.getOneNode(removeEdge.target);
+      const node = this.graph.getNodeById(removeEdge.target);
       return node.getRelationship().isInputPortEmpty(removeEdge.targetHandle);
     });
   }
@@ -491,7 +493,7 @@ cycle`;
   }
 
   private getExplainDerivativeType(nodeId: string): ExplainDerivativeType {
-    if (this.graph.getNodeType(nodeId) === "CONSTANT") {
+    if (this.graph.getNodeType(nodeId) === "constant") {
       return "zeroBecauseXIsConstant";
     }
 
@@ -584,7 +586,7 @@ cycle`;
   }
 
   private isDummyInputNodeConnected(nodeId: string, portId: string): boolean {
-    const node = this.graph.getOneNode(nodeId);
+    const node = this.graph.getNodeById(nodeId);
     const dummyInputNodeId = this.getDummyInputNodeId(nodeId, portId);
     return node.getRelationship().hasInputNodeByPort(portId, dummyInputNodeId);
   }
@@ -687,15 +689,17 @@ cycle`;
     });
   }
 
-  private emitFValuesUpdated(nodeIdToFValues: Map<string, string>): void {
+  private emitFValuesUpdated(
+    nodeIdToFValues: ReadonlyMap<string, string>,
+  ): void {
     this.fValuesUpdatedCallbacks.forEach((callback) => {
       callback(nodeIdToFValues);
     });
   }
 
   private emitDerivativeValuesUpdated(
-    nodeIdToDerivatives: Map<string, string>,
-    nodeIdToNames: Map<string, string>,
+    nodeIdToDerivatives: ReadonlyMap<string, string>,
+    nodeIdToNames: ReadonlyMap<string, string>,
   ): void {
     const targetNode = this.graph.getTargetNode();
     this.derivativesUpdatedCallbacks.forEach((callback) => {
@@ -748,8 +752,8 @@ cycle`;
         nodeId,
       );
       if (
-        coreNodeState.nodeType === "CONSTANT" ||
-        coreNodeState.nodeType === "VARIABLE"
+        coreNodeState.nodeType === "constant" ||
+        coreNodeState.nodeType === "variable"
       ) {
         node.setValue(coreNodeState.value);
       }
@@ -776,19 +780,19 @@ cycle`;
     state: CoreNodeState,
   ): FeatureNodeType {
     switch (state.nodeType) {
-      case "CONSTANT": {
+      case "constant": {
         return {
-          nodeType: "CONSTANT",
+          nodeType: "constant",
         };
       }
-      case "VARIABLE": {
+      case "variable": {
         return {
-          nodeType: "VARIABLE",
+          nodeType: "variable",
         };
       }
-      case "OPERATION": {
+      case "operation": {
         return {
-          nodeType: "OPERATION",
+          nodeType: "operation",
           operationId: state.operationId,
         };
       }

@@ -1,5 +1,5 @@
 interface OperationNodeData {
-  text: string;
+  name: string;
   helpText: string;
 }
 

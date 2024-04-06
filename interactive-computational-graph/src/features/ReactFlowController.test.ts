@@ -34,7 +34,7 @@ import type SelectedFeature from "./SelectedFeature";
 jest.mock("../features/RandomUtilities");
 
 test("should add node", () => {
-  const featureNodeType: FeatureNodeType = { nodeType: "VARIABLE" };
+  const featureNodeType: FeatureNodeType = { nodeType: "variable" };
   const addNodeData: AddNodeData = {
     featureNodeType,
     featureOperation: getFeatureOperation(),
@@ -547,21 +547,21 @@ test("should update node f values", () => {
       id: "0",
       position: getDummyPosition(),
       data: {
-        outputItems: [{ type: "VALUE", value: "0" }],
+        outputItems: [{ type: "value", value: "0" }],
       },
     },
     {
       id: "1",
       position: getDummyPosition(),
       data: {
-        outputItems: [{ type: "VALUE", value: "0" }],
+        outputItems: [{ type: "value", value: "0" }],
       },
     },
     {
       id: "2",
       position: getDummyPosition(),
       data: {
-        outputItems: [{ type: "VALUE", value: "0" }],
+        outputItems: [{ type: "value", value: "0" }],
       },
     },
   ];
@@ -572,21 +572,21 @@ test("should update node f values", () => {
       id: "0",
       position: getDummyPosition(),
       data: {
-        outputItems: [{ type: "VALUE", value: "123" }],
+        outputItems: [{ type: "value", value: "123" }],
       },
     },
     {
       id: "1",
       position: getDummyPosition(),
       data: {
-        outputItems: [{ type: "VALUE", value: "0" }],
+        outputItems: [{ type: "value", value: "0" }],
       },
     },
     {
       id: "2",
       position: getDummyPosition(),
       data: {
-        outputItems: [{ type: "VALUE", value: "456" }],
+        outputItems: [{ type: "value", value: "456" }],
       },
     },
   ];
@@ -609,21 +609,21 @@ test("should update node derivative values", () => {
       id: "0",
       position: getDummyPosition(),
       data: {
-        outputItems: [{ type: "DERIVATIVE", value: "0" }],
+        outputItems: [{ type: "derivative", value: "0" }],
       },
     },
     {
       id: "1",
       position: getDummyPosition(),
       data: {
-        outputItems: [{ type: "DERIVATIVE", value: "0" }],
+        outputItems: [{ type: "derivative", value: "0" }],
       },
     },
     {
       id: "2",
       position: getDummyPosition(),
       data: {
-        outputItems: [{ type: "DERIVATIVE", value: "0" }],
+        outputItems: [{ type: "derivative", value: "0" }],
       },
     },
   ];
@@ -642,7 +642,7 @@ test("should update node derivative values", () => {
       data: {
         outputItems: [
           {
-            type: "DERIVATIVE",
+            type: "derivative",
             value: "1",
             labelParts: [
               {
@@ -665,7 +665,7 @@ test("should update node derivative values", () => {
       id: "1",
       position: getDummyPosition(),
       data: {
-        outputItems: [{ type: "DERIVATIVE", value: "0" }],
+        outputItems: [{ type: "derivative", value: "0" }],
       },
     },
     {
@@ -674,7 +674,7 @@ test("should update node derivative values", () => {
       data: {
         outputItems: [
           {
-            type: "DERIVATIVE",
+            type: "derivative",
             value: "2",
             labelParts: [
               {
@@ -870,7 +870,7 @@ test("should deselect all nodes", () => {
 const getFeatureOperation = (): FeatureOperation => {
   return {
     id: "add",
-    text: "Add",
+    name: "Add",
     type: "basic",
     namePrefix: "a",
     operation: new Operation(ADD_F_CODE, ADD_DFDX_CODE),

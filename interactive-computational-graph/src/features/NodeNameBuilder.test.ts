@@ -67,19 +67,19 @@ test("should have correct state after loading", () => {
 
 const getConstantNodeType = (): FeatureNodeType => {
   return {
-    nodeType: "CONSTANT",
+    nodeType: "constant",
   };
 };
 
 const getVariableNodeType = (): FeatureNodeType => {
   return {
-    nodeType: "VARIABLE",
+    nodeType: "variable",
   };
 };
 
 const getAddNodeType = (): FeatureNodeType => {
   return {
-    nodeType: "OPERATION",
+    nodeType: "operation",
     operationId: "add",
   };
 };
@@ -87,7 +87,7 @@ const getAddNodeType = (): FeatureNodeType => {
 const getAddOperation = (): FeatureOperation => {
   return {
     id: "add",
-    text: "Add",
+    name: "Add",
     type: "basic",
     namePrefix: "a",
     operation: new Operation(ADD_F_CODE, ADD_DFDX_CODE),

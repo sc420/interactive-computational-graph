@@ -4,7 +4,7 @@ import type OperationType from "./OperationType";
 
 interface FeatureOperation {
   id: string;
-  text: string;
+  name: string;
   type: OperationType;
   // Prefix when adding a new operation
   namePrefix: string;

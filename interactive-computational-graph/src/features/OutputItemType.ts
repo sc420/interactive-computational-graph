@@ -1,3 +1,3 @@
-type OutputItemType = "VALUE" | "DERIVATIVE";
+type OutputItemType = "value" | "derivative";
 
 export default OutputItemType;

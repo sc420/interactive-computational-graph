@@ -3,35 +3,35 @@
         "coreGraphState": {
             "nodeIdToNodes": {
                 "0": {
-                    "nodeType": "VARIABLE",
+                    "nodeType": "variable",
                     "value": "1",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
                     }
                 },
                 "1": {
-                    "nodeType": "VARIABLE",
+                    "nodeType": "variable",
                     "value": "1",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
                     }
                 },
                 "2": {
-                    "nodeType": "VARIABLE",
+                    "nodeType": "variable",
                     "value": "1",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
                     }
                 },
                 "3": {
-                    "nodeType": "VARIABLE",
+                    "nodeType": "variable",
                     "value": "2",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
                     }
                 },
                 "4": {
-                    "nodeType": "OPERATION",
+                    "nodeType": "operation",
                     "operationId": "add",
                     "relationship": {
                         "inputPortIdToNodeIds": {
@@ -45,7 +45,7 @@
                     }
                 },
                 "5": {
-                    "nodeType": "OPERATION",
+                    "nodeType": "operation",
                     "operationId": "add",
                     "relationship": {
                         "inputPortIdToNodeIds": {
@@ -59,7 +59,7 @@
                     }
                 },
                 "6": {
-                    "nodeType": "OPERATION",
+                    "nodeType": "operation",
                     "operationId": "power",
                     "relationship": {
                         "inputPortIdToNodeIds": {
@@ -73,42 +73,42 @@
                     }
                 },
                 "dummy-input-node-4-a": {
-                    "nodeType": "CONSTANT",
+                    "nodeType": "constant",
                     "value": "0",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
                     }
                 },
                 "dummy-input-node-4-b": {
-                    "nodeType": "CONSTANT",
+                    "nodeType": "constant",
                     "value": "0",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
                     }
                 },
                 "dummy-input-node-5-a": {
-                    "nodeType": "CONSTANT",
+                    "nodeType": "constant",
                     "value": "0",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
                     }
                 },
                 "dummy-input-node-5-b": {
-                    "nodeType": "CONSTANT",
+                    "nodeType": "constant",
                     "value": "0",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
                     }
                 },
                 "dummy-input-node-6-x": {
-                    "nodeType": "CONSTANT",
+                    "nodeType": "constant",
                     "value": "0",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
                     }
                 },
                 "dummy-input-node-6-n": {
-                    "nodeType": "CONSTANT",
+                    "nodeType": "constant",
                     "value": "0",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
@@ -147,7 +147,7 @@
     "featureOperations": [
         {
             "id": "add",
-            "text": "Add",
+            "name": "Add",
             "type": "basic",
             "namePrefix": "a",
             "operation": {
@@ -168,7 +168,7 @@
         },
         {
             "id": "subtract",
-            "text": "Subtract",
+            "name": "Subtract",
             "type": "basic",
             "namePrefix": "s",
             "operation": {
@@ -189,7 +189,7 @@
         },
         {
             "id": "multiply",
-            "text": "Multiply",
+            "name": "Multiply",
             "type": "basic",
             "namePrefix": "m",
             "operation": {
@@ -210,7 +210,7 @@
         },
         {
             "id": "divide",
-            "text": "Divide",
+            "name": "Divide",
             "type": "basic",
             "namePrefix": "d",
             "operation": {
@@ -231,7 +231,7 @@
         },
         {
             "id": "power",
-            "text": "Power",
+            "name": "Power",
             "type": "basic",
             "namePrefix": "p",
             "operation": {
@@ -252,7 +252,7 @@
         },
         {
             "id": "exp",
-            "text": "Exp",
+            "name": "Exp",
             "type": "basic",
             "namePrefix": "e",
             "operation": {
@@ -269,7 +269,7 @@
         },
         {
             "id": "ln",
-            "text": "Ln",
+            "name": "Ln",
             "type": "basic",
             "namePrefix": "l",
             "operation": {
@@ -286,7 +286,7 @@
         },
         {
             "id": "sum",
-            "text": "Sum",
+            "name": "Sum",
             "type": "aggregate",
             "namePrefix": "s",
             "operation": {
@@ -303,7 +303,7 @@
         },
         {
             "id": "product",
-            "text": "Product",
+            "name": "Product",
             "type": "aggregate",
             "namePrefix": "p",
             "operation": {
@@ -320,7 +320,7 @@
         },
         {
             "id": "sin",
-            "text": "Sin",
+            "name": "Sin",
             "type": "trigonometric",
             "namePrefix": "s",
             "operation": {
@@ -337,7 +337,7 @@
         },
         {
             "id": "cos",
-            "text": "Cos",
+            "name": "Cos",
             "type": "trigonometric",
             "namePrefix": "c",
             "operation": {
@@ -354,7 +354,7 @@
         },
         {
             "id": "tan",
-            "text": "Tan",
+            "name": "Tan",
             "type": "trigonometric",
             "namePrefix": "t",
             "operation": {
@@ -371,7 +371,7 @@
         },
         {
             "id": "linear",
-            "text": "Linear",
+            "name": "Linear",
             "type": "activation",
             "namePrefix": "l",
             "operation": {
@@ -388,7 +388,7 @@
         },
         {
             "id": "sigmoid",
-            "text": "Sigmoid",
+            "name": "Sigmoid",
             "type": "activation",
             "namePrefix": "s",
             "operation": {
@@ -405,7 +405,7 @@
         },
         {
             "id": "tanh",
-            "text": "Tanh",
+            "name": "Tanh",
             "type": "activation",
             "namePrefix": "s",
             "operation": {
@@ -422,7 +422,7 @@
         },
         {
             "id": "relu",
-            "text": "ReLU",
+            "name": "ReLU",
             "type": "activation",
             "namePrefix": "r",
             "operation": {
@@ -439,7 +439,7 @@
         },
         {
             "id": "squared_error",
-            "text": "Squared Error",
+            "name": "Squared Error",
             "type": "loss",
             "namePrefix": "s",
             "operation": {
@@ -460,7 +460,7 @@
         },
         {
             "id": "binary_cross_entropy",
-            "text": "Binary Cross-Entropy",
+            "name": "Binary Cross-Entropy",
             "type": "loss",
             "namePrefix": "b",
             "operation": {
@@ -505,7 +505,7 @@
                     "name": "a",
                     "operationData": null,
                     "featureNodeType": {
-                        "nodeType": "VARIABLE"
+                        "nodeType": "variable"
                     },
                     "inputItems": [
                         {
@@ -518,7 +518,7 @@
                     ],
                     "outputItems": [
                         {
-                            "type": "DERIVATIVE",
+                            "type": "derivative",
                             "labelParts": [
                                 {
                                     "type": "latexLink",
@@ -559,7 +559,7 @@
                     "name": "b",
                     "operationData": null,
                     "featureNodeType": {
-                        "nodeType": "VARIABLE"
+                        "nodeType": "variable"
                     },
                     "inputItems": [
                         {
@@ -572,7 +572,7 @@
                     ],
                     "outputItems": [
                         {
-                            "type": "DERIVATIVE",
+                            "type": "derivative",
                             "labelParts": [
                                 {
                                     "type": "latexLink",
@@ -613,7 +613,7 @@
                     "name": "c",
                     "operationData": null,
                     "featureNodeType": {
-                        "nodeType": "VARIABLE"
+                        "nodeType": "variable"
                     },
                     "inputItems": [
                         {
@@ -626,7 +626,7 @@
                     ],
                     "outputItems": [
                         {
-                            "type": "DERIVATIVE",
+                            "type": "derivative",
                             "labelParts": [
                                 {
                                     "type": "latexLink",
@@ -667,7 +667,7 @@
                     "name": "d",
                     "operationData": null,
                     "featureNodeType": {
-                        "nodeType": "VARIABLE"
+                        "nodeType": "variable"
                     },
                     "inputItems": [
                         {
@@ -680,7 +680,7 @@
                     ],
                     "outputItems": [
                         {
-                            "type": "DERIVATIVE",
+                            "type": "derivative",
                             "labelParts": [
                                 {
                                     "type": "latexLink",
@@ -720,11 +720,11 @@
                 "data": {
                     "name": "m",
                     "operationData": {
-                        "text": "Add",
+                        "name": "Add",
                         "helpText": "Add two numbers, i.e., a + b"
                     },
                     "featureNodeType": {
-                        "nodeType": "OPERATION",
+                        "nodeType": "operation",
                         "operationId": "add"
                     },
                     "inputItems": [
@@ -745,7 +745,7 @@
                     ],
                     "outputItems": [
                         {
-                            "type": "VALUE",
+                            "type": "value",
                             "labelParts": [
                                 {
                                     "type": "latex",
@@ -756,7 +756,7 @@
                             "value": "2"
                         },
                         {
-                            "type": "DERIVATIVE",
+                            "type": "derivative",
                             "labelParts": [
                                 {
                                     "type": "latexLink",
@@ -796,11 +796,11 @@
                 "data": {
                     "name": "n",
                     "operationData": {
-                        "text": "Add",
+                        "name": "Add",
                         "helpText": "Add two numbers, i.e., a + b"
                     },
                     "featureNodeType": {
-                        "nodeType": "OPERATION",
+                        "nodeType": "operation",
                         "operationId": "add"
                     },
                     "inputItems": [
@@ -821,7 +821,7 @@
                     ],
                     "outputItems": [
                         {
-                            "type": "VALUE",
+                            "type": "value",
                             "labelParts": [
                                 {
                                     "type": "latex",
@@ -832,7 +832,7 @@
                             "value": "3"
                         },
                         {
-                            "type": "DERIVATIVE",
+                            "type": "derivative",
                             "labelParts": [
                                 {
                                     "type": "latexLink",
@@ -872,11 +872,11 @@
                 "data": {
                     "name": "f",
                     "operationData": {
-                        "text": "Power",
+                        "name": "Power",
                         "helpText": "Calculate the power, i.e., x^n"
                     },
                     "featureNodeType": {
-                        "nodeType": "OPERATION",
+                        "nodeType": "operation",
                         "operationId": "power"
                     },
                     "inputItems": [
@@ -897,7 +897,7 @@
                     ],
                     "outputItems": [
                         {
-                            "type": "VALUE",
+                            "type": "value",
                             "labelParts": [
                                 {
                                     "type": "latex",
@@ -908,7 +908,7 @@
                             "value": "8"
                         },
                         {
-                            "type": "DERIVATIVE",
+                            "type": "derivative",
                             "labelParts": [
                                 {
                                     "type": "latexLink",

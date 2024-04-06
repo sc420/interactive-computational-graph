@@ -104,7 +104,7 @@ const EditableName: FunctionComponent<EditableNameProps> = ({
                 enterDelay={500}
                 arrow
               >
-                <Typography>({operationData.text})</Typography>
+                <Typography>({operationData.name})</Typography>
               </Tooltip>
             )}
           </Stack>

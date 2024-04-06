@@ -62,7 +62,7 @@ test("should trigger event when clicking item", () => {
   const addItem = screen.getByText("Add");
   fireEvent.click(addItem);
   const expectedNodeType: FeatureNodeType = {
-    nodeType: "OPERATION",
+    nodeType: "operation",
     operationId: "add",
   };
   expect(handleAddNode).toHaveBeenCalledWith(expectedNodeType);
@@ -180,7 +180,7 @@ const getFeatureOperations = (): FeatureOperation[] => {
   return [
     {
       id: "add",
-      text: "Add",
+      name: "Add",
       type: "basic",
       namePrefix: "a",
       operation: new Operation(ADD_F_CODE, ADD_DFDX_CODE),
@@ -189,7 +189,7 @@ const getFeatureOperations = (): FeatureOperation[] => {
     },
     {
       id: "sum",
-      text: "Sum",
+      name: "Sum",
       type: "aggregate",
       namePrefix: "s",
       operation: new Operation(SUM_F_CODE, SUM_DFDX_CODE),
@@ -198,7 +198,7 @@ const getFeatureOperations = (): FeatureOperation[] => {
     },
     {
       id: "sin",
-      text: "Sin",
+      name: "Sin",
       type: "trigonometric",
       namePrefix: "s",
       operation: new Operation(SIN_F_CODE, SIN_DFDX_CODE),

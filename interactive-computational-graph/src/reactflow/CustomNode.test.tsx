@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import { mockReactFlow } from "../ReactFlowMock";
+import { mockReactFlow } from "../MockReactFlow";
 import type NodeData from "../features/NodeData";
 import CustomNode from "./CustomNode";
 
@@ -61,10 +61,10 @@ const getFakeData = (): NodeData => {
   return {
     name: "a_1",
     operationData: {
-      text: "Add",
+      name: "Add",
       helpText: "Add two numbers $ a + b $",
     },
-    featureNodeType: { nodeType: "OPERATION", operationId: "op1" },
+    featureNodeType: { nodeType: "operation", operationId: "op1" },
     inputItems: [
       {
         id: "a",
@@ -76,7 +76,7 @@ const getFakeData = (): NodeData => {
     ],
     outputItems: [
       {
-        type: "VALUE",
+        type: "value",
         labelParts: [{ type: "text", id: "equal", text: "=" }],
         value: "0",
       },

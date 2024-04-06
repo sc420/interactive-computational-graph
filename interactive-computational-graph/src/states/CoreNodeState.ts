@@ -1,19 +1,19 @@
 import type NodeRelationshipState from "./NodeRelationshipState";
 
 interface ConstantNodeState {
-  nodeType: "CONSTANT";
+  nodeType: "constant";
   value: string;
   relationship: NodeRelationshipState;
 }
 
 interface VariableNodeState {
-  nodeType: "VARIABLE";
+  nodeType: "variable";
   value: string;
   relationship: NodeRelationshipState;
 }
 
 interface OperationNodeState {
-  nodeType: "OPERATION";
+  nodeType: "operation";
   operationId: string;
   relationship: NodeRelationshipState;
 }

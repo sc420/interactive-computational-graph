@@ -32,7 +32,7 @@ import EditOperationTabPanel from "./EditOperationTabPanel";
 interface EditOperationDialogProps {
   open: boolean;
   readOperation: FeatureOperation;
-  operationIdsAddedAtLeastOnce: Set<string>;
+  operationIdsAddedAtLeastOnce: ReadonlySet<string>;
   isDarkMode: boolean;
   onCancel: () => void;
   onSave: (updatedOperation: FeatureOperation) => void;
@@ -84,7 +84,7 @@ const EditOperationDialog: FunctionComponent<EditOperationDialogProps> = ({
       setEditingOperation((featureOperation) => {
         const newOperation: FeatureOperation = {
           ...featureOperation,
-          text: name,
+          name,
           namePrefix: prefix,
           helpText,
         };
@@ -155,7 +155,7 @@ const EditOperationDialog: FunctionComponent<EditOperationDialogProps> = ({
 
           {/* Title */}
           <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-            Edit Operation: {editingOperation.text}
+            Edit Operation: {editingOperation.name}
           </Typography>
 
           {/* Menu */}
@@ -195,7 +195,7 @@ const EditOperationDialog: FunctionComponent<EditOperationDialogProps> = ({
         <EditOperationTabPanel index={0} value={activeTabIndex}>
           <Box sx={{ p: 3 }}>
             <EditOperationBasicTab
-              name={editingOperation.text}
+              name={editingOperation.name}
               prefix={editingOperation.namePrefix}
               helpText={editingOperation.helpText}
               onChangeValues={handleBasicChangeValues}

@@ -5,7 +5,7 @@ const findFeatureOperation = (
   featureNodeType: FeatureNodeType,
   featureOperations: FeatureOperation[],
 ): FeatureOperation | null => {
-  if (featureNodeType.nodeType !== "OPERATION") {
+  if (featureNodeType.nodeType !== "operation") {
     return null;
   }
 

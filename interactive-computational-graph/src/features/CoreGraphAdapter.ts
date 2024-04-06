@@ -227,7 +227,7 @@ cycle`;
 
   updateNodeNameById(nodeId: string, name: string): void {
     this.nodeIdToNames.set(nodeId, name);
-    const node = this.graph.getOneNode(nodeId);
+    const node = this.graph.getNodeById(nodeId);
     const nodeName = this.getNodeNameById(nodeId);
     this.renameDummyInputNodes(node, nodeName);
 
@@ -277,7 +277,7 @@ cycle`;
       switch (change.type) {
         case "remove": {
           const nodeId = change.id;
-          const coreNode = this.graph.getOneNode(nodeId);
+          const coreNode = this.graph.getNodeById(nodeId);
           this.removeDummyInputNodes(coreNode);
 
           this.graph.removeNode(nodeId);
@@ -402,7 +402,7 @@ cycle`;
       if (typeof removeEdge.targetHandle !== "string") {
         return false;
       }
-      const node = this.graph.getOneNode(removeEdge.target);
+      const node = this.graph.getNodeById(removeEdge.target);
       return node.getRelationship().isInputPortEmpty(removeEdge.targetHandle);
     });
   }
@@ -584,7 +584,7 @@ cycle`;
   }
 
   private isDummyInputNodeConnected(nodeId: string, portId: string): boolean {
-    const node = this.graph.getOneNode(nodeId);
+    const node = this.graph.getNodeById(nodeId);
     const dummyInputNodeId = this.getDummyInputNodeId(nodeId, portId);
     return node.getRelationship().hasInputNodeByPort(portId, dummyInputNodeId);
   }

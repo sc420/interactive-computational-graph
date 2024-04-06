@@ -66,7 +66,7 @@ describe("manipulating connections", () => {
 
     expect(graph.getNodes()).toEqual([varNode1]);
     expect(graph.getNodeType("v1")).toEqual("VARIABLE");
-    expect(graph.getOneNode("v1")).toEqual(varNode1);
+    expect(graph.getNodeById("v1")).toEqual(varNode1);
     expect(graph.hasNode("v1")).toBe(true);
   });
 
@@ -114,9 +114,9 @@ describe("manipulating connections", () => {
     graph.disconnect("v1", "sum1", "x_i");
     graph.disconnect("v2", "sum1", "x_i");
 
-    const varNode1 = graph.getOneNode("v1");
-    const varNode2 = graph.getOneNode("v2");
-    const sumNode1 = graph.getOneNode("sum1");
+    const varNode1 = graph.getNodeById("v1");
+    const varNode2 = graph.getNodeById("v2");
+    const sumNode1 = graph.getNodeById("sum1");
     expect(varNode1.getRelationship().isOutputPortEmpty()).toBe(true);
     expect(varNode2.getRelationship().isOutputPortEmpty()).toBe(true);
     expect(sumNode1.getRelationship().isInputPortEmpty("x_i")).toBe(true);
@@ -127,8 +127,8 @@ describe("manipulating connections", () => {
 
     graph.removeNode("sum1");
 
-    const varNode1 = graph.getOneNode("v1");
-    const varNode2 = graph.getOneNode("v2");
+    const varNode1 = graph.getNodeById("v1");
+    const varNode2 = graph.getNodeById("v2");
     expect(varNode1.getRelationship().isOutputPortEmpty()).toBe(true);
     expect(varNode2.getRelationship().isOutputPortEmpty()).toBe(true);
   });
@@ -200,7 +200,7 @@ describe("manipulating connections", () => {
     );
 
     // Should not be half-connected
-    const identityNode1 = graph.getOneNode("identity1");
+    const identityNode1 = graph.getNodeById("identity1");
     expect(varNode4.getRelationship().isOutputPortEmpty()).toBe(true);
     expect(
       identityNode1.getRelationship().getInputNodesByPort("x"),

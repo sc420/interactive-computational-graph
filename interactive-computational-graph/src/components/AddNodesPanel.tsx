@@ -160,7 +160,7 @@ const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
                       nodeType: "OPERATION",
                       operationId: operation.id,
                     }}
-                    text={operation.text}
+                    text={operation.name}
                     helpText={operation.helpText}
                     editable
                     onClickItem={onAddNode}
@@ -193,7 +193,7 @@ const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
                   nodeType: "OPERATION",
                   operationId: operation.id,
                 }}
-                text={operation.text}
+                text={operation.name}
                 helpText={operation.helpText}
                 editable
                 onClickItem={onAddNode}

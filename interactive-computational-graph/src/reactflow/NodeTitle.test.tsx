@@ -114,7 +114,7 @@ test("should have dark striped animation when highlighted in dark mode", () => {
 
 const getOperationData = (): OperationNodeData | null => {
   return {
-    text: "Operation 1",
+    name: "Operation 1",
     helpText: "Do something",
   };
 };

@@ -91,7 +91,7 @@ test("should trigger the event when clicking the load button", async () => {
     "featureOperations": [
         {
             "id": "add",
-            "text": "Add",
+            "name": "Add",
             "type": "basic",
             "namePrefix": "a",
             "operation": {
@@ -222,7 +222,7 @@ test("should trigger the event when clicking the load button", async () => {
                 "data": {
                     "name": "a_1",
                     "operationData": {
-                        "text": "Add",
+                        "name": "Add",
                         "helpText": "Add two numbers, i.e., a + b"
                     },
                     "featureNodeType": {

@@ -106,7 +106,7 @@
     "featureOperations": [
         {
             "id": "add",
-            "text": "Add",
+            "name": "Add",
             "type": "basic",
             "namePrefix": "a",
             "operation": {
@@ -127,7 +127,7 @@
         },
         {
             "id": "subtract",
-            "text": "Subtract",
+            "name": "Subtract",
             "type": "basic",
             "namePrefix": "s",
             "operation": {
@@ -148,7 +148,7 @@
         },
         {
             "id": "multiply",
-            "text": "Multiply",
+            "name": "Multiply",
             "type": "basic",
             "namePrefix": "m",
             "operation": {
@@ -169,7 +169,7 @@
         },
         {
             "id": "divide",
-            "text": "Divide",
+            "name": "Divide",
             "type": "basic",
             "namePrefix": "d",
             "operation": {
@@ -190,7 +190,7 @@
         },
         {
             "id": "power",
-            "text": "Power",
+            "name": "Power",
             "type": "basic",
             "namePrefix": "p",
             "operation": {
@@ -211,7 +211,7 @@
         },
         {
             "id": "exp",
-            "text": "Exp",
+            "name": "Exp",
             "type": "basic",
             "namePrefix": "e",
             "operation": {
@@ -228,7 +228,7 @@
         },
         {
             "id": "ln",
-            "text": "Ln",
+            "name": "Ln",
             "type": "basic",
             "namePrefix": "l",
             "operation": {
@@ -245,7 +245,7 @@
         },
         {
             "id": "sum",
-            "text": "Sum",
+            "name": "Sum",
             "type": "aggregate",
             "namePrefix": "s",
             "operation": {
@@ -262,7 +262,7 @@
         },
         {
             "id": "product",
-            "text": "Product",
+            "name": "Product",
             "type": "aggregate",
             "namePrefix": "p",
             "operation": {
@@ -279,7 +279,7 @@
         },
         {
             "id": "sin",
-            "text": "Sin",
+            "name": "Sin",
             "type": "trigonometric",
             "namePrefix": "s",
             "operation": {
@@ -296,7 +296,7 @@
         },
         {
             "id": "cos",
-            "text": "Cos",
+            "name": "Cos",
             "type": "trigonometric",
             "namePrefix": "c",
             "operation": {
@@ -313,7 +313,7 @@
         },
         {
             "id": "tan",
-            "text": "Tan",
+            "name": "Tan",
             "type": "trigonometric",
             "namePrefix": "t",
             "operation": {
@@ -330,7 +330,7 @@
         },
         {
             "id": "linear",
-            "text": "Linear",
+            "name": "Linear",
             "type": "activation",
             "namePrefix": "l",
             "operation": {
@@ -347,7 +347,7 @@
         },
         {
             "id": "sigmoid",
-            "text": "Sigmoid",
+            "name": "Sigmoid",
             "type": "activation",
             "namePrefix": "s",
             "operation": {
@@ -364,7 +364,7 @@
         },
         {
             "id": "tanh",
-            "text": "Tanh",
+            "name": "Tanh",
             "type": "activation",
             "namePrefix": "s",
             "operation": {
@@ -381,7 +381,7 @@
         },
         {
             "id": "relu",
-            "text": "ReLU",
+            "name": "ReLU",
             "type": "activation",
             "namePrefix": "r",
             "operation": {
@@ -398,7 +398,7 @@
         },
         {
             "id": "squared_error",
-            "text": "Squared Error",
+            "name": "Squared Error",
             "type": "loss",
             "namePrefix": "s",
             "operation": {
@@ -419,7 +419,7 @@
         },
         {
             "id": "binary_cross_entropy",
-            "text": "Binary Cross-Entropy",
+            "name": "Binary Cross-Entropy",
             "type": "loss",
             "namePrefix": "b",
             "operation": {
@@ -589,7 +589,7 @@
                 "data": {
                     "name": "p",
                     "operationData": {
-                        "text": "Power",
+                        "name": "Power",
                         "helpText": "Calculate the power, i.e., x^n"
                     },
                     "featureNodeType": {
@@ -665,7 +665,7 @@
                 "data": {
                     "name": "f",
                     "operationData": {
-                        "text": "Multiply",
+                        "name": "Multiply",
                         "helpText": "Multiply two numbers, i.e., a * b"
                     },
                     "featureNodeType": {

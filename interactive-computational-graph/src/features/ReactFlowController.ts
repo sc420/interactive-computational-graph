@@ -408,7 +408,7 @@ const buildReactFlowNodeData = (addNodeData: AddNodeData): NodeData => {
       return {
         name: nodeName,
         operationData: {
-          text: featureOperation.text,
+          name: featureOperation.name,
           helpText: featureOperation.helpText,
         },
         featureNodeType,

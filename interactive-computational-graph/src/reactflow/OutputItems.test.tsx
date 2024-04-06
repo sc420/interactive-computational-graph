@@ -13,7 +13,7 @@ test("should render the output input box as readonly", () => {
   const data: NodeData = {
     name: "a_1",
     operationData: {
-      text: "Add",
+      name: "Add",
       helpText: "Add two numbers $ a + b $",
     },
     featureNodeType: { nodeType: "OPERATION", operationId: "op1" },

@@ -55,7 +55,7 @@ const getFeatureOperations = (): FeatureOperation[] => {
   return [
     {
       id: "add",
-      text: "Add",
+      name: "Add",
       type: "basic",
       namePrefix: "a",
       operation: new Operation(ADD_F_CODE, ADD_DFDX_CODE),

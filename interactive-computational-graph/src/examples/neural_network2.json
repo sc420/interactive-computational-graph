@@ -475,7 +475,7 @@
     "featureOperations": [
         {
             "id": "add",
-            "text": "Add",
+            "name": "Add",
             "type": "basic",
             "namePrefix": "a",
             "operation": {
@@ -496,7 +496,7 @@
         },
         {
             "id": "subtract",
-            "text": "Subtract",
+            "name": "Subtract",
             "type": "basic",
             "namePrefix": "s",
             "operation": {
@@ -517,7 +517,7 @@
         },
         {
             "id": "multiply",
-            "text": "Multiply",
+            "name": "Multiply",
             "type": "basic",
             "namePrefix": "m",
             "operation": {
@@ -538,7 +538,7 @@
         },
         {
             "id": "divide",
-            "text": "Divide",
+            "name": "Divide",
             "type": "basic",
             "namePrefix": "d",
             "operation": {
@@ -559,7 +559,7 @@
         },
         {
             "id": "power",
-            "text": "Power",
+            "name": "Power",
             "type": "basic",
             "namePrefix": "p",
             "operation": {
@@ -580,7 +580,7 @@
         },
         {
             "id": "exp",
-            "text": "Exp",
+            "name": "Exp",
             "type": "basic",
             "namePrefix": "e",
             "operation": {
@@ -597,7 +597,7 @@
         },
         {
             "id": "ln",
-            "text": "Ln",
+            "name": "Ln",
             "type": "basic",
             "namePrefix": "l",
             "operation": {
@@ -614,7 +614,7 @@
         },
         {
             "id": "sum",
-            "text": "Sum",
+            "name": "Sum",
             "type": "aggregate",
             "namePrefix": "s",
             "operation": {
@@ -631,7 +631,7 @@
         },
         {
             "id": "product",
-            "text": "Product",
+            "name": "Product",
             "type": "aggregate",
             "namePrefix": "p",
             "operation": {
@@ -648,7 +648,7 @@
         },
         {
             "id": "sin",
-            "text": "Sin",
+            "name": "Sin",
             "type": "trigonometric",
             "namePrefix": "s",
             "operation": {
@@ -665,7 +665,7 @@
         },
         {
             "id": "cos",
-            "text": "Cos",
+            "name": "Cos",
             "type": "trigonometric",
             "namePrefix": "c",
             "operation": {
@@ -682,7 +682,7 @@
         },
         {
             "id": "tan",
-            "text": "Tan",
+            "name": "Tan",
             "type": "trigonometric",
             "namePrefix": "t",
             "operation": {
@@ -699,7 +699,7 @@
         },
         {
             "id": "linear",
-            "text": "Linear",
+            "name": "Linear",
             "type": "activation",
             "namePrefix": "l",
             "operation": {
@@ -716,7 +716,7 @@
         },
         {
             "id": "sigmoid",
-            "text": "Sigmoid",
+            "name": "Sigmoid",
             "type": "activation",
             "namePrefix": "s",
             "operation": {
@@ -733,7 +733,7 @@
         },
         {
             "id": "tanh",
-            "text": "Tanh",
+            "name": "Tanh",
             "type": "activation",
             "namePrefix": "s",
             "operation": {
@@ -750,7 +750,7 @@
         },
         {
             "id": "relu",
-            "text": "ReLU",
+            "name": "ReLU",
             "type": "activation",
             "namePrefix": "r",
             "operation": {
@@ -767,7 +767,7 @@
         },
         {
             "id": "squared_error",
-            "text": "Squared Error",
+            "name": "Squared Error",
             "type": "loss",
             "namePrefix": "s",
             "operation": {
@@ -788,7 +788,7 @@
         },
         {
             "id": "binary_cross_entropy",
-            "text": "Binary Cross-Entropy",
+            "name": "Binary Cross-Entropy",
             "type": "loss",
             "namePrefix": "b",
             "operation": {
@@ -1162,7 +1162,7 @@
                 "data": {
                     "name": "m^{(1)}_{11}",
                     "operationData": {
-                        "text": "Multiply",
+                        "name": "Multiply",
                         "helpText": "Multiply two numbers, i.e., a * b"
                     },
                     "featureNodeType": {
@@ -1238,7 +1238,7 @@
                 "data": {
                     "name": "m^{(1)}_{21}",
                     "operationData": {
-                        "text": "Multiply",
+                        "name": "Multiply",
                         "helpText": "Multiply two numbers, i.e., a * b"
                     },
                     "featureNodeType": {
@@ -1314,7 +1314,7 @@
                 "data": {
                     "name": "m^{(1)}_{12}",
                     "operationData": {
-                        "text": "Multiply",
+                        "name": "Multiply",
                         "helpText": "Multiply two numbers, i.e., a * b"
                     },
                     "featureNodeType": {
@@ -1390,7 +1390,7 @@
                 "data": {
                     "name": "m^{(1)}_{22}",
                     "operationData": {
-                        "text": "Multiply",
+                        "name": "Multiply",
                         "helpText": "Multiply two numbers, i.e., a * b"
                     },
                     "featureNodeType": {
@@ -1574,7 +1574,7 @@
                 "data": {
                     "name": "z^{(1)}_1",
                     "operationData": {
-                        "text": "Sum",
+                        "name": "Sum",
                         "helpText": "Add all inputs: sum_i x_i, i.e., x_0 + x_1 + ..."
                     },
                     "featureNodeType": {
@@ -1643,7 +1643,7 @@
                 "data": {
                     "name": "z^{(1)}_2",
                     "operationData": {
-                        "text": "Sum",
+                        "name": "Sum",
                         "helpText": "Add all inputs: sum_i x_i, i.e., x_0 + x_1 + ..."
                     },
                     "featureNodeType": {
@@ -1712,7 +1712,7 @@
                 "data": {
                     "name": "a^{(1)}_1",
                     "operationData": {
-                        "text": "ReLU",
+                        "name": "ReLU",
                         "helpText": "ReLU activation function, i.e., y=max(0, x)"
                     },
                     "featureNodeType": {
@@ -1781,7 +1781,7 @@
                 "data": {
                     "name": "a^{(1)}_2",
                     "operationData": {
-                        "text": "ReLU",
+                        "name": "ReLU",
                         "helpText": "ReLU activation function, i.e., y=max(0, x)"
                     },
                     "featureNodeType": {
@@ -1958,7 +1958,7 @@
                 "data": {
                     "name": "m^{(2)}_{11}",
                     "operationData": {
-                        "text": "Multiply",
+                        "name": "Multiply",
                         "helpText": "Multiply two numbers, i.e., a * b"
                     },
                     "featureNodeType": {
@@ -2034,7 +2034,7 @@
                 "data": {
                     "name": "m^{(2)}_{21}",
                     "operationData": {
-                        "text": "Multiply",
+                        "name": "Multiply",
                         "helpText": "Multiply two numbers, i.e., a * b"
                     },
                     "featureNodeType": {
@@ -2164,7 +2164,7 @@
                 "data": {
                     "name": "z^{(2)}_1",
                     "operationData": {
-                        "text": "Sum",
+                        "name": "Sum",
                         "helpText": "Add all inputs: sum_i x_i, i.e., x_0 + x_1 + ..."
                     },
                     "featureNodeType": {
@@ -2233,7 +2233,7 @@
                 "data": {
                     "name": "\\hat{y}",
                     "operationData": {
-                        "text": "Sigmoid",
+                        "name": "Sigmoid",
                         "helpText": "Sigmoid activation function, i.e., y=1/(1 + e^(-x))"
                     },
                     "featureNodeType": {
@@ -2356,7 +2356,7 @@
                 "data": {
                     "name": "E",
                     "operationData": {
-                        "text": "Squared Error",
+                        "name": "Squared Error",
                         "helpText": "Calculate the squared error, i.e., (y_t - y_e)^2\n (y_t: true value, y_e: estimated value)"
                     },
                     "featureNodeType": {

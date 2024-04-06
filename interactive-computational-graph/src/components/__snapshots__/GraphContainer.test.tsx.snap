@@ -244,7 +244,7 @@ Object {
         "name": "s_1",
         "operationData": Object {
           "helpText": "Add all inputs: sum_i x_i, i.e., x_0 + x_1 + ...",
-          "text": "Sum",
+          "name": "Sum",
         },
         "outputItems": Array [
           Object {

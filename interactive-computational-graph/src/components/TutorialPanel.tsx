@@ -111,7 +111,9 @@ const TutorialPanel: FunctionComponent = () => {
                   <Typography variant="body2">{item.action}</Typography>
                 </Grid>
                 <Grid item xs={6}>
-                  <Typography variant="body2">{item.shortcut}</Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {item.shortcut}
+                  </Typography>
                 </Grid>
               </Fragment>
             ))}
@@ -130,7 +132,9 @@ const TutorialPanel: FunctionComponent = () => {
                   <Typography variant="body2">{item.action}</Typography>
                 </Grid>
                 <Grid item xs={6}>
-                  <Typography variant="body2">{item.shortcut}</Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {item.shortcut}
+                  </Typography>
                 </Grid>
               </Fragment>
             ))}
@@ -149,7 +153,9 @@ const TutorialPanel: FunctionComponent = () => {
                   <Typography variant="body2">{item.action}</Typography>
                 </Grid>
                 <Grid item xs={6}>
-                  <Typography variant="body2">{item.shortcut}</Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {item.shortcut}
+                  </Typography>
                 </Grid>
               </Fragment>
             ))}

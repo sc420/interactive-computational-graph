@@ -10,6 +10,7 @@ import AddNodesPanel from "./AddNodesPanel";
 import EditNodesPanel from "./EditNodesPanel";
 import ExplainDerivativesPanel from "./ExplainDerivativesPanel";
 import SaveLoadPanel from "./SaveLoadPanel";
+import TutorialPanel from "./TutorialPanel";
 
 interface FeaturePanelProps {
   feature: SelectedFeature;
@@ -88,6 +89,8 @@ const FeaturePanel: FunctionComponent<FeaturePanelProps> = ({
         return <EditNodesPanel />;
       case "save-load":
         return <SaveLoadPanel onSave={onSave} onLoad={onLoad} />;
+      case "tutorial":
+        return <TutorialPanel />;
     }
   };
   return (

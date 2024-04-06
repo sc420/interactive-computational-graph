@@ -1,5 +1,6 @@
 import FunctionsIcon from "@mui/icons-material/Functions";
 import {
+  Box,
   Button,
   Card,
   CardActions,
@@ -108,13 +109,13 @@ const WelcomeDialog: FunctionComponent<WelcomeDialogProps> = ({ onLoad }) => {
       open={open}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
-      maxWidth="md"
+      maxWidth="lg"
     >
       <DialogTitle id="alert-dialog-title">Get Started</DialogTitle>
       <DialogContent>
         <Stack direction="row" spacing={3}>
           {/* Load from examples */}
-          <Card variant="outlined" sx={{ px: 2 }}>
+          <Card variant="outlined" sx={{ px: 2, minWidth: 250 }}>
             <CardContent>
               <Typography variant="h6" gutterBottom>
                 Load From Examples
@@ -150,12 +151,21 @@ const WelcomeDialog: FunctionComponent<WelcomeDialogProps> = ({ onLoad }) => {
           </Card>
 
           {/* Start with blank graph */}
-          <Card variant="outlined" sx={{ px: 2 }}>
+          <Card variant="outlined" sx={{ px: 2, minWidth: 300, maxWidth: 600 }}>
             <CardContent>
               <Typography variant="h6" gutterBottom>
                 Build Your Own Graph
               </Typography>
-              <Typography>GIF Here</Typography>
+              <Typography variant="body2" gutterBottom>
+                See Tutorial side panel for more information.
+              </Typography>
+              <Box
+                component="img"
+                src={`${process.env.PUBLIC_URL}/get_started.gif`}
+                alt="get started"
+                maxWidth={"100%"}
+                my={2}
+              ></Box>
             </CardContent>
             <CardActions>
               <Button

@@ -13,11 +13,11 @@ class NodeNameBuilder {
   ): string {
     let prefix: string;
     let counter: number;
-    if (featureNodeType.nodeType === "CONSTANT") {
+    if (featureNodeType.nodeType === "constant") {
       prefix = "c";
       counter = this.constantCounter;
       this.constantCounter += 1;
-    } else if (featureNodeType.nodeType === "VARIABLE") {
+    } else if (featureNodeType.nodeType === "variable") {
       prefix = "v";
       counter = this.variableCounter;
       this.variableCounter += 1;

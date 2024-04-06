@@ -3,28 +3,28 @@
         "coreGraphState": {
             "nodeIdToNodes": {
                 "0": {
-                    "nodeType": "CONSTANT",
+                    "nodeType": "constant",
                     "value": "0.5",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
                     }
                 },
                 "1": {
-                    "nodeType": "VARIABLE",
+                    "nodeType": "variable",
                     "value": "2",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
                     }
                 },
                 "2": {
-                    "nodeType": "CONSTANT",
+                    "nodeType": "constant",
                     "value": "3",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
                     }
                 },
                 "3": {
-                    "nodeType": "OPERATION",
+                    "nodeType": "operation",
                     "operationId": "power",
                     "relationship": {
                         "inputPortIdToNodeIds": {
@@ -38,7 +38,7 @@
                     }
                 },
                 "4": {
-                    "nodeType": "OPERATION",
+                    "nodeType": "operation",
                     "operationId": "multiply",
                     "relationship": {
                         "inputPortIdToNodeIds": {
@@ -52,28 +52,28 @@
                     }
                 },
                 "dummy-input-node-3-x": {
-                    "nodeType": "CONSTANT",
+                    "nodeType": "constant",
                     "value": "0",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
                     }
                 },
                 "dummy-input-node-3-n": {
-                    "nodeType": "CONSTANT",
+                    "nodeType": "constant",
                     "value": "0",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
                     }
                 },
                 "dummy-input-node-4-a": {
-                    "nodeType": "CONSTANT",
+                    "nodeType": "constant",
                     "value": "0",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
                     }
                 },
                 "dummy-input-node-4-b": {
-                    "nodeType": "CONSTANT",
+                    "nodeType": "constant",
                     "value": "0",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
@@ -464,7 +464,7 @@
                     "name": "a",
                     "operationData": null,
                     "featureNodeType": {
-                        "nodeType": "CONSTANT"
+                        "nodeType": "constant"
                     },
                     "inputItems": [
                         {
@@ -500,7 +500,7 @@
                     "name": "x",
                     "operationData": null,
                     "featureNodeType": {
-                        "nodeType": "VARIABLE"
+                        "nodeType": "variable"
                     },
                     "inputItems": [
                         {
@@ -513,7 +513,7 @@
                     ],
                     "outputItems": [
                         {
-                            "type": "DERIVATIVE",
+                            "type": "derivative",
                             "labelParts": [
                                 {
                                     "type": "latexLink",
@@ -554,7 +554,7 @@
                     "name": "n",
                     "operationData": null,
                     "featureNodeType": {
-                        "nodeType": "CONSTANT"
+                        "nodeType": "constant"
                     },
                     "inputItems": [
                         {
@@ -593,7 +593,7 @@
                         "helpText": "Calculate the power, i.e., x^n"
                     },
                     "featureNodeType": {
-                        "nodeType": "OPERATION",
+                        "nodeType": "operation",
                         "operationId": "power"
                     },
                     "inputItems": [
@@ -614,7 +614,7 @@
                     ],
                     "outputItems": [
                         {
-                            "type": "VALUE",
+                            "type": "value",
                             "labelParts": [
                                 {
                                     "type": "latex",
@@ -625,7 +625,7 @@
                             "value": "8"
                         },
                         {
-                            "type": "DERIVATIVE",
+                            "type": "derivative",
                             "labelParts": [
                                 {
                                     "type": "latexLink",
@@ -669,7 +669,7 @@
                         "helpText": "Multiply two numbers, i.e., a * b"
                     },
                     "featureNodeType": {
-                        "nodeType": "OPERATION",
+                        "nodeType": "operation",
                         "operationId": "multiply"
                     },
                     "inputItems": [
@@ -690,7 +690,7 @@
                     ],
                     "outputItems": [
                         {
-                            "type": "VALUE",
+                            "type": "value",
                             "labelParts": [
                                 {
                                     "type": "latex",
@@ -701,7 +701,7 @@
                             "value": "4"
                         },
                         {
-                            "type": "DERIVATIVE",
+                            "type": "derivative",
                             "labelParts": [
                                 {
                                     "type": "latexLink",

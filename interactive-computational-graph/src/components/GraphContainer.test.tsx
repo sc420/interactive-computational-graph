@@ -23,9 +23,9 @@ beforeAll(() => {
 it("should have different node types on the graph after dropping nodes", () => {
   renderGraphContainer();
 
-  dropNode({ nodeType: "CONSTANT" });
-  dropNode({ nodeType: "VARIABLE" });
-  dropNode({ nodeType: "OPERATION", operationId: "sum" });
+  dropNode({ nodeType: "constant" });
+  dropNode({ nodeType: "variable" });
+  dropNode({ nodeType: "operation", operationId: "sum" });
 
   expect(screen.getByText("c_1")).toBeInTheDocument();
   expect(screen.getByText("v_1")).toBeInTheDocument();
@@ -44,13 +44,13 @@ it("should select the last dropped node", () => {
   changeSelection([], []);
 
   // Add a constant node
-  dropNode({ nodeType: "CONSTANT" });
+  dropNode({ nodeType: "constant" });
 
   const nodes1 = getNodes();
   changeSelection(nodes1, []);
 
   // Add another constant node
-  dropNode({ nodeType: "CONSTANT" });
+  dropNode({ nodeType: "constant" });
 
   // Get only the second added node
   const nodes2 = getNodes().filter((node) => node.id === "2");
@@ -299,8 +299,8 @@ it("outputs should be set correctly after adding the nodes", () => {
   fireEvent.click(cosItem); // id=1
 
   // Check the output values
-  expect(getOutputItemValue("0", "VALUE")).toBe("0");
-  expect(getOutputItemValue("1", "VALUE")).toBe("1");
+  expect(getOutputItemValue("0", "value")).toBe("0");
+  expect(getOutputItemValue("1", "value")).toBe("1");
 });
 
 // It uses example from https://colah.github.io/posts/2015-08-Backprop/
@@ -335,97 +335,97 @@ it("outputs should change when derivative mode/target is changed", () => {
   setDerivativeTarget("m_1");
 
   // Check the output values
-  expect(getOutputItemValue("2", "VALUE")).toBe("3");
-  expect(getOutputItemValue("3", "VALUE")).toBe("2");
-  expect(getOutputItemValue("4", "VALUE")).toBe("6");
+  expect(getOutputItemValue("2", "value")).toBe("3");
+  expect(getOutputItemValue("3", "value")).toBe("2");
+  expect(getOutputItemValue("4", "value")).toBe("6");
 
   // Check the derivative labels
-  expect(getOutputItemLabelText("0", "DERIVATIVE")).toBe(
+  expect(getOutputItemLabelText("0", "derivative")).toBe(
     "\\displaystyle \\frac{\\partial{m_1}}{\\partial{v_1}}=",
   );
-  expect(getOutputItemLabelText("1", "DERIVATIVE")).toBe(
+  expect(getOutputItemLabelText("1", "derivative")).toBe(
     "\\displaystyle \\frac{\\partial{m_1}}{\\partial{v_2}}=",
   );
-  expect(getOutputItemLabelText("2", "DERIVATIVE")).toBe(
+  expect(getOutputItemLabelText("2", "derivative")).toBe(
     "\\displaystyle \\frac{\\partial{m_1}}{\\partial{a_1}}=",
   );
-  expect(getOutputItemLabelText("3", "DERIVATIVE")).toBe(
+  expect(getOutputItemLabelText("3", "derivative")).toBe(
     "\\displaystyle \\frac{\\partial{m_1}}{\\partial{a_2}}=",
   );
-  expect(getOutputItemLabelText("4", "DERIVATIVE")).toBe(
+  expect(getOutputItemLabelText("4", "derivative")).toBe(
     "\\displaystyle \\frac{\\partial{m_1}}{\\partial{m_1}}=",
   );
 
   // Check the derivative values
-  expect(getOutputItemValue("0", "DERIVATIVE")).toBe("2");
-  expect(getOutputItemValue("1", "DERIVATIVE")).toBe("5");
-  expect(getOutputItemValue("2", "DERIVATIVE")).toBe("2");
-  expect(getOutputItemValue("3", "DERIVATIVE")).toBe("3");
-  expect(getOutputItemValue("4", "DERIVATIVE")).toBe("1");
+  expect(getOutputItemValue("0", "derivative")).toBe("2");
+  expect(getOutputItemValue("1", "derivative")).toBe("5");
+  expect(getOutputItemValue("2", "derivative")).toBe("2");
+  expect(getOutputItemValue("3", "derivative")).toBe("3");
+  expect(getOutputItemValue("4", "derivative")).toBe("1");
 
   // Change the differentiation mode to forward mode
   toggleDifferentiationMode();
 
   // Check the output values
-  expect(getOutputItemValue("2", "VALUE")).toBe("3");
-  expect(getOutputItemValue("3", "VALUE")).toBe("2");
-  expect(getOutputItemValue("4", "VALUE")).toBe("6");
+  expect(getOutputItemValue("2", "value")).toBe("3");
+  expect(getOutputItemValue("3", "value")).toBe("2");
+  expect(getOutputItemValue("4", "value")).toBe("6");
 
   // Check the derivative labels
-  expect(getOutputItemLabelText("0", "DERIVATIVE")).toBe(
+  expect(getOutputItemLabelText("0", "derivative")).toBe(
     "\\displaystyle \\frac{\\partial{v_1}}{\\partial{m_1}}=",
   );
-  expect(getOutputItemLabelText("1", "DERIVATIVE")).toBe(
+  expect(getOutputItemLabelText("1", "derivative")).toBe(
     "\\displaystyle \\frac{\\partial{v_2}}{\\partial{m_1}}=",
   );
-  expect(getOutputItemLabelText("2", "DERIVATIVE")).toBe(
+  expect(getOutputItemLabelText("2", "derivative")).toBe(
     "\\displaystyle \\frac{\\partial{a_1}}{\\partial{m_1}}=",
   );
-  expect(getOutputItemLabelText("3", "DERIVATIVE")).toBe(
+  expect(getOutputItemLabelText("3", "derivative")).toBe(
     "\\displaystyle \\frac{\\partial{a_2}}{\\partial{m_1}}=",
   );
-  expect(getOutputItemLabelText("4", "DERIVATIVE")).toBe(
+  expect(getOutputItemLabelText("4", "derivative")).toBe(
     "\\displaystyle \\frac{\\partial{m_1}}{\\partial{m_1}}=",
   );
 
   // Check the derivative values
-  expect(getOutputItemValue("0", "DERIVATIVE")).toBe("0");
-  expect(getOutputItemValue("1", "DERIVATIVE")).toBe("0");
-  expect(getOutputItemValue("2", "DERIVATIVE")).toBe("0");
-  expect(getOutputItemValue("3", "DERIVATIVE")).toBe("0");
-  expect(getOutputItemValue("4", "DERIVATIVE")).toBe("1");
+  expect(getOutputItemValue("0", "derivative")).toBe("0");
+  expect(getOutputItemValue("1", "derivative")).toBe("0");
+  expect(getOutputItemValue("2", "derivative")).toBe("0");
+  expect(getOutputItemValue("3", "derivative")).toBe("0");
+  expect(getOutputItemValue("4", "derivative")).toBe("1");
 
   // Select the second variable node as the derivative target
   setDerivativeTarget("v_2");
 
   // Check the output values
-  expect(getOutputItemValue("2", "VALUE")).toBe("3");
-  expect(getOutputItemValue("3", "VALUE")).toBe("2");
-  expect(getOutputItemValue("4", "VALUE")).toBe("6");
+  expect(getOutputItemValue("2", "value")).toBe("3");
+  expect(getOutputItemValue("3", "value")).toBe("2");
+  expect(getOutputItemValue("4", "value")).toBe("6");
 
   // Check the derivative labels
-  expect(getOutputItemLabelText("0", "DERIVATIVE")).toBe(
+  expect(getOutputItemLabelText("0", "derivative")).toBe(
     "\\displaystyle \\frac{\\partial{v_1}}{\\partial{v_2}}=",
   );
-  expect(getOutputItemLabelText("1", "DERIVATIVE")).toBe(
+  expect(getOutputItemLabelText("1", "derivative")).toBe(
     "\\displaystyle \\frac{\\partial{v_2}}{\\partial{v_2}}=",
   );
-  expect(getOutputItemLabelText("2", "DERIVATIVE")).toBe(
+  expect(getOutputItemLabelText("2", "derivative")).toBe(
     "\\displaystyle \\frac{\\partial{a_1}}{\\partial{v_2}}=",
   );
-  expect(getOutputItemLabelText("3", "DERIVATIVE")).toBe(
+  expect(getOutputItemLabelText("3", "derivative")).toBe(
     "\\displaystyle \\frac{\\partial{a_2}}{\\partial{v_2}}=",
   );
-  expect(getOutputItemLabelText("4", "DERIVATIVE")).toBe(
+  expect(getOutputItemLabelText("4", "derivative")).toBe(
     "\\displaystyle \\frac{\\partial{m_1}}{\\partial{v_2}}=",
   );
 
   // Check the derivative values
-  expect(getOutputItemValue("0", "DERIVATIVE")).toBe("0");
-  expect(getOutputItemValue("1", "DERIVATIVE")).toBe("1");
-  expect(getOutputItemValue("2", "DERIVATIVE")).toBe("1");
-  expect(getOutputItemValue("3", "DERIVATIVE")).toBe("1");
-  expect(getOutputItemValue("4", "DERIVATIVE")).toBe("5");
+  expect(getOutputItemValue("0", "derivative")).toBe("0");
+  expect(getOutputItemValue("1", "derivative")).toBe("1");
+  expect(getOutputItemValue("2", "derivative")).toBe("1");
+  expect(getOutputItemValue("3", "derivative")).toBe("1");
+  expect(getOutputItemValue("4", "derivative")).toBe("5");
 });
 
 const renderGraphContainer = (): void => {

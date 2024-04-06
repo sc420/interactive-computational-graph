@@ -617,7 +617,7 @@ const addConstantNode = (
   nodeId: string,
   nodeName: string,
 ): void => {
-  const featureType: FeatureNodeType = { nodeType: "CONSTANT" };
+  const featureType: FeatureNodeType = { nodeType: "constant" };
   adapter.addNode(featureType, featureOperation, nodeId, nodeName);
 };
 
@@ -627,7 +627,7 @@ const addAddNode = (
   nodeName: string,
 ): void => {
   const featureType: FeatureNodeType = {
-    nodeType: "OPERATION",
+    nodeType: "operation",
     operationId: "add",
   };
   adapter.addNode(featureType, featureOperation, nodeId, nodeName);

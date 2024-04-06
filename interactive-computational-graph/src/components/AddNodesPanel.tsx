@@ -106,7 +106,7 @@ const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
         <AccordionDetails id="value-content" sx={{ p: 0 }}>
           <List>
             <DraggableItem
-              featureNodeType={{ nodeType: "CONSTANT" }}
+              featureNodeType={{ nodeType: "constant" }}
               text="Constant"
               helpText="Set a constant value"
               editable={false}
@@ -114,7 +114,7 @@ const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
               onClickEditIcon={null}
             />
             <DraggableItem
-              featureNodeType={{ nodeType: "VARIABLE" }}
+              featureNodeType={{ nodeType: "variable" }}
               text="Variable"
               helpText="Set a variable"
               editable={false}
@@ -157,7 +157,7 @@ const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
                   <DraggableItem
                     key={operation.id}
                     featureNodeType={{
-                      nodeType: "OPERATION",
+                      nodeType: "operation",
                       operationId: operation.id,
                     }}
                     text={operation.name}
@@ -190,7 +190,7 @@ const AddNodesPanel: FunctionComponent<AddNodesPanelProps> = ({
               <DraggableItem
                 key={operation.id}
                 featureNodeType={{
-                  nodeType: "OPERATION",
+                  nodeType: "operation",
                   operationId: operation.id,
                 }}
                 text={operation.name}

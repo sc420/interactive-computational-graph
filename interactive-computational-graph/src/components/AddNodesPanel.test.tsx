@@ -62,7 +62,7 @@ test("should trigger event when clicking item", () => {
   const addItem = screen.getByText("Add");
   fireEvent.click(addItem);
   const expectedNodeType: FeatureNodeType = {
-    nodeType: "OPERATION",
+    nodeType: "operation",
     operationId: "add",
   };
   expect(handleAddNode).toHaveBeenCalledWith(expectedNodeType);

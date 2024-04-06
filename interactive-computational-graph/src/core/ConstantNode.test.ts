@@ -4,7 +4,7 @@ import VariableNode from "./VariableNode";
 
 test("should have correct properties", () => {
   const constNode = new ConstantNode("c1");
-  expect(constNode.getType()).toBe("CONSTANT");
+  expect(constNode.getType()).toBe("constant");
   expect(constNode.getId()).toBe("c1");
   expect(constNode.isConstant()).toBe(true);
   expect(constNode.getValue()).toBe("0");
@@ -43,7 +43,7 @@ test("can save the state", () => {
   const state = constNode.save();
   expect(state).toEqual(
     expect.objectContaining({
-      nodeType: "CONSTANT",
+      nodeType: "constant",
       value: "3",
     }),
   );

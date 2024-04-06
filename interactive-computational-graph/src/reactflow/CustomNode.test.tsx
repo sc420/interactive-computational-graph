@@ -64,7 +64,7 @@ const getFakeData = (): NodeData => {
       name: "Add",
       helpText: "Add two numbers $ a + b $",
     },
-    featureNodeType: { nodeType: "OPERATION", operationId: "op1" },
+    featureNodeType: { nodeType: "operation", operationId: "op1" },
     inputItems: [
       {
         id: "a",
@@ -76,7 +76,7 @@ const getFakeData = (): NodeData => {
     ],
     outputItems: [
       {
-        type: "VALUE",
+        type: "value",
         labelParts: [{ type: "text", id: "equal", text: "=" }],
         value: "0",
       },

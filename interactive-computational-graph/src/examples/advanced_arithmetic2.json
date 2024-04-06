@@ -3,21 +3,21 @@
         "coreGraphState": {
             "nodeIdToNodes": {
                 "0": {
-                    "nodeType": "VARIABLE",
+                    "nodeType": "variable",
                     "value": "1",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
                     }
                 },
                 "1": {
-                    "nodeType": "VARIABLE",
+                    "nodeType": "variable",
                     "value": "4",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
                     }
                 },
                 "2": {
-                    "nodeType": "OPERATION",
+                    "nodeType": "operation",
                     "operationId": "power",
                     "relationship": {
                         "inputPortIdToNodeIds": {
@@ -31,7 +31,7 @@
                     }
                 },
                 "3": {
-                    "nodeType": "OPERATION",
+                    "nodeType": "operation",
                     "operationId": "power",
                     "relationship": {
                         "inputPortIdToNodeIds": {
@@ -45,7 +45,7 @@
                     }
                 },
                 "4": {
-                    "nodeType": "OPERATION",
+                    "nodeType": "operation",
                     "operationId": "ln",
                     "relationship": {
                         "inputPortIdToNodeIds": {
@@ -56,7 +56,7 @@
                     }
                 },
                 "5": {
-                    "nodeType": "OPERATION",
+                    "nodeType": "operation",
                     "operationId": "ln",
                     "relationship": {
                         "inputPortIdToNodeIds": {
@@ -67,7 +67,7 @@
                     }
                 },
                 "6": {
-                    "nodeType": "OPERATION",
+                    "nodeType": "operation",
                     "operationId": "add",
                     "relationship": {
                         "inputPortIdToNodeIds": {
@@ -81,56 +81,56 @@
                     }
                 },
                 "dummy-input-node-2-x": {
-                    "nodeType": "CONSTANT",
+                    "nodeType": "constant",
                     "value": "0",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
                     }
                 },
                 "dummy-input-node-2-n": {
-                    "nodeType": "CONSTANT",
+                    "nodeType": "constant",
                     "value": "2",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
                     }
                 },
                 "dummy-input-node-3-x": {
-                    "nodeType": "CONSTANT",
+                    "nodeType": "constant",
                     "value": "0",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
                     }
                 },
                 "dummy-input-node-3-n": {
-                    "nodeType": "CONSTANT",
+                    "nodeType": "constant",
                     "value": "2",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
                     }
                 },
                 "dummy-input-node-4-x": {
-                    "nodeType": "CONSTANT",
+                    "nodeType": "constant",
                     "value": "0",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
                     }
                 },
                 "dummy-input-node-5-x": {
-                    "nodeType": "CONSTANT",
+                    "nodeType": "constant",
                     "value": "0",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
                     }
                 },
                 "dummy-input-node-6-a": {
-                    "nodeType": "CONSTANT",
+                    "nodeType": "constant",
                     "value": "0",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
                     }
                 },
                 "dummy-input-node-6-b": {
-                    "nodeType": "CONSTANT",
+                    "nodeType": "constant",
                     "value": "0",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
@@ -533,7 +533,7 @@
                     "name": "x",
                     "operationData": null,
                     "featureNodeType": {
-                        "nodeType": "VARIABLE"
+                        "nodeType": "variable"
                     },
                     "inputItems": [
                         {
@@ -546,7 +546,7 @@
                     ],
                     "outputItems": [
                         {
-                            "type": "DERIVATIVE",
+                            "type": "derivative",
                             "labelParts": [
                                 {
                                     "type": "latexLink",
@@ -587,7 +587,7 @@
                     "name": "y",
                     "operationData": null,
                     "featureNodeType": {
-                        "nodeType": "VARIABLE"
+                        "nodeType": "variable"
                     },
                     "inputItems": [
                         {
@@ -600,7 +600,7 @@
                     ],
                     "outputItems": [
                         {
-                            "type": "DERIVATIVE",
+                            "type": "derivative",
                             "labelParts": [
                                 {
                                     "type": "latexLink",
@@ -644,7 +644,7 @@
                         "helpText": "Calculate the power, i.e., x^n"
                     },
                     "featureNodeType": {
-                        "nodeType": "OPERATION",
+                        "nodeType": "operation",
                         "operationId": "power"
                     },
                     "inputItems": [
@@ -665,7 +665,7 @@
                     ],
                     "outputItems": [
                         {
-                            "type": "VALUE",
+                            "type": "value",
                             "labelParts": [
                                 {
                                     "type": "latex",
@@ -676,7 +676,7 @@
                             "value": "1"
                         },
                         {
-                            "type": "DERIVATIVE",
+                            "type": "derivative",
                             "labelParts": [
                                 {
                                     "type": "latexLink",
@@ -720,7 +720,7 @@
                         "helpText": "Calculate the power, i.e., x^n"
                     },
                     "featureNodeType": {
-                        "nodeType": "OPERATION",
+                        "nodeType": "operation",
                         "operationId": "power"
                     },
                     "inputItems": [
@@ -741,7 +741,7 @@
                     ],
                     "outputItems": [
                         {
-                            "type": "VALUE",
+                            "type": "value",
                             "labelParts": [
                                 {
                                     "type": "latex",
@@ -752,7 +752,7 @@
                             "value": "16"
                         },
                         {
-                            "type": "DERIVATIVE",
+                            "type": "derivative",
                             "labelParts": [
                                 {
                                     "type": "latexLink",
@@ -796,7 +796,7 @@
                         "helpText": "Calculate the log: ln(x)"
                     },
                     "featureNodeType": {
-                        "nodeType": "OPERATION",
+                        "nodeType": "operation",
                         "operationId": "ln"
                     },
                     "inputItems": [
@@ -810,7 +810,7 @@
                     ],
                     "outputItems": [
                         {
-                            "type": "VALUE",
+                            "type": "value",
                             "labelParts": [
                                 {
                                     "type": "latex",
@@ -821,7 +821,7 @@
                             "value": "0"
                         },
                         {
-                            "type": "DERIVATIVE",
+                            "type": "derivative",
                             "labelParts": [
                                 {
                                     "type": "latexLink",
@@ -865,7 +865,7 @@
                         "helpText": "Calculate the log: ln(x)"
                     },
                     "featureNodeType": {
-                        "nodeType": "OPERATION",
+                        "nodeType": "operation",
                         "operationId": "ln"
                     },
                     "inputItems": [
@@ -879,7 +879,7 @@
                     ],
                     "outputItems": [
                         {
-                            "type": "VALUE",
+                            "type": "value",
                             "labelParts": [
                                 {
                                     "type": "latex",
@@ -890,7 +890,7 @@
                             "value": "2.772588722239781"
                         },
                         {
-                            "type": "DERIVATIVE",
+                            "type": "derivative",
                             "labelParts": [
                                 {
                                     "type": "latexLink",
@@ -934,7 +934,7 @@
                         "helpText": "Add two numbers, i.e., a + b"
                     },
                     "featureNodeType": {
-                        "nodeType": "OPERATION",
+                        "nodeType": "operation",
                         "operationId": "add"
                     },
                     "inputItems": [
@@ -955,7 +955,7 @@
                     ],
                     "outputItems": [
                         {
-                            "type": "VALUE",
+                            "type": "value",
                             "labelParts": [
                                 {
                                     "type": "latex",
@@ -966,7 +966,7 @@
                             "value": "2.772588722239781"
                         },
                         {
-                            "type": "DERIVATIVE",
+                            "type": "derivative",
                             "labelParts": [
                                 {
                                     "type": "latexLink",

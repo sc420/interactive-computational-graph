@@ -3,49 +3,49 @@
         "coreGraphState": {
             "nodeIdToNodes": {
                 "0": {
-                    "nodeType": "VARIABLE",
+                    "nodeType": "variable",
                     "value": "0",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
                     }
                 },
                 "1": {
-                    "nodeType": "VARIABLE",
+                    "nodeType": "variable",
                     "value": "1",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
                     }
                 },
                 "2": {
-                    "nodeType": "VARIABLE",
+                    "nodeType": "variable",
                     "value": "-0.1",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
                     }
                 },
                 "3": {
-                    "nodeType": "VARIABLE",
+                    "nodeType": "variable",
                     "value": "-0.2",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
                     }
                 },
                 "4": {
-                    "nodeType": "VARIABLE",
+                    "nodeType": "variable",
                     "value": "0.1",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
                     }
                 },
                 "5": {
-                    "nodeType": "VARIABLE",
+                    "nodeType": "variable",
                     "value": "0.2",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
                     }
                 },
                 "6": {
-                    "nodeType": "OPERATION",
+                    "nodeType": "operation",
                     "operationId": "multiply",
                     "relationship": {
                         "inputPortIdToNodeIds": {
@@ -59,7 +59,7 @@
                     }
                 },
                 "7": {
-                    "nodeType": "OPERATION",
+                    "nodeType": "operation",
                     "operationId": "multiply",
                     "relationship": {
                         "inputPortIdToNodeIds": {
@@ -73,7 +73,7 @@
                     }
                 },
                 "8": {
-                    "nodeType": "OPERATION",
+                    "nodeType": "operation",
                     "operationId": "multiply",
                     "relationship": {
                         "inputPortIdToNodeIds": {
@@ -87,7 +87,7 @@
                     }
                 },
                 "9": {
-                    "nodeType": "OPERATION",
+                    "nodeType": "operation",
                     "operationId": "multiply",
                     "relationship": {
                         "inputPortIdToNodeIds": {
@@ -101,21 +101,21 @@
                     }
                 },
                 "10": {
-                    "nodeType": "VARIABLE",
+                    "nodeType": "variable",
                     "value": "-0.3",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
                     }
                 },
                 "11": {
-                    "nodeType": "VARIABLE",
+                    "nodeType": "variable",
                     "value": "0.3",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
                     }
                 },
                 "12": {
-                    "nodeType": "OPERATION",
+                    "nodeType": "operation",
                     "operationId": "sum",
                     "relationship": {
                         "inputPortIdToNodeIds": {
@@ -128,7 +128,7 @@
                     }
                 },
                 "13": {
-                    "nodeType": "OPERATION",
+                    "nodeType": "operation",
                     "operationId": "sum",
                     "relationship": {
                         "inputPortIdToNodeIds": {
@@ -141,7 +141,7 @@
                     }
                 },
                 "14": {
-                    "nodeType": "OPERATION",
+                    "nodeType": "operation",
                     "operationId": "relu",
                     "relationship": {
                         "inputPortIdToNodeIds": {
@@ -152,7 +152,7 @@
                     }
                 },
                 "15": {
-                    "nodeType": "OPERATION",
+                    "nodeType": "operation",
                     "operationId": "relu",
                     "relationship": {
                         "inputPortIdToNodeIds": {
@@ -163,21 +163,21 @@
                     }
                 },
                 "16": {
-                    "nodeType": "VARIABLE",
+                    "nodeType": "variable",
                     "value": "-0.5",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
                     }
                 },
                 "17": {
-                    "nodeType": "VARIABLE",
+                    "nodeType": "variable",
                     "value": "0.5",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
                     }
                 },
                 "18": {
-                    "nodeType": "OPERATION",
+                    "nodeType": "operation",
                     "operationId": "multiply",
                     "relationship": {
                         "inputPortIdToNodeIds": {
@@ -191,7 +191,7 @@
                     }
                 },
                 "19": {
-                    "nodeType": "OPERATION",
+                    "nodeType": "operation",
                     "operationId": "multiply",
                     "relationship": {
                         "inputPortIdToNodeIds": {
@@ -205,14 +205,14 @@
                     }
                 },
                 "20": {
-                    "nodeType": "VARIABLE",
+                    "nodeType": "variable",
                     "value": "-0.25",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
                     }
                 },
                 "21": {
-                    "nodeType": "OPERATION",
+                    "nodeType": "operation",
                     "operationId": "sum",
                     "relationship": {
                         "inputPortIdToNodeIds": {
@@ -225,7 +225,7 @@
                     }
                 },
                 "22": {
-                    "nodeType": "OPERATION",
+                    "nodeType": "operation",
                     "operationId": "sigmoid",
                     "relationship": {
                         "inputPortIdToNodeIds": {
@@ -236,14 +236,14 @@
                     }
                 },
                 "23": {
-                    "nodeType": "VARIABLE",
+                    "nodeType": "variable",
                     "value": "0",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
                     }
                 },
                 "24": {
-                    "nodeType": "OPERATION",
+                    "nodeType": "operation",
                     "operationId": "squared_error",
                     "relationship": {
                         "inputPortIdToNodeIds": {
@@ -257,140 +257,140 @@
                     }
                 },
                 "dummy-input-node-6-a": {
-                    "nodeType": "CONSTANT",
+                    "nodeType": "constant",
                     "value": "0",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
                     }
                 },
                 "dummy-input-node-6-b": {
-                    "nodeType": "CONSTANT",
+                    "nodeType": "constant",
                     "value": "0",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
                     }
                 },
                 "dummy-input-node-7-a": {
-                    "nodeType": "CONSTANT",
+                    "nodeType": "constant",
                     "value": "0",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
                     }
                 },
                 "dummy-input-node-7-b": {
-                    "nodeType": "CONSTANT",
+                    "nodeType": "constant",
                     "value": "0",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
                     }
                 },
                 "dummy-input-node-8-a": {
-                    "nodeType": "CONSTANT",
+                    "nodeType": "constant",
                     "value": "0",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
                     }
                 },
                 "dummy-input-node-8-b": {
-                    "nodeType": "CONSTANT",
+                    "nodeType": "constant",
                     "value": "0",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
                     }
                 },
                 "dummy-input-node-9-a": {
-                    "nodeType": "CONSTANT",
+                    "nodeType": "constant",
                     "value": "0",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
                     }
                 },
                 "dummy-input-node-9-b": {
-                    "nodeType": "CONSTANT",
+                    "nodeType": "constant",
                     "value": "0",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
                     }
                 },
                 "dummy-input-node-12-x_i": {
-                    "nodeType": "CONSTANT",
+                    "nodeType": "constant",
                     "value": "0",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
                     }
                 },
                 "dummy-input-node-13-x_i": {
-                    "nodeType": "CONSTANT",
+                    "nodeType": "constant",
                     "value": "0",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
                     }
                 },
                 "dummy-input-node-14-x": {
-                    "nodeType": "CONSTANT",
+                    "nodeType": "constant",
                     "value": "0",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
                     }
                 },
                 "dummy-input-node-15-x": {
-                    "nodeType": "CONSTANT",
+                    "nodeType": "constant",
                     "value": "0",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
                     }
                 },
                 "dummy-input-node-18-a": {
-                    "nodeType": "CONSTANT",
+                    "nodeType": "constant",
                     "value": "0",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
                     }
                 },
                 "dummy-input-node-18-b": {
-                    "nodeType": "CONSTANT",
+                    "nodeType": "constant",
                     "value": "0",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
                     }
                 },
                 "dummy-input-node-19-a": {
-                    "nodeType": "CONSTANT",
+                    "nodeType": "constant",
                     "value": "0",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
                     }
                 },
                 "dummy-input-node-19-b": {
-                    "nodeType": "CONSTANT",
+                    "nodeType": "constant",
                     "value": "0",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
                     }
                 },
                 "dummy-input-node-21-x_i": {
-                    "nodeType": "CONSTANT",
+                    "nodeType": "constant",
                     "value": "0",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
                     }
                 },
                 "dummy-input-node-22-x": {
-                    "nodeType": "CONSTANT",
+                    "nodeType": "constant",
                     "value": "0",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
                     }
                 },
                 "dummy-input-node-24-y_t": {
-                    "nodeType": "CONSTANT",
+                    "nodeType": "constant",
                     "value": "0",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
                     }
                 },
                 "dummy-input-node-24-y_e": {
-                    "nodeType": "CONSTANT",
+                    "nodeType": "constant",
                     "value": "0",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
@@ -839,7 +839,7 @@
                     "name": "x_1",
                     "operationData": null,
                     "featureNodeType": {
-                        "nodeType": "VARIABLE"
+                        "nodeType": "variable"
                     },
                     "inputItems": [
                         {
@@ -852,7 +852,7 @@
                     ],
                     "outputItems": [
                         {
-                            "type": "DERIVATIVE",
+                            "type": "derivative",
                             "labelParts": [
                                 {
                                     "type": "latexLink",
@@ -893,7 +893,7 @@
                     "name": "x_2",
                     "operationData": null,
                     "featureNodeType": {
-                        "nodeType": "VARIABLE"
+                        "nodeType": "variable"
                     },
                     "inputItems": [
                         {
@@ -906,7 +906,7 @@
                     ],
                     "outputItems": [
                         {
-                            "type": "DERIVATIVE",
+                            "type": "derivative",
                             "labelParts": [
                                 {
                                     "type": "latexLink",
@@ -947,7 +947,7 @@
                     "name": "w^{(1)}_{11}",
                     "operationData": null,
                     "featureNodeType": {
-                        "nodeType": "VARIABLE"
+                        "nodeType": "variable"
                     },
                     "inputItems": [
                         {
@@ -960,7 +960,7 @@
                     ],
                     "outputItems": [
                         {
-                            "type": "DERIVATIVE",
+                            "type": "derivative",
                             "labelParts": [
                                 {
                                     "type": "latexLink",
@@ -1001,7 +1001,7 @@
                     "name": "w^{(1)}_{21}",
                     "operationData": null,
                     "featureNodeType": {
-                        "nodeType": "VARIABLE"
+                        "nodeType": "variable"
                     },
                     "inputItems": [
                         {
@@ -1014,7 +1014,7 @@
                     ],
                     "outputItems": [
                         {
-                            "type": "DERIVATIVE",
+                            "type": "derivative",
                             "labelParts": [
                                 {
                                     "type": "latexLink",
@@ -1055,7 +1055,7 @@
                     "name": "w^{(1)}_{12}",
                     "operationData": null,
                     "featureNodeType": {
-                        "nodeType": "VARIABLE"
+                        "nodeType": "variable"
                     },
                     "inputItems": [
                         {
@@ -1068,7 +1068,7 @@
                     ],
                     "outputItems": [
                         {
-                            "type": "DERIVATIVE",
+                            "type": "derivative",
                             "labelParts": [
                                 {
                                     "type": "latexLink",
@@ -1109,7 +1109,7 @@
                     "name": "w^{(1)}_{22}",
                     "operationData": null,
                     "featureNodeType": {
-                        "nodeType": "VARIABLE"
+                        "nodeType": "variable"
                     },
                     "inputItems": [
                         {
@@ -1122,7 +1122,7 @@
                     ],
                     "outputItems": [
                         {
-                            "type": "DERIVATIVE",
+                            "type": "derivative",
                             "labelParts": [
                                 {
                                     "type": "latexLink",
@@ -1166,7 +1166,7 @@
                         "helpText": "Multiply two numbers, i.e., a * b"
                     },
                     "featureNodeType": {
-                        "nodeType": "OPERATION",
+                        "nodeType": "operation",
                         "operationId": "multiply"
                     },
                     "inputItems": [
@@ -1187,7 +1187,7 @@
                     ],
                     "outputItems": [
                         {
-                            "type": "VALUE",
+                            "type": "value",
                             "labelParts": [
                                 {
                                     "type": "latex",
@@ -1198,7 +1198,7 @@
                             "value": "0"
                         },
                         {
-                            "type": "DERIVATIVE",
+                            "type": "derivative",
                             "labelParts": [
                                 {
                                     "type": "latexLink",
@@ -1242,7 +1242,7 @@
                         "helpText": "Multiply two numbers, i.e., a * b"
                     },
                     "featureNodeType": {
-                        "nodeType": "OPERATION",
+                        "nodeType": "operation",
                         "operationId": "multiply"
                     },
                     "inputItems": [
@@ -1263,7 +1263,7 @@
                     ],
                     "outputItems": [
                         {
-                            "type": "VALUE",
+                            "type": "value",
                             "labelParts": [
                                 {
                                     "type": "latex",
@@ -1274,7 +1274,7 @@
                             "value": "-0.2"
                         },
                         {
-                            "type": "DERIVATIVE",
+                            "type": "derivative",
                             "labelParts": [
                                 {
                                     "type": "latexLink",
@@ -1318,7 +1318,7 @@
                         "helpText": "Multiply two numbers, i.e., a * b"
                     },
                     "featureNodeType": {
-                        "nodeType": "OPERATION",
+                        "nodeType": "operation",
                         "operationId": "multiply"
                     },
                     "inputItems": [
@@ -1339,7 +1339,7 @@
                     ],
                     "outputItems": [
                         {
-                            "type": "VALUE",
+                            "type": "value",
                             "labelParts": [
                                 {
                                     "type": "latex",
@@ -1350,7 +1350,7 @@
                             "value": "0"
                         },
                         {
-                            "type": "DERIVATIVE",
+                            "type": "derivative",
                             "labelParts": [
                                 {
                                     "type": "latexLink",
@@ -1394,7 +1394,7 @@
                         "helpText": "Multiply two numbers, i.e., a * b"
                     },
                     "featureNodeType": {
-                        "nodeType": "OPERATION",
+                        "nodeType": "operation",
                         "operationId": "multiply"
                     },
                     "inputItems": [
@@ -1415,7 +1415,7 @@
                     ],
                     "outputItems": [
                         {
-                            "type": "VALUE",
+                            "type": "value",
                             "labelParts": [
                                 {
                                     "type": "latex",
@@ -1426,7 +1426,7 @@
                             "value": "0.2"
                         },
                         {
-                            "type": "DERIVATIVE",
+                            "type": "derivative",
                             "labelParts": [
                                 {
                                     "type": "latexLink",
@@ -1467,7 +1467,7 @@
                     "name": "b^{(1)}_1",
                     "operationData": null,
                     "featureNodeType": {
-                        "nodeType": "VARIABLE"
+                        "nodeType": "variable"
                     },
                     "inputItems": [
                         {
@@ -1480,7 +1480,7 @@
                     ],
                     "outputItems": [
                         {
-                            "type": "DERIVATIVE",
+                            "type": "derivative",
                             "labelParts": [
                                 {
                                     "type": "latexLink",
@@ -1521,7 +1521,7 @@
                     "name": "b^{(1)}_2",
                     "operationData": null,
                     "featureNodeType": {
-                        "nodeType": "VARIABLE"
+                        "nodeType": "variable"
                     },
                     "inputItems": [
                         {
@@ -1534,7 +1534,7 @@
                     ],
                     "outputItems": [
                         {
-                            "type": "DERIVATIVE",
+                            "type": "derivative",
                             "labelParts": [
                                 {
                                     "type": "latexLink",
@@ -1578,7 +1578,7 @@
                         "helpText": "Add all inputs: sum_i x_i, i.e., x_0 + x_1 + ..."
                     },
                     "featureNodeType": {
-                        "nodeType": "OPERATION",
+                        "nodeType": "operation",
                         "operationId": "sum"
                     },
                     "inputItems": [
@@ -1592,7 +1592,7 @@
                     ],
                     "outputItems": [
                         {
-                            "type": "VALUE",
+                            "type": "value",
                             "labelParts": [
                                 {
                                     "type": "latex",
@@ -1603,7 +1603,7 @@
                             "value": "-0.5"
                         },
                         {
-                            "type": "DERIVATIVE",
+                            "type": "derivative",
                             "labelParts": [
                                 {
                                     "type": "latexLink",
@@ -1647,7 +1647,7 @@
                         "helpText": "Add all inputs: sum_i x_i, i.e., x_0 + x_1 + ..."
                     },
                     "featureNodeType": {
-                        "nodeType": "OPERATION",
+                        "nodeType": "operation",
                         "operationId": "sum"
                     },
                     "inputItems": [
@@ -1661,7 +1661,7 @@
                     ],
                     "outputItems": [
                         {
-                            "type": "VALUE",
+                            "type": "value",
                             "labelParts": [
                                 {
                                     "type": "latex",
@@ -1672,7 +1672,7 @@
                             "value": "0.5"
                         },
                         {
-                            "type": "DERIVATIVE",
+                            "type": "derivative",
                             "labelParts": [
                                 {
                                     "type": "latexLink",
@@ -1716,7 +1716,7 @@
                         "helpText": "ReLU activation function, i.e., y=max(0, x)"
                     },
                     "featureNodeType": {
-                        "nodeType": "OPERATION",
+                        "nodeType": "operation",
                         "operationId": "relu"
                     },
                     "inputItems": [
@@ -1730,7 +1730,7 @@
                     ],
                     "outputItems": [
                         {
-                            "type": "VALUE",
+                            "type": "value",
                             "labelParts": [
                                 {
                                     "type": "latex",
@@ -1741,7 +1741,7 @@
                             "value": "0"
                         },
                         {
-                            "type": "DERIVATIVE",
+                            "type": "derivative",
                             "labelParts": [
                                 {
                                     "type": "latexLink",
@@ -1785,7 +1785,7 @@
                         "helpText": "ReLU activation function, i.e., y=max(0, x)"
                     },
                     "featureNodeType": {
-                        "nodeType": "OPERATION",
+                        "nodeType": "operation",
                         "operationId": "relu"
                     },
                     "inputItems": [
@@ -1799,7 +1799,7 @@
                     ],
                     "outputItems": [
                         {
-                            "type": "VALUE",
+                            "type": "value",
                             "labelParts": [
                                 {
                                     "type": "latex",
@@ -1810,7 +1810,7 @@
                             "value": "0.5"
                         },
                         {
-                            "type": "DERIVATIVE",
+                            "type": "derivative",
                             "labelParts": [
                                 {
                                     "type": "latexLink",
@@ -1851,7 +1851,7 @@
                     "name": "w^{(2)}_{11}",
                     "operationData": null,
                     "featureNodeType": {
-                        "nodeType": "VARIABLE"
+                        "nodeType": "variable"
                     },
                     "inputItems": [
                         {
@@ -1864,7 +1864,7 @@
                     ],
                     "outputItems": [
                         {
-                            "type": "DERIVATIVE",
+                            "type": "derivative",
                             "labelParts": [
                                 {
                                     "type": "latexLink",
@@ -1905,7 +1905,7 @@
                     "name": "w^{(2)}_{21}",
                     "operationData": null,
                     "featureNodeType": {
-                        "nodeType": "VARIABLE"
+                        "nodeType": "variable"
                     },
                     "inputItems": [
                         {
@@ -1918,7 +1918,7 @@
                     ],
                     "outputItems": [
                         {
-                            "type": "DERIVATIVE",
+                            "type": "derivative",
                             "labelParts": [
                                 {
                                     "type": "latexLink",
@@ -1962,7 +1962,7 @@
                         "helpText": "Multiply two numbers, i.e., a * b"
                     },
                     "featureNodeType": {
-                        "nodeType": "OPERATION",
+                        "nodeType": "operation",
                         "operationId": "multiply"
                     },
                     "inputItems": [
@@ -1983,7 +1983,7 @@
                     ],
                     "outputItems": [
                         {
-                            "type": "VALUE",
+                            "type": "value",
                             "labelParts": [
                                 {
                                     "type": "latex",
@@ -1994,7 +1994,7 @@
                             "value": "0"
                         },
                         {
-                            "type": "DERIVATIVE",
+                            "type": "derivative",
                             "labelParts": [
                                 {
                                     "type": "latexLink",
@@ -2038,7 +2038,7 @@
                         "helpText": "Multiply two numbers, i.e., a * b"
                     },
                     "featureNodeType": {
-                        "nodeType": "OPERATION",
+                        "nodeType": "operation",
                         "operationId": "multiply"
                     },
                     "inputItems": [
@@ -2059,7 +2059,7 @@
                     ],
                     "outputItems": [
                         {
-                            "type": "VALUE",
+                            "type": "value",
                             "labelParts": [
                                 {
                                     "type": "latex",
@@ -2070,7 +2070,7 @@
                             "value": "0.25"
                         },
                         {
-                            "type": "DERIVATIVE",
+                            "type": "derivative",
                             "labelParts": [
                                 {
                                     "type": "latexLink",
@@ -2111,7 +2111,7 @@
                     "name": "b^{(2)}_1",
                     "operationData": null,
                     "featureNodeType": {
-                        "nodeType": "VARIABLE"
+                        "nodeType": "variable"
                     },
                     "inputItems": [
                         {
@@ -2124,7 +2124,7 @@
                     ],
                     "outputItems": [
                         {
-                            "type": "DERIVATIVE",
+                            "type": "derivative",
                             "labelParts": [
                                 {
                                     "type": "latexLink",
@@ -2168,7 +2168,7 @@
                         "helpText": "Add all inputs: sum_i x_i, i.e., x_0 + x_1 + ..."
                     },
                     "featureNodeType": {
-                        "nodeType": "OPERATION",
+                        "nodeType": "operation",
                         "operationId": "sum"
                     },
                     "inputItems": [
@@ -2182,7 +2182,7 @@
                     ],
                     "outputItems": [
                         {
-                            "type": "VALUE",
+                            "type": "value",
                             "labelParts": [
                                 {
                                     "type": "latex",
@@ -2193,7 +2193,7 @@
                             "value": "0"
                         },
                         {
-                            "type": "DERIVATIVE",
+                            "type": "derivative",
                             "labelParts": [
                                 {
                                     "type": "latexLink",
@@ -2237,7 +2237,7 @@
                         "helpText": "Sigmoid activation function, i.e., y=1/(1 + e^(-x))"
                     },
                     "featureNodeType": {
-                        "nodeType": "OPERATION",
+                        "nodeType": "operation",
                         "operationId": "sigmoid"
                     },
                     "inputItems": [
@@ -2251,7 +2251,7 @@
                     ],
                     "outputItems": [
                         {
-                            "type": "VALUE",
+                            "type": "value",
                             "labelParts": [
                                 {
                                     "type": "latex",
@@ -2262,7 +2262,7 @@
                             "value": "0.5"
                         },
                         {
-                            "type": "DERIVATIVE",
+                            "type": "derivative",
                             "labelParts": [
                                 {
                                     "type": "latexLink",
@@ -2303,7 +2303,7 @@
                     "name": "y",
                     "operationData": null,
                     "featureNodeType": {
-                        "nodeType": "VARIABLE"
+                        "nodeType": "variable"
                     },
                     "inputItems": [
                         {
@@ -2316,7 +2316,7 @@
                     ],
                     "outputItems": [
                         {
-                            "type": "DERIVATIVE",
+                            "type": "derivative",
                             "labelParts": [
                                 {
                                     "type": "latexLink",
@@ -2360,7 +2360,7 @@
                         "helpText": "Calculate the squared error, i.e., (y_t - y_e)^2\n (y_t: true value, y_e: estimated value)"
                     },
                     "featureNodeType": {
-                        "nodeType": "OPERATION",
+                        "nodeType": "operation",
                         "operationId": "squared_error"
                     },
                     "inputItems": [
@@ -2381,7 +2381,7 @@
                     ],
                     "outputItems": [
                         {
-                            "type": "VALUE",
+                            "type": "value",
                             "labelParts": [
                                 {
                                     "type": "latex",
@@ -2392,7 +2392,7 @@
                             "value": "0.25"
                         },
                         {
-                            "type": "DERIVATIVE",
+                            "type": "derivative",
                             "labelParts": [
                                 {
                                     "type": "latexLink",

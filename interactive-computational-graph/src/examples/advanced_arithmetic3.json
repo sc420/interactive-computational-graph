@@ -3,14 +3,14 @@
         "coreGraphState": {
             "nodeIdToNodes": {
                 "0": {
-                    "nodeType": "VARIABLE",
+                    "nodeType": "variable",
                     "value": "1",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
                     }
                 },
                 "1": {
-                    "nodeType": "OPERATION",
+                    "nodeType": "operation",
                     "operationId": "sin",
                     "relationship": {
                         "inputPortIdToNodeIds": {
@@ -21,7 +21,7 @@
                     }
                 },
                 "2": {
-                    "nodeType": "OPERATION",
+                    "nodeType": "operation",
                     "operationId": "divide",
                     "relationship": {
                         "inputPortIdToNodeIds": {
@@ -35,21 +35,21 @@
                     }
                 },
                 "dummy-input-node-1-x": {
-                    "nodeType": "CONSTANT",
+                    "nodeType": "constant",
                     "value": "0",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
                     }
                 },
                 "dummy-input-node-2-a": {
-                    "nodeType": "CONSTANT",
+                    "nodeType": "constant",
                     "value": "0",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
                     }
                 },
                 "dummy-input-node-2-b": {
-                    "nodeType": "CONSTANT",
+                    "nodeType": "constant",
                     "value": "0",
                     "relationship": {
                         "inputPortIdToNodeIds": {}
@@ -436,7 +436,7 @@
                     "name": "x",
                     "operationData": null,
                     "featureNodeType": {
-                        "nodeType": "VARIABLE"
+                        "nodeType": "variable"
                     },
                     "inputItems": [
                         {
@@ -449,7 +449,7 @@
                     ],
                     "outputItems": [
                         {
-                            "type": "DERIVATIVE",
+                            "type": "derivative",
                             "labelParts": [
                                 {
                                     "type": "latexLink",
@@ -493,7 +493,7 @@
                         "helpText": "Calculate sin(x)"
                     },
                     "featureNodeType": {
-                        "nodeType": "OPERATION",
+                        "nodeType": "operation",
                         "operationId": "sin"
                     },
                     "inputItems": [
@@ -507,7 +507,7 @@
                     ],
                     "outputItems": [
                         {
-                            "type": "VALUE",
+                            "type": "value",
                             "labelParts": [
                                 {
                                     "type": "latex",
@@ -518,7 +518,7 @@
                             "value": "0.8414709848078965"
                         },
                         {
-                            "type": "DERIVATIVE",
+                            "type": "derivative",
                             "labelParts": [
                                 {
                                     "type": "latexLink",
@@ -562,7 +562,7 @@
                         "helpText": "Divide two numbers, i.e., a / b"
                     },
                     "featureNodeType": {
-                        "nodeType": "OPERATION",
+                        "nodeType": "operation",
                         "operationId": "divide"
                     },
                     "inputItems": [
@@ -583,7 +583,7 @@
                     ],
                     "outputItems": [
                         {
-                            "type": "VALUE",
+                            "type": "value",
                             "labelParts": [
                                 {
                                     "type": "latex",
@@ -594,7 +594,7 @@
                             "value": "0.8414709848078965"
                         },
                         {
-                            "type": "DERIVATIVE",
+                            "type": "derivative",
                             "labelParts": [
                                 {
                                     "type": "latexLink",

@@ -208,7 +208,7 @@ const updateReactFlowNodeFValues = (
 
       const data = node.data as NodeData;
       const outputItem = data.outputItems.find(
-        (outputItem) => outputItem.type === "VALUE",
+        (outputItem) => outputItem.type === "value",
       );
       if (outputItem !== undefined) {
         outputItem.value = value;
@@ -242,7 +242,7 @@ const updateReactFlowNodeDerivatives = (
 
       const data = node.data as NodeData;
       const outputItem = data.outputItems.find(
-        (outputItem) => outputItem.type === "DERIVATIVE",
+        (outputItem) => outputItem.type === "derivative",
       );
       if (outputItem !== undefined) {
         outputItem.labelParts = buildDerivativeLabelParts(
@@ -337,7 +337,7 @@ const buildReactFlowNodeData = (addNodeData: AddNodeData): NodeData => {
   const isHighlighted = false;
 
   switch (featureNodeType.nodeType) {
-    case "CONSTANT": {
+    case "constant": {
       return {
         name: nodeName,
         operationData: null,
@@ -360,7 +360,7 @@ const buildReactFlowNodeData = (addNodeData: AddNodeData): NodeData => {
         isHighlighted,
       };
     }
-    case "VARIABLE": {
+    case "variable": {
       const derivativeLabelParts = buildDerivativeLabelParts(
         isReverseMode,
         nodeId,
@@ -382,7 +382,7 @@ const buildReactFlowNodeData = (addNodeData: AddNodeData): NodeData => {
         ],
         outputItems: [
           {
-            type: "DERIVATIVE",
+            type: "derivative",
             labelParts: derivativeLabelParts,
             value: "0",
           },
@@ -395,7 +395,7 @@ const buildReactFlowNodeData = (addNodeData: AddNodeData): NodeData => {
         isHighlighted,
       };
     }
-    case "OPERATION": {
+    case "operation": {
       const derivativeLabelParts = buildDerivativeLabelParts(
         isReverseMode,
         nodeId,
@@ -423,7 +423,7 @@ const buildReactFlowNodeData = (addNodeData: AddNodeData): NodeData => {
         }),
         outputItems: [
           {
-            type: "VALUE",
+            type: "value",
             labelParts: [
               {
                 type: "latex",
@@ -434,7 +434,7 @@ const buildReactFlowNodeData = (addNodeData: AddNodeData): NodeData => {
             value: initialOutputValue,
           },
           {
-            type: "DERIVATIVE",
+            type: "derivative",
             labelParts: derivativeLabelParts,
             value: "0",
           },

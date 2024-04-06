@@ -67,19 +67,19 @@ test("should have correct state after loading", () => {
 
 const getConstantNodeType = (): FeatureNodeType => {
   return {
-    nodeType: "CONSTANT",
+    nodeType: "constant",
   };
 };
 
 const getVariableNodeType = (): FeatureNodeType => {
   return {
-    nodeType: "VARIABLE",
+    nodeType: "variable",
   };
 };
 
 const getAddNodeType = (): FeatureNodeType => {
   return {
-    nodeType: "OPERATION",
+    nodeType: "operation",
     operationId: "add",
   };
 };

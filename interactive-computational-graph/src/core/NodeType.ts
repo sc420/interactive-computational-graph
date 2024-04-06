@@ -1,3 +1,3 @@
-type NodeType = "CONSTANT" | "VARIABLE" | "OPERATION";
+type NodeType = "constant" | "variable" | "operation";
 
 export default NodeType;

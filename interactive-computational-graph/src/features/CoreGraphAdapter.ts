@@ -95,13 +95,13 @@ class CoreGraphAdapter {
     nodeId: string,
   ): CoreNode {
     switch (featureNodeType.nodeType) {
-      case "CONSTANT": {
+      case "constant": {
         return new ConstantNode(nodeId);
       }
-      case "VARIABLE": {
+      case "variable": {
         return new VariableNode(nodeId);
       }
-      case "OPERATION": {
+      case "operation": {
         if (featureOperation === null) {
           throw new Error("Should provide the operation");
         }
@@ -253,15 +253,15 @@ cycle`;
   ): void {
     const nodeType = this.graph.getNodeType(nodeId);
     switch (nodeType) {
-      case "CONSTANT": {
+      case "constant": {
         this.graph.setNodeValue(nodeId, value);
         break;
       }
-      case "VARIABLE": {
+      case "variable": {
         this.graph.setNodeValue(nodeId, value);
         break;
       }
-      case "OPERATION": {
+      case "operation": {
         const dummyInputNodeId = this.getDummyInputNodeId(nodeId, inputPortId);
         this.graph.setNodeValue(dummyInputNodeId, value);
         break;
@@ -491,7 +491,7 @@ cycle`;
   }
 
   private getExplainDerivativeType(nodeId: string): ExplainDerivativeType {
-    if (this.graph.getNodeType(nodeId) === "CONSTANT") {
+    if (this.graph.getNodeType(nodeId) === "constant") {
       return "zeroBecauseXIsConstant";
     }
 
@@ -748,8 +748,8 @@ cycle`;
         nodeId,
       );
       if (
-        coreNodeState.nodeType === "CONSTANT" ||
-        coreNodeState.nodeType === "VARIABLE"
+        coreNodeState.nodeType === "constant" ||
+        coreNodeState.nodeType === "variable"
       ) {
         node.setValue(coreNodeState.value);
       }
@@ -776,19 +776,19 @@ cycle`;
     state: CoreNodeState,
   ): FeatureNodeType {
     switch (state.nodeType) {
-      case "CONSTANT": {
+      case "constant": {
         return {
-          nodeType: "CONSTANT",
+          nodeType: "constant",
         };
       }
-      case "VARIABLE": {
+      case "variable": {
         return {
-          nodeType: "VARIABLE",
+          nodeType: "variable",
         };
       }
-      case "OPERATION": {
+      case "operation": {
         return {
-          nodeType: "OPERATION",
+          nodeType: "operation",
           operationId: state.operationId,
         };
       }

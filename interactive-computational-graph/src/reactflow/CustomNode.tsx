@@ -24,22 +24,22 @@ const CustomNode: FunctionComponent<CustomNodeProps> = ({
 
   const getColorTheme = useCallback((): Record<string, string> => {
     switch (data.featureNodeType.nodeType) {
-      case "CONSTANT":
+      case "constant":
         return data.isDarkMode ? teal : green;
-      case "VARIABLE":
+      case "variable":
         return lime;
-      case "OPERATION":
+      case "operation":
         return data.isDarkMode ? indigo : blue;
     }
   }, [data.featureNodeType.nodeType, data.isDarkMode]);
 
   const getDarkenCoefficient = useCallback(() => {
     switch (data.featureNodeType.nodeType) {
-      case "CONSTANT":
+      case "constant":
         return 0;
-      case "VARIABLE":
+      case "variable":
         return data.isDarkMode ? 0.25 : 0;
-      case "OPERATION":
+      case "operation":
         return data.isDarkMode ? 0.1 : 0;
     }
   }, [data.featureNodeType.nodeType, data.isDarkMode]);

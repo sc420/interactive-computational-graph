@@ -65,7 +65,7 @@ describe("manipulating connections", () => {
     graph.addNode(varNode1);
 
     expect(graph.getNodes()).toEqual([varNode1]);
-    expect(graph.getNodeType("v1")).toEqual("VARIABLE");
+    expect(graph.getNodeType("v1")).toEqual("variable");
     expect(graph.getNodeById("v1")).toEqual(varNode1);
     expect(graph.hasNode("v1")).toBe(true);
   });
@@ -989,21 +989,21 @@ describe("saving graph state", () => {
     expect(state).toEqual({
       nodeIdToNodes: {
         v1: {
-          nodeType: "VARIABLE",
+          nodeType: "variable",
           value: "2",
           relationship: {
             inputPortIdToNodeIds: {},
           },
         },
         v2: {
-          nodeType: "VARIABLE",
+          nodeType: "variable",
           value: "1",
           relationship: {
             inputPortIdToNodeIds: {},
           },
         },
         sum1: {
-          nodeType: "OPERATION",
+          nodeType: "operation",
           operationId: "sum",
           relationship: {
             inputPortIdToNodeIds: {

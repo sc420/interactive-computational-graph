@@ -32,7 +32,7 @@ class OperationNode implements CoreNode {
   }
 
   getType(): NodeType {
-    return "OPERATION";
+    return "operation";
   }
 
   getId(): string {
@@ -102,7 +102,7 @@ class OperationNode implements CoreNode {
 
   save(): CoreNodeState {
     return {
-      nodeType: "OPERATION",
+      nodeType: "operation",
       operationId: this.operationId,
       relationship: this.nodeRelationship.save(),
     };

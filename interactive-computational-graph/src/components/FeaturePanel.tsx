@@ -7,7 +7,6 @@ import type FeatureOperation from "../features/FeatureOperation";
 import type SelectedFeature from "../features/SelectedFeature";
 import type GraphContainerState from "../states/GraphContainerState";
 import AddNodesPanel from "./AddNodesPanel";
-import EditNodesPanel from "./EditNodesPanel";
 import ExplainDerivativesPanel from "./ExplainDerivativesPanel";
 import SaveLoadPanel from "./SaveLoadPanel";
 import TutorialPanel from "./TutorialPanel";
@@ -61,8 +60,6 @@ const FeaturePanel: FunctionComponent<FeaturePanelProps> = ({
             onDeleteOperation={onDeleteOperation}
           />
         );
-      case "view-nodes":
-        return <EditNodesPanel />;
       case "explain-derivatives":
         return (
           <ExplainDerivativesPanel
@@ -73,20 +70,6 @@ const FeaturePanel: FunctionComponent<FeaturePanelProps> = ({
             onClickLatexLink={onSelectNode}
           />
         );
-      case "network-builder":
-        return (
-          <AddNodesPanel
-            featureOperations={featureOperations}
-            operationIdsAddedAtLeastOnce={operationIdsAddedAtLeastOnce}
-            isDarkMode={isDarkMode}
-            onAddNode={onAddNode}
-            onAddOperation={onAddOperation}
-            onEditOperation={onEditOperation}
-            onDeleteOperation={onDeleteOperation}
-          />
-        );
-      case "examples":
-        return <EditNodesPanel />;
       case "save-load":
         return <SaveLoadPanel onSave={onSave} onLoad={onLoad} />;
       case "tutorial":

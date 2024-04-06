@@ -1,10 +1,7 @@
 import AddIcon from "@mui/icons-material/Add";
-import EmojiObjectsIcon from "@mui/icons-material/EmojiObjects";
 import HelpIcon from "@mui/icons-material/Help";
 import ImportExportIcon from "@mui/icons-material/ImportExport";
-import ListIcon from "@mui/icons-material/List";
 import SchoolIcon from "@mui/icons-material/School";
-import TimelineIcon from "@mui/icons-material/Timeline";
 import {
   List,
   ListItemButton,
@@ -39,24 +36,9 @@ const FeatureNavigator: FunctionComponent<FeatureNavigatorProps> = ({
       icon: <AddIcon />,
     },
     {
-      id: "view-nodes",
-      text: "View Nodes",
-      icon: <ListIcon />,
-    },
-    {
       id: "explain-derivatives",
       text: "Explain Derivatives",
       icon: <SchoolIcon />,
-    },
-    {
-      id: "network-builder",
-      text: "Network Builder",
-      icon: <TimelineIcon />,
-    },
-    {
-      id: "examples",
-      text: "Examples",
-      icon: <EmojiObjectsIcon />,
     },
     {
       id: "save-load",

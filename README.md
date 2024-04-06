@@ -1,6 +1,8 @@
 # Interactive Computational Graph
 
-A small React website to understand how computational graph and derivatives work. I created this website because I couldn't fully understand how back-propagation works in neural networks.
+A small educational React website to understand how computational graph and derivatives work. I created this tool because I couldn't fully understand how back-propagation works in neural networks.
+
+![screenshot](./interactive-computational-graph/public/get_started.gif "Get Started")
 
 ## Development
 

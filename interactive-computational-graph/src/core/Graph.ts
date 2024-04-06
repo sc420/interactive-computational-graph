@@ -455,7 +455,8 @@ multiple edges`,
           const derivative2 = node.calculateDfdx(inputNode);
           // d(node)/d(targetNode) = d(inputNode)/d(targetNode) *
           // d(node)/d(inputNode) (chain rule)
-          // TODO(sc420): Allow customization of product
+
+          // NOTE: You can customize the operation if the data are not numeric
           totalDerivative += parseFloat(derivative1) * parseFloat(derivative2);
         });
     } else {
@@ -470,7 +471,8 @@ multiple edges`,
           const derivative2 = this.getNodeDerivative(outputNode.getId());
           // d(targetNode)/d(node) = d(outputNode)/d(node) *
           // d(targetNode)/d(outputNode)
-          // TODO(sc420): Allow customization of product
+
+          // NOTE: You can customize the operation if the data are not numeric
           totalDerivative += parseFloat(derivative1) * parseFloat(derivative2);
         });
     }

@@ -1,6 +1,6 @@
 # Interactive Computational Graph
 
-A small educational React website to understand how computational graph and derivatives work. I created this tool because I couldn't fully understand how back-propagation works in neural networks.
+A small educational React website to understand how backpropagation and chain rule work in neural networks.
 
 Classic calculus problem $\frac{\sin{x}}{x}$:
 

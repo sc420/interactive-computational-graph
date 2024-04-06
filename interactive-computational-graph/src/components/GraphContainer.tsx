@@ -470,11 +470,23 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
           if (featureOperation.id !== updatedOperation.id) {
             return featureOperation;
           }
-          return updatedOperation;
+
+          featureOperation.operation.setFCode(
+            updatedOperation.operation.getFCode(),
+          );
+          featureOperation.operation.setDfdxCode(
+            updatedOperation.operation.getDfdxCode(),
+          );
+          return {
+            ...updatedOperation,
+            operation: featureOperation.operation,
+          };
         });
       });
+
+      coreGraphAdapter.updateOutputs();
     },
-    [],
+    [coreGraphAdapter],
   );
 
   const handleDeleteOperation = useCallback((operationId: string) => {

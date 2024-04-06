@@ -1,17 +1,17 @@
 import {
-  Connection,
-  Edge,
-  EdgeChange,
-  Node,
-  OnSelectionChangeParams,
-  XYPosition,
+  type Connection,
+  type Edge,
+  type EdgeChange,
+  type Node,
+  type OnSelectionChangeParams,
+  type XYPosition,
 } from "reactflow";
 import Operation from "../core/Operation";
 import Port from "../core/Port";
-import AddNodeData from "./AddNodeData";
+import type AddNodeData from "./AddNodeData";
 import { ADD_DFDX_CODE, ADD_F_CODE } from "./BuiltInCode";
-import FeatureNodeType from "./FeatureNodeType";
-import FeatureOperation from "./FeatureOperation";
+import type FeatureNodeType from "./FeatureNodeType";
+import type FeatureOperation from "./FeatureOperation";
 import {
   addReactFlowNode,
   deselectAllNodes,
@@ -29,7 +29,7 @@ import {
   updateReactFlowNodeInputValue,
   updateReactFlowNodeName,
 } from "./ReactFlowController";
-import SelectedFeature from "./SelectedFeature";
+import type SelectedFeature from "./SelectedFeature";
 
 jest.mock("../features/RandomUtilities");
 
@@ -538,7 +538,7 @@ test("should not update edge animations when there's no derivative target", () =
 });
 
 test("should update node f values", () => {
-  const updatedNodeIdToValues: Map<string, string> = new Map([
+  const updatedNodeIdToValues = new Map<string, string>([
     ["0", "123"],
     ["2", "456"],
   ]);
@@ -736,8 +736,7 @@ test("should update nodes dark mode", () => {
   expect(updatedNodes).toEqual(expectedNodes);
 });
 
-test("should highlight target node when the current feature is explain derivatives", () => {
-  const selectedFeature: SelectedFeature | null = "explain-derivatives";
+test("should highlight the derivative target node", () => {
   const derivativeTarget: string | null = "0";
   const nodes: Node[] = [
     {
@@ -755,11 +754,7 @@ test("should highlight target node when the current feature is explain derivativ
       },
     },
   ];
-  const updatedNodes = updateReactFlowNodeHighlighted(
-    selectedFeature,
-    derivativeTarget,
-    nodes,
-  );
+  const updatedNodes = updateReactFlowNodeHighlighted(derivativeTarget, nodes);
 
   const expectedNodes: Node[] = [
     {
@@ -767,50 +762,6 @@ test("should highlight target node when the current feature is explain derivativ
       position: getDummyPosition(),
       data: {
         isHighlighted: true,
-      },
-    },
-    {
-      id: "1",
-      position: getDummyPosition(),
-      data: {
-        isHighlighted: false,
-      },
-    },
-  ];
-  expect(updatedNodes).toEqual(expectedNodes);
-});
-
-test("should remove the highlighted target node when the current feature is not explain derivatives", () => {
-  const selectedFeature: SelectedFeature | null = null;
-  const derivativeTarget: string | null = "0";
-  const nodes: Node[] = [
-    {
-      id: "0",
-      position: getDummyPosition(),
-      data: {
-        isHighlighted: false,
-      },
-    },
-    {
-      id: "1",
-      position: getDummyPosition(),
-      data: {
-        isHighlighted: true,
-      },
-    },
-  ];
-  const updatedNodes = updateReactFlowNodeHighlighted(
-    selectedFeature,
-    derivativeTarget,
-    nodes,
-  );
-
-  const expectedNodes: Node[] = [
-    {
-      id: "0",
-      position: getDummyPosition(),
-      data: {
-        isHighlighted: false,
       },
     },
     {

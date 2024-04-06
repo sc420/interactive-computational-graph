@@ -704,11 +704,7 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
       coreGraphAdapter.updateSelectedNodeIds(selectedNodeIds);
 
       setReactFlowNodes((nodes) =>
-        updateReactFlowNodeHighlighted(
-          selectedFeature,
-          derivativeTarget,
-          nodes,
-        ),
+        updateReactFlowNodeHighlighted(derivativeTarget, nodes),
       );
 
       setReactFlowEdges((edges) =>

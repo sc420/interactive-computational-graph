@@ -15,8 +15,8 @@ import type FeatureOperation from "./FeatureOperation";
 import {
   addReactFlowNode,
   deselectAllNodes,
+  findFirstSelectedNodeId,
   findRemovedEdges,
-  getLastSelectedNodeId,
   getNewReactFlowNodePosition,
   hideInputField,
   selectReactFlowNode,
@@ -775,7 +775,7 @@ test("should highlight the derivative target node", () => {
   expect(updatedNodes).toEqual(expectedNodes);
 });
 
-test("should get the last selected node", () => {
+test("should find the first selected node ID", () => {
   const nodes: Node[] = [
     {
       id: "0",
@@ -793,7 +793,7 @@ test("should get the last selected node", () => {
     nodes,
     edges,
   };
-  const nodeId = getLastSelectedNodeId(params);
+  const nodeId = findFirstSelectedNodeId(params);
 
   expect(nodeId).toBe("0");
 });

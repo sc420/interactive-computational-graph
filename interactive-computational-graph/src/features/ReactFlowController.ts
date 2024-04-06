@@ -290,7 +290,7 @@ const updateReactFlowNodeHighlighted = (
   });
 };
 
-const getLastSelectedNodeId = (
+const findFirstSelectedNodeId = (
   params: OnSelectionChangeParams,
 ): string | null => {
   const firstNode = params.nodes.find((node) => "id" in node) ?? null;
@@ -489,8 +489,8 @@ const findLastSelectedNode = (
 export {
   addReactFlowNode,
   deselectAllNodes,
+  findFirstSelectedNodeId,
   findRemovedEdges,
-  getLastSelectedNodeId,
   getNewReactFlowNodePosition,
   hideInputField,
   selectReactFlowNode,

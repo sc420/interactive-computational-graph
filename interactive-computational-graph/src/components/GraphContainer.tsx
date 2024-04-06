@@ -76,7 +76,7 @@ import NodeNameBuilder from "../features/NodeNameBuilder";
 import {
   addReactFlowNode,
   deselectAllNodes,
-  getLastSelectedNodeId,
+  findFirstSelectedNodeId,
   getNewReactFlowNodePosition,
   hideInputField,
   selectReactFlowNode,
@@ -697,7 +697,13 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
 
   const handleSelectionChange = useCallback(
     (params: OnSelectionChangeParams): void => {
-      setLastSelectedNodeId(getLastSelectedNodeId(params));
+      setLastSelectedNodeId((oldLastSelectedNodeId) => {
+        const firstSelectedNodeId = findFirstSelectedNodeId(params);
+        if (firstSelectedNodeId !== null) {
+          return firstSelectedNodeId;
+        }
+        return oldLastSelectedNodeId;
+      });
 
       const selectedNodeIds = params.nodes.map((node) => node.id);
 

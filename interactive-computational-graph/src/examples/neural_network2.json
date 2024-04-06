@@ -1,0 +1,2670 @@
+{
+    "coreGraphAdapterState": {
+        "coreGraphState": {
+            "nodeIdToNodes": {
+                "0": {
+                    "nodeType": "VARIABLE",
+                    "value": "0",
+                    "relationship": {
+                        "inputPortIdToNodeIds": {}
+                    }
+                },
+                "1": {
+                    "nodeType": "VARIABLE",
+                    "value": "1",
+                    "relationship": {
+                        "inputPortIdToNodeIds": {}
+                    }
+                },
+                "2": {
+                    "nodeType": "VARIABLE",
+                    "value": "-0.1",
+                    "relationship": {
+                        "inputPortIdToNodeIds": {}
+                    }
+                },
+                "3": {
+                    "nodeType": "VARIABLE",
+                    "value": "-0.2",
+                    "relationship": {
+                        "inputPortIdToNodeIds": {}
+                    }
+                },
+                "4": {
+                    "nodeType": "VARIABLE",
+                    "value": "0.1",
+                    "relationship": {
+                        "inputPortIdToNodeIds": {}
+                    }
+                },
+                "5": {
+                    "nodeType": "VARIABLE",
+                    "value": "0.2",
+                    "relationship": {
+                        "inputPortIdToNodeIds": {}
+                    }
+                },
+                "6": {
+                    "nodeType": "OPERATION",
+                    "operationId": "multiply",
+                    "relationship": {
+                        "inputPortIdToNodeIds": {
+                            "a": [
+                                "0"
+                            ],
+                            "b": [
+                                "2"
+                            ]
+                        }
+                    }
+                },
+                "7": {
+                    "nodeType": "OPERATION",
+                    "operationId": "multiply",
+                    "relationship": {
+                        "inputPortIdToNodeIds": {
+                            "a": [
+                                "1"
+                            ],
+                            "b": [
+                                "3"
+                            ]
+                        }
+                    }
+                },
+                "8": {
+                    "nodeType": "OPERATION",
+                    "operationId": "multiply",
+                    "relationship": {
+                        "inputPortIdToNodeIds": {
+                            "a": [
+                                "0"
+                            ],
+                            "b": [
+                                "4"
+                            ]
+                        }
+                    }
+                },
+                "9": {
+                    "nodeType": "OPERATION",
+                    "operationId": "multiply",
+                    "relationship": {
+                        "inputPortIdToNodeIds": {
+                            "a": [
+                                "1"
+                            ],
+                            "b": [
+                                "5"
+                            ]
+                        }
+                    }
+                },
+                "10": {
+                    "nodeType": "VARIABLE",
+                    "value": "-0.3",
+                    "relationship": {
+                        "inputPortIdToNodeIds": {}
+                    }
+                },
+                "11": {
+                    "nodeType": "VARIABLE",
+                    "value": "0.3",
+                    "relationship": {
+                        "inputPortIdToNodeIds": {}
+                    }
+                },
+                "12": {
+                    "nodeType": "OPERATION",
+                    "operationId": "sum",
+                    "relationship": {
+                        "inputPortIdToNodeIds": {
+                            "x_i": [
+                                "6",
+                                "7",
+                                "10"
+                            ]
+                        }
+                    }
+                },
+                "13": {
+                    "nodeType": "OPERATION",
+                    "operationId": "sum",
+                    "relationship": {
+                        "inputPortIdToNodeIds": {
+                            "x_i": [
+                                "8",
+                                "9",
+                                "11"
+                            ]
+                        }
+                    }
+                },
+                "14": {
+                    "nodeType": "OPERATION",
+                    "operationId": "relu",
+                    "relationship": {
+                        "inputPortIdToNodeIds": {
+                            "x": [
+                                "12"
+                            ]
+                        }
+                    }
+                },
+                "15": {
+                    "nodeType": "OPERATION",
+                    "operationId": "relu",
+                    "relationship": {
+                        "inputPortIdToNodeIds": {
+                            "x": [
+                                "13"
+                            ]
+                        }
+                    }
+                },
+                "16": {
+                    "nodeType": "VARIABLE",
+                    "value": "-0.5",
+                    "relationship": {
+                        "inputPortIdToNodeIds": {}
+                    }
+                },
+                "17": {
+                    "nodeType": "VARIABLE",
+                    "value": "0.5",
+                    "relationship": {
+                        "inputPortIdToNodeIds": {}
+                    }
+                },
+                "18": {
+                    "nodeType": "OPERATION",
+                    "operationId": "multiply",
+                    "relationship": {
+                        "inputPortIdToNodeIds": {
+                            "a": [
+                                "14"
+                            ],
+                            "b": [
+                                "16"
+                            ]
+                        }
+                    }
+                },
+                "19": {
+                    "nodeType": "OPERATION",
+                    "operationId": "multiply",
+                    "relationship": {
+                        "inputPortIdToNodeIds": {
+                            "a": [
+                                "15"
+                            ],
+                            "b": [
+                                "17"
+                            ]
+                        }
+                    }
+                },
+                "20": {
+                    "nodeType": "VARIABLE",
+                    "value": "-0.25",
+                    "relationship": {
+                        "inputPortIdToNodeIds": {}
+                    }
+                },
+                "21": {
+                    "nodeType": "OPERATION",
+                    "operationId": "sum",
+                    "relationship": {
+                        "inputPortIdToNodeIds": {
+                            "x_i": [
+                                "18",
+                                "19",
+                                "20"
+                            ]
+                        }
+                    }
+                },
+                "22": {
+                    "nodeType": "OPERATION",
+                    "operationId": "sigmoid",
+                    "relationship": {
+                        "inputPortIdToNodeIds": {
+                            "x": [
+                                "21"
+                            ]
+                        }
+                    }
+                },
+                "23": {
+                    "nodeType": "VARIABLE",
+                    "value": "0",
+                    "relationship": {
+                        "inputPortIdToNodeIds": {}
+                    }
+                },
+                "24": {
+                    "nodeType": "OPERATION",
+                    "operationId": "squared_error",
+                    "relationship": {
+                        "inputPortIdToNodeIds": {
+                            "y_t": [
+                                "23"
+                            ],
+                            "y_e": [
+                                "22"
+                            ]
+                        }
+                    }
+                },
+                "dummy-input-node-6-a": {
+                    "nodeType": "CONSTANT",
+                    "value": "0",
+                    "relationship": {
+                        "inputPortIdToNodeIds": {}
+                    }
+                },
+                "dummy-input-node-6-b": {
+                    "nodeType": "CONSTANT",
+                    "value": "0",
+                    "relationship": {
+                        "inputPortIdToNodeIds": {}
+                    }
+                },
+                "dummy-input-node-7-a": {
+                    "nodeType": "CONSTANT",
+                    "value": "0",
+                    "relationship": {
+                        "inputPortIdToNodeIds": {}
+                    }
+                },
+                "dummy-input-node-7-b": {
+                    "nodeType": "CONSTANT",
+                    "value": "0",
+                    "relationship": {
+                        "inputPortIdToNodeIds": {}
+                    }
+                },
+                "dummy-input-node-8-a": {
+                    "nodeType": "CONSTANT",
+                    "value": "0",
+                    "relationship": {
+                        "inputPortIdToNodeIds": {}
+                    }
+                },
+                "dummy-input-node-8-b": {
+                    "nodeType": "CONSTANT",
+                    "value": "0",
+                    "relationship": {
+                        "inputPortIdToNodeIds": {}
+                    }
+                },
+                "dummy-input-node-9-a": {
+                    "nodeType": "CONSTANT",
+                    "value": "0",
+                    "relationship": {
+                        "inputPortIdToNodeIds": {}
+                    }
+                },
+                "dummy-input-node-9-b": {
+                    "nodeType": "CONSTANT",
+                    "value": "0",
+                    "relationship": {
+                        "inputPortIdToNodeIds": {}
+                    }
+                },
+                "dummy-input-node-12-x_i": {
+                    "nodeType": "CONSTANT",
+                    "value": "0",
+                    "relationship": {
+                        "inputPortIdToNodeIds": {}
+                    }
+                },
+                "dummy-input-node-13-x_i": {
+                    "nodeType": "CONSTANT",
+                    "value": "0",
+                    "relationship": {
+                        "inputPortIdToNodeIds": {}
+                    }
+                },
+                "dummy-input-node-14-x": {
+                    "nodeType": "CONSTANT",
+                    "value": "0",
+                    "relationship": {
+                        "inputPortIdToNodeIds": {}
+                    }
+                },
+                "dummy-input-node-15-x": {
+                    "nodeType": "CONSTANT",
+                    "value": "0",
+                    "relationship": {
+                        "inputPortIdToNodeIds": {}
+                    }
+                },
+                "dummy-input-node-18-a": {
+                    "nodeType": "CONSTANT",
+                    "value": "0",
+                    "relationship": {
+                        "inputPortIdToNodeIds": {}
+                    }
+                },
+                "dummy-input-node-18-b": {
+                    "nodeType": "CONSTANT",
+                    "value": "0",
+                    "relationship": {
+                        "inputPortIdToNodeIds": {}
+                    }
+                },
+                "dummy-input-node-19-a": {
+                    "nodeType": "CONSTANT",
+                    "value": "0",
+                    "relationship": {
+                        "inputPortIdToNodeIds": {}
+                    }
+                },
+                "dummy-input-node-19-b": {
+                    "nodeType": "CONSTANT",
+                    "value": "0",
+                    "relationship": {
+                        "inputPortIdToNodeIds": {}
+                    }
+                },
+                "dummy-input-node-21-x_i": {
+                    "nodeType": "CONSTANT",
+                    "value": "0",
+                    "relationship": {
+                        "inputPortIdToNodeIds": {}
+                    }
+                },
+                "dummy-input-node-22-x": {
+                    "nodeType": "CONSTANT",
+                    "value": "0",
+                    "relationship": {
+                        "inputPortIdToNodeIds": {}
+                    }
+                },
+                "dummy-input-node-24-y_t": {
+                    "nodeType": "CONSTANT",
+                    "value": "0",
+                    "relationship": {
+                        "inputPortIdToNodeIds": {}
+                    }
+                },
+                "dummy-input-node-24-y_e": {
+                    "nodeType": "CONSTANT",
+                    "value": "0",
+                    "relationship": {
+                        "inputPortIdToNodeIds": {}
+                    }
+                }
+            },
+            "differentiationMode": "REVERSE",
+            "targetNodeId": "24"
+        },
+        "nodeIdToNames": {
+            "0": "x_1",
+            "1": "x_2",
+            "2": "w^{(1)}_{11}",
+            "3": "w^{(1)}_{21}",
+            "4": "w^{(1)}_{12}",
+            "5": "w^{(1)}_{22}",
+            "6": "m^{(1)}_{11}",
+            "7": "m^{(1)}_{21}",
+            "8": "m^{(1)}_{12}",
+            "9": "m^{(1)}_{22}",
+            "10": "b^{(1)}_1",
+            "11": "b^{(1)}_2",
+            "12": "z^{(1)}_1",
+            "13": "z^{(1)}_2",
+            "14": "a^{(1)}_1",
+            "15": "a^{(1)}_2",
+            "16": "w^{(2)}_{11}",
+            "17": "w^{(2)}_{21}",
+            "18": "m^{(2)}_{11}",
+            "19": "m^{(2)}_{21}",
+            "20": "b^{(2)}_1",
+            "21": "z^{(2)}_1",
+            "22": "\\hat{y}",
+            "23": "y",
+            "24": "E",
+            "dummy-input-node-6-a": "m^{(1)}_{11}.a",
+            "dummy-input-node-6-b": "m^{(1)}_{11}.b",
+            "dummy-input-node-7-a": "m^{(1)}_{21}.a",
+            "dummy-input-node-7-b": "m^{(1)}_{21}.b",
+            "dummy-input-node-8-a": "m^{(1)}_{12}.a",
+            "dummy-input-node-8-b": "m^{(1)}_{12}.b",
+            "dummy-input-node-9-a": "m^{(1)}_{22}.a",
+            "dummy-input-node-9-b": "m^{(1)}_{22}.b",
+            "dummy-input-node-12-x_i": "z^{(1)}_1.x_i",
+            "dummy-input-node-13-x_i": "z^{(1)}_2.x_i",
+            "dummy-input-node-14-x": "a^{(1)}_1.x",
+            "dummy-input-node-15-x": "a^{(1)}_2.x",
+            "dummy-input-node-18-a": "m^{(2)}_{11}.a",
+            "dummy-input-node-18-b": "m^{(2)}_{11}.b",
+            "dummy-input-node-19-a": "m^{(2)}_{21}.a",
+            "dummy-input-node-19-b": "m^{(2)}_{21}.b",
+            "dummy-input-node-21-x_i": "z^{(2)}_1.x_i",
+            "dummy-input-node-22-x": "\\hat{y}.x",
+            "dummy-input-node-24-y_t": "E.y_t",
+            "dummy-input-node-24-y_e": "E.y_e"
+        },
+        "dummyInputNodeIdToNodeIds": {
+            "dummy-input-node-6-a": "6",
+            "dummy-input-node-6-b": "6",
+            "dummy-input-node-7-a": "7",
+            "dummy-input-node-7-b": "7",
+            "dummy-input-node-8-a": "8",
+            "dummy-input-node-8-b": "8",
+            "dummy-input-node-9-a": "9",
+            "dummy-input-node-9-b": "9",
+            "dummy-input-node-12-x_i": "12",
+            "dummy-input-node-13-x_i": "13",
+            "dummy-input-node-14-x": "14",
+            "dummy-input-node-15-x": "15",
+            "dummy-input-node-18-a": "18",
+            "dummy-input-node-18-b": "18",
+            "dummy-input-node-19-a": "19",
+            "dummy-input-node-19-b": "19",
+            "dummy-input-node-21-x_i": "21",
+            "dummy-input-node-22-x": "22",
+            "dummy-input-node-24-y_t": "24",
+            "dummy-input-node-24-y_e": "24"
+        }
+    },
+    "isReverseMode": true,
+    "derivativeTarget": "24",
+    "featureOperations": [
+        {
+            "id": "add",
+            "text": "Add",
+            "type": "basic",
+            "namePrefix": "a",
+            "operation": {
+                "fCode": "/**\n * Calculates f().\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for add:\n * ```json\n * {\n *   \"a\": [\"0\"],\n *   \"b\": [\"1\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for add:\n * ```json\n * {\n *   \"0\": \"0.2\",\n *   \"1\": \"0.4\"\n * }\n * ```\n * @returns {string} Evaluated f value. For example: if we consider\n * the above example data, then the value is \"0.6\" because\n * f(a, b) = a + b = 0.2 + 0.4 = 0.6.\n */\nfunction f(fInputPortToNodes, fInputNodeToValues) {\n  if (fInputPortToNodes.a.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port a\");\n  }\n  if (fInputPortToNodes.b.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port b\");\n  }\n  const aInputNodeId = fInputPortToNodes.a[0];\n  const bInputNodeId = fInputPortToNodes.b[0];\n  const a = parseFloat(fInputNodeToValues[aInputNodeId]);\n  const b = parseFloat(fInputNodeToValues[bInputNodeId]);\n  const y = a + b;\n  return `${y}`;\n}\n",
+                "dfdxCode": "/**\n * Calculates df/dx.\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for add:\n * ```json\n * {\n *   \"a\": [\"0\"],\n *   \"b\": [\"1\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for add:\n * ```json\n * {\n *   \"0\": \"0.2\",\n *   \"1\": \"0.4\"\n * }\n * ```\n * @param {string} xId Node ID of x. Note that the framework will not call this\n * function for the following cases:\n * - x is a constant node (i.e., x will always be a variable)\n * - x is the node of f (i.e., the derivative is always 1)\n * - x is not on the forward/reverse differentiation path (i.e., gradient of x\n *   doesn't flow through f node)\n * @returns {string} Evaluated derivative df/dy. For example, if we consider\n * the above example data and assume xId is \"1\", then the value is \"1\"\n * since f(a, b) = a + b and df/dx = df/db = 1.\n */\nfunction dfdx(fInputPortToNodes, fInputNodeToValues, xId) {\n  if (fInputPortToNodes.a.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port a\");\n  }\n  if (fInputPortToNodes.b.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port b\");\n  }\n  const hasXInA = fInputPortToNodes.a.includes(xId);\n  const hasXInB = fInputPortToNodes.b.includes(xId);\n  if (!hasXInA && !hasXInB) {\n    return \"0\";\n  }\n  return \"1\";\n}\n"
+            },
+            "inputPorts": [
+                {
+                    "id": "a",
+                    "allowMultiEdges": false
+                },
+                {
+                    "id": "b",
+                    "allowMultiEdges": false
+                }
+            ],
+            "helpText": "Add two numbers, i.e., a + b"
+        },
+        {
+            "id": "subtract",
+            "text": "Subtract",
+            "type": "basic",
+            "namePrefix": "s",
+            "operation": {
+                "fCode": "/**\n * Calculates f().\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for subtract:\n * ```json\n * {\n *   \"a\": [\"0\"],\n *   \"b\": [\"1\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for subtract:\n * ```json\n * {\n *   \"0\": \"0.2\",\n *   \"1\": \"0.4\"\n * }\n * ```\n * @returns {string} Evaluated f value. For example: if we consider\n * the above example data, then the value is \"-0.2\" because\n * f(a, b) = a - b = 0.2 - 0.4 = -0.2.\n */\nfunction f(fInputPortToNodes, fInputNodeToValues) {\n  if (fInputPortToNodes.a.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port a\");\n  }\n  if (fInputPortToNodes.b.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port b\");\n  }\n  const aInputNodeId = fInputPortToNodes.a[0];\n  const bInputNodeId = fInputPortToNodes.b[0];\n  const a = parseFloat(fInputNodeToValues[aInputNodeId]);\n  const b = parseFloat(fInputNodeToValues[bInputNodeId]);\n  const y = a - b;\n  return `${y}`;\n}\n",
+                "dfdxCode": "/**\n * Calculates df/dx.\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for subtract:\n * ```json\n * {\n *   \"a\": [\"0\"],\n *   \"b\": [\"1\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for subtract:\n * ```json\n * {\n *   \"0\": \"0.2\",\n *   \"1\": \"0.4\"\n * }\n * ```\n * @param {string} xId Node ID of x. Note that the framework will not call this\n * function for the following cases:\n * - x is a constant node (i.e., x will always be a variable)\n * - x is the node of f (i.e., the derivative is always 1)\n * - x is not on the forward/reverse differentiation path (i.e., gradient of x\n *   doesn't flow through f node)\n * @returns {string} Evaluated derivative df/dy. For example, if we consider\n * the above example data and assume xId is \"1\", then the value is \"-1\"\n * since f(a, b) = a - b and df/dx = df/db = -1.\n */\nfunction dfdx(fInputPortToNodes, fInputNodeToValues, xId) {\n  if (fInputPortToNodes.a.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port a\");\n  }\n  if (fInputPortToNodes.b.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port b\");\n  }\n  const hasXInA = fInputPortToNodes.a.includes(xId);\n  const hasXInB = fInputPortToNodes.b.includes(xId);\n  if (!hasXInA && !hasXInB) {\n    return \"0\";\n  }\n  const df = hasXInA ? 1 : -1;\n  return `${df}`;\n}\n"
+            },
+            "inputPorts": [
+                {
+                    "id": "a",
+                    "allowMultiEdges": false
+                },
+                {
+                    "id": "b",
+                    "allowMultiEdges": false
+                }
+            ],
+            "helpText": "Subtract two numbers, i.e., a - b"
+        },
+        {
+            "id": "multiply",
+            "text": "Multiply",
+            "type": "basic",
+            "namePrefix": "m",
+            "operation": {
+                "fCode": "/**\n * Calculates f().\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for multiply:\n * ```json\n * {\n *   \"a\": [\"0\"],\n *   \"b\": [\"1\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for multiply:\n * ```json\n * {\n *   \"0\": \"0.2\",\n *   \"1\": \"0.4\"\n * }\n * ```\n * @returns {string} Evaluated f value. For example: if we consider\n * the above example data, then the value is \"0.08\" because\n * f(a, b) = a * b = 0.2 * 0.4 = 0.08.\n */\nfunction f(fInputPortToNodes, fInputNodeToValues) {\n  if (fInputPortToNodes.a.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port a\");\n  }\n  if (fInputPortToNodes.b.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port b\");\n  }\n  const aInputNodeId = fInputPortToNodes.a[0];\n  const bInputNodeId = fInputPortToNodes.b[0];\n  const a = parseFloat(fInputNodeToValues[aInputNodeId]);\n  const b = parseFloat(fInputNodeToValues[bInputNodeId]);\n  const y = a * b;\n  return `${y}`;\n}\n",
+                "dfdxCode": "/**\n * Calculates df/dx.\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for multiply:\n * ```json\n * {\n *   \"a\": [\"0\"],\n *   \"b\": [\"1\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for multiply:\n * ```json\n * {\n *   \"0\": \"0.2\",\n *   \"1\": \"0.4\"\n * }\n * ```\n * @param {string} xId Node ID of x. Note that the framework will not call this\n * function for the following cases:\n * - x is a constant node (i.e., x will always be a variable)\n * - x is the node of f (i.e., the derivative is always 1)\n * - x is not on the forward/reverse differentiation path (i.e., gradient of x\n *   doesn't flow through f node)\n * @returns {string} Evaluated derivative df/dy. For example, if we consider\n * the above example data and assume xId is \"1\", then the value is \"0.2\"\n * since f(a, b) = a * b and df/dx = df/db = a = 0.2.\n */\nfunction dfdx(fInputPortToNodes, fInputNodeToValues, xId) {\n  if (fInputPortToNodes.a.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port a\");\n  }\n  if (fInputPortToNodes.b.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port b\");\n  }\n  const hasXInA = fInputPortToNodes.a.includes(xId);\n  const hasXInB = fInputPortToNodes.b.includes(xId);\n  if (!hasXInA && !hasXInB) {\n    return \"0\";\n  }\n  const aInputNodeId = fInputPortToNodes.a[0];\n  const bInputNodeId = fInputPortToNodes.b[0];\n  const a = parseFloat(fInputNodeToValues[aInputNodeId]);\n  const b = parseFloat(fInputNodeToValues[bInputNodeId]);\n  return hasXInA ? `${b}` : `${a}`;\n}\n"
+            },
+            "inputPorts": [
+                {
+                    "id": "a",
+                    "allowMultiEdges": false
+                },
+                {
+                    "id": "b",
+                    "allowMultiEdges": false
+                }
+            ],
+            "helpText": "Multiply two numbers, i.e., a * b"
+        },
+        {
+            "id": "divide",
+            "text": "Divide",
+            "type": "basic",
+            "namePrefix": "d",
+            "operation": {
+                "fCode": "/**\n * Calculates f().\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for divide:\n * ```json\n * {\n *   \"a\": [\"0\"],\n *   \"b\": [\"1\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for divide:\n * ```json\n * {\n *   \"0\": \"0.2\",\n *   \"1\": \"0.4\"\n * }\n * ```\n * @returns {string} Evaluated f value. For example: if we consider\n * the above example data, then the value is \"0.5\" because\n * f(a, b) = a / b = 0.2 / 0.4 = 0.5.\n */\nfunction f(fInputPortToNodes, fInputNodeToValues) {\n  if (fInputPortToNodes.a.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port a\");\n  }\n  if (fInputPortToNodes.b.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port b\");\n  }\n  const aInputNodeId = fInputPortToNodes.a[0];\n  const bInputNodeId = fInputPortToNodes.b[0];\n  const a = parseFloat(fInputNodeToValues[aInputNodeId]);\n  const b = parseFloat(fInputNodeToValues[bInputNodeId]);\n  const y = a / b;\n  return `${y}`;\n}\n",
+                "dfdxCode": "/**\n * Calculates df/dx.\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for divide:\n * ```json\n * {\n *   \"a\": [\"0\"],\n *   \"b\": [\"1\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for divide:\n * ```json\n * {\n *   \"0\": \"0.2\",\n *   \"1\": \"0.4\"\n * }\n * ```\n * @param {string} xId Node ID of x. Note that the framework will not call this\n * function for the following cases:\n * - x is a constant node (i.e., x will always be a variable)\n * - x is the node of f (i.e., the derivative is always 1)\n * - x is not on the forward/reverse differentiation path (i.e., gradient of x\n *   doesn't flow through f node)\n * @returns {string} Evaluated derivative df/dy. For example, if we consider\n * the above example data and assume xId is \"1\", then the value is \"-1.25\"\n * since f(a, b) = a / b and df/dx = df/db = -(a / b^2) = -1.25.\n */\nfunction dfdx(fInputPortToNodes, fInputNodeToValues, xId) {\n  if (fInputPortToNodes.a.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port a\");\n  }\n  if (fInputPortToNodes.b.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port b\");\n  }\n  const hasXInA = fInputPortToNodes.a.includes(xId);\n  const hasXInB = fInputPortToNodes.b.includes(xId);\n  if (!hasXInA && !hasXInB) {\n    return \"0\";\n  }\n  const aInputNodeId = fInputPortToNodes.a[0];\n  const bInputNodeId = fInputPortToNodes.b[0];\n  const a = parseFloat(fInputNodeToValues[aInputNodeId]);\n  const b = parseFloat(fInputNodeToValues[bInputNodeId]);\n  const df = hasXInA ? 1 / b : -(a / Math.pow(b, 2));\n  return `${df}`;\n}\n"
+            },
+            "inputPorts": [
+                {
+                    "id": "a",
+                    "allowMultiEdges": false
+                },
+                {
+                    "id": "b",
+                    "allowMultiEdges": false
+                }
+            ],
+            "helpText": "Divide two numbers, i.e., a / b"
+        },
+        {
+            "id": "power",
+            "text": "Power",
+            "type": "basic",
+            "namePrefix": "p",
+            "operation": {
+                "fCode": "/**\n * Calculates f().\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for power:\n * ```json\n * {\n *   \"x\": [\"0\"],\n *   \"n\": [\"1\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for power:\n * ```json\n * {\n *   \"0\": \"2\",\n *   \"1\": \"3\"\n * }\n * ```\n * @returns {string} Evaluated f value. For example: if we consider\n * the above example data, then the value is \"8\" because\n * f(x, n) = x ^ n = 2 ^ 3 = 8.\n */\nfunction f(fInputPortToNodes, fInputNodeToValues) {\n  if (fInputPortToNodes.x.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port x\");\n  }\n  if (fInputPortToNodes.n.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port n\");\n  }\n  const xInputNodeId = fInputPortToNodes.x[0];\n  const nInputNodeId = fInputPortToNodes.n[0];\n  const x = parseFloat(fInputNodeToValues[xInputNodeId]);\n  const n = parseFloat(fInputNodeToValues[nInputNodeId]);\n  const y = Math.pow(x, n);\n  return `${y}`;\n}\n",
+                "dfdxCode": "/**\n * Calculates df/dx.\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for power:\n * ```json\n * {\n *   \"x\": [\"0\"],\n *   \"n\": [\"1\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for power:\n * ```json\n * {\n *   \"0\": \"2\",\n *   \"1\": \"3\"\n * }\n * ```\n * @param {string} xId Node ID of x. Note that the framework will not call this\n * function for the following cases:\n * - x is a constant node (i.e., x will always be a variable)\n * - x is the node of f (i.e., the derivative is always 1)\n * - x is not on the forward/reverse differentiation path (i.e., gradient of x\n *   doesn't flow through f node)\n * @returns {string} Evaluated derivative df/dy. For example, if we consider\n * the above example data and assume xId is \"0\", then the value is \"-1.25\"\n * since f(x, n) = x ^ n and df/dx = n * (x ^ (n - 1)) = 3 * (2 ^ (3 - 1)) =\n * 12.\n */\nfunction dfdx(fInputPortToNodes, fInputNodeToValues, xId) {\n  if (fInputPortToNodes.x.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port x\");\n  }\n  if (fInputPortToNodes.n.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port n\");\n  }\n  const hasXInX = fInputPortToNodes.x.includes(xId);\n  const hasXInN = fInputPortToNodes.n.includes(xId);\n  if (!hasXInX && !hasXInN) {\n    return \"0\";\n  }\n  const xInputNodeId = fInputPortToNodes.x[0];\n  const nInputNodeId = fInputPortToNodes.n[0];\n  const x = parseFloat(fInputNodeToValues[xInputNodeId]);\n  const n = parseFloat(fInputNodeToValues[nInputNodeId]);\n  const df = hasXInX ? n * Math.pow(x, n - 1) : Math.pow(x, n) * Math.log(x);\n  return `${df}`;\n}\n"
+            },
+            "inputPorts": [
+                {
+                    "id": "x",
+                    "allowMultiEdges": false
+                },
+                {
+                    "id": "n",
+                    "allowMultiEdges": false
+                }
+            ],
+            "helpText": "Calculate the power, i.e., x^n"
+        },
+        {
+            "id": "exp",
+            "text": "Exp",
+            "type": "basic",
+            "namePrefix": "e",
+            "operation": {
+                "fCode": "/**\n * Calculates f().\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for exp:\n * ```json\n * {\n *   \"x\": [\"0\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for exp:\n * ```json\n * {\n *   \"0\": \"0\"\n * }\n * ```\n * @returns {string} Evaluated f value. For example: if we consider\n * the above example data, then the value is \"1\" because\n * f(x) = e^x = e^0 = 1.\n */\nfunction f(fInputPortToNodes, fInputNodeToValues) {\n  if (fInputPortToNodes.x.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port x\");\n  }\n  const xInputNodeId = fInputPortToNodes.x[0];\n  const x = parseFloat(fInputNodeToValues[xInputNodeId]);\n  const y = Math.exp(x);\n  return `${y}`;\n}\n",
+                "dfdxCode": "/**\n * Calculates df/dx.\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for exp:\n * ```json\n * {\n *   \"x\": [\"0\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for exp:\n * ```json\n * {\n *   \"0\": \"0\"\n * }\n * ```\n * @param {string} xId Node ID of x. Note that the framework will not call this\n * function for the following cases:\n * - x is a constant node (i.e., x will always be a variable)\n * - x is the node of f (i.e., the derivative is always 1)\n * - x is not on the forward/reverse differentiation path (i.e., gradient of x\n *   doesn't flow through f node)\n * @returns {string} Evaluated derivative df/dy. For example, if we consider\n * the above example data and assume xId is \"0\", then the value is \"1\"\n * since f(x) = e^x and df/dx = e^x = e^0 = 1\n */\nfunction dfdx(fInputPortToNodes, fInputNodeToValues, xId) {\n  if (fInputPortToNodes.x.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port x\");\n  }\n  if (!fInputPortToNodes.x.includes(xId)) {\n    return \"0\";\n  }\n  const xInputNodeId = fInputPortToNodes.x[0];\n  const x = parseFloat(fInputNodeToValues[xInputNodeId]);\n  const df = Math.exp(x);\n  return `${df}`;\n}\n"
+            },
+            "inputPorts": [
+                {
+                    "id": "x",
+                    "allowMultiEdges": false
+                }
+            ],
+            "helpText": "Calculate the exponential function, i.e., e^x"
+        },
+        {
+            "id": "ln",
+            "text": "Ln",
+            "type": "basic",
+            "namePrefix": "l",
+            "operation": {
+                "fCode": "/**\n * Calculates f().\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for ln:\n * ```json\n * {\n *   \"x\": [\"0\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for ln:\n * ```json\n * {\n *   \"0\": \"1\"\n * }\n * ```\n * @returns {string} Evaluated f value. For example: if we consider\n * the above example data, then the value is \"0\" because\n * f(x) = ln(x) = ln(1) = 0.\n */\nfunction f(fInputPortToNodes, fInputNodeToValues) {\n  if (fInputPortToNodes.x.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port x\");\n  }\n  const xInputNodeId = fInputPortToNodes.x[0];\n  const x = parseFloat(fInputNodeToValues[xInputNodeId]);\n  const y = Math.log(x);\n  return `${y}`;\n}\n",
+                "dfdxCode": "/**\n * Calculates df/dx.\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for ln:\n * ```json\n * {\n *   \"x\": [\"0\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for ln:\n * ```json\n * {\n *   \"0\": \"1\"\n * }\n * ```\n * @param {string} xId Node ID of x. Note that the framework will not call this\n * function for the following cases:\n * - x is a constant node (i.e., x will always be a variable)\n * - x is the node of f (i.e., the derivative is always 1)\n * - x is not on the forward/reverse differentiation path (i.e., gradient of x\n *   doesn't flow through f node)\n * @returns {string} Evaluated derivative df/dy. For example, if we consider\n * the above example data and assume xId is \"0\", then the value is \"1\"\n * since f(x) = ln(x) and df/dx = 1 / x = 1 / 1 = 1\n */\nfunction dfdx(fInputPortToNodes, fInputNodeToValues, xId) {\n  if (fInputPortToNodes.x.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port x\");\n  }\n  if (!fInputPortToNodes.x.includes(xId)) {\n    return \"0\";\n  }\n  const xInputNodeId = fInputPortToNodes.x[0];\n  const x = parseFloat(fInputNodeToValues[xInputNodeId]);\n  const df = 1 / x;\n  return `${df}`;\n}\n"
+            },
+            "inputPorts": [
+                {
+                    "id": "x",
+                    "allowMultiEdges": false
+                }
+            ],
+            "helpText": "Calculate the log: ln(x)"
+        },
+        {
+            "id": "sum",
+            "text": "Sum",
+            "type": "aggregate",
+            "namePrefix": "s",
+            "operation": {
+                "fCode": "/**\n * Calculates f().\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for sum:\n * ```json\n * {\n *   \"x_i\": [\"0\", \"1\", \"2\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for sum:\n * ```json\n * {\n *   \"0\": \"0.2\",\n *   \"1\": \"0.4\",\n *   \"2\": \"0.6\"\n * }\n * ```\n * @returns {string} Evaluated f value. For example: if we consider\n * the above example data, then the value is \"1.2\" because\n * f(x_i) = x_0 + x_1 + x_2 = 0.2 + 0.4 + 0.6 = 1.2.\n */\nfunction f(fInputPortToNodes, fInputNodeToValues) {\n  let sum = 0;\n  fInputPortToNodes.x_i.forEach((inputNodeId) => {\n    const inputNodeValue = parseFloat(fInputNodeToValues[inputNodeId]);\n    sum += inputNodeValue;\n  });\n  return `${sum}`;\n}\n",
+                "dfdxCode": "/**\n * Calculates df/dx.\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for sum:\n * ```json\n * {\n *   \"x_i\": [\"0\", \"1\", \"2\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for sum:\n * ```json\n * {\n *   \"0\": \"0.2\",\n *   \"1\": \"0.4\",\n *   \"2\": \"0.6\"\n * }\n * ```\n * @param {string} xId Node ID of x. Note that the framework will not call this\n * function for the following cases:\n * - x is a constant node (i.e., x will always be a variable)\n * - x is the node of f (i.e., the derivative is always 1)\n * - x is not on the forward/reverse differentiation path (i.e., gradient of x\n *   doesn't flow through f node)\n * @returns {string} Evaluated derivative df/dy. For example, if we consider\n * the above example data and assume xId is \"1\", then the value is \"1\"\n * since f(x_i) = x_0 + x_1 + x_2 and df/dx = df/d(x_1) = 1.\n */\nfunction dfdx(fInputPortToNodes, fInputNodeToValues, xId) {\n  if (!fInputPortToNodes.x_i.includes(xId)) {\n    return \"0\";\n  }\n  return \"1\";\n}\n"
+            },
+            "inputPorts": [
+                {
+                    "id": "x_i",
+                    "allowMultiEdges": true
+                }
+            ],
+            "helpText": "Add all inputs: sum_i x_i, i.e., x_0 + x_1 + ..."
+        },
+        {
+            "id": "product",
+            "text": "Product",
+            "type": "aggregate",
+            "namePrefix": "p",
+            "operation": {
+                "fCode": "/**\n * Calculates f().\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for product:\n * ```json\n * {\n *   \"x_i\": [\"0\", \"1\", \"2\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for product:\n * ```json\n * {\n *   \"0\": \"1\",\n *   \"1\": \"2\",\n *   \"2\": \"3\"\n * }\n * ```\n * @returns {string} Evaluated f value. For example: if we consider\n * the above example data, then the value is \"6\" because\n * f(x_i) = x_0 * x_1 * x_2 = 1 * 2 * 3 = 6.\n */\nfunction f(fInputPortToNodes, fInputNodeToValues) {\n  let product = 1;\n  fInputPortToNodes.x_i.forEach((inputNodeId) => {\n    const inputNodeValue = parseFloat(fInputNodeToValues[inputNodeId]);\n    product *= inputNodeValue;\n  });\n  return `${product}`;\n}\n",
+                "dfdxCode": "/**\n * Calculates df/dx.\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for product:\n * ```json\n * {\n *   \"x_i\": [\"0\", \"1\", \"2\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for product:\n * ```json\n * {\n *   \"0\": \"1\",\n *   \"1\": \"2\",\n *   \"2\": \"3\"\n * }\n * ```\n * @param {string} xId Node ID of x. Note that the framework will not call this\n * function for the following cases:\n * - x is a constant node (i.e., x will always be a variable)\n * - x is the node of f (i.e., the derivative is always 1)\n * - x is not on the forward/reverse differentiation path (i.e., gradient of x\n *   doesn't flow through f node)\n * @returns {string} Evaluated derivative df/dy. For example, if we consider\n * the above example data and assume xId is \"1\", then the value is \"3\"\n * since f(x_i) = x_0 * x_1 * x_2 and df/dx = df/d(x_1) = x_0 * x_2 = 1 * 3 =\n * 3.\n */\nfunction dfdx(fInputPortToNodes, fInputNodeToValues, xId) {\n  if (!fInputPortToNodes.x_i.includes(xId)) {\n    return \"0\";\n  }\n  let df = 1;\n  fInputPortToNodes.x_i.forEach((inputNodeId) => {\n    if (inputNodeId !== xId) {\n      const inputNodeValue = parseFloat(fInputNodeToValues[inputNodeId]);\n      df *= inputNodeValue;\n    }\n  });\n  return `${df}`;\n}\n"
+            },
+            "inputPorts": [
+                {
+                    "id": "x_i",
+                    "allowMultiEdges": true
+                }
+            ],
+            "helpText": "Multiply all inputs: prod_i x_i, i.e., x_0 * x_1 * ..."
+        },
+        {
+            "id": "sin",
+            "text": "Sin",
+            "type": "trigonometric",
+            "namePrefix": "s",
+            "operation": {
+                "fCode": "/**\n * Calculates f().\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for sin:\n * ```json\n * {\n *   \"x\": [\"0\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for sin:\n * ```json\n * {\n *   \"0\": \"0\"\n * }\n * ```\n * @returns {string} Evaluated f value. For example: if we consider\n * the above example data, then the value is \"0\" because\n * f(x) = sin(x) = sin(0) = 0.\n */\nfunction f(fInputPortToNodes, fInputNodeToValues) {\n  if (fInputPortToNodes.x.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port x\");\n  }\n  const xInputNodeId = fInputPortToNodes.x[0];\n  const x = parseFloat(fInputNodeToValues[xInputNodeId]);\n  const y = Math.sin(x);\n  return `${y}`;\n}\n",
+                "dfdxCode": "/**\n * Calculates df/dx.\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for sin:\n * ```json\n * {\n *   \"x\": [\"0\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for sin:\n * ```json\n * {\n *   \"0\": \"0\"\n * }\n * ```\n * @param {string} xId Node ID of x. Note that the framework will not call this\n * function for the following cases:\n * - x is a constant node (i.e., x will always be a variable)\n * - x is the node of f (i.e., the derivative is always 1)\n * - x is not on the forward/reverse differentiation path (i.e., gradient of x\n *   doesn't flow through f node)\n * @returns {string} Evaluated derivative df/dy. For example, if we consider\n * the above example data and assume xId is \"0\", then the value is \"1\"\n * since f(x) = sin(x) and df/dx = cos(x) = 1.\n */\nfunction dfdx(fInputPortToNodes, fInputNodeToValues, xId) {\n  if (fInputPortToNodes.x.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port x\");\n  }\n  if (!fInputPortToNodes.x.includes(xId)) {\n    return \"0\";\n  }\n  const xInputNodeId = fInputPortToNodes.x[0];\n  const x = parseFloat(fInputNodeToValues[xInputNodeId]);\n  const df = Math.cos(x);\n  return `${df}`;\n}\n"
+            },
+            "inputPorts": [
+                {
+                    "id": "x",
+                    "allowMultiEdges": false
+                }
+            ],
+            "helpText": "Calculate sin(x)"
+        },
+        {
+            "id": "cos",
+            "text": "Cos",
+            "type": "trigonometric",
+            "namePrefix": "c",
+            "operation": {
+                "fCode": "/**\n * Calculates f().\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for cos:\n * ```json\n * {\n *   \"x\": [\"0\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for cos:\n * ```json\n * {\n *   \"0\": \"0\"\n * }\n * ```\n * @returns {string} Evaluated f value. For example: if we consider\n * the above example data, then the value is \"1\" because\n * f(x) = cos(x) = cos(0) = 1.\n */\nfunction f(fInputPortToNodes, fInputNodeToValues) {\n  if (fInputPortToNodes.x.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port x\");\n  }\n  const xInputNodeId = fInputPortToNodes.x[0];\n  const x = parseFloat(fInputNodeToValues[xInputNodeId]);\n  const y = Math.cos(x);\n  return `${y}`;\n}\n",
+                "dfdxCode": "/**\n * Calculates df/dx.\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for cos:\n * ```json\n * {\n *   \"x\": [\"0\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for cos:\n * ```json\n * {\n *   \"0\": \"0\"\n * }\n * ```\n * @param {string} xId Node ID of x. Note that the framework will not call this\n * function for the following cases:\n * - x is a constant node (i.e., x will always be a variable)\n * - x is the node of f (i.e., the derivative is always 1)\n * - x is not on the forward/reverse differentiation path (i.e., gradient of x\n *   doesn't flow through f node)\n * @returns {string} Evaluated derivative df/dy. For example, if we consider\n * the above example data and assume xId is \"0\", then the value is \"0\"\n * since f(x) = cos(x) and df/dx = -sin(x) = 0.\n */\nfunction dfdx(fInputPortToNodes, fInputNodeToValues, xId) {\n  if (fInputPortToNodes.x.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port x\");\n  }\n  if (!fInputPortToNodes.x.includes(xId)) {\n    return \"0\";\n  }\n  const xInputNodeId = fInputPortToNodes.x[0];\n  const x = parseFloat(fInputNodeToValues[xInputNodeId]);\n  const df = -Math.sin(x);\n  return `${df}`;\n}\n"
+            },
+            "inputPorts": [
+                {
+                    "id": "x",
+                    "allowMultiEdges": false
+                }
+            ],
+            "helpText": "Calculate cos(x)"
+        },
+        {
+            "id": "tan",
+            "text": "Tan",
+            "type": "trigonometric",
+            "namePrefix": "t",
+            "operation": {
+                "fCode": "/**\n * Calculates f().\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for tan:\n * ```json\n * {\n *   \"x\": [\"0\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for tan:\n * ```json\n * {\n *   \"0\": \"0\"\n * }\n * ```\n * @returns {string} Evaluated f value. For example: if we consider\n * the above example data, then the value is \"0\" because\n * f(x) = tan(x) = tan(0) = 0.\n */\nfunction f(fInputPortToNodes, fInputNodeToValues) {\n  if (fInputPortToNodes.x.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port x\");\n  }\n  const xInputNodeId = fInputPortToNodes.x[0];\n  const x = parseFloat(fInputNodeToValues[xInputNodeId]);\n  const y = Math.tan(x);\n  return `${y}`;\n}\n",
+                "dfdxCode": "/**\n * Calculates df/dx.\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for tan:\n * ```json\n * {\n *   \"x\": [\"0\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for tan:\n * ```json\n * {\n *   \"0\": \"0\"\n * }\n * ```\n * @param {string} xId Node ID of x. Note that the framework will not call this\n * function for the following cases:\n * - x is a constant node (i.e., x will always be a variable)\n * - x is the node of f (i.e., the derivative is always 1)\n * - x is not on the forward/reverse differentiation path (i.e., gradient of x\n *   doesn't flow through f node)\n * @returns {string} Evaluated derivative df/dy. For example, if we consider\n * the above example data and assume xId is \"0\", then the value is \"1\"\n * since f(x) = tan(x) and df/dx = 1 / cos(x)^2 = 1.\n */\nfunction dfdx(fInputPortToNodes, fInputNodeToValues, xId) {\n  if (fInputPortToNodes.x.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port x\");\n  }\n  if (!fInputPortToNodes.x.includes(xId)) {\n    return \"0\";\n  }\n  const xInputNodeId = fInputPortToNodes.x[0];\n  const x = parseFloat(fInputNodeToValues[xInputNodeId]);\n  const df = 1 / Math.pow(Math.cos(x), 2);\n  return `${df}`;\n}\n"
+            },
+            "inputPorts": [
+                {
+                    "id": "x",
+                    "allowMultiEdges": false
+                }
+            ],
+            "helpText": "Calculate tan(x)"
+        },
+        {
+            "id": "linear",
+            "text": "Linear",
+            "type": "activation",
+            "namePrefix": "l",
+            "operation": {
+                "fCode": "/**\n * Calculates f().\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for identity:\n * ```json\n * {\n *   \"x\": [\"0\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for identity:\n * ```json\n * {\n *   \"0\": \"0.5\"\n * }\n * ```\n * @returns {string} Evaluated f value. For example: if we consider\n * the above example data, then the value is \"0.5\" because\n * f(x) = x = 0.5.\n */\nfunction f(fInputPortToNodes, fInputNodeToValues) {\n  if (fInputPortToNodes.x.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port x\");\n  }\n  const xInputNodeId = fInputPortToNodes.x[0];\n  const x = parseFloat(fInputNodeToValues[xInputNodeId]);\n  return `${x}`;\n}\n",
+                "dfdxCode": "/**\n * Calculates df/dx.\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for identity:\n * ```json\n * {\n *   \"x\": [\"0\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for identity:\n * ```json\n * {\n *   \"0\": \"0.5\"\n * }\n * ```\n * @param {string} xId Node ID of x. Note that the framework will not call this\n * function for the following cases:\n * - x is a constant node (i.e., x will always be a variable)\n * - x is the node of f (i.e., the derivative is always 1)\n * - x is not on the forward/reverse differentiation path (i.e., gradient of x\n *   doesn't flow through f node)\n * @returns {string} Evaluated derivative df/dy. For example, if we consider\n * the above example data and assume xId is \"0\", then the value is \"1\"\n * since f(x) = x and df/dx = 1.\n */\nfunction dfdx(fInputPortToNodes, fInputNodeToValues, xId) {\n  if (fInputPortToNodes.x.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port x\");\n  }\n  if (!fInputPortToNodes.x.includes(xId)) {\n    return \"0\";\n  }\n  return \"1\";\n}\n"
+            },
+            "inputPorts": [
+                {
+                    "id": "x",
+                    "allowMultiEdges": false
+                }
+            ],
+            "helpText": "Linear activation function, i.e., y=x"
+        },
+        {
+            "id": "sigmoid",
+            "text": "Sigmoid",
+            "type": "activation",
+            "namePrefix": "s",
+            "operation": {
+                "fCode": "/**\n * Calculates f().\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for sigmoid:\n * ```json\n * {\n *   \"x\": [\"0\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for sigmoid:\n * ```json\n * {\n *   \"0\": \"0\"\n * }\n * ```\n * @returns {string} Evaluated f value. For example: if we consider\n * the above example data, then the value is \"0.5\" because\n * f(x) = 1 / (1 + e^(-x)) = 1 / (1 + e^0) = 0.5.\n */\nfunction f(fInputPortToNodes, fInputNodeToValues) {\n  if (fInputPortToNodes.x.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port x\");\n  }\n  const xInputNodeId = fInputPortToNodes.x[0];\n  const x = parseFloat(fInputNodeToValues[xInputNodeId]);\n  const y = 1 / (1 + Math.exp(-x));\n  return `${y}`;\n}\n",
+                "dfdxCode": "/**\n * Calculates df/dx.\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for sigmoid:\n * ```json\n * {\n *   \"x\": [\"0\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for sigmoid:\n * ```json\n * {\n *   \"0\": \"0\"\n * }\n * ```\n * @param {string} xId Node ID of x. Note that the framework will not call this\n * function for the following cases:\n * - x is a constant node (i.e., x will always be a variable)\n * - x is the node of f (i.e., the derivative is always 1)\n * - x is not on the forward/reverse differentiation path (i.e., gradient of x\n *   doesn't flow through f node)\n * @returns {string} Evaluated derivative df/dy. For example, if we consider\n * the above example data and assume xId is \"0\", then the value is \"3\"\n * since f(x) = sigmoid(x) and df/dx = sigmoid(x) * (1 - sigmoid(x)) =\n * 0.5 * (1 - 0.5) = 0.25.\n */\nfunction dfdx(fInputPortToNodes, fInputNodeToValues, xId) {\n  if (fInputPortToNodes.x.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port x\");\n  }\n  if (!fInputPortToNodes.x.includes(xId)) {\n    return \"0\";\n  }\n  const xInputNodeId = fInputPortToNodes.x[0];\n  const x = parseFloat(fInputNodeToValues[xInputNodeId]);\n  const sigmoid = 1 / (1 + Math.exp(-x));\n  const df = sigmoid * (1 - sigmoid);\n  return `${df}`;\n}\n"
+            },
+            "inputPorts": [
+                {
+                    "id": "x",
+                    "allowMultiEdges": false
+                }
+            ],
+            "helpText": "Sigmoid activation function, i.e., y=1/(1 + e^(-x))"
+        },
+        {
+            "id": "tanh",
+            "text": "Tanh",
+            "type": "activation",
+            "namePrefix": "s",
+            "operation": {
+                "fCode": "/**\n * Calculates f().\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for tanh:\n * ```json\n * {\n *   \"x\": [\"0\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for tanh:\n * ```json\n * {\n *   \"0\": \"0\"\n * }\n * ```\n * @returns {string} Evaluated f value. For example: if we consider\n * the above example data, then the value is \"0\" because\n * f(x) = (e^x - e^(-x)) / (e^x + e^(-x)) = (e^0 - e^0) / (e^0 + e^0) = 0 / 2 =\n * 0.\n */\nfunction f(fInputPortToNodes, fInputNodeToValues) {\n  if (fInputPortToNodes.x.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port x\");\n  }\n  const xInputNodeId = fInputPortToNodes.x[0];\n  const x = parseFloat(fInputNodeToValues[xInputNodeId]);\n  const y = (Math.exp(x) - Math.exp(-x)) / (Math.exp(x) + Math.exp(-x));\n  return `${y}`;\n}\n",
+                "dfdxCode": "/**\n * Calculates df/dx.\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for tanh:\n * ```json\n * {\n *   \"x\": [\"0\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for tanh:\n * ```json\n * {\n *   \"0\": \"0\"\n * }\n * ```\n * @param {string} xId Node ID of x. Note that the framework will not call this\n * function for the following cases:\n * - x is a constant node (i.e., x will always be a variable)\n * - x is the node of f (i.e., the derivative is always 1)\n * - x is not on the forward/reverse differentiation path (i.e., gradient of x\n *   doesn't flow through f node)\n * @returns {string} Evaluated derivative df/dy. For example, if we consider\n * the above example data and assume xId is \"0\", then the value is \"1\"\n * since f(x) = tanh(x) and df/dx = 1 - tanh(x)^2 = 1 - 0^2 = 1\n */\nfunction dfdx(fInputPortToNodes, fInputNodeToValues, xId) {\n  if (fInputPortToNodes.x.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port x\");\n  }\n  if (!fInputPortToNodes.x.includes(xId)) {\n    return \"0\";\n  }\n  const xInputNodeId = fInputPortToNodes.x[0];\n  const x = parseFloat(fInputNodeToValues[xInputNodeId]);\n  const tanh = (Math.exp(x) - Math.exp(-x)) / (Math.exp(x) + Math.exp(-x));\n  const df = 1 - Math.pow(tanh, 2);\n  return `${df}`;\n}\n"
+            },
+            "inputPorts": [
+                {
+                    "id": "x",
+                    "allowMultiEdges": false
+                }
+            ],
+            "helpText": "Tanh activation function, i.e., y=(e^x - e^(-x))(e^x + e^(-x))"
+        },
+        {
+            "id": "relu",
+            "text": "ReLU",
+            "type": "activation",
+            "namePrefix": "r",
+            "operation": {
+                "fCode": "/**\n * Calculates f().\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for ReLU:\n * ```json\n * {\n *   \"x\": [\"0\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for ReLU:\n * ```json\n * {\n *   \"0\": \"0.5\"\n * }\n * ```\n * @returns {string} Evaluated f value. For example: if we consider\n * the above example data, then the value is \"0.5\" because\n * f(x) = max(0, x) = max(0, 0.5) = 0.5.\n */\nfunction f(fInputPortToNodes, fInputNodeToValues) {\n  if (fInputPortToNodes.x.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port x\");\n  }\n  const xInputNodeId = fInputPortToNodes.x[0];\n  const x = parseFloat(fInputNodeToValues[xInputNodeId]);\n  const y = Math.max(0, x);\n  return `${y}`;\n}\n",
+                "dfdxCode": "/**\n * Calculates df/dx.\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for ReLU:\n * ```json\n * {\n *   \"x\": [\"0\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for ReLU:\n * ```json\n * {\n *   \"0\": \"0.5\"\n * }\n * ```\n * @param {string} xId Node ID of x. Note that the framework will not call this\n * function for the following cases:\n * - x is a constant node (i.e., x will always be a variable)\n * - x is the node of f (i.e., the derivative is always 1)\n * - x is not on the forward/reverse differentiation path (i.e., gradient of x\n *   doesn't flow through f node)\n * @returns {string} Evaluated derivative df/dy. For example, if we consider\n * the above example data and assume xId is \"0\", then the value is \"1\"\n * since f(x) = max(0, x) and df/dx = 1 (x > 0).\n */\nfunction dfdx(fInputPortToNodes, fInputNodeToValues, xId) {\n  if (fInputPortToNodes.x.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port x\");\n  }\n  if (!fInputPortToNodes.x.includes(xId)) {\n    return \"0\";\n  }\n  const xInputNodeId = fInputPortToNodes.x[0];\n  const x = parseFloat(fInputNodeToValues[xInputNodeId]);\n  const df = x > 0 ? 1 : 0;\n  return `${df}`;\n}\n"
+            },
+            "inputPorts": [
+                {
+                    "id": "x",
+                    "allowMultiEdges": false
+                }
+            ],
+            "helpText": "ReLU activation function, i.e., y=max(0, x)"
+        },
+        {
+            "id": "squared_error",
+            "text": "Squared Error",
+            "type": "loss",
+            "namePrefix": "s",
+            "operation": {
+                "fCode": "/**\n * Calculates f().\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for squared error:\n * ```json\n * {\n *   \"y_t\": [\"0\"],\n *   \"y_e\": [\"1\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for squared error:\n * ```json\n * {\n *   \"0\": \"0\",\n *   \"1\": \"0.5\"\n * }\n * ```\n * @returns {string} Evaluated f value. For example: if we consider\n * the above example data, then the value is \"0.25\" because\n * f(y_t, y_e) = (y_t - y_e)^2 = (0 - 0.5)^2 = 0.25.\n */\nfunction f(fInputPortToNodes, fInputNodeToValues) {\n  if (fInputPortToNodes.y_t.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port y_t\");\n  }\n  if (fInputPortToNodes.y_e.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port y_e\");\n  }\n  const yTrueInputNodeId = fInputPortToNodes.y_t[0];\n  const yEstimateInputNodeId = fInputPortToNodes.y_e[0];\n  const yTrue = parseFloat(fInputNodeToValues[yTrueInputNodeId]);\n  const yEstimate = parseFloat(fInputNodeToValues[yEstimateInputNodeId]);\n  const y = Math.pow(yTrue - yEstimate, 2);\n  return `${y}`;\n}\n",
+                "dfdxCode": "/**\n * Calculates df/dx.\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for squared error:\n * ```json\n * {\n *   \"y_t\": [\"0\"],\n *   \"y_e\": [\"1\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for squared error:\n * ```json\n * {\n *   \"0\": \"0\",\n *   \"1\": \"0.5\"\n * }\n * ```\n * @param {string} xId Node ID of x. Note that the framework will not call this\n * function for the following cases:\n * - x is a constant node (i.e., x will always be a variable)\n * - x is the node of f (i.e., the derivative is always 1)\n * - x is not on the forward/reverse differentiation path (i.e., gradient of x\n *   doesn't flow through f node)\n * @returns {string} Evaluated derivative df/dy. For example, if we consider\n * the above example data and assume xId is \"0\", then the value is \"-1\"\n * since f(y_t, y_e) = (y_t - y_e)^2 and df/d(y_t) = 2 * (y_t - y_e) =\n * 2 * (0 - 0.5) = -1.\n */\nfunction dfdx(fInputPortToNodes, fInputNodeToValues, xId) {\n  if (fInputPortToNodes.y_t.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port y_t\");\n  }\n  if (fInputPortToNodes.y_e.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port y_e\");\n  }\n  const hasXInYTrue = fInputPortToNodes.y_t.includes(xId);\n  const hasXInYEstimate = fInputPortToNodes.y_e.includes(xId);\n  if (!hasXInYTrue && !hasXInYEstimate) {\n    return \"0\";\n  }\n  const yTrueInputNodeId = fInputPortToNodes.y_t[0];\n  const yEstimateInputNodeId = fInputPortToNodes.y_e[0];\n  const yTrue = parseFloat(fInputNodeToValues[yTrueInputNodeId]);\n  const yEstimate = parseFloat(fInputNodeToValues[yEstimateInputNodeId]);\n  let df = 0;\n  if (hasXInYTrue) {\n    df = 2 * (yTrue - yEstimate);\n  } else {\n    df = 2 * (yEstimate - yTrue);\n  }\n  return `${df}`;\n}\n"
+            },
+            "inputPorts": [
+                {
+                    "id": "y_t",
+                    "allowMultiEdges": false
+                },
+                {
+                    "id": "y_e",
+                    "allowMultiEdges": false
+                }
+            ],
+            "helpText": "Calculate the squared error, i.e., (y_t - y_e)^2\n (y_t: true value, y_e: estimated value)"
+        },
+        {
+            "id": "binary_cross_entropy",
+            "text": "Binary Cross-Entropy",
+            "type": "loss",
+            "namePrefix": "b",
+            "operation": {
+                "fCode": "/**\n * Calculates f().\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for squared error:\n * ```json\n * {\n *   \"y_t\": [\"0\"],\n *   \"y_e\": [\"1\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for squared error:\n * ```json\n * {\n *   \"0\": \"0\",\n *   \"1\": \"0.5\"\n * }\n * ```\n * @returns {string} Evaluated f value. For example: if we consider\n * the above example data, then the value is \"-0.693\" because\n * f(y_t, y_e) = y_t * log(y_e) + (1 - y_t) * log(1 - y_e) =\n * 0 * log(0.5) + (1 - 0) * log(1 - 0.5) ~= -0.693.\n */\nfunction f(fInputPortToNodes, fInputNodeToValues) {\n  if (fInputPortToNodes.y_t.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port y_t\");\n  }\n  if (fInputPortToNodes.y_e.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port y_e\");\n  }\n  const yTrueInputNodeId = fInputPortToNodes.y_t[0];\n  const yEstimateInputNodeId = fInputPortToNodes.y_e[0];\n  const yTrue = parseFloat(fInputNodeToValues[yTrueInputNodeId]);\n  const yEstimate = parseFloat(fInputNodeToValues[yEstimateInputNodeId]);\n  const y = yTrue * Math.log(yEstimate) + (1 - yTrue) * Math.log(1 - yEstimate);\n  return `${y}`;\n}\n",
+                "dfdxCode": "/**\n * Calculates df/dx.\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for squared error:\n * ```json\n * {\n *   \"y_t\": [\"0\"],\n *   \"y_e\": [\"1\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for squared error:\n * ```json\n * {\n *   \"0\": \"0\",\n *   \"1\": \"0.5\"\n * }\n * ```\n * @param {string} xId Node ID of x. Note that the framework will not call this\n * function for the following cases:\n * - x is a constant node (i.e., x will always be a variable)\n * - x is the node of f (i.e., the derivative is always 1)\n * - x is not on the forward/reverse differentiation path (i.e., gradient of x\n *   doesn't flow through f node)\n * @returns {string} Evaluated derivative df/dy. For example, if we consider\n * the above example data and assume xId is \"0\", then the value is \"-1.386\"\n * since f(y_t, y_e) = y_t * log(y_e) + (1 - y_t) * log(1 - y_e) and\n * df/d(y_t) = log(y_e) - log(1 - y_e) = log(0.5) - log(1 - 0.5) ~= -1.386.\n */\nfunction dfdx(fInputPortToNodes, fInputNodeToValues, xId) {\n  if (fInputPortToNodes.y_t.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port y_t\");\n  }\n  if (fInputPortToNodes.y_e.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port y_e\");\n  }\n  const hasXInYTrue = fInputPortToNodes.y_t.includes(xId);\n  const hasXInYEstimate = fInputPortToNodes.y_e.includes(xId);\n  if (!hasXInYTrue && !hasXInYEstimate) {\n    return \"0\";\n  }\n  const yTrueInputNodeId = fInputPortToNodes.y_t[0];\n  const yEstimateInputNodeId = fInputPortToNodes.y_e[0];\n  const yTrue = parseFloat(fInputNodeToValues[yTrueInputNodeId]);\n  const yEstimate = parseFloat(fInputNodeToValues[yEstimateInputNodeId]);\n  let df = 0;\n  if (hasXInYTrue) {\n    df = Math.log(yEstimate) - Math.log(1 - yEstimate);\n  } else {\n    df = (yTrue - yEstimate) / (yEstimate - Math.pow(yEstimate, 2));\n  }\n  return `${df}`;\n}\n"
+            },
+            "inputPorts": [
+                {
+                    "id": "y_t",
+                    "allowMultiEdges": false
+                },
+                {
+                    "id": "y_e",
+                    "allowMultiEdges": false
+                }
+            ],
+            "helpText": "Calculate the binary cross-entropy,\n i.e., y_t * log(y_e) + (1 - y_t) * log(1 - y_e)\n (y_t: true value, y_e: estimated value)"
+        }
+    ],
+    "nextNodeId": 25,
+    "nodeNameBuilderState": {
+        "constantCounter": 1,
+        "variableCounter": 13,
+        "operationIdToCounter": {
+            "multiply": 7,
+            "sum": 4,
+            "relu": 3,
+            "sigmoid": 2,
+            "squared_error": 2
+        }
+    },
+    "nextOperationId": 0,
+    "operationIdsAddedAtLeastOnce": [
+        "multiply",
+        "sum",
+        "relu",
+        "sigmoid",
+        "squared_error"
+    ],
+    "reactFlowState": {
+        "nodes": [
+            {
+                "width": 209,
+                "height": 153,
+                "id": "0",
+                "type": "custom",
+                "data": {
+                    "name": "x_1",
+                    "operationData": null,
+                    "featureNodeType": {
+                        "nodeType": "VARIABLE"
+                    },
+                    "inputItems": [
+                        {
+                            "id": "value",
+                            "label": "=",
+                            "showHandle": false,
+                            "showInputField": true,
+                            "value": "0"
+                        }
+                    ],
+                    "outputItems": [
+                        {
+                            "type": "DERIVATIVE",
+                            "labelParts": [
+                                {
+                                    "type": "latexLink",
+                                    "id": "derivative",
+                                    "latex": "\\displaystyle \\frac{\\partial{E}}{\\partial{x_1}}",
+                                    "href": "0"
+                                },
+                                {
+                                    "type": "latex",
+                                    "id": "equal",
+                                    "latex": "="
+                                }
+                            ],
+                            "value": "0.0125"
+                        }
+                    ],
+                    "isDarkMode": false,
+                    "isHighlighted": false
+                },
+                "dragHandle": ".drag-handle",
+                "selected": false,
+                "position": {
+                    "x": 100,
+                    "y": 800
+                },
+                "positionAbsolute": {
+                    "x": 100,
+                    "y": 800
+                },
+                "dragging": false
+            },
+            {
+                "width": 209,
+                "height": 153,
+                "id": "1",
+                "type": "custom",
+                "data": {
+                    "name": "x_2",
+                    "operationData": null,
+                    "featureNodeType": {
+                        "nodeType": "VARIABLE"
+                    },
+                    "inputItems": [
+                        {
+                            "id": "value",
+                            "label": "=",
+                            "showHandle": false,
+                            "showInputField": true,
+                            "value": "1"
+                        }
+                    ],
+                    "outputItems": [
+                        {
+                            "type": "DERIVATIVE",
+                            "labelParts": [
+                                {
+                                    "type": "latexLink",
+                                    "id": "derivative",
+                                    "latex": "\\displaystyle \\frac{\\partial{E}}{\\partial{x_2}}",
+                                    "href": "1"
+                                },
+                                {
+                                    "type": "latex",
+                                    "id": "equal",
+                                    "latex": "="
+                                }
+                            ],
+                            "value": "0.025"
+                        }
+                    ],
+                    "isDarkMode": false,
+                    "isHighlighted": false
+                },
+                "dragHandle": ".drag-handle",
+                "selected": false,
+                "position": {
+                    "x": 100,
+                    "y": 1000
+                },
+                "positionAbsolute": {
+                    "x": 100,
+                    "y": 1000
+                },
+                "dragging": false
+            },
+            {
+                "width": 222,
+                "height": 153,
+                "id": "2",
+                "type": "custom",
+                "data": {
+                    "name": "w^{(1)}_{11}",
+                    "operationData": null,
+                    "featureNodeType": {
+                        "nodeType": "VARIABLE"
+                    },
+                    "inputItems": [
+                        {
+                            "id": "value",
+                            "label": "=",
+                            "showHandle": false,
+                            "showInputField": true,
+                            "value": "-0.1"
+                        }
+                    ],
+                    "outputItems": [
+                        {
+                            "type": "DERIVATIVE",
+                            "labelParts": [
+                                {
+                                    "type": "latexLink",
+                                    "id": "derivative",
+                                    "latex": "\\displaystyle \\frac{\\partial{E}}{\\partial{w^{(1)}_{11}}}",
+                                    "href": "2"
+                                },
+                                {
+                                    "type": "latex",
+                                    "id": "equal",
+                                    "latex": "="
+                                }
+                            ],
+                            "value": "0"
+                        }
+                    ],
+                    "isDarkMode": false,
+                    "isHighlighted": false
+                },
+                "dragHandle": ".drag-handle",
+                "selected": false,
+                "position": {
+                    "x": 600,
+                    "y": 200
+                },
+                "positionAbsolute": {
+                    "x": 600,
+                    "y": 200
+                },
+                "dragging": false
+            },
+            {
+                "width": 222,
+                "height": 153,
+                "id": "3",
+                "type": "custom",
+                "data": {
+                    "name": "w^{(1)}_{21}",
+                    "operationData": null,
+                    "featureNodeType": {
+                        "nodeType": "VARIABLE"
+                    },
+                    "inputItems": [
+                        {
+                            "id": "value",
+                            "label": "=",
+                            "showHandle": false,
+                            "showInputField": true,
+                            "value": "-0.2"
+                        }
+                    ],
+                    "outputItems": [
+                        {
+                            "type": "DERIVATIVE",
+                            "labelParts": [
+                                {
+                                    "type": "latexLink",
+                                    "id": "derivative",
+                                    "latex": "\\displaystyle \\frac{\\partial{E}}{\\partial{w^{(1)}_{21}}}",
+                                    "href": "3"
+                                },
+                                {
+                                    "type": "latex",
+                                    "id": "equal",
+                                    "latex": "="
+                                }
+                            ],
+                            "value": "0"
+                        }
+                    ],
+                    "isDarkMode": false,
+                    "isHighlighted": false
+                },
+                "dragHandle": ".drag-handle",
+                "selected": false,
+                "position": {
+                    "x": 600,
+                    "y": 500
+                },
+                "positionAbsolute": {
+                    "x": 600,
+                    "y": 500
+                },
+                "dragging": false
+            },
+            {
+                "width": 222,
+                "height": 153,
+                "id": "4",
+                "type": "custom",
+                "data": {
+                    "name": "w^{(1)}_{12}",
+                    "operationData": null,
+                    "featureNodeType": {
+                        "nodeType": "VARIABLE"
+                    },
+                    "inputItems": [
+                        {
+                            "id": "value",
+                            "label": "=",
+                            "showHandle": false,
+                            "showInputField": true,
+                            "value": "0.1"
+                        }
+                    ],
+                    "outputItems": [
+                        {
+                            "type": "DERIVATIVE",
+                            "labelParts": [
+                                {
+                                    "type": "latexLink",
+                                    "id": "derivative",
+                                    "latex": "\\displaystyle \\frac{\\partial{E}}{\\partial{w^{(1)}_{12}}}",
+                                    "href": "4"
+                                },
+                                {
+                                    "type": "latex",
+                                    "id": "equal",
+                                    "latex": "="
+                                }
+                            ],
+                            "value": "0"
+                        }
+                    ],
+                    "isDarkMode": false,
+                    "isHighlighted": false
+                },
+                "dragHandle": ".drag-handle",
+                "selected": false,
+                "position": {
+                    "x": 600,
+                    "y": 1200
+                },
+                "positionAbsolute": {
+                    "x": 600,
+                    "y": 1200
+                },
+                "dragging": false
+            },
+            {
+                "width": 222,
+                "height": 153,
+                "id": "5",
+                "type": "custom",
+                "data": {
+                    "name": "w^{(1)}_{22}",
+                    "operationData": null,
+                    "featureNodeType": {
+                        "nodeType": "VARIABLE"
+                    },
+                    "inputItems": [
+                        {
+                            "id": "value",
+                            "label": "=",
+                            "showHandle": false,
+                            "showInputField": true,
+                            "value": "0.2"
+                        }
+                    ],
+                    "outputItems": [
+                        {
+                            "type": "DERIVATIVE",
+                            "labelParts": [
+                                {
+                                    "type": "latexLink",
+                                    "id": "derivative",
+                                    "latex": "\\displaystyle \\frac{\\partial{E}}{\\partial{w^{(1)}_{22}}}",
+                                    "href": "5"
+                                },
+                                {
+                                    "type": "latex",
+                                    "id": "equal",
+                                    "latex": "="
+                                }
+                            ],
+                            "value": "0.125"
+                        }
+                    ],
+                    "isDarkMode": false,
+                    "isHighlighted": false
+                },
+                "dragHandle": ".drag-handle",
+                "selected": false,
+                "position": {
+                    "x": 600,
+                    "y": 1500
+                },
+                "positionAbsolute": {
+                    "x": 600,
+                    "y": 1500
+                },
+                "dragging": false
+            },
+            {
+                "width": 223,
+                "height": 233,
+                "id": "6",
+                "type": "custom",
+                "data": {
+                    "name": "m^{(1)}_{11}",
+                    "operationData": {
+                        "text": "Multiply",
+                        "helpText": "Multiply two numbers, i.e., a * b"
+                    },
+                    "featureNodeType": {
+                        "nodeType": "OPERATION",
+                        "operationId": "multiply"
+                    },
+                    "inputItems": [
+                        {
+                            "id": "a",
+                            "label": "a",
+                            "showHandle": true,
+                            "showInputField": false,
+                            "value": "0"
+                        },
+                        {
+                            "id": "b",
+                            "label": "b",
+                            "showHandle": true,
+                            "showInputField": false,
+                            "value": "0"
+                        }
+                    ],
+                    "outputItems": [
+                        {
+                            "type": "VALUE",
+                            "labelParts": [
+                                {
+                                    "type": "latex",
+                                    "id": "value",
+                                    "latex": "="
+                                }
+                            ],
+                            "value": "0"
+                        },
+                        {
+                            "type": "DERIVATIVE",
+                            "labelParts": [
+                                {
+                                    "type": "latexLink",
+                                    "id": "derivative",
+                                    "latex": "\\displaystyle \\frac{\\partial{E}}{\\partial{m^{(1)}_{11}}}",
+                                    "href": "6"
+                                },
+                                {
+                                    "type": "latex",
+                                    "id": "equal",
+                                    "latex": "="
+                                }
+                            ],
+                            "value": "0"
+                        }
+                    ],
+                    "isDarkMode": false,
+                    "isHighlighted": false
+                },
+                "dragHandle": ".drag-handle",
+                "selected": false,
+                "position": {
+                    "x": 900,
+                    "y": 100
+                },
+                "positionAbsolute": {
+                    "x": 900,
+                    "y": 100
+                },
+                "dragging": false
+            },
+            {
+                "width": 223,
+                "height": 233,
+                "id": "7",
+                "type": "custom",
+                "data": {
+                    "name": "m^{(1)}_{21}",
+                    "operationData": {
+                        "text": "Multiply",
+                        "helpText": "Multiply two numbers, i.e., a * b"
+                    },
+                    "featureNodeType": {
+                        "nodeType": "OPERATION",
+                        "operationId": "multiply"
+                    },
+                    "inputItems": [
+                        {
+                            "id": "a",
+                            "label": "a",
+                            "showHandle": true,
+                            "showInputField": false,
+                            "value": "0"
+                        },
+                        {
+                            "id": "b",
+                            "label": "b",
+                            "showHandle": true,
+                            "showInputField": false,
+                            "value": "0"
+                        }
+                    ],
+                    "outputItems": [
+                        {
+                            "type": "VALUE",
+                            "labelParts": [
+                                {
+                                    "type": "latex",
+                                    "id": "value",
+                                    "latex": "="
+                                }
+                            ],
+                            "value": "-0.2"
+                        },
+                        {
+                            "type": "DERIVATIVE",
+                            "labelParts": [
+                                {
+                                    "type": "latexLink",
+                                    "id": "derivative",
+                                    "latex": "\\displaystyle \\frac{\\partial{E}}{\\partial{m^{(1)}_{21}}}",
+                                    "href": "7"
+                                },
+                                {
+                                    "type": "latex",
+                                    "id": "equal",
+                                    "latex": "="
+                                }
+                            ],
+                            "value": "0"
+                        }
+                    ],
+                    "isDarkMode": false,
+                    "isHighlighted": false
+                },
+                "dragHandle": ".drag-handle",
+                "selected": false,
+                "position": {
+                    "x": 900,
+                    "y": 400
+                },
+                "positionAbsolute": {
+                    "x": 900,
+                    "y": 400
+                },
+                "dragging": false
+            },
+            {
+                "width": 223,
+                "height": 233,
+                "id": "8",
+                "type": "custom",
+                "data": {
+                    "name": "m^{(1)}_{12}",
+                    "operationData": {
+                        "text": "Multiply",
+                        "helpText": "Multiply two numbers, i.e., a * b"
+                    },
+                    "featureNodeType": {
+                        "nodeType": "OPERATION",
+                        "operationId": "multiply"
+                    },
+                    "inputItems": [
+                        {
+                            "id": "a",
+                            "label": "a",
+                            "showHandle": true,
+                            "showInputField": false,
+                            "value": "0"
+                        },
+                        {
+                            "id": "b",
+                            "label": "b",
+                            "showHandle": true,
+                            "showInputField": false,
+                            "value": "0"
+                        }
+                    ],
+                    "outputItems": [
+                        {
+                            "type": "VALUE",
+                            "labelParts": [
+                                {
+                                    "type": "latex",
+                                    "id": "value",
+                                    "latex": "="
+                                }
+                            ],
+                            "value": "0"
+                        },
+                        {
+                            "type": "DERIVATIVE",
+                            "labelParts": [
+                                {
+                                    "type": "latexLink",
+                                    "id": "derivative",
+                                    "latex": "\\displaystyle \\frac{\\partial{E}}{\\partial{m^{(1)}_{12}}}",
+                                    "href": "8"
+                                },
+                                {
+                                    "type": "latex",
+                                    "id": "equal",
+                                    "latex": "="
+                                }
+                            ],
+                            "value": "0.125"
+                        }
+                    ],
+                    "isDarkMode": false,
+                    "isHighlighted": false
+                },
+                "dragHandle": ".drag-handle",
+                "selected": false,
+                "position": {
+                    "x": 900,
+                    "y": 1100
+                },
+                "positionAbsolute": {
+                    "x": 900,
+                    "y": 1100
+                },
+                "dragging": false
+            },
+            {
+                "width": 223,
+                "height": 233,
+                "id": "9",
+                "type": "custom",
+                "data": {
+                    "name": "m^{(1)}_{22}",
+                    "operationData": {
+                        "text": "Multiply",
+                        "helpText": "Multiply two numbers, i.e., a * b"
+                    },
+                    "featureNodeType": {
+                        "nodeType": "OPERATION",
+                        "operationId": "multiply"
+                    },
+                    "inputItems": [
+                        {
+                            "id": "a",
+                            "label": "a",
+                            "showHandle": true,
+                            "showInputField": false,
+                            "value": "0"
+                        },
+                        {
+                            "id": "b",
+                            "label": "b",
+                            "showHandle": true,
+                            "showInputField": false,
+                            "value": "0"
+                        }
+                    ],
+                    "outputItems": [
+                        {
+                            "type": "VALUE",
+                            "labelParts": [
+                                {
+                                    "type": "latex",
+                                    "id": "value",
+                                    "latex": "="
+                                }
+                            ],
+                            "value": "0.2"
+                        },
+                        {
+                            "type": "DERIVATIVE",
+                            "labelParts": [
+                                {
+                                    "type": "latexLink",
+                                    "id": "derivative",
+                                    "latex": "\\displaystyle \\frac{\\partial{E}}{\\partial{m^{(1)}_{22}}}",
+                                    "href": "9"
+                                },
+                                {
+                                    "type": "latex",
+                                    "id": "equal",
+                                    "latex": "="
+                                }
+                            ],
+                            "value": "0.125"
+                        }
+                    ],
+                    "isDarkMode": false,
+                    "isHighlighted": false
+                },
+                "dragHandle": ".drag-handle",
+                "selected": false,
+                "position": {
+                    "x": 900,
+                    "y": 1400
+                },
+                "positionAbsolute": {
+                    "x": 900,
+                    "y": 1400
+                },
+                "dragging": false
+            },
+            {
+                "width": 219,
+                "height": 153,
+                "id": "10",
+                "type": "custom",
+                "data": {
+                    "name": "b^{(1)}_1",
+                    "operationData": null,
+                    "featureNodeType": {
+                        "nodeType": "VARIABLE"
+                    },
+                    "inputItems": [
+                        {
+                            "id": "value",
+                            "label": "=",
+                            "showHandle": false,
+                            "showInputField": true,
+                            "value": "-0.3"
+                        }
+                    ],
+                    "outputItems": [
+                        {
+                            "type": "DERIVATIVE",
+                            "labelParts": [
+                                {
+                                    "type": "latexLink",
+                                    "id": "derivative",
+                                    "latex": "\\displaystyle \\frac{\\partial{E}}{\\partial{b^{(1)}_1}}",
+                                    "href": "10"
+                                },
+                                {
+                                    "type": "latex",
+                                    "id": "equal",
+                                    "latex": "="
+                                }
+                            ],
+                            "value": "0"
+                        }
+                    ],
+                    "isDarkMode": false,
+                    "isHighlighted": false
+                },
+                "dragHandle": ".drag-handle",
+                "selected": false,
+                "position": {
+                    "x": 900,
+                    "y": 700
+                },
+                "positionAbsolute": {
+                    "x": 900,
+                    "y": 700
+                },
+                "dragging": false
+            },
+            {
+                "width": 219,
+                "height": 153,
+                "id": "11",
+                "type": "custom",
+                "data": {
+                    "name": "b^{(1)}_2",
+                    "operationData": null,
+                    "featureNodeType": {
+                        "nodeType": "VARIABLE"
+                    },
+                    "inputItems": [
+                        {
+                            "id": "value",
+                            "label": "=",
+                            "showHandle": false,
+                            "showInputField": true,
+                            "value": "0.3"
+                        }
+                    ],
+                    "outputItems": [
+                        {
+                            "type": "DERIVATIVE",
+                            "labelParts": [
+                                {
+                                    "type": "latexLink",
+                                    "id": "derivative",
+                                    "latex": "\\displaystyle \\frac{\\partial{E}}{\\partial{b^{(1)}_2}}",
+                                    "href": "11"
+                                },
+                                {
+                                    "type": "latex",
+                                    "id": "equal",
+                                    "latex": "="
+                                }
+                            ],
+                            "value": "0.125"
+                        }
+                    ],
+                    "isDarkMode": false,
+                    "isHighlighted": false
+                },
+                "dragHandle": ".drag-handle",
+                "selected": false,
+                "position": {
+                    "x": 900,
+                    "y": 1700
+                },
+                "dragging": false,
+                "positionAbsolute": {
+                    "x": 900,
+                    "y": 1700
+                }
+            },
+            {
+                "width": 218,
+                "height": 193,
+                "id": "12",
+                "type": "custom",
+                "data": {
+                    "name": "z^{(1)}_1",
+                    "operationData": {
+                        "text": "Sum",
+                        "helpText": "Add all inputs: sum_i x_i, i.e., x_0 + x_1 + ..."
+                    },
+                    "featureNodeType": {
+                        "nodeType": "OPERATION",
+                        "operationId": "sum"
+                    },
+                    "inputItems": [
+                        {
+                            "id": "x_i",
+                            "label": "x_i",
+                            "showHandle": true,
+                            "showInputField": false,
+                            "value": "0"
+                        }
+                    ],
+                    "outputItems": [
+                        {
+                            "type": "VALUE",
+                            "labelParts": [
+                                {
+                                    "type": "latex",
+                                    "id": "value",
+                                    "latex": "="
+                                }
+                            ],
+                            "value": "-0.5"
+                        },
+                        {
+                            "type": "DERIVATIVE",
+                            "labelParts": [
+                                {
+                                    "type": "latexLink",
+                                    "id": "derivative",
+                                    "latex": "\\displaystyle \\frac{\\partial{E}}{\\partial{z^{(1)}_1}}",
+                                    "href": "12"
+                                },
+                                {
+                                    "type": "latex",
+                                    "id": "equal",
+                                    "latex": "="
+                                }
+                            ],
+                            "value": "0"
+                        }
+                    ],
+                    "isDarkMode": false,
+                    "isHighlighted": false
+                },
+                "dragHandle": ".drag-handle",
+                "selected": false,
+                "position": {
+                    "x": 1200,
+                    "y": 400
+                },
+                "positionAbsolute": {
+                    "x": 1200,
+                    "y": 400
+                },
+                "dragging": false
+            },
+            {
+                "width": 218,
+                "height": 193,
+                "id": "13",
+                "type": "custom",
+                "data": {
+                    "name": "z^{(1)}_2",
+                    "operationData": {
+                        "text": "Sum",
+                        "helpText": "Add all inputs: sum_i x_i, i.e., x_0 + x_1 + ..."
+                    },
+                    "featureNodeType": {
+                        "nodeType": "OPERATION",
+                        "operationId": "sum"
+                    },
+                    "inputItems": [
+                        {
+                            "id": "x_i",
+                            "label": "x_i",
+                            "showHandle": true,
+                            "showInputField": false,
+                            "value": "0"
+                        }
+                    ],
+                    "outputItems": [
+                        {
+                            "type": "VALUE",
+                            "labelParts": [
+                                {
+                                    "type": "latex",
+                                    "id": "value",
+                                    "latex": "="
+                                }
+                            ],
+                            "value": "0.5"
+                        },
+                        {
+                            "type": "DERIVATIVE",
+                            "labelParts": [
+                                {
+                                    "type": "latexLink",
+                                    "id": "derivative",
+                                    "latex": "\\displaystyle \\frac{\\partial{E}}{\\partial{z^{(1)}_2}}",
+                                    "href": "13"
+                                },
+                                {
+                                    "type": "latex",
+                                    "id": "equal",
+                                    "latex": "="
+                                }
+                            ],
+                            "value": "0.125"
+                        }
+                    ],
+                    "isDarkMode": false,
+                    "isHighlighted": false
+                },
+                "dragHandle": ".drag-handle",
+                "selected": false,
+                "position": {
+                    "x": 1200,
+                    "y": 1400
+                },
+                "positionAbsolute": {
+                    "x": 1200,
+                    "y": 1400
+                },
+                "dragging": false
+            },
+            {
+                "width": 219,
+                "height": 193,
+                "id": "14",
+                "type": "custom",
+                "data": {
+                    "name": "a^{(1)}_1",
+                    "operationData": {
+                        "text": "ReLU",
+                        "helpText": "ReLU activation function, i.e., y=max(0, x)"
+                    },
+                    "featureNodeType": {
+                        "nodeType": "OPERATION",
+                        "operationId": "relu"
+                    },
+                    "inputItems": [
+                        {
+                            "id": "x",
+                            "label": "x",
+                            "showHandle": true,
+                            "showInputField": false,
+                            "value": "0"
+                        }
+                    ],
+                    "outputItems": [
+                        {
+                            "type": "VALUE",
+                            "labelParts": [
+                                {
+                                    "type": "latex",
+                                    "id": "value",
+                                    "latex": "="
+                                }
+                            ],
+                            "value": "0"
+                        },
+                        {
+                            "type": "DERIVATIVE",
+                            "labelParts": [
+                                {
+                                    "type": "latexLink",
+                                    "id": "derivative",
+                                    "latex": "\\displaystyle \\frac{\\partial{E}}{\\partial{a^{(1)}_1}}",
+                                    "href": "14"
+                                },
+                                {
+                                    "type": "latex",
+                                    "id": "equal",
+                                    "latex": "="
+                                }
+                            ],
+                            "value": "-0.125"
+                        }
+                    ],
+                    "isDarkMode": false,
+                    "isHighlighted": false
+                },
+                "dragHandle": ".drag-handle",
+                "selected": false,
+                "position": {
+                    "x": 1500,
+                    "y": 400
+                },
+                "positionAbsolute": {
+                    "x": 1500,
+                    "y": 400
+                },
+                "dragging": false
+            },
+            {
+                "width": 219,
+                "height": 193,
+                "id": "15",
+                "type": "custom",
+                "data": {
+                    "name": "a^{(1)}_2",
+                    "operationData": {
+                        "text": "ReLU",
+                        "helpText": "ReLU activation function, i.e., y=max(0, x)"
+                    },
+                    "featureNodeType": {
+                        "nodeType": "OPERATION",
+                        "operationId": "relu"
+                    },
+                    "inputItems": [
+                        {
+                            "id": "x",
+                            "label": "x",
+                            "showHandle": true,
+                            "showInputField": false,
+                            "value": "0"
+                        }
+                    ],
+                    "outputItems": [
+                        {
+                            "type": "VALUE",
+                            "labelParts": [
+                                {
+                                    "type": "latex",
+                                    "id": "value",
+                                    "latex": "="
+                                }
+                            ],
+                            "value": "0.5"
+                        },
+                        {
+                            "type": "DERIVATIVE",
+                            "labelParts": [
+                                {
+                                    "type": "latexLink",
+                                    "id": "derivative",
+                                    "latex": "\\displaystyle \\frac{\\partial{E}}{\\partial{a^{(1)}_2}}",
+                                    "href": "15"
+                                },
+                                {
+                                    "type": "latex",
+                                    "id": "equal",
+                                    "latex": "="
+                                }
+                            ],
+                            "value": "0.125"
+                        }
+                    ],
+                    "isDarkMode": false,
+                    "isHighlighted": false
+                },
+                "dragHandle": ".drag-handle",
+                "selected": false,
+                "position": {
+                    "x": 1500,
+                    "y": 1400
+                },
+                "positionAbsolute": {
+                    "x": 1500,
+                    "y": 1400
+                },
+                "dragging": false
+            },
+            {
+                "width": 222,
+                "height": 153,
+                "id": "16",
+                "type": "custom",
+                "data": {
+                    "name": "w^{(2)}_{11}",
+                    "operationData": null,
+                    "featureNodeType": {
+                        "nodeType": "VARIABLE"
+                    },
+                    "inputItems": [
+                        {
+                            "id": "value",
+                            "label": "=",
+                            "showHandle": false,
+                            "showInputField": true,
+                            "value": "-0.5"
+                        }
+                    ],
+                    "outputItems": [
+                        {
+                            "type": "DERIVATIVE",
+                            "labelParts": [
+                                {
+                                    "type": "latexLink",
+                                    "id": "derivative",
+                                    "latex": "\\displaystyle \\frac{\\partial{E}}{\\partial{w^{(2)}_{11}}}",
+                                    "href": "16"
+                                },
+                                {
+                                    "type": "latex",
+                                    "id": "equal",
+                                    "latex": "="
+                                }
+                            ],
+                            "value": "0"
+                        }
+                    ],
+                    "isDarkMode": false,
+                    "isHighlighted": false
+                },
+                "dragHandle": ".drag-handle",
+                "selected": false,
+                "position": {
+                    "x": 2000,
+                    "y": 800
+                },
+                "positionAbsolute": {
+                    "x": 2000,
+                    "y": 800
+                },
+                "dragging": false
+            },
+            {
+                "width": 222,
+                "height": 153,
+                "id": "17",
+                "type": "custom",
+                "data": {
+                    "name": "w^{(2)}_{21}",
+                    "operationData": null,
+                    "featureNodeType": {
+                        "nodeType": "VARIABLE"
+                    },
+                    "inputItems": [
+                        {
+                            "id": "value",
+                            "label": "=",
+                            "showHandle": false,
+                            "showInputField": true,
+                            "value": "0.5"
+                        }
+                    ],
+                    "outputItems": [
+                        {
+                            "type": "DERIVATIVE",
+                            "labelParts": [
+                                {
+                                    "type": "latexLink",
+                                    "id": "derivative",
+                                    "latex": "\\displaystyle \\frac{\\partial{E}}{\\partial{w^{(2)}_{21}}}",
+                                    "href": "17"
+                                },
+                                {
+                                    "type": "latex",
+                                    "id": "equal",
+                                    "latex": "="
+                                }
+                            ],
+                            "value": "0.125"
+                        }
+                    ],
+                    "isDarkMode": false,
+                    "isHighlighted": false
+                },
+                "dragHandle": ".drag-handle",
+                "selected": false,
+                "position": {
+                    "x": 2000,
+                    "y": 1100
+                },
+                "positionAbsolute": {
+                    "x": 2000,
+                    "y": 1100
+                },
+                "dragging": false
+            },
+            {
+                "width": 223,
+                "height": 233,
+                "id": "18",
+                "type": "custom",
+                "data": {
+                    "name": "m^{(2)}_{11}",
+                    "operationData": {
+                        "text": "Multiply",
+                        "helpText": "Multiply two numbers, i.e., a * b"
+                    },
+                    "featureNodeType": {
+                        "nodeType": "OPERATION",
+                        "operationId": "multiply"
+                    },
+                    "inputItems": [
+                        {
+                            "id": "a",
+                            "label": "a",
+                            "showHandle": true,
+                            "showInputField": false,
+                            "value": "0"
+                        },
+                        {
+                            "id": "b",
+                            "label": "b",
+                            "showHandle": true,
+                            "showInputField": false,
+                            "value": "0"
+                        }
+                    ],
+                    "outputItems": [
+                        {
+                            "type": "VALUE",
+                            "labelParts": [
+                                {
+                                    "type": "latex",
+                                    "id": "value",
+                                    "latex": "="
+                                }
+                            ],
+                            "value": "0"
+                        },
+                        {
+                            "type": "DERIVATIVE",
+                            "labelParts": [
+                                {
+                                    "type": "latexLink",
+                                    "id": "derivative",
+                                    "latex": "\\displaystyle \\frac{\\partial{E}}{\\partial{m^{(2)}_{11}}}",
+                                    "href": "18"
+                                },
+                                {
+                                    "type": "latex",
+                                    "id": "equal",
+                                    "latex": "="
+                                }
+                            ],
+                            "value": "0.25"
+                        }
+                    ],
+                    "isDarkMode": false,
+                    "isHighlighted": false
+                },
+                "dragHandle": ".drag-handle",
+                "selected": false,
+                "position": {
+                    "x": 2300,
+                    "y": 700
+                },
+                "positionAbsolute": {
+                    "x": 2300,
+                    "y": 700
+                },
+                "dragging": false
+            },
+            {
+                "width": 223,
+                "height": 233,
+                "id": "19",
+                "type": "custom",
+                "data": {
+                    "name": "m^{(2)}_{21}",
+                    "operationData": {
+                        "text": "Multiply",
+                        "helpText": "Multiply two numbers, i.e., a * b"
+                    },
+                    "featureNodeType": {
+                        "nodeType": "OPERATION",
+                        "operationId": "multiply"
+                    },
+                    "inputItems": [
+                        {
+                            "id": "a",
+                            "label": "a",
+                            "showHandle": true,
+                            "showInputField": false,
+                            "value": "0"
+                        },
+                        {
+                            "id": "b",
+                            "label": "b",
+                            "showHandle": true,
+                            "showInputField": false,
+                            "value": "0"
+                        }
+                    ],
+                    "outputItems": [
+                        {
+                            "type": "VALUE",
+                            "labelParts": [
+                                {
+                                    "type": "latex",
+                                    "id": "value",
+                                    "latex": "="
+                                }
+                            ],
+                            "value": "0.25"
+                        },
+                        {
+                            "type": "DERIVATIVE",
+                            "labelParts": [
+                                {
+                                    "type": "latexLink",
+                                    "id": "derivative",
+                                    "latex": "\\displaystyle \\frac{\\partial{E}}{\\partial{m^{(2)}_{21}}}",
+                                    "href": "19"
+                                },
+                                {
+                                    "type": "latex",
+                                    "id": "equal",
+                                    "latex": "="
+                                }
+                            ],
+                            "value": "0.25"
+                        }
+                    ],
+                    "isDarkMode": false,
+                    "isHighlighted": false
+                },
+                "dragHandle": ".drag-handle",
+                "selected": false,
+                "position": {
+                    "x": 2300,
+                    "y": 1000
+                },
+                "positionAbsolute": {
+                    "x": 2300,
+                    "y": 1000
+                },
+                "dragging": false
+            },
+            {
+                "width": 219,
+                "height": 153,
+                "id": "20",
+                "type": "custom",
+                "data": {
+                    "name": "b^{(2)}_1",
+                    "operationData": null,
+                    "featureNodeType": {
+                        "nodeType": "VARIABLE"
+                    },
+                    "inputItems": [
+                        {
+                            "id": "value",
+                            "label": "=",
+                            "showHandle": false,
+                            "showInputField": true,
+                            "value": "-0.25"
+                        }
+                    ],
+                    "outputItems": [
+                        {
+                            "type": "DERIVATIVE",
+                            "labelParts": [
+                                {
+                                    "type": "latexLink",
+                                    "id": "derivative",
+                                    "latex": "\\displaystyle \\frac{\\partial{E}}{\\partial{b^{(2)}_1}}",
+                                    "href": "20"
+                                },
+                                {
+                                    "type": "latex",
+                                    "id": "equal",
+                                    "latex": "="
+                                }
+                            ],
+                            "value": "0.25"
+                        }
+                    ],
+                    "isDarkMode": false,
+                    "isHighlighted": false
+                },
+                "dragHandle": ".drag-handle",
+                "selected": false,
+                "position": {
+                    "x": 2300,
+                    "y": 1300
+                },
+                "positionAbsolute": {
+                    "x": 2300,
+                    "y": 1300
+                },
+                "dragging": false
+            },
+            {
+                "width": 218,
+                "height": 193,
+                "id": "21",
+                "type": "custom",
+                "data": {
+                    "name": "z^{(2)}_1",
+                    "operationData": {
+                        "text": "Sum",
+                        "helpText": "Add all inputs: sum_i x_i, i.e., x_0 + x_1 + ..."
+                    },
+                    "featureNodeType": {
+                        "nodeType": "OPERATION",
+                        "operationId": "sum"
+                    },
+                    "inputItems": [
+                        {
+                            "id": "x_i",
+                            "label": "x_i",
+                            "showHandle": true,
+                            "showInputField": false,
+                            "value": "0"
+                        }
+                    ],
+                    "outputItems": [
+                        {
+                            "type": "VALUE",
+                            "labelParts": [
+                                {
+                                    "type": "latex",
+                                    "id": "value",
+                                    "latex": "="
+                                }
+                            ],
+                            "value": "0"
+                        },
+                        {
+                            "type": "DERIVATIVE",
+                            "labelParts": [
+                                {
+                                    "type": "latexLink",
+                                    "id": "derivative",
+                                    "latex": "\\displaystyle \\frac{\\partial{E}}{\\partial{z^{(2)}_1}}",
+                                    "href": "21"
+                                },
+                                {
+                                    "type": "latex",
+                                    "id": "equal",
+                                    "latex": "="
+                                }
+                            ],
+                            "value": "0.25"
+                        }
+                    ],
+                    "isDarkMode": false,
+                    "isHighlighted": false
+                },
+                "dragHandle": ".drag-handle",
+                "selected": false,
+                "position": {
+                    "x": 2600,
+                    "y": 1000
+                },
+                "positionAbsolute": {
+                    "x": 2600,
+                    "y": 1000
+                },
+                "dragging": false
+            },
+            {
+                "width": 203,
+                "height": 193,
+                "id": "22",
+                "type": "custom",
+                "data": {
+                    "name": "\\hat{y}",
+                    "operationData": {
+                        "text": "Sigmoid",
+                        "helpText": "Sigmoid activation function, i.e., y=1/(1 + e^(-x))"
+                    },
+                    "featureNodeType": {
+                        "nodeType": "OPERATION",
+                        "operationId": "sigmoid"
+                    },
+                    "inputItems": [
+                        {
+                            "id": "x",
+                            "label": "x",
+                            "showHandle": true,
+                            "showInputField": false,
+                            "value": "0"
+                        }
+                    ],
+                    "outputItems": [
+                        {
+                            "type": "VALUE",
+                            "labelParts": [
+                                {
+                                    "type": "latex",
+                                    "id": "value",
+                                    "latex": "="
+                                }
+                            ],
+                            "value": "0.5"
+                        },
+                        {
+                            "type": "DERIVATIVE",
+                            "labelParts": [
+                                {
+                                    "type": "latexLink",
+                                    "id": "derivative",
+                                    "latex": "\\displaystyle \\frac{\\partial{E}}{\\partial{\\hat{y}}}",
+                                    "href": "22"
+                                },
+                                {
+                                    "type": "latex",
+                                    "id": "equal",
+                                    "latex": "="
+                                }
+                            ],
+                            "value": "1"
+                        }
+                    ],
+                    "isDarkMode": false,
+                    "isHighlighted": false
+                },
+                "dragHandle": ".drag-handle",
+                "selected": false,
+                "position": {
+                    "x": 2900,
+                    "y": 1000
+                },
+                "positionAbsolute": {
+                    "x": 2900,
+                    "y": 1000
+                },
+                "dragging": false
+            },
+            {
+                "width": 203,
+                "height": 153,
+                "id": "23",
+                "type": "custom",
+                "data": {
+                    "name": "y",
+                    "operationData": null,
+                    "featureNodeType": {
+                        "nodeType": "VARIABLE"
+                    },
+                    "inputItems": [
+                        {
+                            "id": "value",
+                            "label": "=",
+                            "showHandle": false,
+                            "showInputField": true,
+                            "value": "0"
+                        }
+                    ],
+                    "outputItems": [
+                        {
+                            "type": "DERIVATIVE",
+                            "labelParts": [
+                                {
+                                    "type": "latexLink",
+                                    "id": "derivative",
+                                    "latex": "\\displaystyle \\frac{\\partial{E}}{\\partial{y}}",
+                                    "href": "23"
+                                },
+                                {
+                                    "type": "latex",
+                                    "id": "equal",
+                                    "latex": "="
+                                }
+                            ],
+                            "value": "-1"
+                        }
+                    ],
+                    "isDarkMode": false,
+                    "isHighlighted": false
+                },
+                "dragHandle": ".drag-handle",
+                "selected": false,
+                "position": {
+                    "x": 2900,
+                    "y": 800
+                },
+                "positionAbsolute": {
+                    "x": 2900,
+                    "y": 800
+                },
+                "dragging": false
+            },
+            {
+                "width": 203,
+                "height": 233,
+                "id": "24",
+                "type": "custom",
+                "data": {
+                    "name": "E",
+                    "operationData": {
+                        "text": "Squared Error",
+                        "helpText": "Calculate the squared error, i.e., (y_t - y_e)^2\n (y_t: true value, y_e: estimated value)"
+                    },
+                    "featureNodeType": {
+                        "nodeType": "OPERATION",
+                        "operationId": "squared_error"
+                    },
+                    "inputItems": [
+                        {
+                            "id": "y_t",
+                            "label": "y_t",
+                            "showHandle": true,
+                            "showInputField": false,
+                            "value": "0"
+                        },
+                        {
+                            "id": "y_e",
+                            "label": "y_e",
+                            "showHandle": true,
+                            "showInputField": false,
+                            "value": "0"
+                        }
+                    ],
+                    "outputItems": [
+                        {
+                            "type": "VALUE",
+                            "labelParts": [
+                                {
+                                    "type": "latex",
+                                    "id": "value",
+                                    "latex": "="
+                                }
+                            ],
+                            "value": "0.25"
+                        },
+                        {
+                            "type": "DERIVATIVE",
+                            "labelParts": [
+                                {
+                                    "type": "latexLink",
+                                    "id": "derivative",
+                                    "latex": "\\displaystyle \\frac{\\partial{E}}{\\partial{E}}",
+                                    "href": "24"
+                                },
+                                {
+                                    "type": "latex",
+                                    "id": "equal",
+                                    "latex": "="
+                                }
+                            ],
+                            "value": "1"
+                        }
+                    ],
+                    "isDarkMode": false,
+                    "isHighlighted": false
+                },
+                "dragHandle": ".drag-handle",
+                "selected": true,
+                "position": {
+                    "x": 3200,
+                    "y": 900
+                },
+                "positionAbsolute": {
+                    "x": 3200,
+                    "y": 900
+                },
+                "dragging": false
+            }
+        ],
+        "edges": [
+            {
+                "source": "2",
+                "sourceHandle": "output",
+                "target": "6",
+                "targetHandle": "b",
+                "id": "reactflow__edge-2output-6b",
+                "animated": false,
+                "selected": false
+            },
+            {
+                "source": "0",
+                "sourceHandle": "output",
+                "target": "6",
+                "targetHandle": "a",
+                "id": "reactflow__edge-0output-6a",
+                "animated": false,
+                "selected": false
+            },
+            {
+                "source": "3",
+                "sourceHandle": "output",
+                "target": "7",
+                "targetHandle": "b",
+                "id": "reactflow__edge-3output-7b",
+                "animated": false,
+                "selected": false
+            },
+            {
+                "source": "1",
+                "sourceHandle": "output",
+                "target": "7",
+                "targetHandle": "a",
+                "id": "reactflow__edge-1output-7a",
+                "animated": false,
+                "selected": false
+            },
+            {
+                "source": "4",
+                "sourceHandle": "output",
+                "target": "8",
+                "targetHandle": "b",
+                "id": "reactflow__edge-4output-8b",
+                "animated": false,
+                "selected": false
+            },
+            {
+                "source": "5",
+                "sourceHandle": "output",
+                "target": "9",
+                "targetHandle": "b",
+                "id": "reactflow__edge-5output-9b",
+                "animated": false,
+                "selected": false
+            },
+            {
+                "source": "0",
+                "sourceHandle": "output",
+                "target": "8",
+                "targetHandle": "a",
+                "id": "reactflow__edge-0output-8a",
+                "animated": false,
+                "selected": false
+            },
+            {
+                "source": "1",
+                "sourceHandle": "output",
+                "target": "9",
+                "targetHandle": "a",
+                "id": "reactflow__edge-1output-9a",
+                "animated": false,
+                "selected": false
+            },
+            {
+                "source": "6",
+                "sourceHandle": "output",
+                "target": "12",
+                "targetHandle": "x_i",
+                "id": "reactflow__edge-6output-12x_i",
+                "animated": false,
+                "selected": false
+            },
+            {
+                "source": "7",
+                "sourceHandle": "output",
+                "target": "12",
+                "targetHandle": "x_i",
+                "id": "reactflow__edge-7output-12x_i",
+                "animated": false,
+                "selected": false
+            },
+            {
+                "source": "10",
+                "sourceHandle": "output",
+                "target": "12",
+                "targetHandle": "x_i",
+                "id": "reactflow__edge-10output-12x_i",
+                "animated": false,
+                "selected": false
+            },
+            {
+                "source": "8",
+                "sourceHandle": "output",
+                "target": "13",
+                "targetHandle": "x_i",
+                "id": "reactflow__edge-8output-13x_i",
+                "animated": false,
+                "selected": false
+            },
+            {
+                "source": "9",
+                "sourceHandle": "output",
+                "target": "13",
+                "targetHandle": "x_i",
+                "id": "reactflow__edge-9output-13x_i",
+                "animated": false,
+                "selected": false
+            },
+            {
+                "source": "11",
+                "sourceHandle": "output",
+                "target": "13",
+                "targetHandle": "x_i",
+                "id": "reactflow__edge-11output-13x_i",
+                "animated": false,
+                "selected": false
+            },
+            {
+                "source": "12",
+                "sourceHandle": "output",
+                "target": "14",
+                "targetHandle": "x",
+                "id": "reactflow__edge-12output-14x",
+                "animated": false,
+                "selected": false
+            },
+            {
+                "source": "13",
+                "sourceHandle": "output",
+                "target": "15",
+                "targetHandle": "x",
+                "id": "reactflow__edge-13output-15x",
+                "animated": false,
+                "selected": false
+            },
+            {
+                "source": "16",
+                "sourceHandle": "output",
+                "target": "18",
+                "targetHandle": "b",
+                "id": "reactflow__edge-16output-18b",
+                "animated": false,
+                "selected": false
+            },
+            {
+                "source": "17",
+                "sourceHandle": "output",
+                "target": "19",
+                "targetHandle": "b",
+                "id": "reactflow__edge-17output-19b",
+                "animated": false,
+                "selected": false
+            },
+            {
+                "source": "15",
+                "sourceHandle": "output",
+                "target": "19",
+                "targetHandle": "a",
+                "id": "reactflow__edge-15output-19a",
+                "animated": false,
+                "selected": false
+            },
+            {
+                "source": "14",
+                "sourceHandle": "output",
+                "target": "18",
+                "targetHandle": "a",
+                "id": "reactflow__edge-14output-18a",
+                "animated": false,
+                "selected": false
+            },
+            {
+                "source": "18",
+                "sourceHandle": "output",
+                "target": "21",
+                "targetHandle": "x_i",
+                "id": "reactflow__edge-18output-21x_i",
+                "animated": false,
+                "selected": false
+            },
+            {
+                "source": "19",
+                "sourceHandle": "output",
+                "target": "21",
+                "targetHandle": "x_i",
+                "id": "reactflow__edge-19output-21x_i",
+                "animated": false,
+                "selected": false
+            },
+            {
+                "source": "20",
+                "sourceHandle": "output",
+                "target": "21",
+                "targetHandle": "x_i",
+                "id": "reactflow__edge-20output-21x_i",
+                "animated": false,
+                "selected": false
+            },
+            {
+                "source": "21",
+                "sourceHandle": "output",
+                "target": "22",
+                "targetHandle": "x",
+                "id": "reactflow__edge-21output-22x",
+                "animated": false,
+                "selected": false
+            },
+            {
+                "source": "23",
+                "sourceHandle": "output",
+                "target": "24",
+                "targetHandle": "y_t",
+                "id": "reactflow__edge-23output-24y_t",
+                "animated": false,
+                "selected": false
+            },
+            {
+                "source": "22",
+                "sourceHandle": "output",
+                "target": "24",
+                "targetHandle": "y_e",
+                "id": "reactflow__edge-22output-24y_e",
+                "animated": false,
+                "selected": false
+            }
+        ],
+        "viewport": {
+            "x": 0,
+            "y": 0,
+            "zoom": 0.25
+        }
+    }
+}

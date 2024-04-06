@@ -1,0 +1,624 @@
+{
+    "coreGraphAdapterState": {
+        "coreGraphState": {
+            "nodeIdToNodes": {
+                "0": {
+                    "nodeType": "VARIABLE",
+                    "value": "1",
+                    "relationship": {
+                        "inputPortIdToNodeIds": {}
+                    }
+                },
+                "1": {
+                    "nodeType": "VARIABLE",
+                    "value": "2",
+                    "relationship": {
+                        "inputPortIdToNodeIds": {}
+                    }
+                },
+                "2": {
+                    "nodeType": "OPERATION",
+                    "operationId": "multiply",
+                    "relationship": {
+                        "inputPortIdToNodeIds": {
+                            "a": [
+                                "0"
+                            ],
+                            "b": [
+                                "1"
+                            ]
+                        }
+                    }
+                },
+                "dummy-input-node-2-a": {
+                    "nodeType": "CONSTANT",
+                    "value": "0",
+                    "relationship": {
+                        "inputPortIdToNodeIds": {}
+                    }
+                },
+                "dummy-input-node-2-b": {
+                    "nodeType": "CONSTANT",
+                    "value": "0",
+                    "relationship": {
+                        "inputPortIdToNodeIds": {}
+                    }
+                }
+            },
+            "differentiationMode": "REVERSE",
+            "targetNodeId": "2"
+        },
+        "nodeIdToNames": {
+            "0": "x",
+            "1": "y",
+            "2": "f",
+            "dummy-input-node-2-a": "f.a",
+            "dummy-input-node-2-b": "f.b"
+        },
+        "dummyInputNodeIdToNodeIds": {
+            "dummy-input-node-2-a": "2",
+            "dummy-input-node-2-b": "2"
+        }
+    },
+    "isReverseMode": true,
+    "derivativeTarget": "2",
+    "featureOperations": [
+        {
+            "id": "add",
+            "text": "Add",
+            "type": "basic",
+            "namePrefix": "a",
+            "operation": {
+                "fCode": "/**\n * Calculates f().\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for add:\n * ```json\n * {\n *   \"a\": [\"0\"],\n *   \"b\": [\"1\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for add:\n * ```json\n * {\n *   \"0\": \"0.2\",\n *   \"1\": \"0.4\"\n * }\n * ```\n * @returns {string} Evaluated f value. For example: if we consider\n * the above example data, then the value is \"0.6\" because\n * f(a, b) = a + b = 0.2 + 0.4 = 0.6.\n */\nfunction f(fInputPortToNodes, fInputNodeToValues) {\n  if (fInputPortToNodes.a.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port a\");\n  }\n  if (fInputPortToNodes.b.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port b\");\n  }\n  const aInputNodeId = fInputPortToNodes.a[0];\n  const bInputNodeId = fInputPortToNodes.b[0];\n  const a = parseFloat(fInputNodeToValues[aInputNodeId]);\n  const b = parseFloat(fInputNodeToValues[bInputNodeId]);\n  const y = a + b;\n  return `${y}`;\n}\n",
+                "dfdxCode": "/**\n * Calculates df/dx.\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for add:\n * ```json\n * {\n *   \"a\": [\"0\"],\n *   \"b\": [\"1\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for add:\n * ```json\n * {\n *   \"0\": \"0.2\",\n *   \"1\": \"0.4\"\n * }\n * ```\n * @param {string} xId Node ID of x. Note that the framework will not call this\n * function for the following cases:\n * - x is a constant node (i.e., x will always be a variable)\n * - x is the node of f (i.e., the derivative is always 1)\n * - x is not on the forward/reverse differentiation path (i.e., gradient of x\n *   doesn't flow through f node)\n * @returns {string} Evaluated derivative df/dy. For example, if we consider\n * the above example data and assume xId is \"1\", then the value is \"1\"\n * since f(a, b) = a + b and df/dx = df/db = 1.\n */\nfunction dfdx(fInputPortToNodes, fInputNodeToValues, xId) {\n  if (fInputPortToNodes.a.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port a\");\n  }\n  if (fInputPortToNodes.b.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port b\");\n  }\n  const hasXInA = fInputPortToNodes.a.includes(xId);\n  const hasXInB = fInputPortToNodes.b.includes(xId);\n  if (!hasXInA && !hasXInB) {\n    return \"0\";\n  }\n  return \"1\";\n}\n"
+            },
+            "inputPorts": [
+                {
+                    "id": "a",
+                    "allowMultiEdges": false
+                },
+                {
+                    "id": "b",
+                    "allowMultiEdges": false
+                }
+            ],
+            "helpText": "Add two numbers, i.e., a + b"
+        },
+        {
+            "id": "subtract",
+            "text": "Subtract",
+            "type": "basic",
+            "namePrefix": "s",
+            "operation": {
+                "fCode": "/**\n * Calculates f().\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for subtract:\n * ```json\n * {\n *   \"a\": [\"0\"],\n *   \"b\": [\"1\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for subtract:\n * ```json\n * {\n *   \"0\": \"0.2\",\n *   \"1\": \"0.4\"\n * }\n * ```\n * @returns {string} Evaluated f value. For example: if we consider\n * the above example data, then the value is \"-0.2\" because\n * f(a, b) = a - b = 0.2 - 0.4 = -0.2.\n */\nfunction f(fInputPortToNodes, fInputNodeToValues) {\n  if (fInputPortToNodes.a.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port a\");\n  }\n  if (fInputPortToNodes.b.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port b\");\n  }\n  const aInputNodeId = fInputPortToNodes.a[0];\n  const bInputNodeId = fInputPortToNodes.b[0];\n  const a = parseFloat(fInputNodeToValues[aInputNodeId]);\n  const b = parseFloat(fInputNodeToValues[bInputNodeId]);\n  const y = a - b;\n  return `${y}`;\n}\n",
+                "dfdxCode": "/**\n * Calculates df/dx.\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for subtract:\n * ```json\n * {\n *   \"a\": [\"0\"],\n *   \"b\": [\"1\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for subtract:\n * ```json\n * {\n *   \"0\": \"0.2\",\n *   \"1\": \"0.4\"\n * }\n * ```\n * @param {string} xId Node ID of x. Note that the framework will not call this\n * function for the following cases:\n * - x is a constant node (i.e., x will always be a variable)\n * - x is the node of f (i.e., the derivative is always 1)\n * - x is not on the forward/reverse differentiation path (i.e., gradient of x\n *   doesn't flow through f node)\n * @returns {string} Evaluated derivative df/dy. For example, if we consider\n * the above example data and assume xId is \"1\", then the value is \"-1\"\n * since f(a, b) = a - b and df/dx = df/db = -1.\n */\nfunction dfdx(fInputPortToNodes, fInputNodeToValues, xId) {\n  if (fInputPortToNodes.a.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port a\");\n  }\n  if (fInputPortToNodes.b.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port b\");\n  }\n  const hasXInA = fInputPortToNodes.a.includes(xId);\n  const hasXInB = fInputPortToNodes.b.includes(xId);\n  if (!hasXInA && !hasXInB) {\n    return \"0\";\n  }\n  const df = hasXInA ? 1 : -1;\n  return `${df}`;\n}\n"
+            },
+            "inputPorts": [
+                {
+                    "id": "a",
+                    "allowMultiEdges": false
+                },
+                {
+                    "id": "b",
+                    "allowMultiEdges": false
+                }
+            ],
+            "helpText": "Subtract two numbers, i.e., a - b"
+        },
+        {
+            "id": "multiply",
+            "text": "Multiply",
+            "type": "basic",
+            "namePrefix": "m",
+            "operation": {
+                "fCode": "/**\n * Calculates f().\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for multiply:\n * ```json\n * {\n *   \"a\": [\"0\"],\n *   \"b\": [\"1\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for multiply:\n * ```json\n * {\n *   \"0\": \"0.2\",\n *   \"1\": \"0.4\"\n * }\n * ```\n * @returns {string} Evaluated f value. For example: if we consider\n * the above example data, then the value is \"0.08\" because\n * f(a, b) = a * b = 0.2 * 0.4 = 0.08.\n */\nfunction f(fInputPortToNodes, fInputNodeToValues) {\n  if (fInputPortToNodes.a.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port a\");\n  }\n  if (fInputPortToNodes.b.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port b\");\n  }\n  const aInputNodeId = fInputPortToNodes.a[0];\n  const bInputNodeId = fInputPortToNodes.b[0];\n  const a = parseFloat(fInputNodeToValues[aInputNodeId]);\n  const b = parseFloat(fInputNodeToValues[bInputNodeId]);\n  const y = a * b;\n  return `${y}`;\n}\n",
+                "dfdxCode": "/**\n * Calculates df/dx.\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for multiply:\n * ```json\n * {\n *   \"a\": [\"0\"],\n *   \"b\": [\"1\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for multiply:\n * ```json\n * {\n *   \"0\": \"0.2\",\n *   \"1\": \"0.4\"\n * }\n * ```\n * @param {string} xId Node ID of x. Note that the framework will not call this\n * function for the following cases:\n * - x is a constant node (i.e., x will always be a variable)\n * - x is the node of f (i.e., the derivative is always 1)\n * - x is not on the forward/reverse differentiation path (i.e., gradient of x\n *   doesn't flow through f node)\n * @returns {string} Evaluated derivative df/dy. For example, if we consider\n * the above example data and assume xId is \"1\", then the value is \"0.2\"\n * since f(a, b) = a * b and df/dx = df/db = a = 0.2.\n */\nfunction dfdx(fInputPortToNodes, fInputNodeToValues, xId) {\n  if (fInputPortToNodes.a.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port a\");\n  }\n  if (fInputPortToNodes.b.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port b\");\n  }\n  const hasXInA = fInputPortToNodes.a.includes(xId);\n  const hasXInB = fInputPortToNodes.b.includes(xId);\n  if (!hasXInA && !hasXInB) {\n    return \"0\";\n  }\n  const aInputNodeId = fInputPortToNodes.a[0];\n  const bInputNodeId = fInputPortToNodes.b[0];\n  const a = parseFloat(fInputNodeToValues[aInputNodeId]);\n  const b = parseFloat(fInputNodeToValues[bInputNodeId]);\n  return hasXInA ? `${b}` : `${a}`;\n}\n"
+            },
+            "inputPorts": [
+                {
+                    "id": "a",
+                    "allowMultiEdges": false
+                },
+                {
+                    "id": "b",
+                    "allowMultiEdges": false
+                }
+            ],
+            "helpText": "Multiply two numbers, i.e., a * b"
+        },
+        {
+            "id": "divide",
+            "text": "Divide",
+            "type": "basic",
+            "namePrefix": "d",
+            "operation": {
+                "fCode": "/**\n * Calculates f().\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for divide:\n * ```json\n * {\n *   \"a\": [\"0\"],\n *   \"b\": [\"1\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for divide:\n * ```json\n * {\n *   \"0\": \"0.2\",\n *   \"1\": \"0.4\"\n * }\n * ```\n * @returns {string} Evaluated f value. For example: if we consider\n * the above example data, then the value is \"0.5\" because\n * f(a, b) = a / b = 0.2 / 0.4 = 0.5.\n */\nfunction f(fInputPortToNodes, fInputNodeToValues) {\n  if (fInputPortToNodes.a.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port a\");\n  }\n  if (fInputPortToNodes.b.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port b\");\n  }\n  const aInputNodeId = fInputPortToNodes.a[0];\n  const bInputNodeId = fInputPortToNodes.b[0];\n  const a = parseFloat(fInputNodeToValues[aInputNodeId]);\n  const b = parseFloat(fInputNodeToValues[bInputNodeId]);\n  const y = a / b;\n  return `${y}`;\n}\n",
+                "dfdxCode": "/**\n * Calculates df/dx.\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for divide:\n * ```json\n * {\n *   \"a\": [\"0\"],\n *   \"b\": [\"1\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for divide:\n * ```json\n * {\n *   \"0\": \"0.2\",\n *   \"1\": \"0.4\"\n * }\n * ```\n * @param {string} xId Node ID of x. Note that the framework will not call this\n * function for the following cases:\n * - x is a constant node (i.e., x will always be a variable)\n * - x is the node of f (i.e., the derivative is always 1)\n * - x is not on the forward/reverse differentiation path (i.e., gradient of x\n *   doesn't flow through f node)\n * @returns {string} Evaluated derivative df/dy. For example, if we consider\n * the above example data and assume xId is \"1\", then the value is \"-1.25\"\n * since f(a, b) = a / b and df/dx = df/db = -(a / b^2) = -1.25.\n */\nfunction dfdx(fInputPortToNodes, fInputNodeToValues, xId) {\n  if (fInputPortToNodes.a.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port a\");\n  }\n  if (fInputPortToNodes.b.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port b\");\n  }\n  const hasXInA = fInputPortToNodes.a.includes(xId);\n  const hasXInB = fInputPortToNodes.b.includes(xId);\n  if (!hasXInA && !hasXInB) {\n    return \"0\";\n  }\n  const aInputNodeId = fInputPortToNodes.a[0];\n  const bInputNodeId = fInputPortToNodes.b[0];\n  const a = parseFloat(fInputNodeToValues[aInputNodeId]);\n  const b = parseFloat(fInputNodeToValues[bInputNodeId]);\n  const df = hasXInA ? 1 / b : -(a / Math.pow(b, 2));\n  return `${df}`;\n}\n"
+            },
+            "inputPorts": [
+                {
+                    "id": "a",
+                    "allowMultiEdges": false
+                },
+                {
+                    "id": "b",
+                    "allowMultiEdges": false
+                }
+            ],
+            "helpText": "Divide two numbers, i.e., a / b"
+        },
+        {
+            "id": "power",
+            "text": "Power",
+            "type": "basic",
+            "namePrefix": "p",
+            "operation": {
+                "fCode": "/**\n * Calculates f().\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for power:\n * ```json\n * {\n *   \"x\": [\"0\"],\n *   \"n\": [\"1\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for power:\n * ```json\n * {\n *   \"0\": \"2\",\n *   \"1\": \"3\"\n * }\n * ```\n * @returns {string} Evaluated f value. For example: if we consider\n * the above example data, then the value is \"8\" because\n * f(x, n) = x ^ n = 2 ^ 3 = 8.\n */\nfunction f(fInputPortToNodes, fInputNodeToValues) {\n  if (fInputPortToNodes.x.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port x\");\n  }\n  if (fInputPortToNodes.n.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port n\");\n  }\n  const xInputNodeId = fInputPortToNodes.x[0];\n  const nInputNodeId = fInputPortToNodes.n[0];\n  const x = parseFloat(fInputNodeToValues[xInputNodeId]);\n  const n = parseFloat(fInputNodeToValues[nInputNodeId]);\n  const y = Math.pow(x, n);\n  return `${y}`;\n}\n",
+                "dfdxCode": "/**\n * Calculates df/dx.\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for power:\n * ```json\n * {\n *   \"x\": [\"0\"],\n *   \"n\": [\"1\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for power:\n * ```json\n * {\n *   \"0\": \"2\",\n *   \"1\": \"3\"\n * }\n * ```\n * @param {string} xId Node ID of x. Note that the framework will not call this\n * function for the following cases:\n * - x is a constant node (i.e., x will always be a variable)\n * - x is the node of f (i.e., the derivative is always 1)\n * - x is not on the forward/reverse differentiation path (i.e., gradient of x\n *   doesn't flow through f node)\n * @returns {string} Evaluated derivative df/dy. For example, if we consider\n * the above example data and assume xId is \"0\", then the value is \"-1.25\"\n * since f(x, n) = x ^ n and df/dx = n * (x ^ (n - 1)) = 3 * (2 ^ (3 - 1)) =\n * 12.\n */\nfunction dfdx(fInputPortToNodes, fInputNodeToValues, xId) {\n  if (fInputPortToNodes.x.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port x\");\n  }\n  if (fInputPortToNodes.n.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port n\");\n  }\n  const hasXInX = fInputPortToNodes.x.includes(xId);\n  const hasXInN = fInputPortToNodes.n.includes(xId);\n  if (!hasXInX && !hasXInN) {\n    return \"0\";\n  }\n  const xInputNodeId = fInputPortToNodes.x[0];\n  const nInputNodeId = fInputPortToNodes.n[0];\n  const x = parseFloat(fInputNodeToValues[xInputNodeId]);\n  const n = parseFloat(fInputNodeToValues[nInputNodeId]);\n  const df = hasXInX ? n * Math.pow(x, n - 1) : Math.pow(x, n) * Math.log(x);\n  return `${df}`;\n}\n"
+            },
+            "inputPorts": [
+                {
+                    "id": "x",
+                    "allowMultiEdges": false
+                },
+                {
+                    "id": "n",
+                    "allowMultiEdges": false
+                }
+            ],
+            "helpText": "Calculate the power, i.e., x^n"
+        },
+        {
+            "id": "exp",
+            "text": "Exp",
+            "type": "basic",
+            "namePrefix": "e",
+            "operation": {
+                "fCode": "/**\n * Calculates f().\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for exp:\n * ```json\n * {\n *   \"x\": [\"0\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for exp:\n * ```json\n * {\n *   \"0\": \"0\"\n * }\n * ```\n * @returns {string} Evaluated f value. For example: if we consider\n * the above example data, then the value is \"1\" because\n * f(x) = e^x = e^0 = 1.\n */\nfunction f(fInputPortToNodes, fInputNodeToValues) {\n  if (fInputPortToNodes.x.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port x\");\n  }\n  const xInputNodeId = fInputPortToNodes.x[0];\n  const x = parseFloat(fInputNodeToValues[xInputNodeId]);\n  const y = Math.exp(x);\n  return `${y}`;\n}\n",
+                "dfdxCode": "/**\n * Calculates df/dx.\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for exp:\n * ```json\n * {\n *   \"x\": [\"0\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for exp:\n * ```json\n * {\n *   \"0\": \"0\"\n * }\n * ```\n * @param {string} xId Node ID of x. Note that the framework will not call this\n * function for the following cases:\n * - x is a constant node (i.e., x will always be a variable)\n * - x is the node of f (i.e., the derivative is always 1)\n * - x is not on the forward/reverse differentiation path (i.e., gradient of x\n *   doesn't flow through f node)\n * @returns {string} Evaluated derivative df/dy. For example, if we consider\n * the above example data and assume xId is \"0\", then the value is \"1\"\n * since f(x) = e^x and df/dx = e^x = e^0 = 1\n */\nfunction dfdx(fInputPortToNodes, fInputNodeToValues, xId) {\n  if (fInputPortToNodes.x.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port x\");\n  }\n  if (!fInputPortToNodes.x.includes(xId)) {\n    return \"0\";\n  }\n  const xInputNodeId = fInputPortToNodes.x[0];\n  const x = parseFloat(fInputNodeToValues[xInputNodeId]);\n  const df = Math.exp(x);\n  return `${df}`;\n}\n"
+            },
+            "inputPorts": [
+                {
+                    "id": "x",
+                    "allowMultiEdges": false
+                }
+            ],
+            "helpText": "Calculate the exponential function, i.e., e^x"
+        },
+        {
+            "id": "ln",
+            "text": "Ln",
+            "type": "basic",
+            "namePrefix": "l",
+            "operation": {
+                "fCode": "/**\n * Calculates f().\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for ln:\n * ```json\n * {\n *   \"x\": [\"0\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for ln:\n * ```json\n * {\n *   \"0\": \"1\"\n * }\n * ```\n * @returns {string} Evaluated f value. For example: if we consider\n * the above example data, then the value is \"0\" because\n * f(x) = ln(x) = ln(1) = 0.\n */\nfunction f(fInputPortToNodes, fInputNodeToValues) {\n  if (fInputPortToNodes.x.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port x\");\n  }\n  const xInputNodeId = fInputPortToNodes.x[0];\n  const x = parseFloat(fInputNodeToValues[xInputNodeId]);\n  const y = Math.log(x);\n  return `${y}`;\n}\n",
+                "dfdxCode": "/**\n * Calculates df/dx.\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for ln:\n * ```json\n * {\n *   \"x\": [\"0\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for ln:\n * ```json\n * {\n *   \"0\": \"1\"\n * }\n * ```\n * @param {string} xId Node ID of x. Note that the framework will not call this\n * function for the following cases:\n * - x is a constant node (i.e., x will always be a variable)\n * - x is the node of f (i.e., the derivative is always 1)\n * - x is not on the forward/reverse differentiation path (i.e., gradient of x\n *   doesn't flow through f node)\n * @returns {string} Evaluated derivative df/dy. For example, if we consider\n * the above example data and assume xId is \"0\", then the value is \"1\"\n * since f(x) = ln(x) and df/dx = 1 / x = 1 / 1 = 1\n */\nfunction dfdx(fInputPortToNodes, fInputNodeToValues, xId) {\n  if (fInputPortToNodes.x.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port x\");\n  }\n  if (!fInputPortToNodes.x.includes(xId)) {\n    return \"0\";\n  }\n  const xInputNodeId = fInputPortToNodes.x[0];\n  const x = parseFloat(fInputNodeToValues[xInputNodeId]);\n  const df = 1 / x;\n  return `${df}`;\n}\n"
+            },
+            "inputPorts": [
+                {
+                    "id": "x",
+                    "allowMultiEdges": false
+                }
+            ],
+            "helpText": "Calculate the log: ln(x)"
+        },
+        {
+            "id": "sum",
+            "text": "Sum",
+            "type": "aggregate",
+            "namePrefix": "s",
+            "operation": {
+                "fCode": "/**\n * Calculates f().\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for sum:\n * ```json\n * {\n *   \"x_i\": [\"0\", \"1\", \"2\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for sum:\n * ```json\n * {\n *   \"0\": \"0.2\",\n *   \"1\": \"0.4\",\n *   \"2\": \"0.6\"\n * }\n * ```\n * @returns {string} Evaluated f value. For example: if we consider\n * the above example data, then the value is \"1.2\" because\n * f(x_i) = x_0 + x_1 + x_2 = 0.2 + 0.4 + 0.6 = 1.2.\n */\nfunction f(fInputPortToNodes, fInputNodeToValues) {\n  let sum = 0;\n  fInputPortToNodes.x_i.forEach((inputNodeId) => {\n    const inputNodeValue = parseFloat(fInputNodeToValues[inputNodeId]);\n    sum += inputNodeValue;\n  });\n  return `${sum}`;\n}\n",
+                "dfdxCode": "/**\n * Calculates df/dx.\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for sum:\n * ```json\n * {\n *   \"x_i\": [\"0\", \"1\", \"2\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for sum:\n * ```json\n * {\n *   \"0\": \"0.2\",\n *   \"1\": \"0.4\",\n *   \"2\": \"0.6\"\n * }\n * ```\n * @param {string} xId Node ID of x. Note that the framework will not call this\n * function for the following cases:\n * - x is a constant node (i.e., x will always be a variable)\n * - x is the node of f (i.e., the derivative is always 1)\n * - x is not on the forward/reverse differentiation path (i.e., gradient of x\n *   doesn't flow through f node)\n * @returns {string} Evaluated derivative df/dy. For example, if we consider\n * the above example data and assume xId is \"1\", then the value is \"1\"\n * since f(x_i) = x_0 + x_1 + x_2 and df/dx = df/d(x_1) = 1.\n */\nfunction dfdx(fInputPortToNodes, fInputNodeToValues, xId) {\n  if (!fInputPortToNodes.x_i.includes(xId)) {\n    return \"0\";\n  }\n  return \"1\";\n}\n"
+            },
+            "inputPorts": [
+                {
+                    "id": "x_i",
+                    "allowMultiEdges": true
+                }
+            ],
+            "helpText": "Add all inputs: sum_i x_i, i.e., x_0 + x_1 + ..."
+        },
+        {
+            "id": "product",
+            "text": "Product",
+            "type": "aggregate",
+            "namePrefix": "p",
+            "operation": {
+                "fCode": "/**\n * Calculates f().\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for product:\n * ```json\n * {\n *   \"x_i\": [\"0\", \"1\", \"2\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for product:\n * ```json\n * {\n *   \"0\": \"1\",\n *   \"1\": \"2\",\n *   \"2\": \"3\"\n * }\n * ```\n * @returns {string} Evaluated f value. For example: if we consider\n * the above example data, then the value is \"6\" because\n * f(x_i) = x_0 * x_1 * x_2 = 1 * 2 * 3 = 6.\n */\nfunction f(fInputPortToNodes, fInputNodeToValues) {\n  let product = 1;\n  fInputPortToNodes.x_i.forEach((inputNodeId) => {\n    const inputNodeValue = parseFloat(fInputNodeToValues[inputNodeId]);\n    product *= inputNodeValue;\n  });\n  return `${product}`;\n}\n",
+                "dfdxCode": "/**\n * Calculates df/dx.\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for product:\n * ```json\n * {\n *   \"x_i\": [\"0\", \"1\", \"2\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for product:\n * ```json\n * {\n *   \"0\": \"1\",\n *   \"1\": \"2\",\n *   \"2\": \"3\"\n * }\n * ```\n * @param {string} xId Node ID of x. Note that the framework will not call this\n * function for the following cases:\n * - x is a constant node (i.e., x will always be a variable)\n * - x is the node of f (i.e., the derivative is always 1)\n * - x is not on the forward/reverse differentiation path (i.e., gradient of x\n *   doesn't flow through f node)\n * @returns {string} Evaluated derivative df/dy. For example, if we consider\n * the above example data and assume xId is \"1\", then the value is \"3\"\n * since f(x_i) = x_0 * x_1 * x_2 and df/dx = df/d(x_1) = x_0 * x_2 = 1 * 3 =\n * 3.\n */\nfunction dfdx(fInputPortToNodes, fInputNodeToValues, xId) {\n  if (!fInputPortToNodes.x_i.includes(xId)) {\n    return \"0\";\n  }\n  let df = 1;\n  fInputPortToNodes.x_i.forEach((inputNodeId) => {\n    if (inputNodeId !== xId) {\n      const inputNodeValue = parseFloat(fInputNodeToValues[inputNodeId]);\n      df *= inputNodeValue;\n    }\n  });\n  return `${df}`;\n}\n"
+            },
+            "inputPorts": [
+                {
+                    "id": "x_i",
+                    "allowMultiEdges": true
+                }
+            ],
+            "helpText": "Multiply all inputs: prod_i x_i, i.e., x_0 * x_1 * ..."
+        },
+        {
+            "id": "sin",
+            "text": "Sin",
+            "type": "trigonometric",
+            "namePrefix": "s",
+            "operation": {
+                "fCode": "/**\n * Calculates f().\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for sin:\n * ```json\n * {\n *   \"x\": [\"0\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for sin:\n * ```json\n * {\n *   \"0\": \"0\"\n * }\n * ```\n * @returns {string} Evaluated f value. For example: if we consider\n * the above example data, then the value is \"0\" because\n * f(x) = sin(x) = sin(0) = 0.\n */\nfunction f(fInputPortToNodes, fInputNodeToValues) {\n  if (fInputPortToNodes.x.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port x\");\n  }\n  const xInputNodeId = fInputPortToNodes.x[0];\n  const x = parseFloat(fInputNodeToValues[xInputNodeId]);\n  const y = Math.sin(x);\n  return `${y}`;\n}\n",
+                "dfdxCode": "/**\n * Calculates df/dx.\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for sin:\n * ```json\n * {\n *   \"x\": [\"0\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for sin:\n * ```json\n * {\n *   \"0\": \"0\"\n * }\n * ```\n * @param {string} xId Node ID of x. Note that the framework will not call this\n * function for the following cases:\n * - x is a constant node (i.e., x will always be a variable)\n * - x is the node of f (i.e., the derivative is always 1)\n * - x is not on the forward/reverse differentiation path (i.e., gradient of x\n *   doesn't flow through f node)\n * @returns {string} Evaluated derivative df/dy. For example, if we consider\n * the above example data and assume xId is \"0\", then the value is \"1\"\n * since f(x) = sin(x) and df/dx = cos(x) = 1.\n */\nfunction dfdx(fInputPortToNodes, fInputNodeToValues, xId) {\n  if (fInputPortToNodes.x.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port x\");\n  }\n  if (!fInputPortToNodes.x.includes(xId)) {\n    return \"0\";\n  }\n  const xInputNodeId = fInputPortToNodes.x[0];\n  const x = parseFloat(fInputNodeToValues[xInputNodeId]);\n  const df = Math.cos(x);\n  return `${df}`;\n}\n"
+            },
+            "inputPorts": [
+                {
+                    "id": "x",
+                    "allowMultiEdges": false
+                }
+            ],
+            "helpText": "Calculate sin(x)"
+        },
+        {
+            "id": "cos",
+            "text": "Cos",
+            "type": "trigonometric",
+            "namePrefix": "c",
+            "operation": {
+                "fCode": "/**\n * Calculates f().\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for cos:\n * ```json\n * {\n *   \"x\": [\"0\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for cos:\n * ```json\n * {\n *   \"0\": \"0\"\n * }\n * ```\n * @returns {string} Evaluated f value. For example: if we consider\n * the above example data, then the value is \"1\" because\n * f(x) = cos(x) = cos(0) = 1.\n */\nfunction f(fInputPortToNodes, fInputNodeToValues) {\n  if (fInputPortToNodes.x.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port x\");\n  }\n  const xInputNodeId = fInputPortToNodes.x[0];\n  const x = parseFloat(fInputNodeToValues[xInputNodeId]);\n  const y = Math.cos(x);\n  return `${y}`;\n}\n",
+                "dfdxCode": "/**\n * Calculates df/dx.\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for cos:\n * ```json\n * {\n *   \"x\": [\"0\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for cos:\n * ```json\n * {\n *   \"0\": \"0\"\n * }\n * ```\n * @param {string} xId Node ID of x. Note that the framework will not call this\n * function for the following cases:\n * - x is a constant node (i.e., x will always be a variable)\n * - x is the node of f (i.e., the derivative is always 1)\n * - x is not on the forward/reverse differentiation path (i.e., gradient of x\n *   doesn't flow through f node)\n * @returns {string} Evaluated derivative df/dy. For example, if we consider\n * the above example data and assume xId is \"0\", then the value is \"0\"\n * since f(x) = cos(x) and df/dx = -sin(x) = 0.\n */\nfunction dfdx(fInputPortToNodes, fInputNodeToValues, xId) {\n  if (fInputPortToNodes.x.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port x\");\n  }\n  if (!fInputPortToNodes.x.includes(xId)) {\n    return \"0\";\n  }\n  const xInputNodeId = fInputPortToNodes.x[0];\n  const x = parseFloat(fInputNodeToValues[xInputNodeId]);\n  const df = -Math.sin(x);\n  return `${df}`;\n}\n"
+            },
+            "inputPorts": [
+                {
+                    "id": "x",
+                    "allowMultiEdges": false
+                }
+            ],
+            "helpText": "Calculate cos(x)"
+        },
+        {
+            "id": "tan",
+            "text": "Tan",
+            "type": "trigonometric",
+            "namePrefix": "t",
+            "operation": {
+                "fCode": "/**\n * Calculates f().\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for tan:\n * ```json\n * {\n *   \"x\": [\"0\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for tan:\n * ```json\n * {\n *   \"0\": \"0\"\n * }\n * ```\n * @returns {string} Evaluated f value. For example: if we consider\n * the above example data, then the value is \"0\" because\n * f(x) = tan(x) = tan(0) = 0.\n */\nfunction f(fInputPortToNodes, fInputNodeToValues) {\n  if (fInputPortToNodes.x.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port x\");\n  }\n  const xInputNodeId = fInputPortToNodes.x[0];\n  const x = parseFloat(fInputNodeToValues[xInputNodeId]);\n  const y = Math.tan(x);\n  return `${y}`;\n}\n",
+                "dfdxCode": "/**\n * Calculates df/dx.\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for tan:\n * ```json\n * {\n *   \"x\": [\"0\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for tan:\n * ```json\n * {\n *   \"0\": \"0\"\n * }\n * ```\n * @param {string} xId Node ID of x. Note that the framework will not call this\n * function for the following cases:\n * - x is a constant node (i.e., x will always be a variable)\n * - x is the node of f (i.e., the derivative is always 1)\n * - x is not on the forward/reverse differentiation path (i.e., gradient of x\n *   doesn't flow through f node)\n * @returns {string} Evaluated derivative df/dy. For example, if we consider\n * the above example data and assume xId is \"0\", then the value is \"1\"\n * since f(x) = tan(x) and df/dx = 1 / cos(x)^2 = 1.\n */\nfunction dfdx(fInputPortToNodes, fInputNodeToValues, xId) {\n  if (fInputPortToNodes.x.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port x\");\n  }\n  if (!fInputPortToNodes.x.includes(xId)) {\n    return \"0\";\n  }\n  const xInputNodeId = fInputPortToNodes.x[0];\n  const x = parseFloat(fInputNodeToValues[xInputNodeId]);\n  const df = 1 / Math.pow(Math.cos(x), 2);\n  return `${df}`;\n}\n"
+            },
+            "inputPorts": [
+                {
+                    "id": "x",
+                    "allowMultiEdges": false
+                }
+            ],
+            "helpText": "Calculate tan(x)"
+        },
+        {
+            "id": "linear",
+            "text": "Linear",
+            "type": "activation",
+            "namePrefix": "l",
+            "operation": {
+                "fCode": "/**\n * Calculates f().\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for identity:\n * ```json\n * {\n *   \"x\": [\"0\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for identity:\n * ```json\n * {\n *   \"0\": \"0.5\"\n * }\n * ```\n * @returns {string} Evaluated f value. For example: if we consider\n * the above example data, then the value is \"0.5\" because\n * f(x) = x = 0.5.\n */\nfunction f(fInputPortToNodes, fInputNodeToValues) {\n  if (fInputPortToNodes.x.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port x\");\n  }\n  const xInputNodeId = fInputPortToNodes.x[0];\n  const x = parseFloat(fInputNodeToValues[xInputNodeId]);\n  return `${x}`;\n}\n",
+                "dfdxCode": "/**\n * Calculates df/dx.\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for identity:\n * ```json\n * {\n *   \"x\": [\"0\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for identity:\n * ```json\n * {\n *   \"0\": \"0.5\"\n * }\n * ```\n * @param {string} xId Node ID of x. Note that the framework will not call this\n * function for the following cases:\n * - x is a constant node (i.e., x will always be a variable)\n * - x is the node of f (i.e., the derivative is always 1)\n * - x is not on the forward/reverse differentiation path (i.e., gradient of x\n *   doesn't flow through f node)\n * @returns {string} Evaluated derivative df/dy. For example, if we consider\n * the above example data and assume xId is \"0\", then the value is \"1\"\n * since f(x) = x and df/dx = 1.\n */\nfunction dfdx(fInputPortToNodes, fInputNodeToValues, xId) {\n  if (fInputPortToNodes.x.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port x\");\n  }\n  if (!fInputPortToNodes.x.includes(xId)) {\n    return \"0\";\n  }\n  return \"1\";\n}\n"
+            },
+            "inputPorts": [
+                {
+                    "id": "x",
+                    "allowMultiEdges": false
+                }
+            ],
+            "helpText": "Linear activation function, i.e., y=x"
+        },
+        {
+            "id": "sigmoid",
+            "text": "Sigmoid",
+            "type": "activation",
+            "namePrefix": "s",
+            "operation": {
+                "fCode": "/**\n * Calculates f().\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for sigmoid:\n * ```json\n * {\n *   \"x\": [\"0\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for sigmoid:\n * ```json\n * {\n *   \"0\": \"0\"\n * }\n * ```\n * @returns {string} Evaluated f value. For example: if we consider\n * the above example data, then the value is \"0.5\" because\n * f(x) = 1 / (1 + e^(-x)) = 1 / (1 + e^0) = 0.5.\n */\nfunction f(fInputPortToNodes, fInputNodeToValues) {\n  if (fInputPortToNodes.x.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port x\");\n  }\n  const xInputNodeId = fInputPortToNodes.x[0];\n  const x = parseFloat(fInputNodeToValues[xInputNodeId]);\n  const y = 1 / (1 + Math.exp(-x));\n  return `${y}`;\n}\n",
+                "dfdxCode": "/**\n * Calculates df/dx.\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for sigmoid:\n * ```json\n * {\n *   \"x\": [\"0\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for sigmoid:\n * ```json\n * {\n *   \"0\": \"0\"\n * }\n * ```\n * @param {string} xId Node ID of x. Note that the framework will not call this\n * function for the following cases:\n * - x is a constant node (i.e., x will always be a variable)\n * - x is the node of f (i.e., the derivative is always 1)\n * - x is not on the forward/reverse differentiation path (i.e., gradient of x\n *   doesn't flow through f node)\n * @returns {string} Evaluated derivative df/dy. For example, if we consider\n * the above example data and assume xId is \"0\", then the value is \"3\"\n * since f(x) = sigmoid(x) and df/dx = sigmoid(x) * (1 - sigmoid(x)) =\n * 0.5 * (1 - 0.5) = 0.25.\n */\nfunction dfdx(fInputPortToNodes, fInputNodeToValues, xId) {\n  if (fInputPortToNodes.x.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port x\");\n  }\n  if (!fInputPortToNodes.x.includes(xId)) {\n    return \"0\";\n  }\n  const xInputNodeId = fInputPortToNodes.x[0];\n  const x = parseFloat(fInputNodeToValues[xInputNodeId]);\n  const sigmoid = 1 / (1 + Math.exp(-x));\n  const df = sigmoid * (1 - sigmoid);\n  return `${df}`;\n}\n"
+            },
+            "inputPorts": [
+                {
+                    "id": "x",
+                    "allowMultiEdges": false
+                }
+            ],
+            "helpText": "Sigmoid activation function, i.e., y=1/(1 + e^(-x))"
+        },
+        {
+            "id": "tanh",
+            "text": "Tanh",
+            "type": "activation",
+            "namePrefix": "s",
+            "operation": {
+                "fCode": "/**\n * Calculates f().\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for tanh:\n * ```json\n * {\n *   \"x\": [\"0\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for tanh:\n * ```json\n * {\n *   \"0\": \"0\"\n * }\n * ```\n * @returns {string} Evaluated f value. For example: if we consider\n * the above example data, then the value is \"0\" because\n * f(x) = (e^x - e^(-x)) / (e^x + e^(-x)) = (e^0 - e^0) / (e^0 + e^0) = 0 / 2 =\n * 0.\n */\nfunction f(fInputPortToNodes, fInputNodeToValues) {\n  if (fInputPortToNodes.x.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port x\");\n  }\n  const xInputNodeId = fInputPortToNodes.x[0];\n  const x = parseFloat(fInputNodeToValues[xInputNodeId]);\n  const y = (Math.exp(x) - Math.exp(-x)) / (Math.exp(x) + Math.exp(-x));\n  return `${y}`;\n}\n",
+                "dfdxCode": "/**\n * Calculates df/dx.\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for tanh:\n * ```json\n * {\n *   \"x\": [\"0\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for tanh:\n * ```json\n * {\n *   \"0\": \"0\"\n * }\n * ```\n * @param {string} xId Node ID of x. Note that the framework will not call this\n * function for the following cases:\n * - x is a constant node (i.e., x will always be a variable)\n * - x is the node of f (i.e., the derivative is always 1)\n * - x is not on the forward/reverse differentiation path (i.e., gradient of x\n *   doesn't flow through f node)\n * @returns {string} Evaluated derivative df/dy. For example, if we consider\n * the above example data and assume xId is \"0\", then the value is \"1\"\n * since f(x) = tanh(x) and df/dx = 1 - tanh(x)^2 = 1 - 0^2 = 1\n */\nfunction dfdx(fInputPortToNodes, fInputNodeToValues, xId) {\n  if (fInputPortToNodes.x.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port x\");\n  }\n  if (!fInputPortToNodes.x.includes(xId)) {\n    return \"0\";\n  }\n  const xInputNodeId = fInputPortToNodes.x[0];\n  const x = parseFloat(fInputNodeToValues[xInputNodeId]);\n  const tanh = (Math.exp(x) - Math.exp(-x)) / (Math.exp(x) + Math.exp(-x));\n  const df = 1 - Math.pow(tanh, 2);\n  return `${df}`;\n}\n"
+            },
+            "inputPorts": [
+                {
+                    "id": "x",
+                    "allowMultiEdges": false
+                }
+            ],
+            "helpText": "Tanh activation function, i.e., y=(e^x - e^(-x))(e^x + e^(-x))"
+        },
+        {
+            "id": "relu",
+            "text": "ReLU",
+            "type": "activation",
+            "namePrefix": "r",
+            "operation": {
+                "fCode": "/**\n * Calculates f().\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for ReLU:\n * ```json\n * {\n *   \"x\": [\"0\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for ReLU:\n * ```json\n * {\n *   \"0\": \"0.5\"\n * }\n * ```\n * @returns {string} Evaluated f value. For example: if we consider\n * the above example data, then the value is \"0.5\" because\n * f(x) = max(0, x) = max(0, 0.5) = 0.5.\n */\nfunction f(fInputPortToNodes, fInputNodeToValues) {\n  if (fInputPortToNodes.x.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port x\");\n  }\n  const xInputNodeId = fInputPortToNodes.x[0];\n  const x = parseFloat(fInputNodeToValues[xInputNodeId]);\n  const y = Math.max(0, x);\n  return `${y}`;\n}\n",
+                "dfdxCode": "/**\n * Calculates df/dx.\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for ReLU:\n * ```json\n * {\n *   \"x\": [\"0\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for ReLU:\n * ```json\n * {\n *   \"0\": \"0.5\"\n * }\n * ```\n * @param {string} xId Node ID of x. Note that the framework will not call this\n * function for the following cases:\n * - x is a constant node (i.e., x will always be a variable)\n * - x is the node of f (i.e., the derivative is always 1)\n * - x is not on the forward/reverse differentiation path (i.e., gradient of x\n *   doesn't flow through f node)\n * @returns {string} Evaluated derivative df/dy. For example, if we consider\n * the above example data and assume xId is \"0\", then the value is \"1\"\n * since f(x) = max(0, x) and df/dx = 1 (x > 0).\n */\nfunction dfdx(fInputPortToNodes, fInputNodeToValues, xId) {\n  if (fInputPortToNodes.x.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port x\");\n  }\n  if (!fInputPortToNodes.x.includes(xId)) {\n    return \"0\";\n  }\n  const xInputNodeId = fInputPortToNodes.x[0];\n  const x = parseFloat(fInputNodeToValues[xInputNodeId]);\n  const df = x > 0 ? 1 : 0;\n  return `${df}`;\n}\n"
+            },
+            "inputPorts": [
+                {
+                    "id": "x",
+                    "allowMultiEdges": false
+                }
+            ],
+            "helpText": "ReLU activation function, i.e., y=max(0, x)"
+        },
+        {
+            "id": "squared_error",
+            "text": "Squared Error",
+            "type": "loss",
+            "namePrefix": "s",
+            "operation": {
+                "fCode": "/**\n * Calculates f().\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for squared error:\n * ```json\n * {\n *   \"y_t\": [\"0\"],\n *   \"y_e\": [\"1\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for squared error:\n * ```json\n * {\n *   \"0\": \"0\",\n *   \"1\": \"0.5\"\n * }\n * ```\n * @returns {string} Evaluated f value. For example: if we consider\n * the above example data, then the value is \"0.25\" because\n * f(y_t, y_e) = (y_t - y_e)^2 = (0 - 0.5)^2 = 0.25.\n */\nfunction f(fInputPortToNodes, fInputNodeToValues) {\n  if (fInputPortToNodes.y_t.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port y_t\");\n  }\n  if (fInputPortToNodes.y_e.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port y_e\");\n  }\n  const yTrueInputNodeId = fInputPortToNodes.y_t[0];\n  const yEstimateInputNodeId = fInputPortToNodes.y_e[0];\n  const yTrue = parseFloat(fInputNodeToValues[yTrueInputNodeId]);\n  const yEstimate = parseFloat(fInputNodeToValues[yEstimateInputNodeId]);\n  const y = Math.pow(yTrue - yEstimate, 2);\n  return `${y}`;\n}\n",
+                "dfdxCode": "/**\n * Calculates df/dx.\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for squared error:\n * ```json\n * {\n *   \"y_t\": [\"0\"],\n *   \"y_e\": [\"1\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for squared error:\n * ```json\n * {\n *   \"0\": \"0\",\n *   \"1\": \"0.5\"\n * }\n * ```\n * @param {string} xId Node ID of x. Note that the framework will not call this\n * function for the following cases:\n * - x is a constant node (i.e., x will always be a variable)\n * - x is the node of f (i.e., the derivative is always 1)\n * - x is not on the forward/reverse differentiation path (i.e., gradient of x\n *   doesn't flow through f node)\n * @returns {string} Evaluated derivative df/dy. For example, if we consider\n * the above example data and assume xId is \"0\", then the value is \"-1\"\n * since f(y_t, y_e) = (y_t - y_e)^2 and df/d(y_t) = 2 * (y_t - y_e) =\n * 2 * (0 - 0.5) = -1.\n */\nfunction dfdx(fInputPortToNodes, fInputNodeToValues, xId) {\n  if (fInputPortToNodes.y_t.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port y_t\");\n  }\n  if (fInputPortToNodes.y_e.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port y_e\");\n  }\n  const hasXInYTrue = fInputPortToNodes.y_t.includes(xId);\n  const hasXInYEstimate = fInputPortToNodes.y_e.includes(xId);\n  if (!hasXInYTrue && !hasXInYEstimate) {\n    return \"0\";\n  }\n  const yTrueInputNodeId = fInputPortToNodes.y_t[0];\n  const yEstimateInputNodeId = fInputPortToNodes.y_e[0];\n  const yTrue = parseFloat(fInputNodeToValues[yTrueInputNodeId]);\n  const yEstimate = parseFloat(fInputNodeToValues[yEstimateInputNodeId]);\n  let df = 0;\n  if (hasXInYTrue) {\n    df = 2 * (yTrue - yEstimate);\n  } else {\n    df = 2 * (yEstimate - yTrue);\n  }\n  return `${df}`;\n}\n"
+            },
+            "inputPorts": [
+                {
+                    "id": "y_t",
+                    "allowMultiEdges": false
+                },
+                {
+                    "id": "y_e",
+                    "allowMultiEdges": false
+                }
+            ],
+            "helpText": "Calculate the squared error, i.e., (y_t - y_e)^2\n (y_t: true value, y_e: estimated value)"
+        },
+        {
+            "id": "binary_cross_entropy",
+            "text": "Binary Cross-Entropy",
+            "type": "loss",
+            "namePrefix": "b",
+            "operation": {
+                "fCode": "/**\n * Calculates f().\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for squared error:\n * ```json\n * {\n *   \"y_t\": [\"0\"],\n *   \"y_e\": [\"1\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for squared error:\n * ```json\n * {\n *   \"0\": \"0\",\n *   \"1\": \"0.5\"\n * }\n * ```\n * @returns {string} Evaluated f value. For example: if we consider\n * the above example data, then the value is \"-0.693\" because\n * f(y_t, y_e) = y_t * log(y_e) + (1 - y_t) * log(1 - y_e) =\n * 0 * log(0.5) + (1 - 0) * log(1 - 0.5) ~= -0.693.\n */\nfunction f(fInputPortToNodes, fInputNodeToValues) {\n  if (fInputPortToNodes.y_t.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port y_t\");\n  }\n  if (fInputPortToNodes.y_e.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port y_e\");\n  }\n  const yTrueInputNodeId = fInputPortToNodes.y_t[0];\n  const yEstimateInputNodeId = fInputPortToNodes.y_e[0];\n  const yTrue = parseFloat(fInputNodeToValues[yTrueInputNodeId]);\n  const yEstimate = parseFloat(fInputNodeToValues[yEstimateInputNodeId]);\n  const y = yTrue * Math.log(yEstimate) + (1 - yTrue) * Math.log(1 - yEstimate);\n  return `${y}`;\n}\n",
+                "dfdxCode": "/**\n * Calculates df/dx.\n * @param {Record<string, string[]>} fInputPortToNodes An object where the keys\n * are port IDs and the values are node IDs of the connected input nodes.\n * Example data for squared error:\n * ```json\n * {\n *   \"y_t\": [\"0\"],\n *   \"y_e\": [\"1\"]\n * }\n * ```\n * @param {Record<string, string>} fInputNodeToValues An object where the keys\n * are node IDs and the values are node values of the connected input nodes.\n * Example data for squared error:\n * ```json\n * {\n *   \"0\": \"0\",\n *   \"1\": \"0.5\"\n * }\n * ```\n * @param {string} xId Node ID of x. Note that the framework will not call this\n * function for the following cases:\n * - x is a constant node (i.e., x will always be a variable)\n * - x is the node of f (i.e., the derivative is always 1)\n * - x is not on the forward/reverse differentiation path (i.e., gradient of x\n *   doesn't flow through f node)\n * @returns {string} Evaluated derivative df/dy. For example, if we consider\n * the above example data and assume xId is \"0\", then the value is \"-1.386\"\n * since f(y_t, y_e) = y_t * log(y_e) + (1 - y_t) * log(1 - y_e) and\n * df/d(y_t) = log(y_e) - log(1 - y_e) = log(0.5) - log(1 - 0.5) ~= -1.386.\n */\nfunction dfdx(fInputPortToNodes, fInputNodeToValues, xId) {\n  if (fInputPortToNodes.y_t.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port y_t\");\n  }\n  if (fInputPortToNodes.y_e.length !== 1) {\n    throw new Error(\"Should have exactly 1 input node for port y_e\");\n  }\n  const hasXInYTrue = fInputPortToNodes.y_t.includes(xId);\n  const hasXInYEstimate = fInputPortToNodes.y_e.includes(xId);\n  if (!hasXInYTrue && !hasXInYEstimate) {\n    return \"0\";\n  }\n  const yTrueInputNodeId = fInputPortToNodes.y_t[0];\n  const yEstimateInputNodeId = fInputPortToNodes.y_e[0];\n  const yTrue = parseFloat(fInputNodeToValues[yTrueInputNodeId]);\n  const yEstimate = parseFloat(fInputNodeToValues[yEstimateInputNodeId]);\n  let df = 0;\n  if (hasXInYTrue) {\n    df = Math.log(yEstimate) - Math.log(1 - yEstimate);\n  } else {\n    df = (yTrue - yEstimate) / (yEstimate - Math.pow(yEstimate, 2));\n  }\n  return `${df}`;\n}\n"
+            },
+            "inputPorts": [
+                {
+                    "id": "y_t",
+                    "allowMultiEdges": false
+                },
+                {
+                    "id": "y_e",
+                    "allowMultiEdges": false
+                }
+            ],
+            "helpText": "Calculate the binary cross-entropy,\n i.e., y_t * log(y_e) + (1 - y_t) * log(1 - y_e)\n (y_t: true value, y_e: estimated value)"
+        }
+    ],
+    "nextNodeId": 3,
+    "nodeNameBuilderState": {
+        "constantCounter": 1,
+        "variableCounter": 3,
+        "operationIdToCounter": {
+            "multiply": 2
+        }
+    },
+    "nextOperationId": 0,
+    "operationIdsAddedAtLeastOnce": [
+        "multiply"
+    ],
+    "reactFlowState": {
+        "nodes": [
+            {
+                "width": 202,
+                "height": 153,
+                "id": "0",
+                "type": "custom",
+                "data": {
+                    "name": "x",
+                    "operationData": null,
+                    "featureNodeType": {
+                        "nodeType": "VARIABLE"
+                    },
+                    "inputItems": [
+                        {
+                            "id": "value",
+                            "label": "=",
+                            "showHandle": false,
+                            "showInputField": true,
+                            "value": "1"
+                        }
+                    ],
+                    "outputItems": [
+                        {
+                            "type": "DERIVATIVE",
+                            "labelParts": [
+                                {
+                                    "type": "latexLink",
+                                    "id": "derivative",
+                                    "latex": "\\displaystyle \\frac{\\partial{f}}{\\partial{x}}",
+                                    "href": "0"
+                                },
+                                {
+                                    "type": "latex",
+                                    "id": "equal",
+                                    "latex": "="
+                                }
+                            ],
+                            "value": "1"
+                        }
+                    ],
+                    "isDarkMode": false,
+                    "isHighlighted": false
+                },
+                "dragHandle": ".drag-handle",
+                "selected": false,
+                "position": {
+                    "x": 100,
+                    "y": 100
+                },
+                "positionAbsolute": {
+                    "x": 100,
+                    "y": 100
+                },
+                "dragging": false
+            },
+            {
+                "width": 202,
+                "height": 153,
+                "id": "1",
+                "type": "custom",
+                "data": {
+                    "name": "y",
+                    "operationData": null,
+                    "featureNodeType": {
+                        "nodeType": "VARIABLE"
+                    },
+                    "inputItems": [
+                        {
+                            "id": "value",
+                            "label": "=",
+                            "showHandle": false,
+                            "showInputField": true,
+                            "value": "2"
+                        }
+                    ],
+                    "outputItems": [
+                        {
+                            "type": "DERIVATIVE",
+                            "labelParts": [
+                                {
+                                    "type": "latexLink",
+                                    "id": "derivative",
+                                    "latex": "\\displaystyle \\frac{\\partial{f}}{\\partial{y}}",
+                                    "href": "1"
+                                },
+                                {
+                                    "type": "latex",
+                                    "id": "equal",
+                                    "latex": "="
+                                }
+                            ],
+                            "value": "1"
+                        }
+                    ],
+                    "isDarkMode": false,
+                    "isHighlighted": false
+                },
+                "dragHandle": ".drag-handle",
+                "selected": false,
+                "position": {
+                    "x": 100,
+                    "y": 300
+                },
+                "positionAbsolute": {
+                    "x": 100,
+                    "y": 300
+                },
+                "dragging": false
+            },
+            {
+                "width": 202,
+                "height": 233,
+                "id": "2",
+                "type": "custom",
+                "data": {
+                    "name": "f",
+                    "operationData": {
+                        "text": "Multiply",
+                        "helpText": "Multiply two numbers, i.e., a * b"
+                    },
+                    "featureNodeType": {
+                        "nodeType": "OPERATION",
+                        "operationId": "multiply"
+                    },
+                    "inputItems": [
+                        {
+                            "id": "a",
+                            "label": "a",
+                            "showHandle": true,
+                            "showInputField": false,
+                            "value": "0"
+                        },
+                        {
+                            "id": "b",
+                            "label": "b",
+                            "showHandle": true,
+                            "showInputField": false,
+                            "value": "0"
+                        }
+                    ],
+                    "outputItems": [
+                        {
+                            "type": "VALUE",
+                            "labelParts": [
+                                {
+                                    "type": "latex",
+                                    "id": "value",
+                                    "latex": "="
+                                }
+                            ],
+                            "value": "2"
+                        },
+                        {
+                            "type": "DERIVATIVE",
+                            "labelParts": [
+                                {
+                                    "type": "latexLink",
+                                    "id": "derivative",
+                                    "latex": "\\displaystyle \\frac{\\partial{f}}{\\partial{f}}",
+                                    "href": "2"
+                                },
+                                {
+                                    "type": "latex",
+                                    "id": "equal",
+                                    "latex": "="
+                                }
+                            ],
+                            "value": "1"
+                        }
+                    ],
+                    "isDarkMode": false,
+                    "isHighlighted": false
+                },
+                "dragHandle": ".drag-handle",
+                "selected": true,
+                "position": {
+                    "x": 400,
+                    "y": 150
+                },
+                "positionAbsolute": {
+                    "x": 400,
+                    "y": 150
+                },
+                "dragging": false
+            }
+        ],
+        "edges": [
+            {
+                "source": "0",
+                "sourceHandle": "output",
+                "target": "2",
+                "targetHandle": "a",
+                "id": "reactflow__edge-0output-2a",
+                "animated": false
+            },
+            {
+                "source": "1",
+                "sourceHandle": "output",
+                "target": "2",
+                "targetHandle": "b",
+                "id": "reactflow__edge-1output-2b",
+                "animated": false
+            }
+        ],
+        "viewport": {
+            "x": 0,
+            "y": 0,
+            "zoom": 1
+        }
+    }
+}

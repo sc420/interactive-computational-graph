@@ -122,21 +122,27 @@ const ReactFlowGraph: FunctionComponent<ReactFlowGraphProps> = ({
     >
       <div ref={reactFlowWrapper}>
         <ReactFlow
-          // Basic props
+          // Common props
           nodes={nodes}
           edges={edges}
+          onConnect={onConnect}
+          nodeTypes={nodeTypes}
           style={style}
           className={isDarkMode ? "dark-mode" : ""}
-          nodeTypes={nodeTypes}
-          // Event handlers
+          // Viewport props
+          minZoom={0.05}
+          // Event handlers: General events
           onInit={handleInit}
+          // Event handlers: Node events
           onNodesChange={onNodesChange}
+          // Event handlers: Edge events
           onEdgesChange={onEdgesChange}
+          // Event handlers: Selection events
           onSelectionChange={onSelectionChange}
-          onConnect={onConnect}
+          // Event handlers: Drag and drop events
           onDragOver={handleDragOver}
           onDrop={handleDrop}
-          // Keys
+          // Keyboard props
           deleteKeyCode={deleteKeyCode}
           multiSelectionKeyCode={multiSelectionKeyCode}
           zoomActivationKeyCode={zoomActivationKeyCode}

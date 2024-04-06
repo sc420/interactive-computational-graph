@@ -31,7 +31,14 @@ class NodeNameBuilder {
       counter = foundCounter === undefined ? 1 : foundCounter;
       this.operationIdToCounter.set(operationId, counter + 1);
     }
-    return `${prefix}_${counter}`;
+    return this.buildLatexName(prefix, counter);
+  }
+
+  private buildLatexName(prefix: string, counter: number): string {
+    if (counter < 10) {
+      return `${prefix}_${counter}`;
+    }
+    return `${prefix}_{${counter}}`;
   }
 
   save(): NodeNameBuilderState {

@@ -21,6 +21,17 @@ test("should build names with interleaving node types", () => {
   expect(builder.buildName(getVariableNodeType(), null)).toBe("v_4");
 });
 
+test("should have braces around counter when counter is more than 9", () => {
+  const builder = new NodeNameBuilder();
+
+  for (let counter = 1; counter < 10; counter += 1) {
+    expect(builder.buildName(getConstantNodeType(), null)).toBe(`c_${counter}`);
+  }
+  expect(builder.buildName(getConstantNodeType(), null)).toBe(`c_{10}`);
+  expect(builder.buildName(getConstantNodeType(), null)).toBe(`c_{11}`);
+  expect(builder.buildName(getConstantNodeType(), null)).toBe(`c_{12}`);
+});
+
 test("should save the state", () => {
   const builder = new NodeNameBuilder();
 

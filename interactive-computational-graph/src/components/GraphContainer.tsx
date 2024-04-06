@@ -99,6 +99,7 @@ import type PortState from "../states/PortState";
 import FeaturePanel from "./FeaturePanel";
 import GraphToolbar from "./GraphToolbar";
 import Title from "./Title";
+import WelcomeDialog from "./WelcomeDialog";
 
 const isTest = process.env.NODE_ENV === "test";
 
@@ -828,6 +829,9 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
 
   return (
     <>
+      {/* Welcome dialog */}
+      {!isTest && <WelcomeDialog onLoad={handleLoad} />}
+
       {/* Toolbar padding */}
       <Toolbar />
 
@@ -847,7 +851,6 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
           onDerivativeTargetChange={handleDerivativeTargetChange}
         />
       </Title>
-
       {/* Graph content */}
       <Grid
         container
@@ -912,7 +915,6 @@ const GraphContainer: FunctionComponent<GraphContainerProps> = ({
           </Grid>
         </Grid>
       </Grid>
-
       {/* Error message */}
       <Snackbar
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}

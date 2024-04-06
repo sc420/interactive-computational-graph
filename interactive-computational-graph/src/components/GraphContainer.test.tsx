@@ -5,7 +5,7 @@ import {
   type Node,
   type OnSelectionChangeParams,
 } from "reactflow";
-import { mockReactFlow } from "../ReactFlowMock";
+import { mockReactFlow } from "../MockReactFlow";
 import type FeatureNodeType from "../features/FeatureNodeType";
 import type SelectedFeature from "../features/SelectedFeature";
 import GraphContainer from "./GraphContainer";

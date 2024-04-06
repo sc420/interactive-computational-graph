@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import { mockReactFlow } from "../ReactFlowMock";
+import { mockReactFlow } from "../MockReactFlow";
 import type NodeData from "../features/NodeData";
 import CustomNode from "./CustomNode";
 

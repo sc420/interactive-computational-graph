@@ -43,7 +43,7 @@ test("should render the tabs", () => {
   expect(screen.getByText("Test Data: X ID")).toBeInTheDocument();
 });
 
-test("should render the operation added warning when the operation ID has been added at least once", () => {
+test("should disable deleting the operation when the operation has been added at least once", () => {
   const featureOperation = getFeatureOperation();
   const handleCancel = jest.fn();
   const handleSave = jest.fn();
@@ -60,9 +60,11 @@ test("should render the operation added warning when the operation ID has been a
     />,
   );
 
-  const message = `This operation has already been added to the graph once. \
-Editing it may cause inconsistent results.`;
-  expect(screen.getByText(message)).toBeInTheDocument();
+  const menuButton = screen.getByLabelText("more");
+  fireEvent.click(menuButton);
+
+  const deleteOperationMenuItem = screen.getByTestId("delete-operation");
+  expect(deleteOperationMenuItem).toHaveAttribute("aria-disabled");
 });
 
 test("should trigger event when clicking save button", () => {

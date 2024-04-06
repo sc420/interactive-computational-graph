@@ -60,6 +60,7 @@ const EditOperationDialogMenu: FunctionComponent<
         }}
       >
         <MenuItem
+          data-testid="delete-operation"
           disabled={!deletable}
           onClick={() => {
             onDelete();

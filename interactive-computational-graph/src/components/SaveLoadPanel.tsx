@@ -1,4 +1,12 @@
-import { Alert, Button, Stack, Typography } from "@mui/material";
+import {
+  Alert,
+  Button,
+  List,
+  ListItem,
+  ListItemText,
+  Stack,
+  Typography,
+} from "@mui/material";
 import { saveAs } from "file-saver";
 import {
   useCallback,
@@ -116,6 +124,29 @@ const SaveLoadPanel: FunctionComponent<SaveLoadPanelProps> = ({
         >
           Load
         </Button>
+
+        {/* Help text */}
+        <section>
+          <Typography variant="subtitle2" gutterBottom>
+            What Will Be Saved/Loaded
+          </Typography>
+          <List
+            dense
+            disablePadding
+            component="ul"
+            sx={{ listStyle: "disc", pl: 3 }}
+          >
+            <ListItem disablePadding sx={{ display: "list-item" }}>
+              <ListItemText primary="Nodes and connections" />
+            </ListItem>
+            <ListItem disablePadding sx={{ display: "list-item" }}>
+              <ListItemText primary="Operations" />
+            </ListItem>
+            <ListItem disablePadding sx={{ display: "list-item" }}>
+              <ListItemText primary="Toolbar status" />
+            </ListItem>
+          </List>
+        </section>
 
         {/* Successful message for loading */}
         {isLoadingSuccess && (

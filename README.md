@@ -26,5 +26,5 @@ If you use VSCode, please open the subdirectory `./interactive-computational-gra
 - Code Spell Checker: Checks common spelling errors
 - ESLint: Lints Typescript files
 - Stylelint: Lints CSS files
-- PrettierL: Formats Typescript files
+- Prettier: Formats Typescript files
 - Markdown Preview Mermaid Support: Previews Mermaid graphs in Markdown files

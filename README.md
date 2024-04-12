@@ -14,6 +14,14 @@ Classic calculus problem $\frac{\sin{x}}{x}$:
 
 [Interactive Computational Graph](https://sc420.github.io/interactive-computational-graph/)
 
+## Features
+
+- Show how derivatives are calculated in any scalar conputational graph
+- Customizable operators
+- Can save/load the graph to/from file
+
+For simplicity, the built-in operators and how derivatives are accumulated are limited to scalar values, but the architectural design is open to handle higher-dimensional values.
+
 ## Development
 
 VSCode can be used to develop the website.
